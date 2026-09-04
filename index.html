@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>돈돼 (Don Dwae) - 프로토타입 포털</title>
+  
+  <!-- Pretendard Webfont -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            canvas: {
+              cream: '#F8F6DF',
+              bg: '#FBFBF7',
+            },
+            primary: {
+              DEFAULT: '#A9DD82',
+              hover: '#95ce6c',
+              dark: '#2E5E14',
+            },
+            secondary: {
+              DEFAULT: '#FDA2BC',
+              hover: '#f58ca8',
+              wine: '#8A2B43',
+            },
+            dark: '#191A1C',
+            muted: '#71717A',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: #FBFBF7;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-[#191A1C] flex flex-col justify-between antialiased">
+  
+  <!-- 헤더 영역 -->
+  <header class="w-full border-b border-gray-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <img src="./logo-default.png" alt="돈돼 로고" class="w-8 h-8 object-contain" onerror="this.src='./assets/logo-default.png'" />
+        <span class="font-bold text-xl tracking-tight">돈돼 <span class="text-sm font-semibold text-[#71717A] ml-1">Prototype Portal</span></span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#A9DD82]/20 text-[#2E5E14]">
+          <span class="w-2 h-2 rounded-full bg-[#A9DD82] animate-pulse"></span>
+          인터랙티브 프로토타입
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <main class="max-w-5xl mx-auto px-6 py-12 flex-1 flex flex-col justify-center items-center w-full">
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-white shadow-sm border border-gray-100">
+        <img src="./mascot-full.png" alt="돈돼 마스코트" class="w-16 h-16 object-contain" onerror="this.src='./assets/mascot-full.png'" />
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 mb-3">
+        돈돼(Don Dwae) 인터랙티브 체험
+      </h1>
+      <p class="text-base sm:text-lg text-gray-600 max-w-xl mx-auto">
+        체험하고 싶은 프로토타입 버전을 선택해 주세요.<br />
+        실제 기기 환경 및 웹 브라우저에서 각각 최적화된 화면을 확인하실 수 있습니다.
+      </p>
+    </div>
+
+    <!-- 2가지 버전 선택 카드 그리드 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
+      
+      <!-- 카드 1: 제작자 웹 버전 -->
+      <a href="./creator-web/index.html" class="group relative flex flex-col justify-between bg-white rounded-3xl p-7 border border-gray-200/90 shadow-sm hover:shadow-xl hover:border-[#A9DD82] transition-all duration-300 transform hover:-translate-y-1">
+        <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#A9DD82]/15 text-[#2E5E14] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+          ↗
+        </div>
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-[#F2F5E8] flex items-center justify-center text-2xl mb-5 shadow-xs">
+            🖥️
+          </div>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#2E5E14] bg-[#A9DD82]/25 px-2.5 py-1 rounded-md">
+            Desktop Web
+          </span>
+          <h2 class="text-2xl font-bold text-gray-900 mt-3 mb-2 group-hover:text-[#2E5E14] transition-colors">
+            제작자 웹 버전
+          </h2>
+          <p class="text-sm text-gray-600 leading-relaxed mb-6">
+            피드백 대시보드, 프로젝트 등록 폼, 코인마켓/환전소 등 기획자/제작자를 위한 전체 데스크톱 화면 플로우입니다.
+          </p>
+        </div>
+        
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-sm font-bold text-[#2E5E14]">
+          <span>웹 버전 바로가기</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </div>
+      </a>
+
+      <!-- 카드 2: 테스터 모바일 앱 버전 -->
+      <a href="./tester-mobile/index.html" class="group relative flex flex-col justify-between bg-white rounded-3xl p-7 border border-gray-200/90 shadow-sm hover:shadow-xl hover:border-[#FDA2BC] transition-all duration-300 transform hover:-translate-y-1">
+        <div class="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#FDA2BC]/20 text-[#8A2B43] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+          ↗
+        </div>
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-[#FFF2F6] flex items-center justify-center text-2xl mb-5 shadow-xs">
+            📱
+          </div>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#8A2B43] bg-[#FDA2BC]/25 px-2.5 py-1 rounded-md">
+            Mobile App
+          </span>
+          <h2 class="text-2xl font-bold text-gray-900 mt-3 mb-2 group-hover:text-[#8A2B43] transition-colors">
+            테스터 앱 버전
+          </h2>
+          <p class="text-sm text-gray-600 leading-relaxed mb-6">
+            피드백 참여, B-보팅 테스트, 코인 리워드 적립 및 마이페이지 등 참여 테스터를 위한 모바일 뷰 프로토타입입니다.
+          </p>
+        </div>
+        
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-sm font-bold text-[#8A2B43]">
+          <span>앱 버전 바로가기</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 도움말 가이드 -->
+    <div class="mt-10 p-4 rounded-2xl bg-white/70 border border-gray-200/60 max-w-xl text-center text-xs text-gray-500">
+      💡 모바일 앱 버전은 스마트폰 환경이나 개발자 도구(F12)의 모바일 뷰포트에서 더욱 실감나게 체험하실 수 있습니다.
+    </div>
+  </main>
+
+  <!-- 푸터 영역 -->
+  <footer class="w-full border-t border-gray-200/60 py-6 text-center text-xs text-gray-400">
+    <p>© 2026 돈돼(Don Dwae). All rights reserved. | SeSAC Final Project</p>
+  </footer>
+
+</body>
+</html>
