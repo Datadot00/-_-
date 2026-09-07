@@ -708,7 +708,7 @@
   </div>
 
   <!-- ========================================================
-       VIEW: LOGIN PAGE (로컬 테스트 및 구글 로그인)
+       VIEW: LOGIN PAGE (Supabase 이메일 인증)
   ======================================================== -->
   <div id="view-login" class="view-container hidden w-full min-h-screen flex flex-col bg-[#FBFBF7]">
     <header class="w-full border-b border-neutral-lightborder sticky top-0 z-30 bg-white/95 backdrop-blur-sm">
@@ -738,45 +738,46 @@
           돈 돼? 로그인
         </h2>
         <p class="text-xs text-neutral-muted mb-8 text-center">
-          로컬 테스트 계정 또는 구글로 간편하게 로그인하세요.
+          이메일과 비밀번호로 로그인하거나 새 계정을 만드세요.
         </p>
 
-        <!-- Login Form -->
-        <form onsubmit="handleLocalLoginSubmit(event)" class="w-full flex flex-col gap-4">
+        <!-- Supabase Email Auth Form -->
+        <form id="auth-form" class="w-full flex flex-col gap-4">
           <div>
-            <label class="block text-xs font-bold text-neutral-dark mb-1.5">아이디 (ID)</label>
-            <input id="login-id-input" type="text" value="PROJECT001" placeholder="아이디를 입력하세요"
+            <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">이메일</label>
+            <input id="auth-email-input" type="email" autocomplete="email" placeholder="name@example.com"
               class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
               required />
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호 (Password)</label>
-            <input id="login-pw-input" type="password" value="1234" placeholder="비밀번호를 입력하세요"
+            <label for="auth-password-input" class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호</label>
+            <input id="auth-password-input" type="password" autocomplete="current-password" minlength="6"
+              placeholder="6자 이상 입력하세요"
               class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
               required />
           </div>
 
-          <!-- Quick Fill Banner for Tester -->
           <div
-            class="p-3.5 rounded-xl bg-canvas-cream/60 border border-[#E9E4C2] flex items-center justify-between text-xs">
-            <div class="flex flex-col">
-              <span class="font-bold text-[#2F6517]">💡 로컬 테스트 기본 계정</span>
-              <span class="text-[11px] text-neutral-600 font-mono mt-0.5">ID: <strong>PROJECT001</strong> / PW:
-                <strong>1234</strong></span>
-            </div>
-            <button type="button" onclick="fillTestAccountCredentials()"
-              class="px-2.5 py-1 rounded-lg bg-primary text-neutral-dark font-extrabold text-[11px] hover:bg-primary-hover active:scale-95 transition-all cursor-pointer">
-              자동 입력
-            </button>
+            class="p-3.5 rounded-xl bg-canvas-cream/60 border border-[#E9E4C2] flex flex-col gap-1 text-xs">
+            <span class="font-bold text-[#2F6517]">✉️ 처음 방문하셨나요?</span>
+            <span class="text-[11px] text-neutral-600">같은 이메일과 비밀번호를 입력한 뒤 회원가입을 누르면 인증 메일이 발송됩니다.</span>
           </div>
 
-          <div id="login-error-msg" class="text-xs font-bold text-red-500 hidden text-center"></div>
+          <div id="auth-error-msg" role="alert" aria-live="assertive"
+            class="text-xs font-bold text-red-500 hidden text-center"></div>
+          <div id="auth-success-msg" role="status" aria-live="polite"
+            class="text-xs font-bold text-[#2F6517] hidden text-center"></div>
 
-          <button type="submit" id="btn-local-login"
+          <button type="submit" id="btn-email-login"
             class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20 cursor-pointer mt-1">
-            <span>로그인하기</span>
+            <span id="btn-email-login-text">로그인하기</span>
             <span>→</span>
+          </button>
+
+          <button type="button" id="btn-email-signup"
+            class="w-full py-3 px-4 rounded-xl bg-white hover:bg-neutral-50 active:scale-98 text-neutral-700 font-bold text-sm transition-all border border-neutral-300 cursor-pointer">
+            이메일로 회원가입
           </button>
         </form>
 
@@ -786,9 +787,9 @@
           <div class="flex-1 border-t border-neutral-200"></div>
         </div>
 
-        <!-- Google OAuth Mock Button -->
-        <button type="button" onclick="handleGoogleOAuthMock()"
-          class="w-full h-[52px] bg-white border border-neutral-300 rounded-xl flex items-center justify-center gap-3 px-4 hover:bg-neutral-50 transition-all active:scale-98 cursor-pointer">
+        <!-- Google OAuth is intentionally disabled until its provider is configured. -->
+        <button type="button" disabled
+          class="w-full h-[52px] bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-center gap-3 px-4 cursor-not-allowed opacity-60">
           <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
             <path fill="#4285F4"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -799,7 +800,7 @@
             <path fill="#EA4335"
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
           </svg>
-          <span class="text-xs font-bold text-neutral-700">구글 계정으로 로그인 (추후 연동)</span>
+          <span class="text-xs font-bold text-neutral-500">Google 로그인 (준비 중)</span>
         </button>
       </div>
     </main>
@@ -899,6 +900,14 @@
             <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
               onerror="this.onerror=null; this.src='./logo-coin.png';" />
             <span class="text-xs font-bold text-[#574B1A]" id="user-coin-badge">1,300</span>
+          </div>
+
+          <div class="hidden xl:flex items-center gap-2 border-l border-neutral-200 pl-3">
+            <span data-auth-email class="max-w-40 truncate text-[11px] font-semibold text-neutral-500"></span>
+            <button type="button" data-auth-signout
+              class="px-3 py-2 rounded-full border border-neutral-200 bg-white text-[11px] font-bold text-neutral-600 hover:bg-neutral-50 transition-colors">
+              로그아웃
+            </button>
           </div>
 
           <div onclick="navigateTo('mypage')" title="마이페이지로 이동"
@@ -3111,7 +3120,7 @@
             🐶
           </div>
           <div class="min-w-0">
-            <span class="font-extrabold text-xs text-neutral-dark block truncate">바이브코더123</span>
+            <span data-auth-email class="font-extrabold text-xs text-neutral-dark block truncate">로그인 사용자</span>
             <span class="text-[10px] text-primary-dark font-bold">🏆 상위 3% 테스터</span>
           </div>
         </div>
@@ -3185,6 +3194,11 @@
             <span>⚙️</span>
             <span>계정 정보</span>
           </a>
+          <button type="button" data-auth-signout
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-neutral-500 hover:text-red-600 transition-colors font-medium text-left">
+            <span>↪</span>
+            <span>로그아웃</span>
+          </button>
           <a href="#alerts"
             class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 transition-colors font-medium">
             <span>🔔</span>
@@ -4231,12 +4245,8 @@
     };
 
     let currentPostId = 'moneylog';
-    // 로컬 프로젝트 계정 (PROJECT001 / 1234): 새로고침 시 3회 게이팅 자동 달성 상태로 설정
-    let userParticipatedTests = {
-      'project-init-1': true,
-      'project-init-2': true,
-      'project-init-3': true
-    };
+    // Supabase 데이터 연동 전까지 현재 브라우저 세션의 참여 상태만 보관합니다.
+    let userParticipatedTests = {};
     let currentCreateStep = 1;
 
     // Multi-Step Form Logic (Step 1, 2, 3)
@@ -5699,56 +5709,6 @@
       }
     }
 
-    // ========================================================
-    // Login Handling Logic (TEST001 / 1234 Validation)
-    // ========================================================
-    function fillTestAccountCredentials() {
-      const idInp = document.getElementById('login-id-input');
-      const pwInp = document.getElementById('login-pw-input');
-      if (idInp) idInp.value = 'PROJECT001';
-      if (pwInp) pwInp.value = '1234';
-      const err = document.getElementById('login-error-msg');
-      if (err) err.classList.add('hidden');
-    }
-
-    function handleLocalLoginSubmit(e) {
-      e.preventDefault();
-      const idInp = document.getElementById('login-id-input');
-      const pwInp = document.getElementById('login-pw-input');
-      const err = document.getElementById('login-error-msg');
-
-      const idVal = (idInp?.value || '').trim();
-      const pwVal = (pwInp?.value || '').trim();
-
-      if (idVal === 'PROJECT001' && pwVal === '1234') {
-        if (err) err.classList.add('hidden');
-        userParticipatedTests = {
-          'project-init-1': true,
-          'project-init-2': true,
-          'project-init-3': true
-        };
-        updatePledgeModalUI();
-        showGenericToast('🔑 PROJECT001 계정으로 성공적으로 로그인되었습니다!', '🎉');
-        navigateTo('explore');
-      } else {
-        if (err) {
-          err.textContent = '❌ 아이디(PROJECT001) 또는 비밀번호(1234)가 올바르지 않습니다.';
-          err.classList.remove('hidden');
-        }
-      }
-    }
-
-    function handleGoogleOAuthMock() {
-      userParticipatedTests = {
-        'project-init-1': true,
-        'project-init-2': true,
-        'project-init-3': true
-      };
-      updatePledgeModalUI();
-      showGenericToast('🌐 [가상 구글 로그인] PROJECT001 계정으로 접속되었습니다.', '🚀');
-      navigateTo('explore');
-    }
-
     // Interviewer controller is available only during local development.
     function isInterviewerControllerEnabled(hostname = window.location.hostname) {
       return ['localhost', '127.0.0.1', '::1'].includes(hostname);
@@ -5806,6 +5766,7 @@
       navigateTo('landing');
     });
   </script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>

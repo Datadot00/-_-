@@ -25,7 +25,7 @@ npm install
 npm run dev
 ```
 
-Vite 기본 주소는 `http://localhost:5173`입니다. 포트 `3000`을 사용하려면 `npm run dev -- --port 3000`으로 실행합니다.
+Vite 로컬 개발 주소는 `http://localhost:3000`입니다. `creator-web/package.json`의 개발 스크립트가 포트 `3000`을 사용하도록 고정되어 있습니다.
 
 ## 폴더 역할
 
