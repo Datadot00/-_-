@@ -1,59 +1,87 @@
 # 삼각대 파이널 프로젝트
 
-SeSAC 파이널 프로젝트 저장소입니다.
+SeSAC 파이널 프로젝트 **돈돼(Don Dwae)** 저장소입니다.
 
-## 프로젝트 소개
+## 현재 개발 기준
 
-**돈돼 (Don Dwae)** — 제품 피드백 & B-보팅 리워드 플랫폼
+돈돼는 서비스 유효성을 검증하기 위한 **데스크톱 웹 MVP**로 개발합니다.
 
-- **제작자 웹 (Desktop Web)**: 신규 프로덕트 등록, 피드백 현황 대시보드, B-보팅 테스트 관리, 코인마켓/환전소
-- **테스터 모바일 앱 (Mobile App)**: 피드백 설문 참여, B-보팅 선호도 투표, 코인 보상 획득 및 마이페이지
+- 실제 서비스 프론트엔드: `creator-web/`
+- 실제 서비스 진입 파일: `creator-web/index.html`
+- Vercel 배포 시 Root Directory: `creator-web`
+- 백엔드 예정: Supabase Auth, Database, Storage
+- 사용자 행동 분석 예정: GTM + GA4 웹 스트림
+- 코인과 결제: MVP 기간에는 실제 금전 거래가 없는 가상 기능
 
-## 실행 방법
+`tester-mobile/`과 `index(mode).html`은 기존 사용자 흐름을 확인하기 위한 참고용 프로토타입이며 실제 서비스 배포 대상이 아닙니다.
 
-### 1. 로컬 환경에서 바로 열기
-별도의 서버 설치 없이 브라우저에서 바로 HTML 파일을 실행할 수 있습니다:
-- **전체 통합 포털**: 루트의 `index.html` 더블 클릭
-- **제작자 웹 버전**: `creator-web/index.html`
-- **테스터 앱 버전**: `tester-mobile/index.html`
+## 현재 실행 방법
 
-### 2. GitHub Pages 배포 시
-저장소의 `Settings` > `Pages`에서 `Branch: main`, `Folder: / (root)`로 설정하면 즉시 웹 링크로 인터랙티브 프로토타입을 체험할 수 있습니다.
+Node.js를 설치한 뒤 `creator-web`에서 다음 명령을 실행합니다.
 
-## 폴더 구조
-
+```bash
+cd creator-web
+npm install
+npm run dev
 ```
+
+Vite 기본 주소는 `http://localhost:5173`입니다. 포트 `3000`을 사용하려면 `npm run dev -- --port 3000`으로 실행합니다.
+
+## 폴더 역할
+
+```text
 돈돼/
-├── index.html            # [통합 포털] 웹/모바일 선택 랜딩 페이지
-├── creator-web/          # [제작자 버전] 데스크톱 웹 프로토타입 (HTML & 이미지)
-├── tester-mobile/        # [테스터 버전] 모바일 앱 프로토타입 (HTML & 이미지)
-└── assets/               # 공통 로고 및 마스코트 이미지 리소스
+├── creator-web/          # 실제 서비스 루트 및 개발 기준 폴더
+│   └── index.html        # 실제 서비스 진입 파일
+├── tester-mobile/        # 모바일 플로우 참고용 프로토타입(배포 제외)
+├── index(mode).html      # 과거 웹/모바일 선택 포털(배포 제외)
+├── assets/               # 공통 이미지 리소스
+└── docs/                 # 설계 및 리서치 문서
 ```
 
-## 협업 규칙
+## 배포 기준
 
-### 브랜치
+Vercel 프로젝트를 연결할 때 다음 설정을 사용합니다.
 
-- `main` — 배포/제출용. **직접 push 금지**
-- 작업은 개인 브랜치에서 진행 후 PR로 병합
+| 설정 | 값 |
+|---|---|
+| Root Directory | `creator-web` |
+| Framework Preset | `Vite` |
+| Install Command | `npm install` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
 
-브랜치 이름 규칙:
+Vercel 프로젝트는 `don-dwae-web`이며 GitHub 저장소의 `main` 브랜치 Push를 자동 배포합니다.
 
-```
-feature/기능명
-fix/버그명
-```
+## main 브랜치 협업 규칙
 
-### 커밋 메시지
+현재 MVP 단계에서는 팀의 Git 사용 난도를 낮추기 위해 `main` 브랜치에서 작업합니다.
 
-```
+1. 작업 시작 전에 GitHub Desktop에서 `Fetch origin`과 `Pull origin`을 실행합니다.
+2. 팀 채팅에 수정할 파일과 작업 내용을 알립니다.
+3. 같은 파일은 한 번에 한 사람만 수정합니다.
+4. 하나의 작은 기능 단위로 Commit하고 Push합니다.
+5. Push 후 팀원에게 최신 `main`을 Pull하도록 알립니다.
+6. `git push --force` 또는 강제 Push는 사용하지 않습니다.
+
+특히 `creator-web/index.html`은 현재 화면과 JavaScript가 함께 있는 큰 파일이므로 동시 수정을 금지합니다. 파일이 모듈로 분리된 뒤에는 담당 파일을 나누어 작업합니다.
+
+## 커밋 메시지
+
+```text
 feat: 새 기능 추가
 fix: 버그 수정
 docs: 문서 수정
 refactor: 코드 구조 개선
 ```
 
-### 주의사항
+## 보안 주의사항
 
-- API 키, 비밀번호 등은 **절대 커밋하지 않습니다** (`.env` 사용)
-- 커밋 전 GitHub Desktop의 변경 파일 목록을 확인해 주세요
+- API Secret Key와 비밀번호는 절대 Git에 Commit하지 않습니다.
+- 브라우저에는 Supabase publishable key만 사용합니다.
+- Supabase secret/service role key는 프론트엔드 코드와 `VITE_` 환경변수에 넣지 않습니다.
+- `.env.local`, `node_modules`, `dist`는 Git에서 제외합니다.
+
+## 관련 문서
+
+- [데이터 파이프라인 설계 리서치](docs/data-pipeline-research.md)

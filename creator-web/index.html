@@ -3649,7 +3649,7 @@
   <!-- ========================================================
        INTERVIEWER MINI CONTROLLER (FLOATING VIEW SWITCHER)
   ======================================================== -->
-  <aside class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+  <aside id="interviewer-controller" hidden class="fixed bottom-6 right-6 z-50 flex-col items-end">
     <div id="switcher-panel"
       class="bg-white/95 backdrop-blur-md rounded-soft-lg shadow-float border border-neutral-border p-3.5 mb-2.5 w-72 transition-all duration-200 origin-bottom-right">
       <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-neutral-border/70">
@@ -5749,6 +5749,19 @@
       navigateTo('explore');
     }
 
+    // Interviewer controller is available only during local development.
+    function isInterviewerControllerEnabled(hostname = window.location.hostname) {
+      return ['localhost', '127.0.0.1', '::1'].includes(hostname);
+    }
+
+    function initializeInterviewerController() {
+      const controller = document.getElementById('interviewer-controller');
+      if (!controller || !isInterviewerControllerEnabled()) return;
+
+      controller.hidden = false;
+      controller.classList.add('flex');
+    }
+
     // Switcher Panel Control
     let isSwitcherOpen = true;
     function toggleSwitcherPanel() {
@@ -5763,6 +5776,7 @@
 
     // Hotkeys (1 ~ 7, C key)
     window.addEventListener('keydown', (e) => {
+      if (!isInterviewerControllerEnabled()) return;
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
 
       const keyMap = {
@@ -5785,6 +5799,7 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
+      initializeInterviewerController();
       updateAllCoinDisplays();
       updatePledgeModalUI();
       calculateTotalCost();
