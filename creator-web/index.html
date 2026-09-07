@@ -744,24 +744,18 @@
         <!-- Supabase Email Auth Form -->
         <form id="auth-form" class="w-full flex flex-col gap-4">
           <div>
-            <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">이메일</label>
-            <input id="auth-email-input" type="email" autocomplete="email" placeholder="name@example.com"
+            <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">아이디 또는 이메일</label>
+            <input id="auth-email-input" type="text" placeholder="아이디 또는 이메일을 입력하세요"
               class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
               required />
           </div>
 
           <div>
             <label for="auth-password-input" class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호</label>
-            <input id="auth-password-input" type="password" autocomplete="current-password" minlength="6"
-              placeholder="6자 이상 입력하세요"
+            <input id="auth-password-input" type="password" autocomplete="current-password"
+              placeholder="비밀번호를 입력하세요"
               class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
               required />
-          </div>
-
-          <div
-            class="p-3.5 rounded-xl bg-canvas-cream/60 border border-[#E9E4C2] flex flex-col gap-1 text-xs">
-            <span class="font-bold text-[#2F6517]">✉️ 처음 방문하셨나요?</span>
-            <span class="text-[11px] text-neutral-600">같은 이메일과 비밀번호를 입력한 뒤 회원가입을 누르면 인증 메일이 발송됩니다.</span>
           </div>
 
           <div id="auth-error-msg" role="alert" aria-live="assertive"
@@ -1586,54 +1580,160 @@
             </div>
 
             <!-- Sub Form 2: 투표 (A/B 테스트 vs 디자인 시안 vs 랜딩페이지) -->
-            <div id="sub-form-vote" class="flex flex-col gap-5 hidden">
-              <label class="block text-sm font-bold text-neutral-dark">
-                2-2. 투표 상세 유형 선택 <span class="text-red-500">*</span>
-              </label>
-              <div class="grid grid-cols-3 gap-3 text-center text-xs">
-                <button type="button" onclick="selectVoteSubOption('ab')" id="btn-vote-sub-ab"
-                  class="py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold">
-                  A/B 테스트
-                </button>
-                <button type="button" onclick="selectVoteSubOption('design')" id="btn-vote-sub-design"
-                  class="py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50">
-                  디자인 시안
-                </button>
-                <button type="button" onclick="selectVoteSubOption('landing')" id="btn-vote-sub-landing"
-                  class="py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50">
-                  랜딩페이지
-                </button>
+            <div id="sub-form-vote" class="flex flex-col gap-6 hidden">
+              <div class="flex flex-col gap-3">
+                <label class="block text-sm font-bold text-neutral-dark">
+                  2-2. 투표 상세 유형 선택 <span class="text-red-500">*</span>
+                </label>
+                <div class="grid grid-cols-3 gap-3 text-center text-xs">
+                  <button type="button" onclick="selectVoteSubOption('ab')" id="btn-vote-sub-ab"
+                    class="py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer">
+                    A/B 테스트
+                  </button>
+                  <button type="button" onclick="selectVoteSubOption('design')" id="btn-vote-sub-design"
+                    class="py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer">
+                    디자인 시안
+                  </button>
+                  <button type="button" onclick="selectVoteSubOption('landing')" id="btn-vote-sub-landing"
+                    class="py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer">
+                    랜딩페이지
+                  </button>
+                </div>
               </div>
 
-              <!-- A/B 테스트 세부 필드 -->
-              <div id="vote-ab-fields" class="flex flex-col gap-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                    <span class="text-xs font-extrabold text-primary-dark">A안 (이미지 업로드 또는 링크)</span>
-                    <input id="input-vote-a-link" type="text" placeholder="A안 이미지 URL 또는 설명"
-                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs" />
+              <!-- 1. 콘텐츠 입력 방식 선택 (이미지 업로드 vs URL 링크) -->
+              <div class="flex flex-col gap-2 bg-white p-4 rounded-xl border border-neutral-200">
+                <label class="block text-xs font-bold text-neutral-dark">
+                  1. 콘텐츠 입력 방식 선택 <span class="text-red-500">*</span>
+                </label>
+                <div class="grid grid-cols-2 gap-3 text-center text-xs">
+                  <button type="button" id="btn-vote-input-mode-image" onclick="setVoteInputMode('image')"
+                    class="py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>🖼️</span> <span>이미지 업로드</span>
+                  </button>
+                  <button type="button" id="btn-vote-input-mode-url" onclick="setVoteInputMode('url')"
+                    class="py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>🔗</span> <span>URL 링크</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 2. 콘텐츠 입력 필드 (하위유형 & 입력방식에 따른 동적 필드) -->
+              <div class="flex flex-col gap-3">
+                <label class="block text-xs font-bold text-neutral-dark">
+                  2. 콘텐츠 입력 <span class="text-red-500">*</span>
+                </label>
+
+                <!-- [하위유형 1: A/B 테스트] -->
+                <div id="vote-content-ab" class="flex flex-col gap-3">
+                  <!-- 이미지 모드: A안 / B안 파일 업로드 -->
+                  <div id="vote-ab-image-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                      <span class="text-xs font-extrabold text-primary-dark">A안 이미지 업로드</span>
+                      <input id="input-vote-ab-img-a" type="file" accept="image/*"
+                        class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
+                    </div>
+                    <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                      <span class="text-xs font-extrabold text-secondary-wine">B안 이미지 업로드</span>
+                      <input id="input-vote-ab-img-b" type="file" accept="image/*"
+                        class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
+                    </div>
                   </div>
-                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                    <span class="text-xs font-extrabold text-secondary-wine">B안 (이미지 업로드 또는 링크)</span>
-                    <input id="input-vote-b-link" type="text" placeholder="B안 이미지 URL 또는 설명"
-                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs" />
+
+                  <!-- URL 모드: A안 / B안 URL 입력 -->
+                  <div id="vote-ab-url-fields" class="flex flex-col gap-3 hidden">
+                    <div class="p-3 rounded-xl bg-blue-50/80 border border-blue-100 text-xs text-blue-800 font-medium">
+                      💡 사용자 여정을 추적하려면 URL을 권장해요.
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                        <span class="text-xs font-extrabold text-primary-dark">A안 URL 입력</span>
+                        <input id="input-vote-ab-url-a" type="url" placeholder="https://a-version.example.com"
+                          class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none" />
+                      </div>
+                      <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                        <span class="text-xs font-extrabold text-secondary-wine">B안 URL 입력</span>
+                        <input id="input-vote-ab-url-b" type="url" placeholder="https://b-version.example.com"
+                          class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- [하위유형 2: 디자인 시안] -->
+                <div id="vote-content-design" class="flex flex-col gap-3 hidden">
+                  <!-- 이미지 모드: 시안 이미지 다중 업로드 -->
+                  <div id="vote-design-image-fields" class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                    <span class="text-xs font-extrabold text-neutral-dark">시안 이미지 다중 업로드</span>
+                    <input id="input-vote-design-files" type="file" multiple accept="image/*"
+                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
+                    <p class="text-[11px] text-neutral-400">피드백받고 싶은 디자인 시안 이미지 파일들을 다중 선택해 주세요.</p>
+                  </div>
+
+                  <!-- URL 모드: 시안 URL 다중 추가 -->
+                  <div id="vote-design-url-fields" class="flex flex-col gap-3 hidden">
+                    <div id="vote-design-url-list" class="space-y-2.5">
+                      <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
+                        <span class="text-xs font-bold text-neutral-500 shrink-0">시안 1</span>
+                        <input type="url" placeholder="https://figma.com/file/... 또는 시안 URL"
+                          class="flex-1 text-xs font-medium focus:outline-none" />
+                        <button type="button" onclick="this.parentElement.remove()"
+                          class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+                      </div>
+                    </div>
+                    <button type="button" onclick="addVoteDesignUrlItem()"
+                      class="w-full py-2.5 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
+                      <span>+ 링크 추가</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- [하위유형 3: 랜딩페이지] -->
+                <div id="vote-content-landing" class="flex flex-col gap-3 hidden">
+                  <!-- 이미지 모드: 스크린샷 1장 업로드 -->
+                  <div id="vote-landing-image-fields" class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                    <span class="text-xs font-extrabold text-neutral-dark">페이지 스크린샷 업로드 (1장)</span>
+                    <input id="input-vote-landing-img" type="file" accept="image/*"
+                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
+                  </div>
+
+                  <!-- URL 모드: 페이지 URL 1개 입력 -->
+                  <div id="vote-landing-url-fields" class="flex flex-col gap-3 hidden">
+                    <div class="p-3 rounded-xl bg-blue-50/80 border border-blue-100 text-xs text-blue-800 font-medium">
+                      💡 실제 페이지 방문 데이터를 추적하려면 URL을 권장해요.
+                    </div>
+                    <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                      <span class="text-xs font-extrabold text-neutral-dark">랜딩페이지 URL 입력</span>
+                      <input id="input-vote-landing-url" type="url" placeholder="https://my-landing.example.com"
+                        class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none" />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- 디자인 시안 세부 필드 -->
-              <div id="vote-design-fields" class="flex flex-col gap-3 hidden">
-                <label class="block text-xs font-bold text-neutral-dark">시안 이미지 업로드 (여러 장 가능)</label>
-                <input id="input-vote-design-files" type="file" multiple accept="image/*"
-                  class="w-full p-3 rounded-xl border border-neutral-200 bg-white text-xs" />
-                <p class="text-[11px] text-neutral-400">피드백받고 싶은 디자인 시안 이미지 파일들을 다중 선택해 주세요.</p>
-              </div>
+              <!-- 3. 질문 입력 (콘텐츠 입력 방식과 무관하게 항상 동일한 UI) -->
+              <div class="flex flex-col gap-3 border-t border-neutral-200/80 pt-4">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-bold text-neutral-dark">
+                    3. 질문 입력 <span class="text-red-500">*</span>
+                  </label>
+                  <span class="text-[11px] text-neutral-400 font-normal">피드백받을 질문을 여러 개 등록할 수 있습니다.</span>
+                </div>
 
-              <!-- 랜딩페이지 세부 필드 -->
-              <div id="vote-landing-fields" class="flex flex-col gap-3 hidden">
-                <label class="block text-xs font-bold text-neutral-dark">페이지 URL</label>
-                <input id="input-vote-landing-url" type="url" placeholder="https://my-landing.io"
-                  class="w-full p-3 rounded-xl border border-neutral-200 bg-white text-xs" />
+                <div id="vote-questions-list" class="space-y-3">
+                  <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors">
+                    <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문 1</span>
+                    <input type="text" placeholder="예: 어떤 안이 더 좋아 보이나요? 왜 그렇게 생각하시나요?"
+                      class="flex-1 text-xs font-medium focus:outline-none" />
+                    <button type="button" onclick="this.parentElement.remove()"
+                      class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+                  </div>
+                </div>
+
+                <button type="button" onclick="addVoteQuestionItem()"
+                  class="w-full py-3 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
+                  <span>+ 질문 추가</span>
+                </button>
               </div>
             </div>
 
@@ -4794,23 +4894,101 @@
       if (appFields) appFields.style.display = platform === 'app' ? 'flex' : 'none';
     }
 
+    let currentVoteInputMode = 'image'; // 'image' | 'url'
+
     function selectVoteSubOption(opt) {
       currentVoteSubOption = opt;
       const abBtn = document.getElementById('btn-vote-sub-ab');
       const designBtn = document.getElementById('btn-vote-sub-design');
       const landingBtn = document.getElementById('btn-vote-sub-landing');
 
-      if (abBtn) abBtn.className = opt === 'ab' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50';
-      if (designBtn) designBtn.className = opt === 'design' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50';
-      if (landingBtn) landingBtn.className = opt === 'landing' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50';
+      if (abBtn) abBtn.className = opt === 'ab' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer';
+      if (designBtn) designBtn.className = opt === 'design' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer';
+      if (landingBtn) landingBtn.className = opt === 'landing' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer';
 
-      const fieldsAb = document.getElementById('vote-ab-fields');
-      const fieldsDesign = document.getElementById('vote-design-fields');
-      const fieldsLanding = document.getElementById('vote-landing-fields');
+      // Toggle containers for AB / Design / Landing
+      const contentAb = document.getElementById('vote-content-ab');
+      const contentDesign = document.getElementById('vote-content-design');
+      const contentLanding = document.getElementById('vote-content-landing');
 
-      if (fieldsAb) fieldsAb.style.display = opt === 'ab' ? 'flex' : 'none';
-      if (fieldsDesign) fieldsDesign.style.display = opt === 'design' ? 'flex' : 'none';
-      if (fieldsLanding) fieldsLanding.style.display = opt === 'landing' ? 'flex' : 'none';
+      if (contentAb) contentAb.style.display = opt === 'ab' ? 'flex' : 'none';
+      if (contentDesign) contentDesign.style.display = opt === 'design' ? 'flex' : 'none';
+      if (contentLanding) contentLanding.style.display = opt === 'landing' ? 'flex' : 'none';
+
+      updateVoteSubFieldsDisplay();
+    }
+
+    function setVoteInputMode(mode) {
+      currentVoteInputMode = mode;
+      const btnImage = document.getElementById('btn-vote-input-mode-image');
+      const btnUrl = document.getElementById('btn-vote-input-mode-url');
+
+      if (btnImage) btnImage.className = mode === 'image' ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5' : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
+      if (btnUrl) btnUrl.className = mode === 'url' ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5' : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
+
+      resetVoteInputs();
+      updateVoteSubFieldsDisplay();
+    }
+
+    function resetVoteInputs() {
+      // Reset text & file inputs in vote sub form when input mode toggles
+      const inputs = document.querySelectorAll('#sub-form-vote input[type="text"], #sub-form-vote input[type="url"], #sub-form-vote input[type="file"]');
+      inputs.forEach(inp => {
+        if (!inp.closest('#vote-questions-list')) {
+          inp.value = '';
+        }
+      });
+    }
+
+    function updateVoteSubFieldsDisplay() {
+      const mode = currentVoteInputMode;
+      const subOpt = currentVoteSubOption;
+
+      // AB
+      const abImg = document.getElementById('vote-ab-image-fields');
+      const abUrl = document.getElementById('vote-ab-url-fields');
+      if (abImg) abImg.style.display = (subOpt === 'ab' && mode === 'image') ? 'grid' : 'none';
+      if (abUrl) abUrl.style.display = (subOpt === 'ab' && mode === 'url') ? 'flex' : 'none';
+
+      // Design
+      const designImg = document.getElementById('vote-design-image-fields');
+      const designUrl = document.getElementById('vote-design-url-fields');
+      if (designImg) designImg.style.display = (subOpt === 'design' && mode === 'image') ? 'flex' : 'none';
+      if (designUrl) designUrl.style.display = (subOpt === 'design' && mode === 'url') ? 'flex' : 'none';
+
+      // Landing
+      const landingImg = document.getElementById('vote-landing-image-fields');
+      const landingUrl = document.getElementById('vote-landing-url-fields');
+      if (landingImg) landingImg.style.display = (subOpt === 'landing' && mode === 'image') ? 'flex' : 'none';
+      if (landingUrl) landingUrl.style.display = (subOpt === 'landing' && mode === 'url') ? 'flex' : 'none';
+    }
+
+    function addVoteDesignUrlItem() {
+      const list = document.getElementById('vote-design-url-list');
+      if (!list) return;
+      const count = list.children.length + 1;
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white animate-in fade-in duration-150';
+      div.innerHTML = `
+        <span class="text-xs font-bold text-neutral-500 shrink-0">시안 ${count}</span>
+        <input type="url" placeholder="https://figma.com/file/... 또는 시안 URL" class="flex-1 text-xs font-medium focus:outline-none" />
+        <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+      `;
+      list.appendChild(div);
+    }
+
+    function addVoteQuestionItem() {
+      const list = document.getElementById('vote-questions-list');
+      if (!list) return;
+      const count = list.children.length + 1;
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors animate-in fade-in duration-150';
+      div.innerHTML = `
+        <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문 ${count}</span>
+        <input type="text" placeholder="예: 어떤 안이 더 좋아 보이나요? 왜 그렇게 생각하시나요?" class="flex-1 text-xs font-medium focus:outline-none" />
+        <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+      `;
+      list.appendChild(div);
     }
 
     function toggleSurveySubMode(mode) {
@@ -5130,13 +5308,50 @@
         }
       } else if (currentMainCategory === 'vote') {
         testCategoryName = `투표 (${currentVoteSubOption.toUpperCase()})`;
+        const inputMode = currentVoteInputMode; // 'image' | 'url'
+        let contentData = [];
+
         if (currentVoteSubOption === 'ab') {
-          typeSpecificData = { voteType: 'ab', optionA: document.getElementById('input-vote-a-link')?.value || 'A안 시안', optionB: document.getElementById('input-vote-b-link')?.value || 'B안 시안' };
+          if (inputMode === 'image') {
+            contentData = ['A안 이미지 업로드 파일', 'B안 이미지 업로드 파일'];
+          } else {
+            const urlA = document.getElementById('input-vote-ab-url-a')?.value.trim() || 'https://a-version.example.com';
+            const urlB = document.getElementById('input-vote-ab-url-b')?.value.trim() || 'https://b-version.example.com';
+            contentData = [urlA, urlB];
+          }
         } else if (currentVoteSubOption === 'design') {
-          typeSpecificData = { voteType: 'design', images: '다중 디자인 시안 업로드됨' };
-        } else {
-          typeSpecificData = { voteType: 'landing', url: document.getElementById('input-vote-landing-url')?.value || 'https://my-landing.io' };
+          if (inputMode === 'image') {
+            contentData = ['다중 디자인 시안 이미지 업로드 파일들'];
+          } else {
+            const designUrlInputs = document.querySelectorAll('#vote-design-url-list input[type="url"]');
+            designUrlInputs.forEach(inp => { if (inp.value.trim()) contentData.push(inp.value.trim()); });
+            if (contentData.length === 0) contentData.push('https://figma.com/file/example-design');
+          }
+        } else if (currentVoteSubOption === 'landing') {
+          if (inputMode === 'image') {
+            contentData = ['랜딩페이지 1장 스크린샷 파일'];
+          } else {
+            const landingUrl = document.getElementById('input-vote-landing-url')?.value.trim() || 'https://my-landing.example.com';
+            contentData = [landingUrl];
+          }
         }
+
+        // Extract questions from reusable vote questions list
+        const voteQInputs = document.querySelectorAll('#vote-questions-list input[type="text"]');
+        const voteQuestions = [];
+        voteQInputs.forEach(inp => {
+          if (inp.value.trim()) voteQuestions.push(inp.value.trim());
+        });
+        if (voteQuestions.length === 0) {
+          voteQuestions.push('어떤 안이 더 좋아 보이나요? 왜 그렇게 생각하시나요?');
+        }
+
+        typeSpecificData = {
+          subType: currentVoteSubOption,
+          inputMode: inputMode,
+          content: contentData,
+          questions: voteQuestions
+        };
       } else if (currentMainCategory === 'survey') {
         const surveyMode = document.querySelector('input[name="surveySubMode"]:checked')?.value || 'link';
         testCategoryName = `설문조사 (${surveyMode === 'link' ? 'URL 링크형' : '직접 입력형'})`;

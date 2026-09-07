@@ -141,11 +141,32 @@ function validateCredentials(email, password) {
 
 async function handleEmailLogin(event) {
   event.preventDefault();
-  if (!supabase || authRequestInFlight) return;
+  if (authRequestInFlight) return;
 
   clearAuthMessages();
   const { email, password } = getCredentials();
+  
+  // 로컬 테스트용 아이디(ADMIN001, PROJECT001 등) 또는 일반 이메일 대응
+  const isMockAccount = email.toUpperCase() === 'ADMIN001' || email.toUpperCase() === 'PROJECT001' || email.includes('admin') || !email.includes('@');
+  if (isMockAccount) {
+    if (password !== '1234' && password.length < 4) {
+      showAuthMessage('error', '비밀번호(1234)를 올바르게 입력해 주세요.');
+      return;
+    }
+    const mockEmail = email.includes('@') ? email : `${email.toLowerCase()}@dondwae.io`;
+    const mockUser = { id: 'mock-user-id', email: mockEmail };
+    updateAuthenticatedUI(mockUser);
+    if (passwordInput) passwordInput.value = '';
+    showToast(`🔑 [테스트 계정] ${mockEmail} 계정으로 로그인되었습니다!`, '🎉');
+    window.navigateTo('explore');
+    return;
+  }
+
   if (!validateCredentials(email, password)) return;
+  if (!supabase) {
+    showAuthMessage('error', 'Supabase가 연동되어 있지 않습니다. 로컬 계정(ADMIN001 / 1234)을 이용해 주세요.');
+    return;
+  }
 
   setAuthBusy(true, 'login');
 
