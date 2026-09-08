@@ -497,9 +497,10 @@
           결과 대시보드에서 리뷰 작성 시 <strong id="part-external-reward-text" class="text-[#7E22CE]">동전</strong>이 최종 지급됩니다.
         </div>
 
-        <button type="button" onclick="closeTestParticipateModal()"
-          class="w-full py-3.5 px-4 rounded-xl bg-neutral-dark hover:bg-neutral-800 text-white font-extrabold text-sm transition-all cursor-pointer">
-          확인 (모달 닫기)
+        <button type="button" onclick="openFeedbackWriteModal()"
+          class="w-full py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span>✍️ 피드백 작성하러 가기</span>
+          <span>→</span>
         </button>
       </div>
 
@@ -521,6 +522,55 @@
         <button type="button" onclick="completeInternalTestFlow()"
           class="w-full py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
           <span>✓ 검증 완료하고 리워드 수령하기</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
+       DYNAMIC FEEDBACK SUBMISSION MODAL (테스트 유형별 피드백 작성 모달)
+  ======================================================== -->
+  <div id="write-feedback-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-neutral-dark/60 backdrop-blur-xs hidden transition-all duration-200">
+    <div
+      class="w-full max-w-[620px] mx-4 bg-white rounded-[24px] border border-neutral-border shadow-float p-6 sm:p-8 flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200 relative max-h-[90vh] overflow-y-auto">
+
+      <!-- Close (X) Button -->
+      <button type="button" onclick="closeFeedbackWriteModal()"
+        class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-colors text-sm cursor-pointer"
+        title="닫기">
+        ✕
+      </button>
+
+      <!-- Header -->
+      <div class="border-b border-neutral-100 pb-4">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span id="fb-modal-badge" class="text-xs font-bold text-primary-dark bg-[#EBF7E2] px-2.5 py-0.5 rounded-full border border-[#D5EA9F]">
+            📱 프로덕트 테스트 피드백
+          </span>
+          <span id="fb-modal-reward" class="text-xs font-bold text-[#7E22CE] bg-purple-50 px-2.5 py-0.5 rounded-full">
+            🪙 +600 동전 지급
+          </span>
+        </div>
+        <h3 id="fb-modal-title" class="text-xl font-extrabold text-neutral-dark">가계부 앱 베타테스트 피드백 작성</h3>
+        <p class="text-xs text-neutral-500 mt-1">테스트 경험을 솔직하게 남겨주시면 제작자에게 큰 도움이 됩니다.</p>
+      </div>
+
+      <!-- Dynamic Body Form Container -->
+      <div id="fb-modal-dynamic-body" class="flex flex-col gap-5">
+        <!-- Rendered via JS according to test type -->
+      </div>
+
+      <!-- Footer Action -->
+      <div class="pt-2 border-t border-neutral-100 flex items-center justify-end gap-3">
+        <button type="button" onclick="closeFeedbackWriteModal()"
+          class="px-5 py-3 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">
+          나중에 작성
+        </button>
+        <button type="button" onclick="submitFeedbackForm()"
+          class="px-6 py-3 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span>✓ 피드백 제출하고 리워드 받기</span>
         </button>
       </div>
 
@@ -6106,6 +6156,256 @@
       showGenericToast(`🎉 검증 제출 완료! +${reward} 동전이 지급되었습니다.${countNotice}`, '🪙');
 
       // 마이페이지 리뷰 작성으로 이동
+      navigateTo('feedback');
+    }
+
+    // ========================================================
+    // TEST TYPE FEEDBACK SUBMISSION MODAL LOGIC
+    // ========================================================
+    function openFeedbackWriteModal(postId) {
+      closeTestParticipateModal();
+
+      const pId = postId || currentParticipatingPostId || currentPostId || 'moneylog';
+      const postsMap = typeof testPosts !== 'undefined' ? testPosts : {};
+      const post = postsMap[pId] || {
+        title: pId === 'prototype' ? '온보딩 UI 시안 A/B 투표' : '스마트 가계부 머니로그 테스트',
+        type: pId === 'prototype' ? 'Vote' : 'Product',
+        reward: pId === 'prototype' ? 350 : 600
+      };
+
+      const modal = document.getElementById('write-feedback-modal');
+      const badge = document.getElementById('fb-modal-badge');
+      const reward = document.getElementById('fb-modal-reward');
+      const title = document.getElementById('fb-modal-title');
+      const body = document.getElementById('fb-modal-dynamic-body');
+
+      if (!modal || !body) return;
+
+      const typeMap = {
+        'Product': '📱 프로덕트 테스트',
+        'Vote': '🗳️ 투표 테스트',
+        'Survey': '📋 설문조사'
+      };
+
+      if (badge) badge.textContent = `${typeMap[post.type] || '📱 프로덕트 테스트'} 피드백`;
+      if (reward) reward.textContent = `🪙 +${post.reward || 600} 동전 지급`;
+      if (title) title.textContent = `${post.title} 피드백 작성`;
+
+      // Render content based on test type
+      renderFeedbackFormByTestType(post.type || 'Product', body);
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeFeedbackWriteModal() {
+      const modal = document.getElementById('write-feedback-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderFeedbackFormByTestType(testType, container) {
+      if (testType === 'Vote') {
+        container.innerHTML = `
+          <!-- 별점 평가 -->
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold text-neutral-800">1. 시안 디자인 만족도 (별점)</label>
+            <div class="flex items-center gap-2 text-2xl text-amber-400 cursor-pointer select-none" id="star-rating-box">
+              <span onclick="setFeedbackStar(1)">★</span>
+              <span onclick="setFeedbackStar(2)">★</span>
+              <span onclick="setFeedbackStar(3)">★</span>
+              <span onclick="setFeedbackStar(4)">★</span>
+              <span onclick="setFeedbackStar(5)">★</span>
+              <span class="text-xs font-bold text-neutral-500 ml-2" id="star-rating-val">5.0 / 5.0</span>
+            </div>
+          </div>
+
+          <!-- 투표 선택 이유 -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-neutral-800">2. 선호하는 시안 및 선택 이유 <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-2 gap-2.5 mb-1">
+              <label class="p-3 border-2 border-primary bg-primary/5 rounded-xl flex items-center gap-2 text-xs font-bold text-primary-dark cursor-pointer">
+                <input type="radio" name="fb-vote-opt" value="A" checked class="accent-[#2F6517]">
+                <span>A안 (그리드 레이아웃)</span>
+              </label>
+              <label class="p-3 border border-neutral-200 bg-white rounded-xl flex items-center gap-2 text-xs font-bold text-neutral-700 cursor-pointer hover:border-neutral-300">
+                <input type="radio" name="fb-vote-opt" value="B" class="accent-[#2F6517]">
+                <span>B안 (스크롤 리스트)</span>
+              </label>
+            </div>
+            <textarea rows="3" placeholder="선택하신 이유 및 더 인상 깊었던 점을 작성해 주세요 (최소 10자)" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
+          </div>
+
+          <!-- 개선 피드백 -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-neutral-800">3. 추가 개선 제안 (선택)</label>
+            <textarea rows="2" placeholder="색상, 버튼 위치, 텍스트 가독성 등 추가 피드백이 있다면 남겨주세요" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
+          </div>
+        `;
+      } else if (testType === 'Survey') {
+        container.innerHTML = `
+          <!-- 설문 문항 응답 -->
+          <div class="flex flex-col gap-4">
+            <div class="p-4 bg-neutral-50 rounded-xl border border-neutral-200 flex flex-col gap-2">
+              <span class="text-xs font-extrabold text-neutral-800">Q1. 해당 서비스를 일주일에 얼마나 자주 이용하시나요?</span>
+              <div class="flex flex-wrap gap-2 text-xs">
+                <label class="px-3 py-2 border bg-white rounded-lg flex items-center gap-1.5 cursor-pointer">
+                  <input type="radio" name="fb-surv-q1" value="daily" checked class="accent-[#2F6517]"> 매일
+                </label>
+                <label class="px-3 py-2 border bg-white rounded-lg flex items-center gap-1.5 cursor-pointer">
+                  <input type="radio" name="fb-surv-q1" value="weekly" class="accent-[#2F6517]"> 주 2-3회
+                </label>
+                <label class="px-3 py-2 border bg-white rounded-lg flex items-center gap-1.5 cursor-pointer">
+                  <input type="radio" name="fb-surv-q1" value="monthly" class="accent-[#2F6517]"> 월 1-2회
+                </label>
+              </div>
+            </div>
+
+            <div class="p-4 bg-neutral-50 rounded-xl border border-neutral-200 flex flex-col gap-2">
+              <span class="text-xs font-extrabold text-neutral-800">Q2. 서비스 사용 시 가장 중요하게 생각하는 요소는?</span>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <label class="px-3 py-2 border bg-white rounded-lg flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" checked class="accent-[#2F6517]"> 빠른 처리 속도
+                </label>
+                <label class="px-3 py-2 border bg-white rounded-lg flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" class="accent-[#2F6517]"> 직관적인 디자인
+                </label>
+                <label class="px-3 py-2 border bg-white rounded-lg flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" checked class="accent-[#2F6517]"> 데이터 정확도
+                </label>
+                <label class="px-3 py-2 border bg-white rounded-lg flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" class="accent-[#2F6517]"> 알림 서비스
+                </label>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-neutral-800">Q3. 제작자에게 전하고 싶은 종합 의견 <span class="text-red-500">*</span></label>
+              <textarea rows="3" placeholder="서비스에 대한 솔직한 주관식 답변을 남겨주세요" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
+            </div>
+          </div>
+        `;
+      } else {
+        // Default: Product Test (웹/앱 실구동 테스트)
+        container.innerHTML = `
+          <!-- 별점 평가 -->
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold text-neutral-800">1. 프로덕트 종합 만족도 (별점) <span class="text-red-500">*</span></label>
+            <div class="flex items-center gap-2 text-2xl text-amber-400 cursor-pointer select-none" id="star-rating-box">
+              <span onclick="setFeedbackStar(1)">★</span>
+              <span onclick="setFeedbackStar(2)">★</span>
+              <span onclick="setFeedbackStar(3)">★</span>
+              <span onclick="setFeedbackStar(4)">★</span>
+              <span onclick="setFeedbackStar(5)">★</span>
+              <span class="text-xs font-bold text-neutral-500 ml-2" id="star-rating-val">5.0 / 5.0</span>
+            </div>
+          </div>
+
+          <!-- 검증 체크리스트 & 객관식 검증 문항 수행 -->
+          <div class="flex flex-col gap-3">
+            <label class="text-xs font-bold text-neutral-800 flex items-center justify-between">
+              <span>2. 테스트 미션 검증 문항 <span class="text-red-500">*</span></span>
+              <span class="text-[11px] font-normal text-neutral-400">제작자가 지정한 실제 구동 확인 질문입니다</span>
+            </label>
+            
+            <div class="space-y-3 bg-[#FAFBF7] p-4 rounded-xl border border-[#E9EEDC] text-xs">
+              <!-- 문항 1: 객관식 선택형 -->
+              <div class="p-3 bg-white rounded-lg border border-[#E2E8D5] flex flex-col gap-2">
+                <span class="font-extrabold text-neutral-800">Q1. 영수증 OCR 촬영 후 자동 입력된 상호명 인식 정확도는 어땠나요?</span>
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                  <label class="p-2 border border-primary bg-primary/5 rounded-md flex items-center gap-1.5 cursor-pointer font-semibold text-primary-dark">
+                    <input type="radio" name="fb-product-q1" value="very_accurate" checked class="accent-[#2F6517]"> 100% 정확하게 인식됨
+                  </label>
+                  <label class="p-2 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
+                    <input type="radio" name="fb-product-q1" value="minor_error" class="accent-[#2F6517]"> 오타가 1~2개 발생함
+                  </label>
+                  <label class="p-2 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
+                    <input type="radio" name="fb-product-q1" value="failed" class="accent-[#2F6517]"> 인식에 실패함
+                  </label>
+                  <label class="p-2 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
+                    <input type="radio" name="fb-product-q1" value="not_tested" class="accent-[#2F6517]"> 영수증 기능을 안 써봄
+                  </label>
+                </div>
+              </div>
+
+              <!-- 문항 2: 객관식 선택형 -->
+              <div class="p-3 bg-white rounded-lg border border-[#E2E8D5] flex flex-col gap-2">
+                <span class="font-extrabold text-neutral-800">Q2. 지출 카테고리별 차트 화면 진입 속도는 어떠셨나요?</span>
+                <div class="flex flex-wrap gap-2 text-[11px]">
+                  <label class="px-3 py-1.5 border border-primary bg-primary/5 rounded-md flex items-center gap-1.5 cursor-pointer font-semibold text-primary-dark">
+                    <input type="radio" name="fb-product-q2" value="fast" checked class="accent-[#2F6517]"> 1초 미만 (매우 쾌적)
+                  </label>
+                  <label class="px-3 py-1.5 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
+                    <input type="radio" name="fb-product-q2" value="normal" class="accent-[#2F6517]"> 2~3초 (보통)
+                  </label>
+                  <label class="px-3 py-1.5 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
+                    <input type="radio" name="fb-product-q2" value="slow" class="accent-[#2F6517]"> 5초 이상 (답답함/로딩 렉)
+                  </label>
+                </div>
+              </div>
+
+              <!-- 문항 3: 체크박스 최종 확인 -->
+              <label class="flex items-center justify-between p-2.5 bg-white rounded-lg border border-[#E2E8D5] text-neutral-800 font-medium cursor-pointer">
+                <span>✓ 카테고리별 예산 알림 푸시 수신 여부 확인</span>
+                <input type="checkbox" checked class="w-4 h-4 accent-[#2F6517]">
+              </label>
+            </div>
+          </div>
+
+          <!-- 상세 리뷰 작성 -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-neutral-800">3. 사용 후기 및 버그/개선점 서술 <span class="text-red-500">*</span></label>
+            <textarea rows="4" placeholder="실제 서비스를 체험하시면서 느낀 좋았던 점, 버그, 아쉬운 UX 등을 구체적으로 남겨주세요 (최소 20자 이상)" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary leading-relaxed"></textarea>
+          </div>
+
+          <!-- 캡처 이미지 첨부 (선택) -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-neutral-800">4. 화면 스크린샷 첨부 (선택)</label>
+            <div class="border-2 border-dashed border-neutral-200 rounded-xl p-4 text-center bg-neutral-50/50 hover:bg-neutral-50 transition-colors cursor-pointer flex flex-col items-center gap-1">
+              <span class="text-xl">📸</span>
+              <span class="text-xs font-semibold text-neutral-600">오류 화면 또는 캡처 이미지를 드래그하거나 클릭하여 첨부하세요</span>
+              <span class="text-[11px] text-neutral-400">(PNG, JPG 최대 10MB)</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    let selectedFeedbackStarCount = 5;
+    function setFeedbackStar(count) {
+      selectedFeedbackStarCount = count;
+      const box = document.getElementById('star-rating-box');
+      const valText = document.getElementById('star-rating-val');
+      if (!box) return;
+
+      const stars = box.querySelectorAll('span');
+      stars.forEach((star, idx) => {
+        if (idx < 5) {
+          star.className = idx < count ? 'text-amber-400' : 'text-neutral-300';
+        }
+      });
+      if (valText) valText.textContent = `${count}.0 / 5.0`;
+    }
+
+    function submitFeedbackForm() {
+      const pId = currentParticipatingPostId || currentPostId || 'moneylog';
+      const postsMap = typeof testPosts !== 'undefined' ? testPosts : {};
+      const post = postsMap[pId] || { reward: pId === 'prototype' ? 350 : 600 };
+      const reward = post.reward || 600;
+
+      // Reward & Participation status update
+      userCoinBalance += reward;
+      updateAllCoinDisplays();
+      updatePledgeModalUI();
+
+      closeFeedbackWriteModal();
+
+      const count = getCompletedTestCount();
+      const countNotice = count >= 3
+        ? ` 🎉 [내 테스트 등록 자격 충족!] (총 ${count}회 완료)`
+        : ` (내 테스트 등록 조건 달성률: ${count}/3회 완료)`;
+
+      showGenericToast(`🎉 피드백 제출 완료! +${reward} 동전이 지급되었습니다.${countNotice}`, '🪙');
+
+      // Navigate to MyPage feedback section
       navigateTo('feedback');
     }
 
