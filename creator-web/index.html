@@ -1285,11 +1285,6 @@
         </div>
 
         <div class="flex items-center gap-3.5 pl-6">
-          <button onclick="openPledgeModal()"
-            class="hidden lg:flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-neutral-dark font-extrabold text-xs shadow-xs hover:bg-primary-hover active:scale-95 transition-all border border-primary-dark/20 cursor-pointer">
-            <span>+ 프로젝트 등록하기</span>
-          </button>
-
           <div
             class="flex items-center gap-1.5 bg-canvas-cream border border-[#E9E4C2] px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-[#F2EECA] transition-colors"
             title="보유 동전">
@@ -1314,365 +1309,529 @@
         </div>
       </header>
 
-      <main class="p-8 max-w-[1240px] flex flex-col gap-7">
-        <section
-          class="w-full bg-[#F4F6EC] border border-[#E4EAD3] rounded-2xl p-8 relative overflow-hidden flex items-center justify-between">
-          <div class="max-w-xl z-10">
-            <div id="dashboard-qualification-badge"
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/30 border border-secondary/50 text-[#8A2B43] text-xs font-bold mb-3">
-              <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-              게시 자격 진행 중 (다른 서비스 테스트 0/3 완료)
+      <main class="p-8 max-w-[1280px] w-full mx-auto flex flex-col gap-8">
+        
+        <!-- Top Hero Section: Greeting Banner (Left 70%) & Real-time Popular Users (Right 30%) -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          
+          <!-- Left Banner (안녕하세요, OOO님! 👋) -->
+          <div class="lg:col-span-8 bg-white border border-[#E5E7EB] rounded-[28px] p-8 relative overflow-hidden shadow-subtle flex flex-col justify-between min-h-[220px]">
+            <div class="max-w-[420px] z-10 flex flex-col justify-center h-full">
+              <h2 class="text-2xl sm:text-3xl font-black text-neutral-dark mb-3 flex items-center gap-2 tracking-tight">
+                안녕하세요, OOO님! 👋
+              </h2>
+              <p class="text-xs sm:text-sm text-neutral-500 font-medium leading-relaxed mb-6">
+                오늘도 새로운 프로덕트를 발견하고 생생한 피드백을 남겨 돼지 코인을 차곡차곡 적립해보세요!<br>
+                티끌모아 내 집 마련!! 가즈아..!!
+              </p>
+              
+              <div class="flex items-center gap-3">
+                <button type="button" onclick="navigateToMypageSection('mypage-market-section', 'coins')"
+                  class="px-5 py-3 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-extrabold text-xs shadow-sm transition-all flex items-center gap-2">
+                  <span>돼코상점 둘러보기</span>
+                  <span class="text-sm">🪙</span>
+                </button>
+                <button type="button" onclick="alert('피드백 작성 가이드 문서를 확인합니다.')"
+                  class="px-4 py-3 text-neutral-600 hover:text-neutral-900 font-bold text-xs transition-colors flex items-center gap-1">
+                  <span>피드백 작성 가이드</span>
+                  <span>→</span>
+                </button>
+              </div>
             </div>
-            <h2 class="text-2xl font-bold text-neutral-dark mb-2 flex items-center gap-2">
-              안녕하세요, 테스터님! 👋
-            </h2>
-            <p class="text-sm text-neutral-muted leading-relaxed">
-              다른 사람 서비스를 3번 테스트하고, 내 서비스 검증을 시작하세요!<br>
-              오늘도 새로운 프로덕트를 발견하고 리워드를 받아보세요.
-            </p>
+
+            <!-- Mascot Illustration on Right side of Banner -->
+            <div class="absolute right-6 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center w-48 h-48 pointer-events-none">
+              <img src="../mascot-hungry.png" alt="열정 돼지 마스코트" class="w-40 h-40 object-contain hover:scale-105 transition-transform duration-300"
+                onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
+            </div>
           </div>
 
-          <div
-            class="hidden sm:flex bg-white/70 backdrop-blur-xs border border-[#E3E8CF] rounded-2xl p-3 shadow-xs items-center justify-center">
-            <img src="../mascot-hungry.png" alt="마스코트 패니" class="w-24 h-24 object-contain"
-              onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
+          <!-- Right Sidebar: 실시간 인기 유저 (Real-time Popular Users Widget) -->
+          <div class="lg:col-span-4 bg-white border border-[#E5E7EB] rounded-[28px] p-6 shadow-subtle flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-base">🔥</span>
+                  <h3 class="text-sm font-black text-neutral-dark tracking-tight">실시간 인기 유저</h3>
+                </div>
+                <span class="text-[10px] text-neutral-400 font-semibold">이번 주 누적</span>
+              </div>
+
+              <!-- Popular Users Ranking List -->
+              <div class="flex flex-col gap-3">
+                
+                <!-- Rank 1 -->
+                <div class="flex items-center justify-between text-xs py-1">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-extrabold text-amber-500 w-3 text-center text-xs">1</span>
+                    <div class="w-6 h-6 rounded-full bg-[#E5D7B7] text-[#5C4A21] font-bold text-[10px] flex items-center justify-center">민</div>
+                    <span class="font-bold text-neutral-dark">민트코기</span>
+                    <span class="px-1.5 py-0.2 rounded bg-amber-100 text-[#785412] text-[9px] font-bold">다이아</span>
+                  </div>
+                  <span class="font-extrabold text-[#2F6517] text-xs">14,200 C</span>
+                </div>
+
+                <!-- Rank 2 -->
+                <div class="flex items-center justify-between text-xs py-1">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">2</span>
+                    <div class="w-6 h-6 rounded-full bg-[#D1D9E0] text-[#334155] font-bold text-[10px] flex items-center justify-center">진</div>
+                    <span class="font-semibold text-neutral-800">진심피드백러</span>
+                    <span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[9px] font-bold">플래티넘</span>
+                  </div>
+                  <span class="font-extrabold text-[#2F6517] text-xs">11,500 C</span>
+                </div>
+
+                <!-- Rank 3 -->
+                <div class="flex items-center justify-between text-xs py-1">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">3</span>
+                    <div class="w-6 h-6 rounded-full bg-[#E8CDB5] text-[#633A18] font-bold text-[10px] flex items-center justify-center">도</div>
+                    <span class="font-semibold text-neutral-800">도토리탐험가</span>
+                    <span class="px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 text-[9px] font-bold">골드</span>
+                  </div>
+                  <span class="font-extrabold text-[#2F6517] text-xs">8,900 C</span>
+                </div>
+
+                <!-- Rank 4 -->
+                <div class="flex items-center justify-between text-xs py-1">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">4</span>
+                    <div class="w-6 h-6 rounded-full bg-[#D4E2C7] text-[#2C4F16] font-bold text-[10px] flex items-center justify-center">준</div>
+                    <span class="font-medium text-neutral-700">준비된기획자</span>
+                  </div>
+                  <span class="font-bold text-neutral-600 text-xs">6,400 C</span>
+                </div>
+
+                <!-- Rank 5 -->
+                <div class="flex items-center justify-between text-xs py-1">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">5</span>
+                    <div class="w-6 h-6 rounded-full bg-[#E2E8F0] text-[#475569] font-bold text-[10px] flex items-center justify-center">헤</div>
+                    <span class="font-medium text-neutral-700">헤이프로덕트</span>
+                  </div>
+                  <span class="font-bold text-neutral-600 text-xs">5,850 C</span>
+                </div>
+
+              </div>
+            </div>
           </div>
+
         </section>
 
-        <!-- Filter Category Tabs -->
-        <section class="flex items-center gap-2.5 overflow-x-auto pb-1 text-[13px] font-semibold" id="feed-filter-bar">
+        <!-- Section Title: ⚡ 마감 임박! 지금 5분 만에 동전 벌기 -->
+        <div class="flex items-center justify-between pt-2">
+          <div class="flex items-center gap-2">
+            <span class="text-base">⚡</span>
+            <h3 class="text-base sm:text-lg font-black text-neutral-dark tracking-tight">마감 임박! 지금 5분 만에 동전 벌기</h3>
+            <span class="text-xs text-neutral-400 font-medium ml-1">참여 즉시 지갑으로 코인 지급</span>
+          </div>
+        </div>
+
+        <!-- Filter Category Tabs (Reference: 전체 큐레이션, 프로덕트 테스트, 프로토타입 검증, A/B 투표, 랜딩페이지) -->
+        <section class="flex items-center gap-2 overflow-x-auto pb-1 text-[13px] font-semibold" id="feed-filter-bar">
           <button onclick="filterFeed('all', this)"
-            class="feed-filter-btn px-5 py-2.5 rounded-full bg-[#191A1C] text-white shadow-xs shrink-0 transition-all font-semibold text-[13px] flex items-center gap-1.5">
-            전체
+            class="feed-filter-btn px-4 py-2 rounded-full bg-[#18181B] text-white shadow-2xs shrink-0 transition-all font-bold text-xs flex items-center gap-1.5">
+            전체 큐레이션
           </button>
           <button onclick="filterFeed('product', this)"
-            class="feed-filter-btn px-4 py-2.5 rounded-full bg-white border border-[#E4E4E7] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-[13px]">
+            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
             <span>📱</span> 프로덕트 테스트
           </button>
           <button onclick="filterFeed('prototype', this)"
-            class="feed-filter-btn px-4 py-2.5 rounded-full bg-white border border-[#E4E4E7] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-[13px]">
+            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
             <span>🎨</span> 프로토타입 검증
           </button>
           <button onclick="filterFeed('abtest', this)"
-            class="feed-filter-btn px-4 py-2.5 rounded-full bg-white border border-[#E4E4E7] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-[13px]">
+            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
             <span>⚖️</span> A/B 투표
           </button>
           <button onclick="filterFeed('landing', this)"
-            class="feed-filter-btn px-4 py-2.5 rounded-full bg-white border border-[#E4E4E7] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-[13px]">
+            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
             <span>📄</span> 랜딩페이지
-          </button>
-          <button onclick="filterFeed('reward', this)"
-            class="feed-filter-btn px-4 py-2.5 rounded-full bg-white border border-[#E4E4E7] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-[13px]">
-            <span>💰</span> 높은 보상순
           </button>
         </section>
 
-        <!-- 3-Column Card Grid (New Card prepends here) -->
-        <section id="dashboard-cards-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 3-Column Card Grid (6 Cards based 1:1 on user reference image) -->
+        <section id="dashboard-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          <!-- Card 1: AI 기반 하루 일기 웹앱 (A/B 투표) -->
-          <article data-category="abtest" data-reward="200" data-card-id="diary" onclick="openPostDetail('diary')"
+          <!-- Card 1: AI 기반 하루 일기 웹앱 써보시고 UX 피드백 남겨주세요 -->
+          <article data-category="abtest" data-reward="5" data-card-id="diary" onclick="openPostDetail('diary')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
+            
             <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
-              <div
-                class="w-full h-44 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col gap-2">
-                <div
-                  class="flex items-center justify-between border-b border-neutral-100 pb-1.5 text-[10px] text-neutral-muted">
-                  <span class="font-bold text-neutral-dark">오늘의 일기 AI 분석</span>
-                  <span class="text-primary-dark font-medium">감정 점수: 85%</span>
+              <!-- Thumbnail Banner -->
+              <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                  <span class="font-bold text-neutral-700">AI 일기분석 UI</span>
+                  <span class="text-blue-600 font-bold">A/B 안</span>
                 </div>
-                <div class="grid grid-cols-3 gap-1.5 text-[9px] text-neutral-500">
-                  <div class="bg-[#F8FAFC] p-1.5 rounded border border-neutral-100">긍정 65%</div>
-                  <div class="bg-[#F8FAFC] p-1.5 rounded border border-neutral-100">안정 25%</div>
-                  <div class="bg-[#F8FAFC] p-1.5 rounded border border-neutral-100">피로 10%</div>
-                </div>
-                <div
-                  class="flex-1 bg-gradient-to-br from-blue-50/60 to-purple-50/60 rounded p-2 flex items-center justify-center">
-                  <span class="text-[11px] font-semibold text-blue-800">UI/UX 레이아웃 피드백</span>
+                <div class="flex items-center justify-center flex-1 bg-blue-50/50 rounded my-1 text-center">
+                  <span class="text-xs font-bold text-blue-900">감정 통계 대시보드 비교</span>
                 </div>
               </div>
 
-              <div class="absolute top-5 left-5 flex items-center gap-1.5">
-                <span class="px-2.5 py-1 rounded-md bg-[#FCE7F3] text-[#BE185D] text-[11px] font-bold">
-                  [A/B 투표] 약 3분 소요
+              <!-- Top Left Tag & Reward Badge -->
+              <div class="absolute top-5 left-5 flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
+                  A/B 투표 · 30초
+                </span>
+                <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
+                  <span>🪙</span> +5 C
                 </span>
               </div>
 
-              <div class="absolute top-5 right-5 flex items-center gap-2">
-                <span
-                  class="px-2.5 py-1 rounded-full bg-primary text-[#1F450B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                  <span>🪙</span> +200 동전
-                </span>
+              <!-- Bookmark Flag Button -->
+              <button type="button" onclick="toggleBookmark(event, this)"
+                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                title="스크랩 저장">
+                <span>🔖</span>
+              </button>
+            </div>
 
-                <!-- Bookmark Scrap Flag Button -->
-                <button type="button" onclick="toggleBookmark(event, this)"
-                  class="bookmark-flag-btn w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-primary-dark flex items-center justify-center shadow-xs transition-all border border-neutral-200"
-                  title="프로젝트 스크랩 저장">
-                  <svg class="w-4 h-4 flag-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                  </svg>
-                </button>
+            <div class="p-5 flex flex-col flex-1 justify-between gap-4">
+              <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
+                AI 기반 하루 일기 웹앱 써보시고 UX 피드백 남겨주세요
+              </h3>
+
+              <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">● 12명 남음</span>
+                  <span class="text-neutral-400 text-[11px]">(18/30 모집)</span>
+                </div>
+                <span class="text-neutral-400 text-[11px]">⏱ 30초 소요</span>
               </div>
             </div>
 
-            <div class="p-5 flex flex-col flex-1 justify-between">
-              <div>
-                <h3
-                  class="text-[16px] font-bold text-neutral-dark mb-2 line-clamp-1 group-hover:text-primary-dark transition-colors">
-                  AI 기반 하루 일기 웹앱 써보시고 UX 피드백 남겨주
-                </h3>
-                <div class="flex items-center gap-2 text-xs text-neutral-muted mb-4 font-normal">
-                  <span>#Cursor</span>
-                  <span>#Next.js</span>
-                  <span>#v0</span>
-                </div>
-              </div>
-              <div>
-                <div class="flex items-center justify-between text-xs font-semibold text-neutral-dark mb-1.5">
-                  <span>모집률 18/30명</span>
-                  <span class="text-neutral-muted">60%</span>
-                </div>
-                <div class="w-full h-2 bg-[#F4F4F5] rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full" style="width: 60%;"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="px-5 py-3.5 border-t border-[#F4F4F5] flex items-center justify-between text-xs">
+            <div class="px-5 py-3 bg-[#FAFBF7] border-t border-[#E5E7EB] flex items-center justify-between text-xs">
               <div class="flex items-center gap-2">
-                <div class="w-5 h-5 rounded-full bg-pink-100 flex items-center justify-center text-[10px]">🐹</div>
-                <span class="font-medium text-neutral-dark">인디해커_K</span>
+                <div class="w-5 h-5 rounded-full bg-pink-100 text-[10px] flex items-center justify-center">🐷</div>
+                <span class="font-medium text-neutral-700">날씬한돼지저금통</span>
               </div>
-              <span class="font-bold text-[#E11D48]">3일 남음</span>
+              <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
+                <span>🔖 48</span>
+                <span class="font-bold text-red-500">3일 남음</span>
+              </div>
             </div>
           </article>
 
-          <!-- Card 2: 가계부 앱 베타테스터 모집 (프로덕트 테스트) -->
-          <article data-category="product" data-reward="500" data-card-id="moneylog"
-            onclick="openPostDetail('moneylog')"
+          <!-- Card 2: 가계부 앱 베타테스터 모집 - 새로운 디자인 어떠신가요? -->
+          <article data-category="product" data-reward="300" data-card-id="moneylog" onclick="openPostDetail('moneylog')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
+            
             <div class="relative bg-[#F0FDF4] border-b border-[#F0F2F5] p-3">
-              <div
-                class="w-full h-44 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex items-center justify-center">
-                <div
-                  class="w-28 h-38 bg-[#F8FAFC] border-2 border-[#CBD5E1] rounded-xl p-2 flex flex-col justify-between shadow-xs">
-                  <div class="w-8 h-1.5 bg-neutral-300 rounded-full mx-auto mb-1"></div>
-                  <div class="text-center text-[9px] font-bold text-neutral-700">이번 달 지출<br>₩1,893,000</div>
-                  <div
-                    class="h-12 bg-emerald-50 rounded flex flex-col items-center justify-center text-[8px] text-emerald-700 font-bold">
-                    <span>AI 영수증 분석</span>
-                    <span class="text-[7px] text-neutral-400">카테고리 자동분류</span>
-                  </div>
-                  <div class="w-full h-1.5 bg-primary/40 rounded-full"></div>
+              <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                  <span class="font-bold text-neutral-700">가계부 앱 베타</span>
+                  <span class="text-emerald-600 font-bold">v2.1</span>
+                </div>
+                <div class="flex items-center justify-center flex-1 bg-emerald-50/50 rounded my-1 text-center">
+                  <span class="text-xs font-bold text-emerald-900">새로운 지출 트래킹 UI</span>
                 </div>
               </div>
 
-              <div class="absolute top-5 left-5 flex items-center gap-1.5">
-                <span class="px-2.5 py-1 rounded-md bg-primary-sub text-[#26530F] text-[11px] font-bold">
-                  [프로덕트] 5분 소요
+              <div class="absolute top-5 left-5 flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
+                  프로덕트 · 5일
+                </span>
+                <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
+                  <span>🪙</span> +300 C
                 </span>
               </div>
 
-              <div class="absolute top-5 right-5 flex items-center gap-2">
-                <span
-                  class="px-2.5 py-1 rounded-full bg-primary text-[#1F450B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                  <span>🪙</span> +500 동전
-                </span>
+              <button type="button" onclick="toggleBookmark(event, this)"
+                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                title="스크랩 저장">
+                <span>🔖</span>
+              </button>
+            </div>
 
-                <!-- Bookmark Scrap Flag Button -->
-                <button type="button" onclick="toggleBookmark(event, this)"
-                  class="bookmark-flag-btn w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-primary-dark flex items-center justify-center shadow-xs transition-all border border-neutral-200"
-                  title="프로젝트 스크랩 저장">
-                  <svg class="w-4 h-4 flag-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                  </svg>
-                </button>
+            <div class="p-5 flex flex-col flex-1 justify-between gap-4">
+              <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
+                가계부 앱 베타테스터 모집 - 새로운 디자인 어떠신가요?
+              </h3>
+
+              <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full bg-red-50 text-red-600 font-bold text-[11px]">● 5명 남음</span>
+                  <span class="text-neutral-400 text-[11px]">(45/50 모집)</span>
+                </div>
+                <span class="text-neutral-400 text-[11px]">⏱ 5분 소요</span>
               </div>
             </div>
 
-            <div class="p-5 flex flex-col flex-1 justify-between">
-              <div>
-                <h3
-                  class="text-[16px] font-bold text-neutral-dark mb-2 line-clamp-1 group-hover:text-primary-dark transition-colors">
-                  가계부 앱 베타테스터 모집 - 새로운 디자인 어떠신
-                </h3>
-                <div class="flex items-center gap-2 text-xs text-neutral-muted mb-4 font-normal">
-                  <span>#Finance</span>
-                  <span>#Figma</span>
-                </div>
-              </div>
-              <div>
-                <div class="flex items-center justify-between text-xs font-semibold text-neutral-dark mb-1.5">
-                  <span>모집률 45/50명</span>
-                  <span class="text-neutral-muted">90%</span>
-                </div>
-                <div class="w-full h-2 bg-[#F4F4F5] rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full" style="width: 90%;"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="px-5 py-3.5 border-t border-[#F4F4F5] flex items-center justify-between text-xs">
+            <div class="px-5 py-3 bg-[#FAFBF7] border-t border-[#E5E7EB] flex items-center justify-between text-xs">
               <div class="flex items-center gap-2">
-                <div class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">🎨</div>
-                <span class="font-medium text-neutral-dark">UIUX_Master</span>
+                <div class="w-5 h-5 rounded-full bg-purple-100 text-[10px] flex items-center justify-center">🎨</div>
+                <span class="font-medium text-neutral-700">UIUX_Master</span>
               </div>
-              <span class="font-bold text-[#DC2626]">오늘 마감</span>
+              <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
+                <span>🔖 112</span>
+                <span class="font-bold text-red-500">오늘 마감</span>
+              </div>
             </div>
           </article>
 
           <!-- Card 3: SaaS 서비스 랜딩페이지 카피라이팅 A/B 테스트 -->
-          <article data-category="landing" data-reward="100" data-card-id="saas" onclick="openPostDetail('saas')"
+          <article data-category="landing" data-reward="9" data-card-id="saas" onclick="openPostDetail('saas')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
+            
             <div class="relative bg-[#FFFBEB] border-b border-[#F0F2F5] p-3">
-              <div
-                class="w-full h-44 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
-                <div class="bg-[#1E293B] text-white p-2 rounded text-[9px] font-bold flex justify-between items-center">
-                  <span>SaaS Dashboard</span>
-                  <span class="text-emerald-400 text-[8px]">PRO</span>
+              <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                  <span class="font-bold text-neutral-700">SaaS 랜딩페이지</span>
+                  <span class="text-amber-600 font-bold">카피라이팅</span>
                 </div>
-                <div class="p-2 border border-dashed border-amber-200 rounded text-center">
-                  <p class="text-[10px] font-bold text-neutral-800">돈 벌 기회를 확실하게!</p>
-                  <p class="text-[8px] text-neutral-500">쉽고 빠른 수익 관리 대시보드</p>
-                </div>
-                <div
-                  class="w-full h-5 bg-amber-100 rounded text-[9px] font-bold text-amber-900 flex items-center justify-center">
-                  14일 무료 체험 시작하기
+                <div class="flex items-center justify-center flex-1 bg-amber-50/50 rounded my-1 text-center">
+                  <span class="text-xs font-bold text-amber-900">수익 관리 대시보드 문구</span>
                 </div>
               </div>
 
-              <div class="absolute top-5 left-5 flex items-center gap-1.5">
-                <span class="px-2.5 py-1 rounded-md bg-[#F3F4F6] text-[#4B5563] text-[11px] font-bold">
-                  [랜딩페이지] 1분 소요
+              <div class="absolute top-5 left-5 flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
+                  랜딩페이지 · 1분
+                </span>
+                <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
+                  <span>🪙</span> +9 C
                 </span>
               </div>
 
-              <div class="absolute top-5 right-5 flex items-center gap-2">
-                <span
-                  class="px-2.5 py-1 rounded-full bg-primary text-[#1F450B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                  <span>🪙</span> +100 동전
-                </span>
+              <button type="button" onclick="toggleBookmark(event, this)"
+                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                title="스크랩 저장">
+                <span>🔖</span>
+              </button>
+            </div>
 
-                <!-- Bookmark Scrap Flag Button -->
-                <button type="button" onclick="toggleBookmark(event, this)"
-                  class="bookmark-flag-btn w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-primary-dark flex items-center justify-center shadow-xs transition-all border border-neutral-200"
-                  title="프로젝트 스크랩 저장">
-                  <svg class="w-4 h-4 flag-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                  </svg>
-                </button>
+            <div class="p-5 flex flex-col flex-1 justify-between gap-4">
+              <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
+                SaaS 서비스 랜딩페이지 카피라이팅 A/B 테스트
+              </h3>
+
+              <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">● 95명 남음</span>
+                  <span class="text-neutral-400 text-[11px]">(5/100 모집)</span>
+                </div>
+                <span class="text-neutral-400 text-[11px]">⏱ 1분 소요</span>
               </div>
             </div>
 
-            <div class="p-5 flex flex-col flex-1 justify-between">
-              <div>
-                <h3
-                  class="text-[16px] font-bold text-neutral-dark mb-2 line-clamp-1 group-hover:text-primary-dark transition-colors">
-                  SaaS 서비스 랜딩페이지 카피라이팅 A/B 테스트
-                </h3>
-                <div class="flex items-center gap-2 text-xs text-neutral-muted mb-4 font-normal">
-                  <span>#SaaS</span>
-                  <span>#Copywriting</span>
-                </div>
-              </div>
-              <div>
-                <div class="flex items-center justify-between text-xs font-semibold text-neutral-dark mb-1.5">
-                  <span>모집률 5/100명</span>
-                  <span class="text-neutral-muted">5%</span>
-                </div>
-                <div class="w-full h-2 bg-[#F4F4F5] rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full" style="width: 5%;"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="px-5 py-3.5 border-t border-[#F4F4F5] flex items-center justify-between text-xs">
+            <div class="px-5 py-3 bg-[#FAFBF7] border-t border-[#E5E7EB] flex items-center justify-between text-xs">
               <div class="flex items-center gap-2">
-                <div class="w-5 h-5 rounded-full bg-violet-100 flex items-center justify-center text-[10px]">📊</div>
-                <span class="font-medium text-neutral-dark">마케터_J</span>
+                <div class="w-5 h-5 rounded-full bg-blue-100 text-[10px] flex items-center justify-center">💼</div>
+                <span class="font-medium text-neutral-700">마케터_J</span>
               </div>
-              <span class="font-medium text-neutral-muted">7일 남음</span>
+              <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
+                <span>🔖 21</span>
+                <span>7일 남음</span>
+              </div>
             </div>
           </article>
 
-          <!-- Card 4: 프로토타입 검증 카드 (추가) -->
-          <article data-category="prototype" data-reward="350" data-card-id="prototype-onboarding"
-            onclick="openPostDetail('prototype')"
+          <!-- Card 4: 초보자를 위한 가상자산 포트폴리오 대시보드 사용성 테스트 & 버그 리포트 -->
+          <article data-category="product" data-reward="30" data-card-id="crypto-portfolio" onclick="openPostDetail('moneylog')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
-            <div class="relative bg-[#FAF5FF] border-b border-[#F0F2F5] p-3">
-              <div
-                class="w-full h-44 rounded-xl bg-white border border-purple-100 shadow-2xs overflow-hidden p-4 flex flex-col justify-between">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-extrabold text-purple-900">Figma Prototype</span>
-                  <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-bold">인터랙티브</span>
+            
+            <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
+              <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                  <span class="font-bold text-neutral-700">가상자산 대시보드</span>
+                  <span class="text-blue-600 font-bold">버그 리포트</span>
                 </div>
-                <div class="p-3 bg-purple-50 rounded-xl text-center">
-                  <span class="text-2xl mb-1 block">🎨</span>
-                  <span class="text-xs font-bold text-purple-900">3단계 온보딩 사용성 검증</span>
+                <div class="flex items-center justify-center flex-1 bg-blue-50/50 rounded my-1 text-center">
+                  <span class="text-xs font-bold text-blue-900">포트폴리오 대시보드 사용성</span>
                 </div>
-                <div class="text-[10px] text-center text-neutral-400 font-medium">클릭 & 플로우 테스트</div>
               </div>
 
-              <div class="absolute top-5 left-5 flex items-center gap-1.5">
-                <span class="px-2.5 py-1 rounded-md bg-purple-100 text-purple-800 text-[11px] font-bold">
-                  [프로토타입] 3분 소요
+              <div class="absolute top-5 left-5 flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
+                  프로덕트 · 5분
+                </span>
+                <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
+                  <span>🪙</span> +30 C
                 </span>
               </div>
 
-              <div class="absolute top-5 right-5 flex items-center gap-2">
-                <span
-                  class="px-2.5 py-1 rounded-full bg-primary text-[#1F450B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                  <span>🪙</span> +350 동전
-                </span>
+              <button type="button" onclick="toggleBookmark(event, this)"
+                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                title="스크랩 저장">
+                <span>🔖</span>
+              </button>
+            </div>
 
-                <!-- Bookmark Scrap Flag Button -->
-                <button type="button" onclick="toggleBookmark(event, this)"
-                  class="bookmark-flag-btn w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-primary-dark flex items-center justify-center shadow-xs transition-all border border-neutral-200"
-                  title="프로젝트 스크랩 저장">
-                  <svg class="w-4 h-4 flag-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-                  </svg>
-                </button>
+            <div class="p-5 flex flex-col flex-1 justify-between gap-4">
+              <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
+                초보자를 위한 가상자산 포트폴리오 대시보드 사용성 테스트 &amp; 버그 리포트
+              </h3>
+
+              <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">● 12명 남음</span>
+                  <span class="text-neutral-400 text-[11px]">(28/40 모집)</span>
+                </div>
+                <span class="text-neutral-400 text-[11px]">⏱ 30초 소요</span>
               </div>
             </div>
 
-            <div class="p-5 flex flex-col flex-1 justify-between">
-              <div>
-                <h3
-                  class="text-[16px] font-bold text-neutral-dark mb-2 line-clamp-1 group-hover:text-primary-dark transition-colors">
-                  노코드 대화형 피그마 온보딩 플로우 사용성 검증
-                </h3>
-                <div class="flex items-center gap-2 text-xs text-neutral-muted mb-4 font-normal">
-                  <span>#Figma</span>
-                  <span>#Interactive</span>
-                  <span>#Onboarding</span>
-                </div>
-              </div>
-              <div>
-                <div class="flex items-center justify-between text-xs font-semibold text-neutral-dark mb-1.5">
-                  <span>모집률 12/25명</span>
-                  <span class="text-neutral-muted">48%</span>
-                </div>
-                <div class="w-full h-2 bg-[#F4F4F5] rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full" style="width: 48%;"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="px-5 py-3.5 border-t border-[#F4F4F5] flex items-center justify-between text-xs">
+            <div class="px-5 py-3 bg-[#FAFBF7] border-t border-[#E5E7EB] flex items-center justify-between text-xs">
               <div class="flex items-center gap-2">
-                <div class="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-[10px]">💡</div>
-                <span class="font-medium text-neutral-dark">프로토타이퍼</span>
+                <div class="w-5 h-5 rounded-full bg-[#FCE7F3] text-[10px] flex items-center justify-center">🐶</div>
+                <span class="font-medium text-neutral-700">으르렁으르렁kbk</span>
               </div>
-              <span class="font-bold text-[#25500F]">모집 중</span>
+              <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
+                <span>🔖 48</span>
+                <span class="font-bold text-red-500">오늘 마감</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5: 노션 데이터베이스 자동 동기화 캘린더 '플래닉X' 15분 화상/채팅 인터뷰 -->
+          <article data-category="product" data-reward="500" data-card-id="notion-planic" onclick="openPostDetail('moneylog')"
+            class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
+            
+            <div class="relative bg-[#FAF5FF] border-b border-[#F0F2F5] p-3">
+              <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                  <span class="font-bold text-neutral-700">노션 캘린더 동기화</span>
+                  <span class="text-purple-600 font-bold">인터뷰</span>
+                </div>
+                <div class="flex items-center justify-center flex-1 bg-purple-50/50 rounded my-1 text-center">
+                  <span class="text-xs font-bold text-purple-900">플래닉X 화상/채팅 인터뷰</span>
+                </div>
+              </div>
+
+              <div class="absolute top-5 left-5 flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
+                  프로덕트 · 35분
+                </span>
+                <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
+                  <span>🪙</span> +500 C
+                </span>
+              </div>
+
+              <button type="button" onclick="toggleBookmark(event, this)"
+                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                title="스크랩 저장">
+                <span>🔖</span>
+              </button>
+            </div>
+
+            <div class="p-5 flex flex-col flex-1 justify-between gap-4">
+              <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
+                노션 데이터베이스 자동 동기화 캘린더 '플래닉X' 15분 화상/채팅 인터뷰
+              </h3>
+
+              <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">● 95명 남음</span>
+                  <span class="text-neutral-400 text-[11px]">(5/100명)</span>
+                </div>
+                <span class="text-neutral-400 text-[11px]">⏱ 5분 소요</span>
+              </div>
+            </div>
+
+            <div class="px-5 py-3 bg-[#FAFBF7] border-t border-[#E5E7EB] flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded-full bg-purple-100 text-[10px] flex items-center justify-center">🐱</div>
+                <span class="font-medium text-neutral-700">개체크레용</span>
+              </div>
+              <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
+                <span>🔖 112</span>
+                <span class="font-bold text-red-500">오늘 마감</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6: 지휘해서 잠금해제하는 습관 형성 앱 일주일간 사용해보고 리뷰 남기기 -->
+          <article data-category="product" data-reward="1000" data-card-id="habit-lock" onclick="openPostDetail('moneylog')"
+            class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
+            
+            <div class="relative bg-[#F0FDF4] border-b border-[#F0F2F5] p-3">
+              <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                  <span class="font-bold text-neutral-700">습관 형성 앱</span>
+                  <span class="text-emerald-600 font-bold">7일 리뷰</span>
+                </div>
+                <div class="flex items-center justify-center flex-1 bg-emerald-50/50 rounded my-1 text-center">
+                  <span class="text-xs font-bold text-emerald-900">잠금해제 습관 형성 앱</span>
+                </div>
+              </div>
+
+              <div class="absolute top-5 left-5 flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
+                  프로덕트 · 7일
+                </span>
+                <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
+                  <span>🪙</span> +1000 C
+                </span>
+              </div>
+
+              <button type="button" onclick="toggleBookmark(event, this)"
+                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                title="스크랩 저장">
+                <span>🔖</span>
+              </button>
+            </div>
+
+            <div class="p-5 flex flex-col flex-1 justify-between gap-4">
+              <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
+                지휘해서 잠금해제하는 습관 형성 앱 일주일간 사용해보고 리뷰 남기기
+              </h3>
+
+              <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold text-[11px]">● 14명 남음</span>
+                  <span class="text-neutral-400 text-[11px]">(12/36명 모집)</span>
+                </div>
+                <span class="text-neutral-400 text-[11px]">⏱ 1분 소요</span>
+              </div>
+            </div>
+
+            <div class="px-5 py-3 bg-[#FAFBF7] border-t border-[#E5E7EB] flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded-full bg-amber-100 text-[10px] flex items-center justify-center">🧑‍💻</div>
+                <span class="font-medium text-neutral-700">바이브코더103</span>
+              </div>
+              <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
+                <span>🔖 21</span>
+                <span>7일 남음</span>
+              </div>
             </div>
           </article>
 
         </section>
+
+        <!-- Bottom Banner Section: 내가 만든 프로젝트도 피드백을 받고 싶다면? -->
+        <section class="bg-[#F8FCEF] border border-[#E2EED3] rounded-[24px] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-subtle mt-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-white border border-[#D5E6BF] flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+              🐷
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <h4 class="text-base sm:text-lg font-black text-neutral-dark tracking-tight">내가 만든 프로젝트도 피드백을 받고 싶다면?</h4>
+                <span class="px-2 py-0.5 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[10px] font-extrabold">첫 등록 50% 할인</span>
+              </div>
+              <p class="text-xs text-neutral-500 font-medium">
+                링크 하나만 넣으면 3분 만에 피드백 모집 퀘스트가 생성됩니다. 지금 바로 내가 원하는 타겟의 검증을 받아보세요.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <button type="button" onclick="alert('가이드 문서를 연결합니다.')"
+              class="px-4 py-3 rounded-full bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs shadow-2xs transition-colors">
+              가이드 읽어보기
+            </button>
+            <button type="button" onclick="openPledgeModal()"
+              class="px-5 py-3 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-extrabold text-xs shadow-xs transition-all flex items-center gap-1.5">
+              <span>새 프로젝트 등록하기</span>
+              <span class="text-sm">⊕</span>
+            </button>
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
