@@ -785,6 +785,66 @@
   </div>
 
   <!-- ========================================================
+       USER PROFILE VIEW MODAL (인기 유저 프로필 조회 모달)
+  ======================================================== -->
+  <div id="view-user-profile-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-neutral-dark/60 backdrop-blur-xs hidden transition-all duration-200">
+    <div class="w-full max-w-[440px] mx-4 bg-white rounded-[28px] border border-[#E9EEDC] shadow-2xl p-6 sm:p-7 relative animate-in fade-in zoom-in-95 duration-200">
+      <!-- Modal Close Button -->
+      <button type="button" onclick="closeUserProfileModal()"
+        class="absolute top-5 right-5 text-neutral-400 hover:text-neutral-700 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center transition-colors">
+        ✕
+      </button>
+
+      <!-- Profile Header -->
+      <div class="flex flex-col items-center text-center mt-2">
+        <div id="view-user-avatar" class="w-16 h-16 rounded-full font-bold text-xl flex items-center justify-center shadow-inner mb-3">
+          민
+        </div>
+        <div class="flex items-center gap-2 mb-1">
+          <h3 id="view-user-name" class="text-lg font-black text-neutral-dark">민트코기</h3>
+          <span id="view-user-badge" class="px-2 py-0.5 rounded bg-amber-100 text-[#785412] text-[10px] font-bold">다이아</span>
+        </div>
+        <p id="view-user-bio" class="text-xs text-neutral-500 font-medium px-4 leading-relaxed">UX/UI 피드백 전문 크리에이터</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-3 gap-3 my-6 bg-[#FAFBF7] p-3.5 rounded-2xl border border-[#E9EEDC] text-center">
+        <div>
+          <div class="text-[10px] text-neutral-400 font-bold mb-0.5">누적 획득 코인</div>
+          <div id="view-user-coins" class="text-sm font-black text-[#2F6517]">14,200 C</div>
+        </div>
+        <div class="border-x border-[#E9EEDC]">
+          <div class="text-[10px] text-neutral-400 font-bold mb-0.5">피드백 제출</div>
+          <div id="view-user-count" class="text-sm font-black text-neutral-800">142건</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-neutral-400 font-bold mb-0.5">평균 평점</div>
+          <div id="view-user-rating" class="text-sm font-black text-amber-600">⭐ 4.95</div>
+        </div>
+      </div>
+
+      <!-- User Badges / Activities -->
+      <div class="space-y-2 mb-6">
+        <div class="text-xs font-extrabold text-neutral-dark flex items-center gap-1.5">
+          <span>🏆</span> 주 활동 분야 및 배지
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[11px] font-bold">🎯 꼼꼼한 분석가</span>
+          <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-[11px] font-bold">⚡ 빠른 피드백</span>
+          <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-[11px] font-bold">💡 아이디어 왕</span>
+        </div>
+      </div>
+
+      <!-- Close Action -->
+      <button type="button" onclick="closeUserProfileModal()"
+        class="w-full py-3.5 rounded-2xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-sm transition-all shadow-xs">
+        확인
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================
        PRE-PLEDGE MODAL (테스트 등록 자격 확인 및 사전 서약 팝업)
   ======================================================== -->
   <div id="pledge-modal"
@@ -1260,7 +1320,7 @@
         <svg class="w-4 h-4 text-[#2A5612]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
         </svg>
-        <span>Start New Project</span>
+        <span>프로젝트 등록하기</span>
       </button>
     </aside>
 
@@ -1326,7 +1386,7 @@
               </p>
               
               <div class="flex items-center gap-3">
-                <button type="button" onclick="navigateToMypageSection('mypage-market-section', 'coins')"
+                <button type="button" onclick="navigateTo('market')"
                   class="px-5 py-3 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-extrabold text-xs shadow-sm transition-all flex items-center gap-2">
                   <span>돼코상점 둘러보기</span>
                   <span class="text-sm">🪙</span>
@@ -1361,7 +1421,7 @@
               <div class="flex flex-col gap-3">
                 
                 <!-- Rank 1 -->
-                <div class="flex items-center justify-between text-xs py-1">
+                <div class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors" onclick="openUserProfileModal('민트코기', '다이아', '14,200 C', '민', '#E5D7B7', '#5C4A21', 'UX/UI 피드백 전문 크리에이터', '142건', '4.95점')">
                   <div class="flex items-center gap-2.5">
                     <span class="font-extrabold text-amber-500 w-3 text-center text-xs">1</span>
                     <div class="w-6 h-6 rounded-full bg-[#E5D7B7] text-[#5C4A21] font-bold text-[10px] flex items-center justify-center">민</div>
@@ -1372,7 +1432,7 @@
                 </div>
 
                 <!-- Rank 2 -->
-                <div class="flex items-center justify-between text-xs py-1">
+                <div class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors" onclick="openUserProfileModal('진심피드백러', '플래티넘', '11,500 C', '진', '#D1D9E0', '#334155', '디테일한 사용성 분석 전문가', '98건', '4.90점')">
                   <div class="flex items-center gap-2.5">
                     <span class="font-bold text-neutral-400 w-3 text-center text-xs">2</span>
                     <div class="w-6 h-6 rounded-full bg-[#D1D9E0] text-[#334155] font-bold text-[10px] flex items-center justify-center">진</div>
@@ -1383,7 +1443,7 @@
                 </div>
 
                 <!-- Rank 3 -->
-                <div class="flex items-center justify-between text-xs py-1">
+                <div class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors" onclick="openUserProfileModal('도토리탐험가', '골드', '8,900 C', '도', '#E8CDB5', '#633A18', '다양한 신규 서비스 얼리어답터', '76건', '4.85점')">
                   <div class="flex items-center gap-2.5">
                     <span class="font-bold text-neutral-400 w-3 text-center text-xs">3</span>
                     <div class="w-6 h-6 rounded-full bg-[#E8CDB5] text-[#633A18] font-bold text-[10px] flex items-center justify-center">도</div>
@@ -1394,7 +1454,7 @@
                 </div>
 
                 <!-- Rank 4 -->
-                <div class="flex items-center justify-between text-xs py-1">
+                <div class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors" onclick="openUserProfileModal('준비된기획자', '골드', '6,400 C', '준', '#D4E2C7', '#2C4F16', '서비스 기획 및 로직 검증 전문', '52건', '4.80점')">
                   <div class="flex items-center gap-2.5">
                     <span class="font-bold text-neutral-400 w-3 text-center text-xs">4</span>
                     <div class="w-6 h-6 rounded-full bg-[#D4E2C7] text-[#2C4F16] font-bold text-[10px] flex items-center justify-center">준</div>
@@ -1404,7 +1464,7 @@
                 </div>
 
                 <!-- Rank 5 -->
-                <div class="flex items-center justify-between text-xs py-1">
+                <div class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors" onclick="openUserProfileModal('헤이프로덕트', '실버', '5,850 C', '헤', '#E2E8F0', '#475569', '프로덕트 경험 개선 열정 테스터', '45건', '4.78점')">
                   <div class="flex items-center gap-2.5">
                     <span class="font-bold text-neutral-400 w-3 text-center text-xs">5</span>
                     <div class="w-6 h-6 rounded-full bg-[#E2E8F0] text-[#475569] font-bold text-[10px] flex items-center justify-center">헤</div>
@@ -1428,35 +1488,55 @@
           </div>
         </div>
 
-        <!-- Filter Category Tabs (Reference: 전체 큐레이션, 프로덕트 테스트, 프로토타입 검증, A/B 투표, 랜딩페이지) -->
-        <section class="flex items-center gap-2 overflow-x-auto pb-1 text-[13px] font-semibold" id="feed-filter-bar">
-          <button onclick="filterFeed('all', this)"
-            class="feed-filter-btn px-4 py-2 rounded-full bg-[#18181B] text-white shadow-2xs shrink-0 transition-all font-bold text-xs flex items-center gap-1.5">
-            전체 큐레이션
-          </button>
-          <button onclick="filterFeed('product', this)"
-            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
-            <span>📱</span> 프로덕트 테스트
-          </button>
-          <button onclick="filterFeed('prototype', this)"
-            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
-            <span>🎨</span> 프로토타입 검증
-          </button>
-          <button onclick="filterFeed('abtest', this)"
-            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
-            <span>⚖️</span> A/B 투표
-          </button>
-          <button onclick="filterFeed('landing', this)"
-            class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
-            <span>📄</span> 랜딩페이지
-          </button>
+        <!-- Filter Category Tabs & Sort Filter Bar -->
+        <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1" id="feed-filter-container">
+          <!-- Category Chips -->
+          <div class="flex items-center gap-2 overflow-x-auto text-[13px] font-semibold py-1" id="feed-filter-bar">
+            <button onclick="filterFeed('all', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-[#18181B] text-white shadow-2xs shrink-0 transition-all font-bold text-xs flex items-center gap-1.5">
+              전체 큐레이션
+            </button>
+            <button onclick="filterFeed('product', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>📱</span> 프로덕트
+            </button>
+            <button onclick="filterFeed('prototype', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>🎨</span> 프로토타입
+            </button>
+            <button onclick="filterFeed('abtest', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>⚖️</span> A/B테스트
+            </button>
+            <button onclick="filterFeed('vote', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>🗳️</span> 투표
+            </button>
+            <button onclick="filterFeed('survey', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>📝</span> 설문조사
+            </button>
+          </div>
+
+          <!-- Sort Filter Select Dropdown -->
+          <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+            <span class="text-xs text-neutral-400 font-medium">정렬:</span>
+            <select id="feed-sort-select" onchange="sortFeed(this.value)"
+              class="px-3 py-1.5 rounded-xl bg-white border border-[#E5E7EB] text-neutral-700 text-xs font-bold shadow-2xs focus:outline-none focus:border-neutral-400 transition-all cursor-pointer">
+              <option value="recommended">👍 추천순 (맞춤)</option>
+              <option value="reward">💰 높은 보상순</option>
+              <option value="time">⏱ 소요시간 적은 순</option>
+              <option value="latest">🆕 등록순</option>
+              <option value="deadline">🔥 마감순</option>
+            </select>
+          </div>
         </section>
 
         <!-- 3-Column Card Grid (6 Cards based 1:1 on user reference image) -->
         <section id="dashboard-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
           <!-- Card 1: AI 기반 하루 일기 웹앱 써보시고 UX 피드백 남겨주세요 -->
-          <article data-category="abtest" data-reward="5" data-card-id="diary" onclick="openPostDetail('diary')"
+          <article data-category="abtest" data-reward="5" data-time="0.5" data-date="2026-09-08" data-deadline="3" data-recommended="95" data-card-id="diary" onclick="openPostDetail('diary')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             
             <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
@@ -1474,7 +1554,7 @@
               <!-- Top Left Tag & Reward Badge -->
               <div class="absolute top-5 left-5 flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
-                  A/B 투표 · 30초
+                  A/B테스트 · 30초
                 </span>
                 <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
                   <span>🪙</span> +5 C
@@ -1516,7 +1596,7 @@
           </article>
 
           <!-- Card 2: 가계부 앱 베타테스터 모집 - 새로운 디자인 어떠신가요? -->
-          <article data-category="product" data-reward="300" data-card-id="moneylog" onclick="openPostDetail('moneylog')"
+          <article data-category="product" data-reward="300" data-time="5" data-date="2026-09-09" data-deadline="0" data-recommended="98" data-card-id="moneylog" onclick="openPostDetail('moneylog')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             
             <div class="relative bg-[#F0FDF4] border-b border-[#F0F2F5] p-3">
@@ -1532,7 +1612,7 @@
 
               <div class="absolute top-5 left-5 flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
-                  프로덕트 · 5일
+                  프로덕트 · 5분
                 </span>
                 <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
                   <span>🪙</span> +300 C
@@ -1572,27 +1652,27 @@
             </div>
           </article>
 
-          <!-- Card 3: SaaS 서비스 랜딩페이지 카피라이팅 A/B 테스트 -->
-          <article data-category="landing" data-reward="9" data-card-id="saas" onclick="openPostDetail('saas')"
+          <!-- Card 3: SaaS 서비스 랜딩페이지 선호도 투표 -->
+          <article data-category="vote" data-reward="15" data-time="1" data-date="2026-09-07" data-deadline="7" data-recommended="85" data-card-id="saas" onclick="openPostDetail('saas')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             
             <div class="relative bg-[#FFFBEB] border-b border-[#F0F2F5] p-3">
               <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
                 <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
                   <span class="font-bold text-neutral-700">SaaS 랜딩페이지</span>
-                  <span class="text-amber-600 font-bold">카피라이팅</span>
+                  <span class="text-amber-600 font-bold">투표</span>
                 </div>
                 <div class="flex items-center justify-center flex-1 bg-amber-50/50 rounded my-1 text-center">
-                  <span class="text-xs font-bold text-amber-900">수익 관리 대시보드 문구</span>
+                  <span class="text-xs font-bold text-amber-900">수익 관리 대시보드 문구 선호도 투표</span>
                 </div>
               </div>
 
               <div class="absolute top-5 left-5 flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
-                  랜딩페이지 · 1분
+                  투표 · 1분
                 </span>
                 <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                  <span>🪙</span> +9 C
+                  <span>🪙</span> +15 C
                 </span>
               </div>
 
@@ -1605,7 +1685,7 @@
 
             <div class="p-5 flex flex-col flex-1 justify-between gap-4">
               <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
-                SaaS 서비스 랜딩페이지 카피라이팅 A/B 테스트
+                SaaS 서비스 랜딩페이지 카피라이팅 선호도 투표
               </h3>
 
               <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
@@ -1629,27 +1709,27 @@
             </div>
           </article>
 
-          <!-- Card 4: 초보자를 위한 가상자산 포트폴리오 대시보드 사용성 테스트 & 버그 리포트 -->
-          <article data-category="product" data-reward="30" data-card-id="crypto-portfolio" onclick="openPostDetail('moneylog')"
+          <!-- Card 4: 초보자를 위한 가상자산 프로토타입 반응 조사 -->
+          <article data-category="prototype" data-reward="50" data-time="2" data-date="2026-09-09" data-deadline="0" data-recommended="90" data-card-id="crypto-portfolio" onclick="openPostDetail('moneylog')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             
             <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
               <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
                 <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
                   <span class="font-bold text-neutral-700">가상자산 대시보드</span>
-                  <span class="text-blue-600 font-bold">버그 리포트</span>
+                  <span class="text-blue-600 font-bold">프로토타입</span>
                 </div>
                 <div class="flex items-center justify-center flex-1 bg-blue-50/50 rounded my-1 text-center">
-                  <span class="text-xs font-bold text-blue-900">포트폴리오 대시보드 사용성</span>
+                  <span class="text-xs font-bold text-blue-900">포트폴리오 대시보드 피그마 프로토타입</span>
                 </div>
               </div>
 
               <div class="absolute top-5 left-5 flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
-                  프로덕트 · 5분
+                  프로토타입 · 2분
                 </span>
                 <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                  <span>🪙</span> +30 C
+                  <span>🪙</span> +50 C
                 </span>
               </div>
 
@@ -1662,7 +1742,7 @@
 
             <div class="p-5 flex flex-col flex-1 justify-between gap-4">
               <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
-                초보자를 위한 가상자산 포트폴리오 대시보드 사용성 테스트 &amp; 버그 리포트
+                초보자를 위한 가상자산 포트폴리오 대시보드 프로토타입 검증
               </h3>
 
               <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
@@ -1670,7 +1750,7 @@
                   <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">● 12명 남음</span>
                   <span class="text-neutral-400 text-[11px]">(28/40 모집)</span>
                 </div>
-                <span class="text-neutral-400 text-[11px]">⏱ 30초 소요</span>
+                <span class="text-neutral-400 text-[11px]">⏱ 2분 소요</span>
               </div>
             </div>
 
@@ -1686,27 +1766,27 @@
             </div>
           </article>
 
-          <!-- Card 5: 노션 데이터베이스 자동 동기화 캘린더 '플래닉X' 15분 화상/채팅 인터뷰 -->
-          <article data-category="product" data-reward="500" data-card-id="notion-planic" onclick="openPostDetail('moneylog')"
+          <!-- Card 5: 대학생 target 자취 생활 패턴 설문조사 -->
+          <article data-category="survey" data-reward="100" data-time="3" data-date="2026-09-06" data-deadline="5" data-recommended="80" data-card-id="notion-planic" onclick="openPostDetail('moneylog')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             
             <div class="relative bg-[#FAF5FF] border-b border-[#F0F2F5] p-3">
               <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
                 <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
-                  <span class="font-bold text-neutral-700">노션 캘린더 동기화</span>
-                  <span class="text-purple-600 font-bold">인터뷰</span>
+                  <span class="font-bold text-neutral-700">자취 생활 패턴</span>
+                  <span class="text-purple-600 font-bold">설문조사</span>
                 </div>
                 <div class="flex items-center justify-center flex-1 bg-purple-50/50 rounded my-1 text-center">
-                  <span class="text-xs font-bold text-purple-900">플래닉X 화상/채팅 인터뷰</span>
+                  <span class="text-xs font-bold text-purple-900">대학생 자취 생활 및 소비 패턴 설문</span>
                 </div>
               </div>
 
               <div class="absolute top-5 left-5 flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
-                  프로덕트 · 35분
+                  설문조사 · 3분
                 </span>
                 <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                  <span>🪙</span> +500 C
+                  <span>🪙</span> +100 C
                 </span>
               </div>
 
@@ -1719,7 +1799,7 @@
 
             <div class="p-5 flex flex-col flex-1 justify-between gap-4">
               <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
-                노션 데이터베이스 자동 동기화 캘린더 '플래닉X' 15분 화상/채팅 인터뷰
+                2030 자취족을 위한 가계 관리 니즈 설문조사 (3분)
               </h3>
 
               <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
@@ -1727,7 +1807,7 @@
                   <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">● 95명 남음</span>
                   <span class="text-neutral-400 text-[11px]">(5/100명)</span>
                 </div>
-                <span class="text-neutral-400 text-[11px]">⏱ 5분 소요</span>
+                <span class="text-neutral-400 text-[11px]">⏱ 3분 소요</span>
               </div>
             </div>
 
@@ -1738,29 +1818,29 @@
               </div>
               <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
                 <span>🔖 112</span>
-                <span class="font-bold text-red-500">오늘 마감</span>
+                <span>5일 남음</span>
               </div>
             </div>
           </article>
 
-          <!-- Card 6: 지휘해서 잠금해제하는 습관 형성 앱 일주일간 사용해보고 리뷰 남기기 -->
-          <article data-category="product" data-reward="1000" data-card-id="habit-lock" onclick="openPostDetail('moneylog')"
+          <!-- Card 6: 습관 형성 앱 7일 프로덕트 사용 리포트 -->
+          <article data-category="product" data-reward="1000" data-time="10" data-date="2026-09-05" data-deadline="2" data-recommended="92" data-card-id="habit-lock" onclick="openPostDetail('moneylog')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             
             <div class="relative bg-[#F0FDF4] border-b border-[#F0F2F5] p-3">
               <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
                 <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
                   <span class="font-bold text-neutral-700">습관 형성 앱</span>
-                  <span class="text-emerald-600 font-bold">7일 리뷰</span>
+                  <span class="text-emerald-600 font-bold">프로덕트</span>
                 </div>
                 <div class="flex items-center justify-center flex-1 bg-emerald-50/50 rounded my-1 text-center">
-                  <span class="text-xs font-bold text-emerald-900">잠금해제 습관 형성 앱</span>
+                  <span class="text-xs font-bold text-emerald-900">잠금해제 습관 형성 앱 사용 리포트</span>
                 </div>
               </div>
 
               <div class="absolute top-5 left-5 flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
-                  프로덕트 · 7일
+                  프로덕트 · 10분
                 </span>
                 <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
                   <span>🪙</span> +1000 C
@@ -3408,7 +3488,7 @@
       <button onclick="navigateTo('create')"
         class="w-full py-3 bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] rounded-2xl font-black text-sm transition-all shadow-xs flex items-center justify-center gap-2 border border-[#96D15E]">
         <span class="text-base font-bold">+</span>
-        <span>Start New Project</span>
+        <span>프로젝트 등록하기</span>
       </button>
     </aside>
 
@@ -3822,7 +3902,7 @@
         <svg class="w-4 h-4 text-[#2A5612]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
         </svg>
-        <span>Start New Project</span>
+        <span>프로젝트 등록하기</span>
       </button>
     </aside>
 
@@ -4208,7 +4288,7 @@
       <button onclick="navigateTo('create')"
         class="w-full py-3 bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] rounded-2xl font-black text-sm transition-all shadow-xs flex items-center justify-center gap-2 border border-[#96D15E]">
         <span class="text-base font-bold">+</span>
-        <span>Start New Project</span>
+        <span>프로젝트 등록하기</span>
       </button>
     </aside>
 
@@ -4882,7 +4962,7 @@
       <button onclick="navigateTo('create')"
         class="w-full py-3 bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] rounded-2xl font-black text-sm transition-all shadow-xs flex items-center justify-center gap-2 border border-[#96D15E]">
         <span class="text-base font-bold">+</span>
-        <span>Start New Project</span>
+        <span>프로젝트 등록하기</span>
       </button>
     </aside>
 
@@ -5940,27 +6020,17 @@
     function filterFeed(category, btnElement) {
       // 1. Highlight clicked filter button
       document.querySelectorAll('.feed-filter-btn').forEach(btn => {
-        btn.className = 'feed-filter-btn px-4 py-2.5 rounded-full bg-white border border-[#E4E4E7] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-[13px]';
+        btn.className = 'feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs';
       });
       if (btnElement) {
-        btnElement.className = 'feed-filter-btn px-5 py-2.5 rounded-full bg-[#191A1C] text-white shadow-xs shrink-0 transition-all font-semibold text-[13px] flex items-center gap-1.5';
+        btnElement.className = 'feed-filter-btn px-4 py-2 rounded-full bg-[#18181B] text-white shadow-2xs shrink-0 transition-all font-bold text-xs flex items-center gap-1.5';
       }
 
       const grid = document.getElementById('dashboard-cards-grid');
       if (!grid) return;
       const cards = Array.from(grid.querySelectorAll('.feed-card'));
 
-      if (category === 'reward') {
-        // Sort by data-reward descending
-        cards.forEach(card => card.style.display = 'flex');
-        cards.sort((a, b) => {
-          const rA = parseInt(a.getAttribute('data-reward') || '0', 10);
-          const rB = parseInt(b.getAttribute('data-reward') || '0', 10);
-          return rB - rA;
-        });
-        cards.forEach(card => grid.appendChild(card));
-        showGenericToast('💰 높은 보상순으로 카드가 정렬되었습니다.', '🪙');
-      } else if (category === 'all') {
+      if (category === 'all') {
         cards.forEach(card => card.style.display = 'flex');
       } else {
         cards.forEach(card => {
@@ -5971,6 +6041,55 @@
             card.style.display = 'none';
           }
         });
+      }
+    }
+
+    function sortFeed(sortKey) {
+      const grid = document.getElementById('dashboard-cards-grid');
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.feed-card'));
+
+      cards.sort((a, b) => {
+        if (sortKey === 'reward') {
+          // 높은 보상순 (descending)
+          const rA = parseInt(a.getAttribute('data-reward') || '0', 10);
+          const rB = parseInt(b.getAttribute('data-reward') || '0', 10);
+          return rB - rA;
+        } else if (sortKey === 'time') {
+          // 소요시간 적은 순 (ascending)
+          const tA = parseFloat(a.getAttribute('data-time') || '999');
+          const tB = parseFloat(b.getAttribute('data-time') || '999');
+          return tA - tB;
+        } else if (sortKey === 'recommended') {
+          // 추천순 (descending)
+          const recA = parseInt(a.getAttribute('data-recommended') || '0', 10);
+          const recB = parseInt(b.getAttribute('data-recommended') || '0', 10);
+          return recB - recA;
+        } else if (sortKey === 'latest') {
+          // 등록순 (latest date first)
+          const dA = a.getAttribute('data-date') || '';
+          const dB = b.getAttribute('data-date') || '';
+          return dB.localeCompare(dA);
+        } else if (sortKey === 'deadline') {
+          // 마감순 (deadline closest first)
+          const dlA = parseInt(a.getAttribute('data-deadline') || '999', 10);
+          const dlB = parseInt(b.getAttribute('data-deadline') || '999', 10);
+          return dlA - dlB;
+        }
+        return 0;
+      });
+
+      cards.forEach(card => grid.appendChild(card));
+
+      const toastMessages = {
+        reward: '💰 높은 보상순으로 정렬되었습니다.',
+        time: '⏱ 소요시간 적은 순으로 정렬되었습니다.',
+        recommended: '👍 개인 맞춤 추천순으로 정렬되었습니다.',
+        latest: '🆕 최신 등록순으로 정렬되었습니다.',
+        deadline: '🔥 마감 임박순으로 정렬되었습니다.'
+      };
+      if (toastMessages[sortKey]) {
+        showGenericToast(toastMessages[sortKey], '✨');
       }
     }
 
@@ -8999,6 +9118,39 @@
 
     function closeEditProfileModal() {
       const modal = document.getElementById('edit-profile-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Real-time Popular User Profile Modal Handlers
+    function openUserProfileModal(name, badge, coins, avatarText, avatarBg, avatarColor, bio, count, rating) {
+      const modal = document.getElementById('view-user-profile-modal');
+      if (!modal) return;
+
+      const avatarEl = document.getElementById('view-user-avatar');
+      const nameEl = document.getElementById('view-user-name');
+      const badgeEl = document.getElementById('view-user-badge');
+      const bioEl = document.getElementById('view-user-bio');
+      const coinsEl = document.getElementById('view-user-coins');
+      const countEl = document.getElementById('view-user-count');
+      const ratingEl = document.getElementById('view-user-rating');
+
+      if (avatarEl) {
+        avatarEl.textContent = avatarText || name.charAt(0);
+        avatarEl.style.backgroundColor = avatarBg || '#E5D7B7';
+        avatarEl.style.color = avatarColor || '#5C4A21';
+      }
+      if (nameEl) nameEl.textContent = name;
+      if (badgeEl) badgeEl.textContent = badge;
+      if (bioEl) bioEl.textContent = bio || '활동 중인 크리에이터';
+      if (coinsEl) coinsEl.textContent = coins;
+      if (countEl) countEl.textContent = count || '0건';
+      if (ratingEl) ratingEl.textContent = '⭐ ' + (rating || '5.0');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeUserProfileModal() {
+      const modal = document.getElementById('view-user-profile-modal');
       if (modal) modal.classList.add('hidden');
     }
 
