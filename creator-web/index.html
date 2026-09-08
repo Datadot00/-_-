@@ -1334,7 +1334,7 @@
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <input type="text" placeholder="검색어를 입력하세요..."
+          <input type="text" id="header-search-input" oninput="searchFeed(this.value)" placeholder="검색어를 입력하세요..."
             class="w-full pl-11 pr-10 py-2.5 bg-[#F4F4F5]/70 border border-neutral-border rounded-full text-sm placeholder-neutral-muted text-neutral-dark focus:outline-none focus:ring-2 focus:ring-primary/50 focus:bg-white transition-all" />
           <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
             <svg class="w-4 h-4 text-neutral-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1880,6 +1880,20 @@
             </div>
           </article>
 
+          <!-- Empty State (Hidden by default, shown when search/filter result is empty) -->
+          <div id="feed-empty-state" class="hidden col-span-1 md:col-span-2 lg:col-span-3 py-16 flex-col items-center justify-center text-center bg-white rounded-3xl border border-dashed border-neutral-300 p-8 shadow-xs">
+            <div class="w-16 h-16 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-3xl mb-4 shadow-inner">
+              🔍
+            </div>
+            <h3 class="text-base font-black text-neutral-dark mb-1">조건에 맞는 프로젝트가 없어요</h3>
+            <p class="text-xs text-neutral-500 font-medium max-w-sm mb-5 leading-relaxed">
+              검색어나 카테고리 필터를 변경하여 다른 신규 피드백 프로젝트를 탐색해보세요!
+            </p>
+            <button type="button" onclick="filterFeed('all'); if(document.getElementById('header-search-input')) document.getElementById('header-search-input').value='';"
+              class="px-5 py-2.5 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-bold text-xs shadow-xs transition-all flex items-center gap-1.5">
+              <span>🔄 전체 큐레이션 보기</span>
+            </button>
+          </div>
         </section>
 
         <!-- Bottom Banner Section: 내가 만든 프로젝트도 피드백을 받고 싶다면? -->
@@ -3528,14 +3542,8 @@
       <!-- Main Feedback Analytics Content Area -->
       <main class="flex-1 p-8 lg:p-10 max-w-[1240px] w-full mx-auto flex flex-col gap-8">
 
-        <!-- Top Navigation Bar (Back Icon Button placed in Main Area) -->
-        <div class="flex items-center justify-between pb-2 border-b border-neutral-200/60">
-          <button onclick="window.history.length > 1 ? window.history.back() : navigateToMypageSection('mypage-projects-section', 'my-projects')"
-            class="w-9 h-9 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-extrabold text-sm transition-all shadow-2xs flex items-center justify-center cursor-pointer"
-            title="직전 화면으로 돌아가기">
-            <span>←</span>
-          </button>
-
+        <!-- Top Navigation Bar (Breadcrumbs) -->
+        <div class="flex items-center justify-start pb-2 border-b border-neutral-200/60">
           <div class="flex items-center gap-2 text-xs text-neutral-400 font-medium">
             <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
             <span>&gt;</span>
@@ -3568,12 +3576,16 @@
           </div>
 
           <!-- Tags & Detail Button -->
-          <div class="flex items-center gap-3 shrink-0">
+          <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
             <span id="feedback-project-category-tag" class="px-2.5 py-1 rounded-lg bg-neutral-100 text-neutral-600 text-xs font-bold">
               프로덕트 테스트
             </span>
             <span id="feedback-project-status-tag" class="px-2.5 py-1 rounded-lg bg-[#EBF7E2] text-[#25500F] text-xs font-extrabold border border-[#D0E8BD]">
               모집 완료
+            </span>
+            <!-- 리뷰 공개/비공개 상태 뱃지 -->
+            <span id="feedback-review-visibility-badge" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-extrabold border border-emerald-200 flex items-center gap-1">
+              <span>🌐</span> 리뷰 공개
             </span>
             <span class="text-neutral-300">|</span>
             <button onclick="navigateTo('post')"
@@ -4572,9 +4584,10 @@
               <span>📝 참여 프로젝트 관리</span>
               <span class="px-2 py-0.5 rounded-full bg-[#FCE7F3] text-[#BE185D] text-[10px] font-extrabold">리뷰 대기 1</span>
             </button>
-            <button type="button" onclick="switchMyProjectTab('coins')" id="myproj-tab-coins"
+            <button type="button" onclick="switchMyProjectTab('scraped')" id="myproj-tab-scraped"
               class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
-              <span>🪙 동전 내역 & 적립</span>
+              <span>🔖 스크랩한 프로젝트</span>
+              <span class="w-4 h-4 rounded-full bg-neutral-200 text-neutral-700 text-[10px] flex items-center justify-center font-bold" id="myproj-scraped-count">2</span>
             </button>
           </div>
 
@@ -4744,6 +4757,133 @@
                 <span>📊 결과 리포트 보기</span>
               </button>
             </div>
+          <!-- My Projects Empty State -->
+          <div id="myproj-empty-state" class="hidden py-14 flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
+            <div class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl mb-3">
+              📂
+            </div>
+            <h4 class="text-sm font-extrabold text-neutral-dark mb-1">등록된 프로젝트가 없습니다</h4>
+            <p class="text-xs text-neutral-400 font-medium max-w-xs mb-4">
+              새로운 피드백 모집 프로젝트를 등록하고 사용자의 목소리를 들어보세요!
+            </p>
+            <button onclick="navigateTo('create')" class="px-4 py-2 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-xs transition-all shadow-xs">
+              + 첫 프로젝트 등록하기
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Scraped Projects List Container (Hidden by default) -->
+        <div class="hidden flex-col gap-4" id="myproj-scraped-cards-list">
+
+            <!-- Scraped Card 1 -->
+            <div class="scrapedproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <div class="w-16 h-16 rounded-2xl bg-[#EFF6FF] border border-[#BFDBFE] flex flex-col items-center justify-center relative p-1 shrink-0">
+                    <div class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">⚖️</div>
+                    <span class="text-[9px] font-black text-white bg-blue-600 px-1 rounded mt-1">A/B</span>
+                  </div>
+
+                  <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center gap-2 flex-wrap text-xs">
+                      <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold text-[11px]">
+                        ● A/B테스트
+                      </span>
+                      <span class="text-[11px] text-neutral-400 font-medium">
+                        ⏱ 30초 소요
+                      </span>
+                    </div>
+
+                    <h3 class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors" onclick="openPostDetail('diary')">
+                      AI 기반 하루 일기 웹앱 써보시고 UX 피드백 남겨주세요
+                    </h3>
+
+                    <div class="flex items-center gap-3 text-xs text-neutral-500 pt-1">
+                      <span class="font-black text-[#D97706]">🪙 +5 C</span>
+                      <span class="text-neutral-300">|</span>
+                      <span>모집: <strong>18/30명</strong></span>
+                      <span class="text-neutral-300">|</span>
+                      <span class="text-red-500 font-bold">3일 남음</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" onclick="deleteScrapedItem(this)" class="p-2 hover:bg-neutral-100 rounded-xl text-neutral-400 hover:text-neutral-700 transition-colors" title="스크랩 삭제">
+                  🗑️
+                </button>
+              </div>
+
+              <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+                <button onclick="openPostDetail('diary')"
+                  class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5">
+                  <span>참여하러 가기</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Scraped Card 2 -->
+            <div class="scrapedproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <div class="w-16 h-16 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] flex flex-col items-center justify-center relative p-1 shrink-0">
+                    <div class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">📄</div>
+                    <span class="text-[9px] font-black text-white bg-amber-500 px-1 rounded mt-1">투표</span>
+                  </div>
+
+                  <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center gap-2 flex-wrap text-xs">
+                      <span class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold text-[11px]">
+                        ● 투표
+                      </span>
+                      <span class="text-[11px] text-neutral-400 font-medium">
+                        ⏱ 1분 소요
+                      </span>
+                    </div>
+
+                    <h3 class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors" onclick="openPostDetail('saas')">
+                      SaaS 서비스 랜딩페이지 카피라이팅 선호도 투표
+                    </h3>
+
+                    <div class="flex items-center gap-3 text-xs text-neutral-500 pt-1">
+                      <span class="font-black text-[#D97706]">🪙 +15 C</span>
+                      <span class="text-neutral-300">|</span>
+                      <span>모집: <strong>5/100명</strong></span>
+                      <span class="text-neutral-300">|</span>
+                      <span>7일 남음</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" onclick="deleteScrapedItem(this)" class="p-2 hover:bg-neutral-100 rounded-xl text-neutral-400 hover:text-neutral-700 transition-colors" title="스크랩 삭제">
+                  🗑️
+                </button>
+              </div>
+
+              <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+                <button onclick="openPostDetail('saas')"
+                  class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5">
+                  <span>참여하러 가기</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Scraped Empty State (Hidden when scraped cards exist) -->
+            <div id="scraped-empty-state" class="hidden py-14 flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
+              <div class="w-14 h-14 rounded-full bg-[#FFFBEB] border border-[#FDE68A] flex items-center justify-center text-2xl mb-3">
+                🔖
+              </div>
+              <h4 class="text-sm font-extrabold text-neutral-dark mb-1">스크랩한 프로젝트가 없습니다</h4>
+              <p class="text-xs text-neutral-400 font-medium max-w-xs mb-4">
+                관심 있는 큐레이션 프로젝트에서 스크랩(🔖) 버튼을 눌러 모아보세요!
+              </p>
+              <button onclick="navigateTo('explore')" class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white font-bold text-xs transition-all shadow-xs">
+                프로젝트 탐색하러 가기 →
+              </button>
+            </div>
+
           </div>
 
         </div>
@@ -5452,16 +5592,68 @@
       showGenericToast(`${label} 화면은 다음 작업에서 연결할 예정입니다.`, icon);
     }
 
+    function updateScrapedEmptyState() {
+      const scrapedList = document.getElementById('myproj-scraped-cards-list');
+      if (!scrapedList) return;
+      const cards = scrapedList.querySelectorAll('.scrapedproj-card');
+      const emptyState = document.getElementById('scraped-empty-state');
+      const countBadge = document.getElementById('myproj-scraped-count');
+
+      let visibleCount = 0;
+      cards.forEach(c => {
+        if (!c.classList.contains('hidden') && c.style.display !== 'none') {
+          visibleCount++;
+        }
+      });
+
+      if (countBadge) countBadge.textContent = visibleCount;
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+          emptyState.classList.add('flex');
+        } else {
+          emptyState.classList.add('hidden');
+          emptyState.classList.remove('flex');
+        }
+      }
+    }
+
+    function deleteScrapedItem(btn) {
+      const card = btn.closest('.scrapedproj-card');
+      if (card) {
+        card.remove();
+        showGenericToast('스크랩 항목이 해제되었습니다.', '🔖');
+        updateScrapedEmptyState();
+      }
+    }
+
     function switchMyProjectTab(tabKey) {
       const tabs = {
         registered: document.getElementById('myproj-tab-registered'),
         participated: document.getElementById('myproj-tab-participated'),
-        coins: document.getElementById('myproj-tab-coins')
+        scraped: document.getElementById('myproj-tab-scraped')
       };
 
-      if (tabKey === 'coins') {
-        navigateToMypageSection('mypage-market-section', 'coins');
-        return;
+      const myprojList = document.getElementById('myproj-cards-list');
+      const scrapedList = document.getElementById('myproj-scraped-cards-list');
+      const filterBar = document.querySelector('#mypage-projects-section .flex.items-center.justify-between.pt-2');
+
+      if (tabKey === 'scraped') {
+        if (myprojList) myprojList.classList.add('hidden');
+        if (scrapedList) {
+          scrapedList.classList.remove('hidden');
+          scrapedList.classList.add('flex');
+        }
+        if (filterBar) filterBar.classList.add('hidden');
+        updateScrapedEmptyState();
+      } else {
+        if (scrapedList) {
+          scrapedList.classList.add('hidden');
+          scrapedList.classList.remove('flex');
+        }
+        if (myprojList) myprojList.classList.remove('hidden');
+        if (filterBar) filterBar.classList.remove('hidden');
       }
 
       Object.keys(tabs).forEach(k => {
@@ -5476,14 +5668,28 @@
 
     function filterMyProjects(filterType) {
       const cards = document.querySelectorAll('.myproj-card');
+      let visibleCount = 0;
+
       cards.forEach(card => {
         const status = card.dataset.status;
         if (filterType === 'all' || status === filterType) {
           card.classList.remove('hidden');
+          visibleCount++;
         } else {
           card.classList.add('hidden');
         }
       });
+
+      const emptyState = document.getElementById('myproj-empty-state');
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+          emptyState.classList.add('flex');
+        } else {
+          emptyState.classList.add('hidden');
+          emptyState.classList.remove('flex');
+        }
+      }
 
       const filters = {
         all: document.getElementById('myproj-filter-all'),
@@ -6029,18 +6235,64 @@
       const grid = document.getElementById('dashboard-cards-grid');
       if (!grid) return;
       const cards = Array.from(grid.querySelectorAll('.feed-card'));
+      let visibleCount = 0;
 
       if (category === 'all') {
-        cards.forEach(card => card.style.display = 'flex');
+        cards.forEach(card => {
+          card.style.display = 'flex';
+          visibleCount++;
+        });
       } else {
         cards.forEach(card => {
           const cardCat = card.getAttribute('data-category');
           if (cardCat === category) {
             card.style.display = 'flex';
+            visibleCount++;
           } else {
             card.style.display = 'none';
           }
         });
+      }
+
+      // Empty State Handling
+      const emptyState = document.getElementById('feed-empty-state');
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+          emptyState.classList.add('flex');
+        } else {
+          emptyState.classList.add('hidden');
+          emptyState.classList.remove('flex');
+        }
+      }
+    }
+
+    function searchFeed(query) {
+      const grid = document.getElementById('dashboard-cards-grid');
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.feed-card'));
+      const q = (query || '').trim().toLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!q || text.includes(q)) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      const emptyState = document.getElementById('feed-empty-state');
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+          emptyState.classList.add('flex');
+        } else {
+          emptyState.classList.add('hidden');
+          emptyState.classList.remove('flex');
+        }
       }
     }
 
