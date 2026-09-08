@@ -436,16 +436,20 @@
       <div id="participate-view-initial" class="flex flex-col gap-5">
         <!-- 1. 모달 상단 요약 (작은 썸네일 + 서비스명 + 한줄소개) -->
         <div class="flex items-center gap-4 border-b border-neutral-100 pb-4">
-          <div id="part-modal-thumb-box" class="w-14 h-14 rounded-2xl bg-[#F4F9EE] border border-primary/40 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+          <div id="part-modal-thumb-box"
+            class="w-14 h-14 rounded-2xl bg-[#F4F9EE] border border-primary/40 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
             📱
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-1.5 mb-1">
-              <span id="part-modal-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-primary/30 text-primary-dark">[프로덕트 테스트]</span>
-              <span id="part-modal-reward" class="text-[11px] font-extrabold text-[#7E22CE] bg-purple-50 px-2 py-0.5 rounded">🪙 600 동전 수령</span>
+              <span id="part-modal-badge"
+                class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-primary/30 text-primary-dark">[프로덕트 테스트]</span>
+              <span id="part-modal-reward"
+                class="text-[11px] font-extrabold text-[#7E22CE] bg-purple-50 px-2 py-0.5 rounded">🪙 600 동전 수령</span>
             </div>
             <h3 id="part-modal-title" class="text-base font-extrabold text-neutral-dark truncate">가계부 앱 베타테스트</h3>
-            <p id="part-modal-desc" class="text-xs text-neutral-500 truncate mt-0.5">영수증 사진 한 장으로 지출을 자동 분류하는 스마트 가계부</p>
+            <p id="part-modal-desc" class="text-xs text-neutral-500 truncate mt-0.5">영수증 사진 한 장으로 지출을 자동 분류하는 스마트 가계부
+            </p>
           </div>
         </div>
 
@@ -460,9 +464,11 @@
         </div>
 
         <!-- 3. 대상 조건 확인용 추가 질문 (있을 시 노출) -->
-        <div id="part-modal-target-box" class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex flex-col gap-1">
+        <div id="part-modal-target-box"
+          class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex flex-col gap-1">
           <span class="font-bold flex items-center gap-1">🎯 권장 대상 조건 확인</span>
-          <p id="part-modal-target-text" class="text-[11px] text-amber-800 leading-relaxed font-medium">연령대: 20대, 30대 | 관심사: 핀테크, 자산관리</p>
+          <p id="part-modal-target-text" class="text-[11px] text-amber-800 leading-relaxed font-medium">연령대: 20대, 30대 |
+            관심사: 핀테크, 자산관리</p>
         </div>
 
         <!-- 4. 모달 하단 버튼 -->
@@ -481,7 +487,8 @@
 
       <!-- [VIEW B: 외부형 완료 안내 뷰 (웹/앱/설문URL)] -->
       <div id="participate-view-external-done" class="flex flex-col gap-5 text-center hidden py-4">
-        <div class="mx-auto w-16 h-16 rounded-full bg-[#EBF7E2] text-primary-dark flex items-center justify-center text-3xl mb-1 shadow-xs">
+        <div
+          class="mx-auto w-16 h-16 rounded-full bg-[#EBF7E2] text-primary-dark flex items-center justify-center text-3xl mb-1 shadow-xs">
           🚀
         </div>
         <div>
@@ -492,7 +499,8 @@
           </p>
         </div>
 
-        <div class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 text-xs text-[#2A5E12] font-semibold leading-relaxed">
+        <div
+          class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 text-xs text-[#2A5E12] font-semibold leading-relaxed">
           💡 다녀오신 후 <strong class="underline decoration-2">마이페이지 &gt; 참여한 테스트 활동</strong> 또는 <br />
           결과 대시보드에서 리뷰 작성 시 <strong id="part-external-reward-text" class="text-[#7E22CE]">동전</strong>이 최종 지급됩니다.
         </div>
@@ -546,7 +554,8 @@
       <!-- Header -->
       <div class="border-b border-neutral-100 pb-4">
         <div class="flex items-center gap-2 mb-1.5">
-          <span id="fb-modal-badge" class="text-xs font-bold text-primary-dark bg-[#EBF7E2] px-2.5 py-0.5 rounded-full border border-[#D5EA9F]">
+          <span id="fb-modal-badge"
+            class="text-xs font-bold text-primary-dark bg-[#EBF7E2] px-2.5 py-0.5 rounded-full border border-[#D5EA9F]">
             📱 프로덕트 테스트 피드백
           </span>
           <span id="fb-modal-reward" class="text-xs font-bold text-[#7E22CE] bg-purple-50 px-2.5 py-0.5 rounded-full">
@@ -728,8 +737,7 @@
           <span class="text-xl font-extrabold text-[#2F6517] tracking-tight">돈 돼?</span>
         </div>
 
-        <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium text-[#4B5563]"
-          aria-label="서비스 소개 메뉴">
+        <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium text-[#4B5563]" aria-label="서비스 소개 메뉴">
           <a href="#features" class="hover:text-neutral-dark transition-colors">Features</a>
           <a href="#testers" class="hover:text-neutral-dark transition-colors">Testers</a>
           <a href="#stats" class="hover:text-neutral-dark transition-colors">Stats</a>
@@ -908,8 +916,8 @@
           class="w-full text-xs font-bold text-[#2F6517] hidden text-center mb-4"></div>
 
         <div id="auth-form-panel" class="w-full">
-          <div id="auth-mode-tabs" class="w-full grid grid-cols-2 gap-1 bg-neutral-100 rounded-xl p-1 mb-6" role="tablist"
-            aria-label="인증 방식 선택">
+          <div id="auth-mode-tabs" class="w-full grid grid-cols-2 gap-1 bg-neutral-100 rounded-xl p-1 mb-6"
+            role="tablist" aria-label="인증 방식 선택">
             <button type="button" id="auth-mode-login" role="tab" aria-selected="true" aria-controls="auth-form"
               class="py-2.5 rounded-lg bg-white text-neutral-dark text-xs font-extrabold shadow-sm transition-all">
               로그인
@@ -951,8 +959,8 @@
             </div>
 
             <div id="auth-password-confirm-group" class="hidden">
-              <label for="auth-password-confirm-input"
-                class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호 확인</label>
+              <label for="auth-password-confirm-input" class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호
+                확인</label>
               <div class="relative">
                 <input id="auth-password-confirm-input" type="password" autocomplete="new-password" minlength="6"
                   placeholder="비밀번호를 한 번 더 입력하세요"
@@ -1035,8 +1043,8 @@
           </div>
 
           <div>
-            <label for="auth-new-password-confirm-input"
-              class="block text-xs font-bold text-neutral-dark mb-1.5">새 비밀번호 확인</label>
+            <label for="auth-new-password-confirm-input" class="block text-xs font-bold text-neutral-dark mb-1.5">새 비밀번호
+              확인</label>
             <div class="relative">
               <input id="auth-new-password-confirm-input" type="password" autocomplete="new-password" minlength="6"
                 placeholder="새 비밀번호를 한 번 더 입력하세요"
@@ -1193,7 +1201,7 @@
         <section id="dashboard-cards-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           <!-- Card 1: AI 기반 하루 일기 웹앱 (A/B 투표) -->
-          <article data-category="abtest" data-reward="200" data-card-id="diary" onclick="openAbTest('diary')"
+          <article data-category="abtest" data-reward="200" data-card-id="diary" onclick="openPostDetail('diary')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
               <div
@@ -1216,7 +1224,7 @@
 
               <div class="absolute top-5 left-5 flex items-center gap-1.5">
                 <span class="px-2.5 py-1 rounded-md bg-[#FCE7F3] text-[#BE185D] text-[11px] font-bold">
-                  [A/B 투표] 30초 소요
+                  [A/B 투표] 약 3분 소요
                 </span>
               </div>
 
@@ -1346,7 +1354,7 @@
           </article>
 
           <!-- Card 3: SaaS 서비스 랜딩페이지 카피라이팅 A/B 테스트 -->
-          <article data-category="landing" data-reward="100" data-card-id="saas" onclick="openAbTest('saas')"
+          <article data-category="landing" data-reward="100" data-card-id="saas" onclick="openPostDetail('saas')"
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
             <div class="relative bg-[#FFFBEB] border-b border-[#F0F2F5] p-3">
               <div
@@ -1632,7 +1640,8 @@
               </label>
               <span id="service-name-counter" class="text-xs text-neutral-400 font-mono">0 / 20자</span>
             </div>
-            <input id="input-service-name" type="text" maxlength="20" value="머니로그 (MoneyLog)" placeholder="예: 돈돼 (최대 20자)"
+            <input id="input-service-name" type="text" maxlength="20" value="머니로그 (MoneyLog)"
+              placeholder="예: 돈돼 (최대 20자)"
               class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium"
               oninput="document.getElementById('service-name-counter').textContent = `${this.value.length} / 20자`" />
           </div>
@@ -1640,10 +1649,10 @@
           <!-- 4. 서비스 소개 (텍스트, 필수, 200자 내외 권장) -->
           <div>
             <label class="block text-sm font-bold text-neutral-dark mb-1.5">
-              서비스 소개 <span class="text-red-500">*</span> <span class="text-xs font-normal text-neutral-400">(200자 내외)</span>
+              서비스 소개 <span class="text-red-500">*</span> <span class="text-xs font-normal text-neutral-400">(200자
+                내외)</span>
             </label>
-            <textarea id="input-service-desc" rows="3"
-              placeholder="서비스에 대한 소개를 자유롭게 작성해 주세요 (200자 내외 권장)"
+            <textarea id="input-service-desc" rows="3" placeholder="서비스에 대한 소개를 자유롭게 작성해 주세요 (200자 내외 권장)"
               class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">바이브코딩으로 만든 영수증 자동 분류 스마트 가계부 서비스입니다. 복잡한 지출 입력을 영수증 사진 한 장으로 손쉽게 해결하며, 카테고리별 실시간 지출 차트와 예산 알림 기능을 제공합니다.</textarea>
           </div>
 
@@ -1670,64 +1679,67 @@
           </div>
         </div>
 
-        <!-- STEP 2: 테스트 유형 선택 (동적 렌더링) -->
+        <!-- STEP 2: 테스트 유형 및 세부 정보 선택 (동적 렌더링) -->
         <div id="form-section-2" style="display: none;" class="flex flex-col gap-6">
           <div class="border-b border-neutral-100 pb-3 flex items-center justify-between">
             <div>
               <span class="text-xs font-bold text-primary-dark uppercase tracking-wider">Step 02</span>
-              <h2 class="text-lg font-bold text-neutral-dark mt-0.5">테스트 유형 및 세부 정보 선택</h2>
+              <h2 class="text-lg font-bold text-neutral-dark mt-0.5">테스트 유형 및 검증 방식 선택</h2>
             </div>
             <span class="text-xs text-neutral-400 font-medium">2 / 3 단계</span>
           </div>
 
-          <!-- 대분류 선택 카드 3가지 -->
+          <!-- 1. 테스트 대분류 선택 (단순 설문조사는 생략 가능) -->
           <div>
-            <h3 class="text-sm font-bold text-neutral-dark mb-1">1. 테스트 대분류 선택 <span class="text-red-500">*</span></h3>
-            <p class="text-xs text-neutral-muted mb-4">수행할 검증 형태를 선택해주세요. 선택에 따라 세부 입력 필드가 동적으로 표시됩니다.</p>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="text-sm font-bold text-neutral-dark">1. 테스트 대분류 선택 <span class="text-neutral-400 font-normal text-xs">(단순 설문조사 시 생략 가능)</span></h3>
+              <button type="button" id="btn-skip-main-category" onclick="handleSkipMainCategory()"
+                class="px-3 py-1 rounded-lg border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer">
+                ⏩ 대분류 생략 (단순 설문)
+              </button>
+            </div>
+            <p class="text-xs text-neutral-muted mb-4">프로덕트, 프로토타입, 투표 중 검증할 대상 형태를 선택하세요.</p>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <!-- 분류 1: 프로덕트/프로토타입 -->
+              <!-- 분류 1: 프로덕트 -->
               <label id="card-main-product"
                 class="main-category-card cursor-pointer rounded-2xl border-2 border-primary bg-[#F4F9EE] p-5 flex flex-col items-center text-center gap-3 transition-all shadow-xs">
                 <input type="radio" name="mainCategory" value="product" class="hidden" checked
                   onchange="handleMainCategoryChange('product')" />
-                <div
-                  class="w-12 h-12 rounded-full bg-primary/30 text-primary-dark flex items-center justify-center text-xl">
+                <div class="w-12 h-12 rounded-full bg-primary/30 text-primary-dark flex items-center justify-center text-xl">
                   💻
                 </div>
                 <div>
-                  <span class="text-base font-extrabold text-neutral-dark block">프로덕트 / 프로토타입</span>
-                  <span class="text-xs text-[#2F6517] font-semibold mt-0.5 block">웹사이트 또는 모바일 앱 검증</span>
+                  <span class="text-base font-extrabold text-neutral-dark block">프로덕트</span>
+                  <span class="text-xs text-[#2F6517] font-semibold mt-0.5 block">상용 출시된 웹사이트 또는 모바일 앱</span>
                 </div>
               </label>
 
-              <!-- 분류 2: 투표 -->
+              <!-- 분류 2: 프로토타입 -->
+              <label id="card-main-prototype"
+                class="main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all">
+                <input type="radio" name="mainCategory" value="prototype" class="hidden"
+                  onchange="handleMainCategoryChange('prototype')" />
+                <div class="w-12 h-12 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-xl">
+                  📱
+                </div>
+                <div>
+                  <span class="text-base font-extrabold text-neutral-dark block">프로토타입</span>
+                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">개발 중인 웹/피그마 또는 베타 앱</span>
+                </div>
+              </label>
+
+              <!-- 분류 3: 투표 -->
               <label id="card-main-vote"
                 class="main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all">
                 <input type="radio" name="mainCategory" value="vote" class="hidden"
                   onchange="handleMainCategoryChange('vote')" />
-                <div
-                  class="w-12 h-12 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-xl">
+                <div class="w-12 h-12 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-xl">
                   📊
                 </div>
                 <div>
                   <span class="text-base font-extrabold text-neutral-dark block">투표</span>
-                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">다중 시안 및 질문 기반 투표</span>
-                </div>
-              </label>
-
-              <!-- 분류 3: 설문조사 -->
-              <label id="card-main-survey"
-                class="main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all">
-                <input type="radio" name="mainCategory" value="survey" class="hidden"
-                  onchange="handleMainCategoryChange('survey')" />
-                <div
-                  class="w-12 h-12 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-xl">
-                  📝
-                </div>
-                <div>
-                  <span class="text-base font-extrabold text-neutral-dark block">설문조사</span>
-                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">구글폼 링크 또는 직접 질문 작성</span>
+                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">다중 이미지/URL 시안 비교 투표</span>
                 </div>
               </label>
             </div>
@@ -1737,10 +1749,10 @@
           <div id="sub-category-form-container"
             class="bg-[#FAFBF7] border border-[#E9EEDC] rounded-2xl p-6 flex flex-col gap-6 animate-in fade-in duration-200">
 
-            <!-- Sub Form 1: 프로덕트/프로토타입 (웹 vs 앱 + A/B 비교 토글) -->
+            <!-- Sub Form 1: 프로덕트 / 프로토타입 서브 폼 -->
             <div id="sub-form-product" class="flex flex-col gap-5">
               <label class="block text-sm font-bold text-neutral-dark">
-                2-1. 매체 구분 선택 <span class="text-red-500">*</span>
+                매체 및 접속 정보 설정 <span class="text-red-500">*</span>
               </label>
               <div class="flex items-center gap-4">
                 <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-neutral-800">
@@ -1759,168 +1771,135 @@
               <div class="p-4 rounded-xl bg-white border border-neutral-200 flex items-center justify-between">
                 <div>
                   <span class="text-xs font-bold text-neutral-dark block">A/B 비교 테스트 모드</span>
-                  <span class="text-[11px] text-neutral-400 font-medium">ON 설정 시 A안/B안 2개 시안 비교 및 전용 질문 작성이 추가됩니다.</span>
+                  <span class="text-[11px] text-neutral-400 font-medium">ON 설정 시 A안/B안 2개 시안 비교 필드가 추가됩니다.</span>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="toggle-product-ab" onchange="toggleProductAbMode(this.checked)" class="sr-only switch-toggle" />
+                  <input type="checkbox" id="toggle-product-ab" onchange="toggleProductAbMode(this.checked)"
+                    class="sr-only switch-toggle" />
                   <div class="w-11 h-6 bg-neutral-200 rounded-full switch-bg transition-colors"></div>
                   <div class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform switch-dot shadow-2xs"></div>
                 </label>
               </div>
 
-              <!-- [OFF 모드] 단일 웹/앱 입력 필드 -->
-              <div id="product-single-fields" class="flex flex-col gap-4">
-                <!-- 웹 선택 시 단일 필드 -->
-                <div id="product-web-fields" class="flex flex-col gap-3">
-                  <label class="block text-xs font-bold text-neutral-dark">사이트 URL <span class="text-red-500">*</span></label>
-                  <div class="flex items-center rounded-xl border border-[#E5E7EB] px-4 py-2.5 bg-white">
-                    <span class="text-sm text-neutral-muted font-mono pr-2">https://</span>
-                    <input id="input-product-web-url" type="url" value="try-money-pig.io"
-                      placeholder="https://example.com" class="flex-1 text-sm font-medium focus:outline-none" />
-                    <button type="button" id="btn-verify-url" onclick="verifyUrlAction()"
-                      class="px-3 py-1 bg-neutral-100 text-xs font-bold rounded-lg hover:bg-neutral-200 transition-colors">검증</button>
-                  </div>
-                  <div id="verify-url-msg" class="text-xs font-semibold hidden transition-all"></div>
+              <!-- 웹 선택 시 필드 (단일 / AB) -->
+              <div id="product-web-fields" class="flex flex-col gap-3">
+                <label class="block text-xs font-bold text-neutral-dark">사이트 URL <span class="text-red-500">*</span></label>
+                <div class="flex items-center rounded-xl border border-[#E5E7EB] px-4 py-2.5 bg-white">
+                  <span class="text-sm text-neutral-muted font-mono pr-2">https://</span>
+                  <input id="input-product-web-url" type="url" value="try-money-pig.io"
+                    placeholder="https://example.com" class="flex-1 text-sm font-medium focus:outline-none" />
                 </div>
+              </div>
 
-                <!-- 앱 선택 시 단일 필드 -->
-                <div id="product-app-fields" class="flex flex-col gap-4 hidden">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-xs font-bold text-neutral-dark mb-1">패키지명 (Android Package Name)</label>
-                      <input id="input-app-package" type="text" placeholder="com.example.app"
-                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
-                    </div>
-                    <div>
-                      <label class="block text-xs font-bold text-neutral-dark mb-1">번들 ID (iOS Bundle ID)</label>
-                      <input id="input-app-bundle" type="text" placeholder="com.example.appname"
-                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
-                    </div>
-                  </div>
-
+              <!-- 프로덕트(상용) 앱 선택 시 필드 -->
+              <div id="product-app-store-fields" class="flex flex-col gap-4 hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 트랙 구별</label>
-                    <select id="select-app-track"
-                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-semibold">
-                      <option value="internal">내부 테스트 (Internal Test)</option>
-                      <option value="closed" selected>비공개 테스트 (Closed Beta / TestFlight)</option>
-                      <option value="open">공개 테스트 (Open Beta)</option>
-                      <option value="store">스토어 정식 출시 (Store Release)</option>
-                    </select>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">구글 플레이스토어 URL</label>
+                    <input id="input-app-playstore-url" type="url" placeholder="https://play.google.com/store/apps/details?id=..."
+                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
                   </div>
-
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-xs font-bold text-neutral-dark mb-1">테스터 그룹 가입 링크</label>
-                      <input id="input-app-group-link" type="text" placeholder="https://groups.google.com/g/my-testers"
-                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
-                    </div>
-                    <div>
-                      <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 참여 링크 또는 스토어 링크</label>
-                      <input id="input-app-test-link" type="text"
-                        placeholder="https://play.google.com/apps/testing/com.example"
-                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
-                    </div>
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">애플 앱스토어 URL</label>
+                    <input id="input-app-appstore-url" type="url" placeholder="https://apps.apple.com/app/id..."
+                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
                   </div>
                 </div>
               </div>
 
-              <!-- [ON 모드] A안/B안 2세트 입력 필드 및 질문 목록 -->
-              <div id="product-ab-fields" class="flex flex-col gap-5 hidden">
-                <!-- 웹 A/B 2세트 -->
+              <!-- 프로토타입(베타) 앱 선택 시 필드 -->
+              <div id="product-app-prototype-fields" class="flex flex-col gap-4 hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">패키지명 (Android Package Name)</label>
+                    <input id="input-app-package" type="text" placeholder="com.example.app"
+                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">번들 ID (iOS Bundle ID)</label>
+                    <input id="input-app-bundle" type="text" placeholder="com.example.appname"
+                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 트랙 구별</label>
+                  <select id="select-app-track" class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-semibold">
+                    <option value="internal">내부 테스트 (Internal Test)</option>
+                    <option value="closed" selected>비공개 테스트 (Closed Beta / TestFlight)</option>
+                    <option value="open">공개 테스트 (Open Beta)</option>
+                  </select>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스터 그룹 가입 링크</label>
+                    <input id="input-app-group-link" type="text" placeholder="https://groups.google.com/g/my-testers"
+                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 참여 링크 또는 스토어 링크</label>
+                    <input id="input-app-test-link" type="text" placeholder="https://play.google.com/apps/testing/com.example"
+                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- A/B 모드 온 일 때 필드 -->
+              <div id="product-ab-fields" class="flex flex-col gap-4 hidden">
                 <div id="product-ab-web-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
                     <span class="text-xs font-extrabold text-primary-dark">A안 사이트 URL</span>
-                    <input id="input-product-ab-web-a" type="url" value="https://a-version.example.com" placeholder="https://a-version.example.com"
+                    <input id="input-product-ab-web-a" type="url" value="https://a-version.example.com"
                       class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none font-medium" />
                   </div>
                   <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
                     <span class="text-xs font-extrabold text-secondary-wine">B안 사이트 URL</span>
-                    <input id="input-product-ab-web-b" type="url" value="https://b-version.example.com" placeholder="https://b-version.example.com"
+                    <input id="input-product-ab-web-b" type="url" value="https://b-version.example.com"
                       class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none font-medium" />
                   </div>
                 </div>
-
-                <!-- 앱 A/B 2세트 -->
                 <div id="product-ab-app-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4 hidden">
                   <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3">
-                    <span class="text-xs font-extrabold text-primary-dark">A안 앱 테스트 정보</span>
-                    <input id="input-product-ab-app-pkg-a" type="text" placeholder="A안 패키지명 (com.a.app)" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
-                    <input id="input-product-ab-app-link-a" type="text" placeholder="A안 참여 링크" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                    <span class="text-xs font-extrabold text-primary-dark">A안 앱 정보</span>
+                    <input id="input-product-ab-app-link-a" type="text" placeholder="A안 참여 링크 또는 스토어 링크"
+                      class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
                   </div>
                   <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3">
-                    <span class="text-xs font-extrabold text-secondary-wine">B안 앱 테스트 정보</span>
-                    <input id="input-product-ab-app-pkg-b" type="text" placeholder="B안 패키지명 (com.b.app)" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
-                    <input id="input-product-ab-app-link-b" type="text" placeholder="B안 참여 링크" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                    <span class="text-xs font-extrabold text-secondary-wine">B안 앱 정보</span>
+                    <input id="input-product-ab-app-link-b" type="text" placeholder="B안 참여 링크 또는 스토어 링크"
+                      class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
                   </div>
-                </div>
-
-                <!-- A/B 비교 질문 입력 (기존 투표 질문 UI 재사용) -->
-                <div class="flex flex-col gap-3 border-t border-neutral-200/80 pt-4">
-                  <div class="flex items-center justify-between">
-                    <label class="block text-xs font-bold text-neutral-dark">
-                      A/B 비교 질문 입력 <span class="text-red-500">*</span>
-                    </label>
-                    <span class="text-[11px] text-neutral-400 font-normal">A안과 B안을 비교할 가이드 질문을 등록해 주세요.</span>
-                  </div>
-
-                  <div id="product-ab-questions-list" class="space-y-3">
-                    <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white">
-                      <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문 1</span>
-                      <input type="text" value="A안과 B안 중 어떤 화면의 UI/UX가 더 직관적인가요? 이유를 함께 남겨주세요."
-                        class="flex-1 text-xs font-medium focus:outline-none" />
-                      <button type="button" onclick="this.parentElement.remove()"
-                        class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
-                    </div>
-                  </div>
-
-                  <button type="button" onclick="addProductAbQuestionItem()"
-                    class="w-full py-3 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
-                    <span>+ 질문 추가</span>
-                  </button>
                 </div>
               </div>
             </div>
 
-            <!-- Sub Form 2: 투표 (통합 단일 패턴) -->
+            <!-- Sub Form 2: 투표 서브 폼 -->
             <div id="sub-form-vote" class="flex flex-col gap-6 hidden">
-              <!-- 1. 콘텐츠 입력 방식 선택 (이미지 업로드 vs URL 링크) -->
               <div class="flex flex-col gap-2 bg-white p-4 rounded-xl border border-neutral-200">
                 <label class="block text-xs font-bold text-neutral-dark">
-                  1. 콘텐츠 입력 방식 선택 <span class="text-red-500">*</span>
+                  콘텐츠 입력 방식 선택 <span class="text-red-500">*</span>
                 </label>
                 <div class="grid grid-cols-2 gap-3 text-center text-xs">
                   <button type="button" id="btn-vote-input-mode-image" onclick="setVoteInputMode('image')"
                     class="py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                    <span>🖼️</span> <span>이미지 업로드</span>
+                    <span>🖼️</span> <span>이미지 업로드 (최대 4개)</span>
                   </button>
                   <button type="button" id="btn-vote-input-mode-url" onclick="setVoteInputMode('url')"
                     class="py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                    <span>🔗</span> <span>URL 링크</span>
+                    <span>🔗</span> <span>URL 링크 (최대 4개)</span>
                   </button>
                 </div>
               </div>
 
-              <!-- 2. 콘텐츠 입력 (다중 추가 UI, 최소 2개 이상) -->
+              <!-- 콘텐츠 추가 UI (최대 4개) -->
               <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between">
-                  <label class="block text-xs font-bold text-neutral-dark">
-                    2. 콘텐츠 추가 (최소 2개 이상) <span class="text-red-500">*</span>
-                  </label>
-                  <span class="text-[11px] text-neutral-400 font-normal">비교할 시안이나 페이지 콘텐츠를 다중으로 추가하세요.</span>
-                </div>
-
-                <!-- 이미지 업로드 다중 모드 -->
                 <div id="vote-image-input-container" class="flex flex-col gap-3">
                   <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                    <span class="text-xs font-extrabold text-neutral-dark">이미지 다중 업로드</span>
+                    <span class="text-xs font-extrabold text-neutral-dark">이미지 다중 업로드 (최대 4개)</span>
                     <input id="input-vote-multi-images" type="file" multiple accept="image/*"
                       class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
-                    <p class="text-[11px] text-neutral-400">투표에 부칠 시안 이미지 파일들을 2개 이상 선택해 주세요.</p>
                   </div>
                 </div>
 
-                <!-- URL 링크 다중 추가 모드 -->
                 <div id="vote-url-input-container" class="flex flex-col gap-3 hidden">
                   <div id="vote-url-list" class="space-y-2.5">
                     <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
@@ -1936,81 +1915,119 @@
                   </div>
                   <button type="button" onclick="addVoteUrlItem()"
                     class="w-full py-2.5 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
-                    <span>+ URL 항목 추가</span>
+                    <span>+ URL 항목 추가 (최대 4개)</span>
                   </button>
                 </div>
               </div>
 
-              <!-- 3. 질문 입력 -->
+              <!-- 질문 입력 (최대 5개) -->
               <div class="flex flex-col gap-3 border-t border-neutral-200/80 pt-4">
                 <div class="flex items-center justify-between">
                   <label class="block text-xs font-bold text-neutral-dark">
-                    3. 질문 입력 <span class="text-red-500">*</span>
+                    질문 입력 (최대 5개) <span class="text-red-500">*</span>
                   </label>
-                  <span class="text-[11px] text-neutral-400 font-normal">투표 시 테스터들에게 던질 질문을 작성하세요.</span>
                 </div>
-
                 <div id="vote-questions-list" class="space-y-3">
                   <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white">
                     <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문 1</span>
-                    <input type="text" value="어떤 안이 더 좋아 보이나요? 왜 그렇게 생각하시나요?"
+                    <input type="text" value="어떤 안이 더 좋아 보이나요? 이유를 함께 남겨주세요."
                       class="flex-1 text-xs font-medium focus:outline-none" />
-                    <button type="button" onclick="this.parentElement.remove()"
-                      class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+                    <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
                   </div>
                 </div>
-
                 <button type="button" onclick="addVoteQuestionItem()"
                   class="w-full py-3 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
-                  <span>+ 질문 추가</span>
+                  <span>+ 질문 추가 (최대 5개)</span>
                 </button>
               </div>
             </div>
 
-            <!-- Sub Form 3: 설문조사 (URL 링크형 vs 직접 입력형) -->
-            <div id="sub-form-survey" class="flex flex-col gap-5 hidden">
-              <label class="block text-sm font-bold text-neutral-dark">
-                2-3. 설문 방식 선택 <span class="text-red-500">*</span>
+          </div>
+
+          <!-- 2. 테스트 진행 방법 (가이드) -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col gap-3">
+            <label class="block text-sm font-bold text-neutral-dark">
+              2. 테스트 진행 방법 (가이드) <span class="text-red-500">*</span>
+            </label>
+            <textarea id="input-test-guide" rows="3" placeholder="테스터가 진행할 가이드나 참여 순서를 입력해 주세요."
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-xs focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">1. 접속 링크를 통해 서비스를 3분간 자유롭게 둘러봅니다.
+2. 아래 검증 항목 질문에 맞춰 솔직한 소감을 작성해 주세요.</textarea>
+          </div>
+
+          <!-- 3. 검증 항목 작성 (테스트 미션) -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col gap-4">
+            <label class="block text-sm font-bold text-neutral-dark">
+              3. 검증 항목 작성 (테스트 미션) <span class="text-red-500">*</span>
+            </label>
+            
+            <div class="flex items-center gap-4">
+              <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-neutral-800">
+                <input type="radio" name="missionFormatMode" value="direct" checked onchange="toggleMissionFormatMode('direct')"
+                  class="accent-primary-dark w-4 h-4" />
+                <span>✏️ 문항 직접 입력</span>
               </label>
-              <div class="flex items-center gap-4">
-                <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-neutral-800">
-                  <input type="radio" name="surveySubMode" value="link" checked onchange="toggleSurveySubMode('link')"
-                    class="accent-primary-dark w-4 h-4" />
-                  <span>🔗 외부 URL 링크형 (구글폼 등)</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-neutral-800">
-                  <input type="radio" name="surveySubMode" value="direct" onchange="toggleSurveySubMode('direct')"
-                    class="accent-primary-dark w-4 h-4" />
-                  <span>✏️ 문항 직접 입력형</span>
-                </label>
-              </div>
+              <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-neutral-800">
+                <input type="radio" name="missionFormatMode" value="link" onchange="toggleMissionFormatMode('link')"
+                  class="accent-primary-dark w-4 h-4" />
+                <span>🔗 외부 URL 링크형 (구글폼, 타입폼 등)</span>
+              </label>
+            </div>
 
-              <!-- URL 링크형 필드 -->
-              <div id="survey-link-fields" class="flex flex-col gap-3">
-                <label class="block text-xs font-bold text-neutral-dark">외부 설문 URL (구글폼, 타입폼 등)</label>
-                <input id="input-survey-url" type="url" placeholder="https://forms.google.com/..."
-                  class="w-full p-3 rounded-xl border border-neutral-200 bg-white text-xs" />
+            <!-- (1) 문항 직접 입력 -->
+            <div id="mission-direct-container" class="flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-neutral-600">검증 문항 작성 (최대 10개까지 추가 가능)</span>
+                <span class="text-[11px] text-neutral-400 font-normal">* 선택지를 모두 지우면 테스터가 직접 서술하는 주관식 질문이 됩니다.</span>
               </div>
-
-              <!-- 직접 입력형 필드 -->
-              <div id="survey-direct-fields" class="flex flex-col gap-3 hidden">
-                <label class="block text-xs font-bold text-neutral-dark mb-1">설문 문항 추가</label>
-                <div id="survey-questions-list" class="space-y-3">
-                  <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white">
-                    <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs">문항 1</span>
-                    <input type="text" placeholder="설문 질문 내용을 입력하세요..."
-                      class="flex-1 text-xs font-medium focus:outline-none" />
-                    <button type="button" onclick="this.parentElement.remove()"
-                      class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+              <div id="questions-list" class="space-y-4">
+                <div class="question-item p-4 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors flex flex-col gap-3">
+                  <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 1</span>
+                    <input type="text" value="핵심 기능의 사용 편의성과 UI 가독성은 어떠하셨나요?" placeholder="질문 내용을 입력하세요..."
+                      class="question-title-input flex-1 text-xs font-medium text-neutral-dark focus:outline-none" />
+                    <button type="button" onclick="this.closest('.question-item').remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-2">삭제</button>
+                  </div>
+                  <div class="pl-8 flex flex-col gap-2 border-t border-neutral-100 pt-2.5">
+                    <div class="flex items-center justify-between">
+                      <span class="text-[11px] font-bold text-neutral-500">선택지 항목 설정 (최대 5개 / 지우면 주관식)</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                      <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+                        <span class="text-xs text-neutral-400">1.</span>
+                        <input type="text" value="매우 양호함 / 이상 없음" placeholder="선택지 1" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                      </div>
+                      <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+                        <span class="text-xs text-neutral-400">2.</span>
+                        <input type="text" value="일부 개선 필요" placeholder="선택지 2" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                      </div>
+                      <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+                        <span class="text-xs text-neutral-400">3.</span>
+                        <input type="text" value="" placeholder="선택지 3 (선택)" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                      </div>
+                      <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+                        <span class="text-xs text-neutral-400">4.</span>
+                        <input type="text" value="" placeholder="선택지 4 (선택)" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                      </div>
+                      <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+                        <span class="text-xs text-neutral-400">5.</span>
+                        <input type="text" value="" placeholder="선택지 5 (선택)" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <button type="button" onclick="addSurveyQuestionItem()"
-                  class="w-full py-3 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 mt-1">
-                  <span>+ 문항 추가하기</span>
-                </button>
               </div>
+              <button type="button" onclick="addQuestionItem()"
+                class="w-full py-3 rounded-xl border border-dashed border-[#D1D5DB] text-xs font-semibold text-neutral-muted hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 mt-1 cursor-pointer">
+                <span>+ 검증 문항 추가하기 (최대 10개)</span>
+              </button>
             </div>
 
+            <!-- (2) 외부 URL 링크형 -->
+            <div id="mission-link-container" class="flex flex-col gap-3 hidden">
+              <label class="block text-xs font-bold text-neutral-dark">외부 설문 URL (구글폼, 타입폼 등)</label>
+              <input id="input-external-survey-url" type="url" placeholder="https://forms.google.com/..."
+                class="w-full p-3 rounded-xl border border-neutral-200 bg-white text-xs" />
+            </div>
           </div>
 
           <!-- Step 2 Navigation Buttons -->
@@ -2027,7 +2044,7 @@
           </div>
         </div>
 
-        <!-- STEP 3: 테스트 세부 설정 (모든 유형에서 동일) -->
+        <!-- STEP 3: 테스트 세부 설정 (검증항목 & 가이드 제거됨) -->
         <div id="form-section-3" style="display: none;" class="flex flex-col gap-6">
           <div class="border-b border-neutral-100 pb-3 flex items-center justify-between">
             <div>
@@ -2040,17 +2057,20 @@
           <!-- 1. 모집기간 & 소요시간 & 모집인원 -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 시작일 <span class="text-red-500">*</span></label>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 시작일 <span
+                  class="text-red-500">*</span></label>
               <input id="input-start-date" type="date" value="2024-11-20"
                 class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60" />
             </div>
             <div>
-              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 종료일 <span class="text-red-500">*</span></label>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 종료일 <span
+                  class="text-red-500">*</span></label>
               <input id="input-end-date" type="date" value="2024-12-05"
                 class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60" />
             </div>
             <div>
-              <label class="block text-xs font-bold text-neutral-dark mb-1">예상 소요 시간 <span class="text-red-500">*</span></label>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">예상 소요 시간 <span
+                  class="text-red-500">*</span></label>
               <select id="select-test-duration"
                 class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-primary/60 cursor-pointer">
                 <option value="1분 내외">1분 내외 (매우 간단)</option>
@@ -2061,7 +2081,8 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-bold text-neutral-dark mb-1">모집인원 (명) <span class="text-red-500">*</span></label>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집인원 (명) <span
+                  class="text-red-500">*</span></label>
               <input id="input-target-count" type="number" value="30" min="30"
                 class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-primary/60"
                 oninput="calculateTotalCost()" />
@@ -2071,47 +2092,58 @@
           <!-- 2. 관심사 카테고리 (다중선택 가능) -->
           <div class="p-5 rounded-2xl border border-neutral-200 bg-[#FAFAFA] flex flex-col gap-3">
             <div>
-              <h3 class="text-xs font-bold text-neutral-dark mb-0.5">관심사 카테고리 선택 <span class="text-neutral-400 font-normal">(다중 선택 가능)</span></h3>
+              <h3 class="text-xs font-bold text-neutral-dark mb-0.5">관심사 카테고리 선택 <span
+                  class="text-neutral-400 font-normal">(다중 선택 가능)</span></h3>
               <p class="text-[11px] text-neutral-400">서비스의 타겟에 알맞은 관심사를 선택해주세요.</p>
             </div>
             <div class="flex flex-wrap gap-2 text-xs font-semibold pt-1">
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="productivity" checked class="accent-[#2F6517]" />
                 생산성/업무도구
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="commerce" class="accent-[#2F6517]" />
                 커머스/쇼핑
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="fintech" checked class="accent-[#2F6517]" />
                 핀테크/금융
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="healthcare" class="accent-[#2F6517]" />
                 헬스케어/웰니스
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="education" class="accent-[#2F6517]" />
                 교육/학습
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="entertainment" class="accent-[#2F6517]" />
                 엔터테인먼트/콘텐츠
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="social" class="accent-[#2F6517]" />
                 소셜/커뮤니티
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="lifestyle" class="accent-[#2F6517]" />
                 라이프스타일
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="ai_dev" checked class="accent-[#2F6517]" />
                 AI/개발도구
               </label>
-              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
                 <input type="checkbox" name="targetInterest" value="etc" class="accent-[#2F6517]" />
                 기타
               </label>
@@ -2133,8 +2165,7 @@
             <div>
               <span class="text-xs font-bold text-neutral-700 block mb-2">권장 테스터 태그 작성 (선택)</span>
               <div class="flex items-center gap-2 mb-3">
-                <input id="input-target-persona-tag" type="text"
-                  placeholder="예: 🎂 연령대: 20대·30대, 📊 가계부 관심자, 📱 앱 실사용자"
+                <input id="input-target-persona-tag" type="text" placeholder="예: 🎂 연령대: 20대·30대, 📊 가계부 관심자, 📱 앱 실사용자"
                   class="flex-1 px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/60"
                   onkeydown="if(event.key==='Enter'){ event.preventDefault(); addPersonaTag(); }" />
                 <button type="button" onclick="addPersonaTag()"
@@ -2145,75 +2176,39 @@
 
               <!-- Persona Tags Container -->
               <div id="persona-tags-container" class="flex flex-wrap gap-2">
-                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                <span
+                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
                   <span>🎂</span> 연령대: 20대·30대
-                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                  <button type="button" onclick="this.parentElement.remove()"
+                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
                 </span>
-                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                <span
+                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
                   <span>📊</span> 가계부/자산관리 관심자
-                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                  <button type="button" onclick="this.parentElement.remove()"
+                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
                 </span>
-                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                <span
+                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
                   <span>🧾</span> 영수증 모으기 습관 보유자
-                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                  <button type="button" onclick="this.parentElement.remove()"
+                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
                 </span>
-                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                <span
+                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
                   <span>📱</span> 모바일 웹/앱 실사용자
-                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                  <button type="button" onclick="this.parentElement.remove()"
+                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
                 </span>
               </div>
             </div>
 
             <!-- Soft guidance notice box -->
-            <div class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] flex items-center gap-2 font-medium">
+            <div
+              class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] flex items-center gap-2 font-medium">
               <span>💡</span>
               <span>해당 조건에 100% 부합하지 않더라도 자유롭고 참신한 시각의 피드백은 언제나 환영합니다!</span>
             </div>
-          </div>
-
-          <!-- 3. 테스트 진행 방법 (가이드) -->
-          <div>
-            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
-              테스트 진행 방법 (가이드) <span class="text-red-500">*</span>
-            </label>
-            <textarea id="input-test-guide" rows="3" placeholder="테스터가 테스트 접속 후 어떤 순서로 진행해야 하는지 단계별 안내 방법을 작성해 주세요."
-              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">1. 제공된 웹사이트 URL에 접속하여 이메일 간편 가입을 진행합니다.
-2. 메인 지출 입력 화면에서 영수증 카메라 촬영 버튼을 클릭해 샘플 영수증 사진을 업로드합니다.
-3. 자동 분류된 지출 내역 및 이번 달 예산 알림 차트를 확인해 주세요.</textarea>
-          </div>
-
-          <!-- 4. 검증 항목 (사용자가 직접 여러 개 추가 가능) -->
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <label class="block text-sm font-bold text-neutral-dark">
-                검증 항목 작성 <span class="text-red-500">*</span>
-              </label>
-              <span class="text-xs text-neutral-400">무엇을 확인해달라고 할지 작성해 주세요.</span>
-            </div>
-
-            <div id="questions-list" class="space-y-3">
-              <div
-                class="flex items-center gap-3 p-4 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors">
-                <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 1</span>
-                <input type="text" value="영수증 OCR 촬영 시 텍스트 인식 속도와 정확도는 어떠한가요?"
-                  class="flex-1 text-sm font-medium text-neutral-dark focus:outline-none" />
-                <button type="button" onclick="this.parentElement.remove()"
-                  class="text-neutral-400 hover:text-neutral-600 text-xs px-2">삭제</button>
-              </div>
-              <div
-                class="flex items-center gap-3 p-4 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors">
-                <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 2</span>
-                <input type="text" value="이번 달 지출 차트 및 예산 초과 알림 UI 가독성이 양호한가요?"
-                  class="flex-1 text-sm font-medium text-neutral-dark focus:outline-none" />
-                <button type="button" onclick="this.parentElement.remove()"
-                  class="text-neutral-400 hover:text-neutral-600 text-xs px-2">삭제</button>
-              </div>
-            </div>
-
-            <button type="button" onclick="addQuestionItem()"
-              class="w-full py-3.5 rounded-xl border border-dashed border-[#D1D5DB] text-xs font-semibold text-neutral-muted hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1.5 mt-3">
-              <span>+ 검증 항목 추가하기</span>
-            </button>
           </div>
 
           <!-- 4. 피드백 공개 / 비공개 설정 -->
@@ -2239,7 +2234,9 @@
                     lbl.className = 'text-xs font-bold text-[#2F6517]';
                   }
                 ">
-                <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2F6517] switch-bg"></div>
+                <div
+                  class="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2F6517] switch-bg">
+                </div>
               </label>
             </div>
           </div>
@@ -2357,15 +2354,18 @@
           <!-- Card 1: Top Mockup Banner & Title + Tech Tags -->
           <div class="bg-white rounded-[24px] border border-[#E5E7EB] p-6 sm:p-7 shadow-subtle flex flex-col gap-5">
             <!-- Preview Mockup Banner Image Container -->
-            <div id="post-mockup-container" class="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3 overflow-hidden shadow-2xs">
+            <div id="post-mockup-container"
+              class="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3 overflow-hidden shadow-2xs">
               <div class="rounded-xl border border-neutral-200 bg-white overflow-hidden shadow-xs">
                 <!-- Mockup Browser Header -->
-                <div class="bg-[#F1F5F9] px-4 py-2 border-b border-neutral-200 flex items-center justify-between text-[11px] text-neutral-500">
+                <div
+                  class="bg-[#F1F5F9] px-4 py-2 border-b border-neutral-200 flex items-center justify-between text-[11px] text-neutral-500">
                   <div class="flex items-center gap-1.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"></span>
                     <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
-                    <span id="post-mockup-url" class="ml-2 font-mono text-[10px] text-neutral-400">moneylog-preview.io</span>
+                    <span id="post-mockup-url"
+                      class="ml-2 font-mono text-[10px] text-neutral-400">moneylog-preview.io</span>
                   </div>
                   <span id="post-mockup-author" class="font-semibold text-neutral-600">핀테크러버 ▾</span>
                 </div>
@@ -2376,7 +2376,8 @@
                       <span class="text-lg">🐷</span>
                       <span class="font-extrabold text-sm text-neutral-800">종목 알림 봇 대시보드 & 머니로그 AI</span>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">실시간 가동중</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">실시간
+                      가동중</span>
                   </div>
                   <div class="grid grid-cols-3 gap-3 text-center">
                     <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
@@ -2392,7 +2393,8 @@
                       <span class="text-lg font-extrabold text-[#BE185D]">185,000원</span>
                     </div>
                   </div>
-                  <div class="w-full h-28 bg-[#EFF6FF] rounded-xl border border-blue-100 p-4 flex items-center justify-center text-center">
+                  <div
+                    class="w-full h-28 bg-[#EFF6FF] rounded-xl border border-blue-100 p-4 flex items-center justify-center text-center">
                     <div>
                       <span class="text-xs font-bold text-blue-900 block mb-1">머니로그 AI 가계부 앱 UI 프리뷰</span>
                       <span class="text-[11px] text-blue-600">지출 분석 차트, 예산 알림, 영수증 OCR 인식 모듈 탑재</span>
@@ -2404,13 +2406,18 @@
 
             <!-- Tech / Keyword Tags -->
             <div id="post-tech-tags-list" class="flex flex-wrap gap-2 pt-1">
-              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크/금융</span>
-              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성/업무도구</span>
-              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI영수증</span>
-              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#OCR</span>
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크/금융</span>
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성/업무도구</span>
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI영수증</span>
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#OCR</span>
             </div>
 
-            <h1 id="post-main-title" class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight leading-tight">
+            <h1 id="post-main-title"
+              class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight leading-tight">
               AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
             </h1>
           </div>
@@ -2424,12 +2431,14 @@
             <button type="button" id="tab-btn-mission" onclick="switchPostDetailTab('mission')"
               class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50">
               <span>🎯 테스트 미션</span>
-              <span id="tab-count-mission" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-neutral-200 text-neutral-700">3</span>
+              <span id="tab-count-mission"
+                class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-neutral-200 text-neutral-700">3</span>
             </button>
             <button type="button" id="tab-btn-reviews" onclick="switchPostDetailTab('reviews')"
               class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50">
               <span>⭐ 리뷰</span>
-              <span id="tab-count-reviews" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">14</span>
+              <span id="tab-count-reviews"
+                class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">14</span>
             </button>
           </div>
 
@@ -2439,36 +2448,43 @@
             <div class="bg-[#FAFBF5] border border-[#E3EBD3] rounded-[22px] p-5 flex flex-col gap-3">
               <div class="flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-md bg-[#2F6517] text-white text-[11px] font-extrabold">서비스 정보</span>
-                <h3 class="text-sm font-extrabold text-neutral-dark" id="post-service-name-text">서비스명: 머니로그 (MoneyLog)</h3>
+                <h3 class="text-sm font-extrabold text-neutral-dark" id="post-service-name-text">서비스명: 머니로그 (MoneyLog)
+                </h3>
               </div>
-              <p class="text-xs text-neutral-700 font-semibold bg-white p-3.5 rounded-xl border border-[#E4EBD5]" id="post-service-short-intro">
+              <p class="text-xs text-neutral-700 font-semibold bg-white p-3.5 rounded-xl border border-[#E4EBD5]"
+                id="post-service-short-intro">
                 <strong class="text-neutral-800">한 줄 소개:</strong> 영수증 사진 한 장으로 끝내는 AI 자동 지출 분류 및 예산 관리 비서
               </p>
             </div>
 
             <!-- 2. 서비스 소개 (상세) -->
             <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
-              <h2 class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+              <h2
+                class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
                 <span>📖 서비스 소개</span>
               </h2>
               <p id="post-service-desc-text" class="text-xs sm:text-sm text-neutral-700 leading-relaxed font-normal">
-                안녕하세요! 영수증 사진 한 장만 찍으면 AI가 자동으로 지출 품목과 카테고리를 분류해 주는 스마트 가계부 '머니로그'를 만들었습니다. 기존 뱅킹앱이나 복잡한 가계부의 번거로움을 줄이고, 이번 달 예산 초과 알림과 지출 패턴 분석 기능을 중점적으로 검증하고자 합니다.
+                안녕하세요! 영수증 사진 한 장만 찍으면 AI가 자동으로 지출 품목과 카테고리를 분류해 주는 스마트 가계부 '머니로그'를 만들었습니다. 기존 뱅킹앱이나 복잡한 가계부의 번거로움을 줄이고,
+                이번 달 예산 초과 알림과 지출 패턴 분석 기능을 중점적으로 검증하고자 합니다.
               </p>
-              <p id="post-service-extra-text" class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] font-medium leading-relaxed">
+              <p id="post-service-extra-text"
+                class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] font-medium leading-relaxed">
                 💡 카메라 영수증 OCR 인식과 대시보드 지출 분석 플로우가 실제 사용 환경에서 얼마나 직관적이고 편리한지 솔직한 피드백을 부탁드립니다.
               </p>
             </div>
 
             <!-- 3. 안내 내용 / 테스트 목적 및 이런 분들의 참여를 원해요 -->
             <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5">
-              <h2 class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+              <h2
+                class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
                 <span>🎯 테스트 목적 및 참여 대상</span>
               </h2>
 
               <!-- 테스트 목적 -->
               <div class="flex flex-col gap-1">
                 <span class="text-xs font-bold text-neutral-800">테스트 목적:</span>
-                <p id="post-notice-text" class="text-xs text-neutral-600 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-200">
+                <p id="post-notice-text"
+                  class="text-xs text-neutral-600 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-200">
                   실제 다양한 영수증 OCR 인식을 검증 및 지출 분석 대시보드 사용성 검증
                 </p>
               </div>
@@ -2485,12 +2501,21 @@
                 </div>
                 <!-- Persona Tags List -->
                 <div id="post-persona-tags-list" class="flex flex-wrap gap-2 pt-1">
-                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🎂 연령대: 20대·30대</span>
-                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📊 가계부/자산관리 관심자</span>
-                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🧾 영수증 모으기 습관 보유자</span>
-                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📱 모바일 웹/앱 실사용자</span>
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🎂
+                    연령대: 20대·30대</span>
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📊
+                    가계부/자산관리 관심자</span>
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🧾
+                    영수증 모으기 습관 보유자</span>
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📱
+                    모바일 웹/앱 실사용자</span>
                 </div>
-                <div class="p-3 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-[11px] text-[#6B5A14] font-medium flex items-center gap-1.5 mt-1">
+                <div
+                  class="p-3 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-[11px] text-[#6B5A14] font-medium flex items-center gap-1.5 mt-1">
                   <span>💡</span>
                   <span>해당 조건에 100% 부합하지 않더라도 자유롭고 참신한 시각의 피드백은 언제나 환영합니다!</span>
                 </div>
@@ -2500,36 +2525,41 @@
 
           <!-- TAB 2 CONTENT: 테스트 미션 (Test Mission) -->
           <div id="tab-content-mission" class="space-y-6 hidden">
-            <!-- 1. 외부 접속 링크 직접 제공 카드 -->
-            <div class="bg-[#F4F9EE] border-2 border-primary/40 rounded-[24px] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-subtle">
+            <!-- 1. 테스트 진행 방식 카드 (외부 접속 vs 내부 검증 테스트하기) -->
+            <div id="post-mission-card-box"
+              class="bg-[#F4F9EE] border-2 border-primary/40 rounded-[24px] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-subtle">
               <div class="flex flex-col gap-1.5">
                 <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded-md bg-[#2F6517] text-white text-[11px] font-extrabold">외부 접속 링크</span>
+                  <span id="post-mission-card-label"
+                    class="px-2.5 py-0.5 rounded-md bg-[#2F6517] text-white text-[11px] font-extrabold">외부 접속 링크</span>
                   <span id="post-mission-type-badge" class="text-xs font-bold text-[#2F6517]">외부 웹사이트 링크형</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div id="post-mission-url-row" class="flex items-center gap-2">
                   <span class="text-xs font-bold text-neutral-500">URL:</span>
-                  <a id="post-external-url-link" href="https://example.com/test-link" target="_blank" class="text-sm font-extrabold text-[#2F6517] hover:underline flex items-center gap-1">
+                  <a id="post-external-url-link" href="https://example.com/test-link" target="_blank"
+                    class="text-sm font-extrabold text-[#2F6517] hover:underline flex items-center gap-1">
                     <span id="post-external-url-text">https://try-money-pig.io</span> ↗
                   </a>
                 </div>
-                <p class="text-[11px] text-neutral-500 font-medium">
+                <p id="post-mission-card-subtext" class="text-[11px] text-neutral-500 font-medium">
                   * 위 접속 링크를 클릭하면 새 탭에서 서비스가 열리며 테스트를 수행할 수 있습니다.
                 </p>
               </div>
-              <button type="button" onclick="executeParticipateInCurrentTest()"
+              <button type="button" id="post-mission-card-btn" onclick="executeParticipateInCurrentTest()"
                 class="px-6 py-3.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-95 text-white text-xs font-extrabold shadow-md shrink-0 transition-all cursor-pointer flex items-center gap-2">
-                <span>🚀 외부 접속 및 참여하기</span>
+                <span id="post-mission-card-btn-text">🚀 외부 접속 및 참여하기</span>
                 <span>→</span>
               </button>
             </div>
 
             <!-- 2. 테스트 진행 방법 (가이드) -->
             <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
-              <h2 class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+              <h2
+                class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
                 <span>💡 테스트 진행 방법 (가이드)</span>
               </h2>
-              <div id="post-test-guide-box" class="p-4.5 rounded-2xl bg-[#FAFBF7] border border-[#EAEFE0] text-xs text-neutral-700 font-medium leading-relaxed whitespace-pre-line">
+              <div id="post-test-guide-box"
+                class="p-4.5 rounded-2xl bg-[#FAFBF7] border border-[#EAEFE0] text-xs text-neutral-700 font-medium leading-relaxed whitespace-pre-line">
                 1. 제공된 외부 접속 링크(try-money-pig.io)에 접속하여 이메일 간편 가입을 진행합니다.
                 2. 메인 지출 입력 화면에서 영수증 카메라 촬영 버튼을 클릭해 샘플 영수증 사진을 업로드합니다.
                 3. 자동 분류된 지출 내역 및 이번 달 예산 알림 차트를 확인해 주세요.
@@ -2547,7 +2577,8 @@
 
               <div id="post-missions-container" class="space-y-3">
                 <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
-                  <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+                  <span
+                    class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
                   <div class="flex flex-col gap-1">
                     <span class="text-xs font-bold text-neutral-800">회원가입 및 영수증 자동 인식 테스트</span>
                     <p class="text-xs text-neutral-600 leading-relaxed font-medium">
@@ -2557,7 +2588,8 @@
                 </div>
 
                 <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
-                  <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                  <span
+                    class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
                   <div class="flex flex-col gap-1">
                     <span class="text-xs font-bold text-neutral-800">지출 분석 리포트 & 예산 알림 시각화 확인</span>
                     <p class="text-xs text-neutral-600 leading-relaxed font-medium">
@@ -2567,7 +2599,8 @@
                 </div>
 
                 <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
-                  <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                  <span
+                    class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
                   <div class="flex flex-col gap-1">
                     <span class="text-xs font-bold text-neutral-800">인식 속도 및 화면 가독성 피드백</span>
                     <p class="text-xs text-neutral-600 leading-relaxed font-medium">
@@ -2582,9 +2615,11 @@
           <!-- TAB 3 CONTENT: 리뷰 (Reviews) -->
           <div id="tab-content-reviews" class="space-y-6 hidden">
             <!-- Review Summary Header Card -->
-            <div class="bg-white rounded-[24px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col sm:flex-row items-center justify-between gap-5">
+            <div
+              class="bg-white rounded-[24px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col sm:flex-row items-center justify-between gap-5">
               <div class="flex items-center gap-5 w-full sm:w-auto">
-                <div class="w-16 h-16 rounded-2xl bg-[#FAFBF5] border border-[#E2E8D3] flex flex-col items-center justify-center text-[#2F6517] shrink-0 shadow-2xs">
+                <div
+                  class="w-16 h-16 rounded-2xl bg-[#FAFBF5] border border-[#E2E8D3] flex flex-col items-center justify-center text-[#2F6517] shrink-0 shadow-2xs">
                   <span class="text-[10px] font-bold text-neutral-400">평점</span>
                   <span class="text-xl font-extrabold">4.8</span>
                 </div>
@@ -2598,17 +2633,21 @@
                   </p>
                 </div>
               </div>
-              <span class="text-xs font-bold text-[#2F6517] bg-[#EBF7E2] px-3.5 py-1.5 rounded-full border border-primary/30 shrink-0">
+              <span
+                class="text-xs font-bold text-[#2F6517] bg-[#EBF7E2] px-3.5 py-1.5 rounded-full border border-primary/30 shrink-0">
                 🔒 피드백 공개됨
               </span>
             </div>
 
             <!-- Review Items List -->
             <div class="space-y-4">
-              <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
+              <div
+                class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
+                    <div
+                      class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">
+                      👤</div>
                     <div>
                       <span class="text-xs font-extrabold text-neutral-dark block">테스터 핀테크조아</span>
                       <span class="text-[10px] text-neutral-400">앱 실사용자 · 20대</span>
@@ -2619,15 +2658,19 @@
                     <span class="text-[11px] text-neutral-400">2024.11.21</span>
                   </div>
                 </div>
-                <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
+                <p
+                  class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
                   "영수증 사진을 올리자마자 OCR 로딩 1초 만에 항목이 자동 분류되어 매우 신기했습니다! 카테고리 수정도 간편해서 자주 쓸 것 같아요."
                 </p>
               </div>
 
-              <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
+              <div
+                class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
+                    <div
+                      class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">
+                      👤</div>
                     <div>
                       <span class="text-xs font-extrabold text-neutral-dark block">테스터 바이브유저</span>
                       <span class="text-[10px] text-neutral-400">자산관리 관심자 · 30대</span>
@@ -2638,15 +2681,19 @@
                     <span class="text-[11px] text-neutral-400">2024.11.20</span>
                   </div>
                 </div>
-                <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
+                <p
+                  class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
                   "대시보드 지출 분석 차트 색감이 직관적이고 깔끔합니다. 예산 초과 경고 푸시 알림 타이밍이 인상적이네요!"
                 </p>
               </div>
 
-              <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
+              <div
+                class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
+                    <div
+                      class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">
+                      👤</div>
                     <div>
                       <span class="text-xs font-extrabold text-neutral-dark block">테스터 서비스마니아</span>
                       <span class="text-[10px] text-neutral-400">노코드 관심자 · 20대</span>
@@ -2657,7 +2704,8 @@
                     <span class="text-[11px] text-neutral-400">2024.11.19</span>
                   </div>
                 </div>
-                <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
+                <p
+                  class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
                   "UX 디자인과 가독성이 훌륭합니다. 실제 오픈되면 메인 가계부 앱으로 정착해서 사용하고 싶습니다."
                 </p>
               </div>
@@ -2680,7 +2728,8 @@
               </div>
               <div>
                 <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">진행 방식</span>
-                <span id="post-side-[#2F6517]" class="inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">외부형</span>
+                <span id="post-side-[#2F6517]"
+                  class="inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">외부형</span>
               </div>
             </div>
 
@@ -2714,13 +2763,16 @@
             <div class="border-b border-neutral-100 pb-4">
               <span class="text-[11px] font-semibold text-neutral-400 block mb-2">사용 도구</span>
               <div id="post-tools-icons" class="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                <span
+                  class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
                   <span>🖤</span> Cursor
                 </span>
-                <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                <span
+                  class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
                   <span>▲</span> Next.js
                 </span>
-                <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                <span
+                  class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
                   <span>⚡</span> v0
                 </span>
               </div>
@@ -2750,14 +2802,16 @@
 
             <!-- 제작자 미니 카드 -->
             <div class="flex items-center gap-3.5 bg-[#FAFBF7] border border-[#E9EEDC] p-3.5 rounded-xl">
-              <div class="w-10 h-10 rounded-full bg-white border border-[#DDD8A8] p-0.5 shadow-2xs shrink-0 flex items-center justify-center">
+              <div
+                class="w-10 h-10 rounded-full bg-white border border-[#DDD8A8] p-0.5 shadow-2xs shrink-0 flex items-center justify-center">
                 <img src="../mascot-hungry.png" alt="제작자 프로필" class="w-8 h-8 object-contain"
                   onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-1.5">
                   <span id="post-creator-name-sidebar" class="font-extrabold text-xs text-neutral-dark">핀테크러버</span>
-                  <span class="px-1.5 py-0.5 rounded bg-[#FDA2BC]/30 text-[#8A2B43] text-[9px] font-extrabold">✓ 검증제작자</span>
+                  <span class="px-1.5 py-0.5 rounded bg-[#FDA2BC]/30 text-[#8A2B43] text-[9px] font-extrabold">✓
+                    검증제작자</span>
                 </div>
                 <span class="text-[10px] text-neutral-400 block mt-0.5">기획자 · 핀테크 메이커</span>
               </div>
@@ -2767,9 +2821,12 @@
             <div>
               <span class="text-[11px] font-semibold text-neutral-400 block mb-2">관심분야</span>
               <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
-                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크</span>
-                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성</span>
-                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI가계부</span>
+                <span
+                  class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크</span>
+                <span
+                  class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성</span>
+                <span
+                  class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI가계부</span>
               </div>
             </div>
 
@@ -2782,7 +2839,8 @@
           </button>
 
           <!-- Encouraging Banner -->
-          <div class="bg-[#FFFDF0] border border-[#F5EDBA] rounded-2xl p-4 text-xs text-[#6B5A14] flex items-center gap-3">
+          <div
+            class="bg-[#FFFDF0] border border-[#F5EDBA] rounded-2xl p-4 text-xs text-[#6B5A14] flex items-center gap-3">
             <span class="text-xl">🐷</span>
             <p class="leading-relaxed font-medium text-[11px]">
               <strong>돈 돼? 검증 팁:</strong> 테스트 후 솔직하고 구체적인 피드백을 작성해주실수록 제작자에게 더 큰 힘이 됩니다!
@@ -2838,8 +2896,13 @@
         어떤 디자인이 서비스의 핵심 가치('쉽고 재미있는 금융')를 더 잘 전달한다고 생각하시나요?
       </p>
 
+      <!-- Custom Direct Questions Form (For Skip Main Category / Direct Survey Tests) -->
+      <div id="custom-questions-full-container" class="w-full space-y-6 hidden mb-8">
+        <!-- Dynamic Questions HTML rendered via JS -->
+      </div>
+
       <!-- Option Cards Side by Side (2-Column Grid) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-7 w-full mb-8">
+      <div id="abtest-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-7 w-full mb-8">
 
         <!-- Option A Card -->
         <div id="card-option-a" onclick="selectAbOption('A')"
@@ -3370,7 +3433,8 @@
             <div class="hidden sm:flex flex-col text-left">
               <span class="text-[10px] text-neutral-muted">환영해요!</span>
               <span data-auth-email
-                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인 사용자</span>
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인
+                사용자</span>
             </div>
           </div>
         </div>
@@ -3378,312 +3442,313 @@
 
       <main class="max-w-[1240px] mx-auto px-6 py-8 w-full flex flex-col gap-8">
 
-      <!-- Top Hero Banner Card -->
-      <section
-        class="w-full bg-gradient-to-r from-[#FFFCEE] via-[#FDF9EA] to-[#FDF4F6] border border-[#EBE6C0] rounded-[24px] p-8 shadow-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-        <div class="max-w-xl z-10">
-          <div
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/30 border border-primary/50 text-[#25500F] text-xs font-bold mb-3">
-            <span>🎁</span> Reward & Exchange Center
-          </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight mb-2">
-            동전 상점<span class="text-lg font-bold text-[#64748B] ml-1.5 font-normal">(Coin Market)</span>
-          </h1>
-          <p class="text-sm text-[#52525B] leading-relaxed mb-6 font-normal">
-            열심히 모은 동전으로 기프티콘과 실전 개발 템플릿, 프롬프트를 교환해보세요!<br>
-            교환 즉시 마이페이지로 안전하게 지급됩니다.
-          </p>
-
-          <div class="flex items-center gap-3">
-            <button onclick="navigateTo('mypage')"
-              class="px-4 py-2 rounded-xl bg-white border border-[#DDD6A7] hover:bg-neutral-50 text-xs font-bold text-neutral-800 shadow-2xs transition-all flex items-center gap-1.5">
-              <span>📋</span> 교환 내역 확인
-            </button>
-            <button onclick="alert('테스트에 정성껏 참여하시면 건당 100~600 동전이 즉시 지급됩니다!');"
-              class="px-4 py-2 rounded-xl bg-[#FDA2BC]/20 hover:bg-[#FDA2BC]/30 text-xs font-bold text-[#8A2B43] border border-[#FDA2BC]/40 transition-all flex items-center gap-1.5">
-              <span>❓</span> 동전 적립 가이드
-            </button>
-          </div>
-        </div>
-
-        <!-- Right Mascot & Coin Summary Card -->
-        <div class="flex items-center gap-4 z-10">
-          <div class="w-24 h-24 flex items-center justify-center shrink-0">
-            <img src="../mascot-hungry.png" alt="코인 가득 든 돼지" class="w-full h-full object-contain drop-shadow-md"
-              onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
-          </div>
-
-          <div class="bg-white rounded-2xl border border-[#E9E5BC] p-5 shadow-card min-w-[210px] flex flex-col gap-1.5">
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-neutral-muted font-medium">내 적립 동전</span>
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            </div>
-            <div class="text-2xl font-extrabold text-neutral-dark tracking-tight flex items-baseline gap-1">
-              <span id="market-user-coin-display">1,300</span>
-              <span class="text-sm font-bold text-primary-dark">C</span>
-            </div>
-            <div class="w-full h-2 bg-[#F4F4F5] rounded-full overflow-hidden mt-1">
-              <div class="h-full bg-primary rounded-full" style="width: 82%;"></div>
-            </div>
-            <div class="flex items-center justify-between text-[10px] text-neutral-400 font-medium">
-              <span>다음 등급까지</span>
-              <span class="font-bold text-neutral-600">550 C 남음</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Category Filter Tabs & Sort Dropdown -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-semibold">
-          <button onclick="filterMarketCategory('all', this)"
-            class="market-filter-btn px-4 py-2 rounded-full bg-primary font-bold text-neutral-dark shadow-2xs">
-            전체
-          </button>
-          <button onclick="filterMarketCategory('gift', this)"
-            class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
-            ☕ 기프티콘
-          </button>
-          <button onclick="filterMarketCategory('notion', this)"
-            class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
-            📑 노션 템플릿
-          </button>
-          <button onclick="filterMarketCategory('prompt', this)"
-            class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
-            ⚡ 바이브 프롬프트
-          </button>
-          <button onclick="filterMarketCategory('goods', this)"
-            class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
-            🎁 실물 굿즈
-          </button>
-        </div>
-
-        <select
-          class="px-3 py-2 bg-white border border-neutral-200 rounded-xl text-xs font-semibold text-neutral-700 shadow-2xs focus:outline-none">
-          <option>인기순</option>
-          <option>낮은 동전순</option>
-          <option>높은 동전순</option>
-        </select>
-      </div>
-
-      <!-- Main Marketplace Grid (Left Products + Right Exchange Box) -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-7 items-start">
-
-        <!-- Left: Product Cards (2 Columns on large, spans 2 of 3) -->
-        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5" id="market-product-grid">
-
-          <!-- Product 1 -->
-          <div data-market-item="p1" data-market-category="gift"
-            onclick="selectMarketProduct('p1', '스타벅스 아이스 아메리카노 T', 4500, '기프티콘', '☕')"
-            class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
-            <div>
-              <div
-                class="relative w-full h-32 rounded-xl bg-[#F8FAFC] border border-neutral-100 flex items-center justify-center mb-3">
-                <span
-                  class="absolute top-2 left-2 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">In-stock</span>
-                <span class="text-4xl">☕</span>
-              </div>
-              <span class="text-[11px] text-neutral-400 font-medium">기프티콘</span>
-              <h3
-                class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
-                스타벅스 아이스 아메리카노 T
-              </h3>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
-              <span class="text-sm font-extrabold text-neutral-dark">4,500 C</span>
-              <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
-            </div>
-          </div>
-
-          <!-- Product 2 (Active/Selected initially) -->
-          <div data-market-item="p2" data-market-category="notion"
-            onclick="selectMarketProduct('p2', 'SaaS 랜딩페이지 검증 노션 템플릿', 1200, '개발 & 기획 템플릿', '📑')"
-            class="market-item-card ring-2 ring-[#2F6517] bg-white rounded-2xl border border-primary p-4 shadow-card transition-all cursor-pointer flex flex-col justify-between group relative">
-            <span
-              class="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-[10px] font-extrabold shadow-xs flex items-center gap-1">
-              ✓ 현재 선택됨
-            </span>
-            <div>
-              <div
-                class="relative w-full h-32 rounded-xl bg-[#EFF6FF] border border-blue-100 flex items-center justify-center mb-3">
-                <span
-                  class="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#FCE7F3] text-[#BE185D] text-[10px] font-bold">Digital
-                  Goods</span>
-                <span class="text-4xl">📑</span>
-              </div>
-              <span class="text-[11px] text-neutral-400 font-medium">개발 & 기획 템플릿</span>
-              <h3
-                class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
-                SaaS 랜딩페이지 검증 노션 템플릿
-              </h3>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
-              <span class="text-sm font-extrabold text-neutral-dark">1,200 C</span>
-              <span class="text-[11px] font-bold text-[#2F6517] bg-primary/20 px-2 py-0.5 rounded">교환 가능</span>
-            </div>
-          </div>
-
-          <!-- Product 3 -->
-          <div data-market-item="p3" data-market-category="prompt"
-            onclick="selectMarketProduct('p3', 'v0 + Supabase 원클릭 생성 프롬프트', 2000, '바이브 프롬프트', '⚡')"
-            class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
-            <div>
-              <div
-                class="relative w-full h-32 rounded-xl bg-[#FFF7ED] border border-orange-100 flex items-center justify-center mb-3">
-                <span
-                  class="absolute top-2 left-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">🔥
-                  HOT</span>
-                <span class="text-4xl">⚡</span>
-              </div>
-              <span class="text-[11px] text-neutral-400 font-medium">바이브 프롬프트</span>
-              <h3
-                class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
-                v0 + Supabase 원클릭 생성
-              </h3>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
-              <span class="text-sm font-extrabold text-neutral-dark">2,000 C</span>
-              <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
-            </div>
-          </div>
-
-          <!-- Product 4 -->
-          <div data-market-item="p4" data-market-category="gift"
-            onclick="selectMarketProduct('p4', '배달의민족 상품권 1만원권', 10000, '외식 상품권', '🍔')"
-            class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
-            <div>
-              <div
-                class="relative w-full h-32 rounded-xl bg-[#ECFDF5] border border-emerald-100 flex items-center justify-center mb-3">
-                <span
-                  class="absolute top-2 left-2 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">In-stock</span>
-                <span class="text-4xl">🍔</span>
-              </div>
-              <span class="text-[11px] text-neutral-400 font-medium">외식 상품권</span>
-              <h3
-                class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
-                배달의민족 상품권 1만원권
-              </h3>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
-              <span class="text-sm font-extrabold text-neutral-dark">10,000 C</span>
-              <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
-            </div>
-          </div>
-
-          <!-- Product 5 -->
-          <div data-market-item="p5" data-market-category="notion"
-            onclick="selectMarketProduct('p5', 'Figma UI/UX 클론 키트 템플릿', 3500, '디자인 에셋', '🎨')"
-            class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
-            <div>
-              <div
-                class="relative w-full h-32 rounded-xl bg-[#FAF5FF] border border-purple-100 flex items-center justify-center mb-3">
-                <span
-                  class="absolute top-2 left-2 px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold">Digital
-                  Goods</span>
-                <span class="text-4xl">🎨</span>
-              </div>
-              <span class="text-[11px] text-neutral-400 font-medium">디자인 에셋</span>
-              <h3
-                class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
-                Figma UI/UX 클론 키트 템플릿
-              </h3>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
-              <span class="text-sm font-extrabold text-neutral-dark">3,500 C</span>
-              <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
-            </div>
-          </div>
-
-          <!-- Product 6 -->
-          <div data-market-item="p6" data-market-category="gift"
-            onclick="selectMarketProduct('p6', '올리브영 기프트카드 5,000원', 5000, '뷰티 & 라이프', '🛍️')"
-            class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
-            <div>
-              <div
-                class="relative w-full h-32 rounded-xl bg-[#F0FDF4] border border-green-100 flex items-center justify-center mb-3">
-                <span
-                  class="absolute top-2 left-2 px-2 py-0.5 rounded bg-green-100 text-green-800 text-[10px] font-bold">In-stock</span>
-                <span class="text-4xl">🛍️</span>
-              </div>
-              <span class="text-[11px] text-neutral-400 font-medium">뷰티 & 라이프</span>
-              <h3
-                class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
-                올리브영 기프트카드 5,000원
-              </h3>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
-              <span class="text-sm font-extrabold text-neutral-dark">5,000 C</span>
-              <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Right Side: Exchange Panel (desktop-creator-coinmarket-and-exchange.png 1:1) -->
-        <div
-          class="lg:col-span-1 bg-white rounded-[24px] border-2 border-[#DCE4CF] p-6 shadow-card sticky top-28 flex flex-col gap-6">
-          <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
-            <div class="flex items-center gap-2">
-              <span
-                class="w-6 h-6 rounded-lg bg-[#EBF4E5] flex items-center justify-center text-primary-dark text-xs font-bold">⇄</span>
-              <h3 class="text-base font-extrabold text-neutral-dark">
-                교환하기 <span class="text-xs font-medium text-neutral-400">(Exchange)</span>
-              </h3>
-            </div>
-            <button class="text-neutral-400 hover:text-neutral-600 text-sm">✕</button>
-          </div>
-
-          <!-- Selected Item Info Box -->
-          <div class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 flex items-center gap-3">
+        <!-- Top Hero Banner Card -->
+        <section
+          class="w-full bg-gradient-to-r from-[#FFFCEE] via-[#FDF9EA] to-[#FDF4F6] border border-[#EBE6C0] rounded-[24px] p-8 shadow-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          <div class="max-w-xl z-10">
             <div
-              class="w-12 h-12 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-2xl shrink-0"
-              id="selected-product-icon">
-              📑
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/30 border border-primary/50 text-[#25500F] text-xs font-bold mb-3">
+              <span>🎁</span> Reward & Exchange Center
             </div>
-            <div class="flex-1 min-w-0">
-              <span class="px-2 py-0.5 rounded bg-primary/20 text-[#25500F] text-[10px] font-extrabold">선택 상품</span>
-              <h4 class="text-xs font-bold text-neutral-dark truncate mt-0.5" id="selected-product-name">
-                SaaS 랜딩페이지 검증 노션 템플릿
-              </h4>
-              <span class="text-xs font-extrabold text-primary-dark" id="selected-product-cost">
-                1,200 C
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight mb-2">
+              동전 상점<span class="text-lg font-bold text-[#64748B] ml-1.5 font-normal">(Coin Market)</span>
+            </h1>
+            <p class="text-sm text-[#52525B] leading-relaxed mb-6 font-normal">
+              열심히 모은 동전으로 기프티콘과 실전 개발 템플릿, 프롬프트를 교환해보세요!<br>
+              교환 즉시 마이페이지로 안전하게 지급됩니다.
+            </p>
+
+            <div class="flex items-center gap-3">
+              <button onclick="navigateTo('mypage')"
+                class="px-4 py-2 rounded-xl bg-white border border-[#DDD6A7] hover:bg-neutral-50 text-xs font-bold text-neutral-800 shadow-2xs transition-all flex items-center gap-1.5">
+                <span>📋</span> 교환 내역 확인
+              </button>
+              <button onclick="alert('테스트에 정성껏 참여하시면 건당 100~600 동전이 즉시 지급됩니다!');"
+                class="px-4 py-2 rounded-xl bg-[#FDA2BC]/20 hover:bg-[#FDA2BC]/30 text-xs font-bold text-[#8A2B43] border border-[#FDA2BC]/40 transition-all flex items-center gap-1.5">
+                <span>❓</span> 동전 적립 가이드
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Mascot & Coin Summary Card -->
+          <div class="flex items-center gap-4 z-10">
+            <div class="w-24 h-24 flex items-center justify-center shrink-0">
+              <img src="../mascot-hungry.png" alt="코인 가득 든 돼지" class="w-full h-full object-contain drop-shadow-md"
+                onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
+            </div>
+
+            <div
+              class="bg-white rounded-2xl border border-[#E9E5BC] p-5 shadow-card min-w-[210px] flex flex-col gap-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-neutral-muted font-medium">내 적립 동전</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-2xl font-extrabold text-neutral-dark tracking-tight flex items-baseline gap-1">
+                <span id="market-user-coin-display">1,300</span>
+                <span class="text-sm font-bold text-primary-dark">C</span>
+              </div>
+              <div class="w-full h-2 bg-[#F4F4F5] rounded-full overflow-hidden mt-1">
+                <div class="h-full bg-primary rounded-full" style="width: 82%;"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-neutral-400 font-medium">
+                <span>다음 등급까지</span>
+                <span class="font-bold text-neutral-600">550 C 남음</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Category Filter Tabs & Sort Dropdown -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-semibold">
+            <button onclick="filterMarketCategory('all', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-primary font-bold text-neutral-dark shadow-2xs">
+              전체
+            </button>
+            <button onclick="filterMarketCategory('gift', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              ☕ 기프티콘
+            </button>
+            <button onclick="filterMarketCategory('notion', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              📑 노션 템플릿
+            </button>
+            <button onclick="filterMarketCategory('prompt', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              ⚡ 바이브 프롬프트
+            </button>
+            <button onclick="filterMarketCategory('goods', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              🎁 실물 굿즈
+            </button>
+          </div>
+
+          <select
+            class="px-3 py-2 bg-white border border-neutral-200 rounded-xl text-xs font-semibold text-neutral-700 shadow-2xs focus:outline-none">
+            <option>인기순</option>
+            <option>낮은 동전순</option>
+            <option>높은 동전순</option>
+          </select>
+        </div>
+
+        <!-- Main Marketplace Grid (Left Products + Right Exchange Box) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-7 items-start">
+
+          <!-- Left: Product Cards (2 Columns on large, spans 2 of 3) -->
+          <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5" id="market-product-grid">
+
+            <!-- Product 1 -->
+            <div data-market-item="p1" data-market-category="gift"
+              onclick="selectMarketProduct('p1', '스타벅스 아이스 아메리카노 T', 4500, '기프티콘', '☕')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#F8FAFC] border border-neutral-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">In-stock</span>
+                  <span class="text-4xl">☕</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">기프티콘</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
+                  스타벅스 아이스 아메리카노 T
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">4,500 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 2 (Active/Selected initially) -->
+            <div data-market-item="p2" data-market-category="notion"
+              onclick="selectMarketProduct('p2', 'SaaS 랜딩페이지 검증 노션 템플릿', 1200, '개발 & 기획 템플릿', '📑')"
+              class="market-item-card ring-2 ring-[#2F6517] bg-white rounded-2xl border border-primary p-4 shadow-card transition-all cursor-pointer flex flex-col justify-between group relative">
+              <span
+                class="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-[10px] font-extrabold shadow-xs flex items-center gap-1">
+                ✓ 현재 선택됨
               </span>
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#EFF6FF] border border-blue-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-[#FCE7F3] text-[#BE185D] text-[10px] font-bold">Digital
+                    Goods</span>
+                  <span class="text-4xl">📑</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">개발 & 기획 템플릿</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
+                  SaaS 랜딩페이지 검증 노션 템플릿
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">1,200 C</span>
+                <span class="text-[11px] font-bold text-[#2F6517] bg-primary/20 px-2 py-0.5 rounded">교환 가능</span>
+              </div>
             </div>
+
+            <!-- Product 3 -->
+            <div data-market-item="p3" data-market-category="prompt"
+              onclick="selectMarketProduct('p3', 'v0 + Supabase 원클릭 생성 프롬프트', 2000, '바이브 프롬프트', '⚡')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#FFF7ED] border border-orange-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">🔥
+                    HOT</span>
+                  <span class="text-4xl">⚡</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">바이브 프롬프트</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
+                  v0 + Supabase 원클릭 생성
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">2,000 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div data-market-item="p4" data-market-category="gift"
+              onclick="selectMarketProduct('p4', '배달의민족 상품권 1만원권', 10000, '외식 상품권', '🍔')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#ECFDF5] border border-emerald-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">In-stock</span>
+                  <span class="text-4xl">🍔</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">외식 상품권</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
+                  배달의민족 상품권 1만원권
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">10,000 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div data-market-item="p5" data-market-category="notion"
+              onclick="selectMarketProduct('p5', 'Figma UI/UX 클론 키트 템플릿', 3500, '디자인 에셋', '🎨')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#FAF5FF] border border-purple-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold">Digital
+                    Goods</span>
+                  <span class="text-4xl">🎨</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">디자인 에셋</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
+                  Figma UI/UX 클론 키트 템플릿
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">3,500 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div data-market-item="p6" data-market-category="gift"
+              onclick="selectMarketProduct('p6', '올리브영 기프트카드 5,000원', 5000, '뷰티 & 라이프', '🛍️')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#F0FDF4] border border-green-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-green-100 text-green-800 text-[10px] font-bold">In-stock</span>
+                  <span class="text-4xl">🛍️</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">뷰티 & 라이프</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
+                  올리브영 기프트카드 5,000원
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">5,000 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
           </div>
 
-          <!-- Calculation Sheet -->
-          <div class="space-y-3 text-xs">
-            <div class="flex items-center justify-between text-neutral-600">
-              <span>보유 동전</span>
-              <span class="font-bold text-neutral-dark" id="exchange-user-coin">1,300 C</span>
-            </div>
-            <div class="flex items-center justify-between text-[#DC2626]">
-              <span>차감 동전</span>
-              <span class="font-extrabold" id="exchange-deduct-coin">- 1,200 C</span>
-            </div>
-            <div class="h-px bg-neutral-200 my-1"></div>
-            <div class="flex items-center justify-between text-sm">
-              <span class="font-bold text-neutral-800">교환 후 잔여</span>
-              <span class="text-lg font-extrabold text-[#2F6517]" id="exchange-remain-coin">100 C</span>
-            </div>
-          </div>
-
-          <!-- Exchange Action Button -->
-          <button type="button" onclick="executeExchange()" id="btn-exchange-action"
-            class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-[0.98] text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20">
-            <span>✓</span> 교환 완료하기
-          </button>
-
-          <!-- Safe Delivery Notice -->
+          <!-- Right Side: Exchange Panel (desktop-creator-coinmarket-and-exchange.png 1:1) -->
           <div
-            class="bg-[#F8FAFC] rounded-xl border border-neutral-200 p-3 text-[11px] text-neutral-500 leading-relaxed flex items-start gap-2">
-            <span class="text-neutral-400 mt-0.5">ℹ️</span>
-            <p>교환 즉시 마이페이지 쿠폰함 및 등록된 이메일로 발급 정보가 안전하게 전송됩니다.</p>
+            class="lg:col-span-1 bg-white rounded-[24px] border-2 border-[#DCE4CF] p-6 shadow-card sticky top-28 flex flex-col gap-6">
+            <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span
+                  class="w-6 h-6 rounded-lg bg-[#EBF4E5] flex items-center justify-center text-primary-dark text-xs font-bold">⇄</span>
+                <h3 class="text-base font-extrabold text-neutral-dark">
+                  교환하기 <span class="text-xs font-medium text-neutral-400">(Exchange)</span>
+                </h3>
+              </div>
+              <button class="text-neutral-400 hover:text-neutral-600 text-sm">✕</button>
+            </div>
+
+            <!-- Selected Item Info Box -->
+            <div class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 flex items-center gap-3">
+              <div
+                class="w-12 h-12 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-2xl shrink-0"
+                id="selected-product-icon">
+                📑
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="px-2 py-0.5 rounded bg-primary/20 text-[#25500F] text-[10px] font-extrabold">선택 상품</span>
+                <h4 class="text-xs font-bold text-neutral-dark truncate mt-0.5" id="selected-product-name">
+                  SaaS 랜딩페이지 검증 노션 템플릿
+                </h4>
+                <span class="text-xs font-extrabold text-primary-dark" id="selected-product-cost">
+                  1,200 C
+                </span>
+              </div>
+            </div>
+
+            <!-- Calculation Sheet -->
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between text-neutral-600">
+                <span>보유 동전</span>
+                <span class="font-bold text-neutral-dark" id="exchange-user-coin">1,300 C</span>
+              </div>
+              <div class="flex items-center justify-between text-[#DC2626]">
+                <span>차감 동전</span>
+                <span class="font-extrabold" id="exchange-deduct-coin">- 1,200 C</span>
+              </div>
+              <div class="h-px bg-neutral-200 my-1"></div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-bold text-neutral-800">교환 후 잔여</span>
+                <span class="text-lg font-extrabold text-[#2F6517]" id="exchange-remain-coin">100 C</span>
+              </div>
+            </div>
+
+            <!-- Exchange Action Button -->
+            <button type="button" onclick="executeExchange()" id="btn-exchange-action"
+              class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-[0.98] text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20">
+              <span>✓</span> 교환 완료하기
+            </button>
+
+            <!-- Safe Delivery Notice -->
+            <div
+              class="bg-[#F8FAFC] rounded-xl border border-neutral-200 p-3 text-[11px] text-neutral-500 leading-relaxed flex items-start gap-2">
+              <span class="text-neutral-400 mt-0.5">ℹ️</span>
+              <p>교환 즉시 마이페이지 쿠폰함 및 등록된 이메일로 발급 정보가 안전하게 전송됩니다.</p>
+            </div>
+
           </div>
 
         </div>
-
-      </div>
 
       </main>
     </div>
@@ -4228,22 +4293,26 @@
           <span class="font-bold text-neutral-700">알림 목록</span>
         </div>
 
-        <div class="flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]">
+        <div
+          class="flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]">
           <span class="w-2 h-2 rounded-full bg-[#2F6517] animate-pulse"></span>
           실시간 수신 활성
         </div>
       </div>
 
       <!-- Header Card -->
-      <section class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex items-start justify-between">
+      <section
+        class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex items-start justify-between">
         <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-[#EDF7E5] border border-[#D5E8C4] flex items-center justify-center text-primary-dark text-xl shrink-0">
+          <div
+            class="w-12 h-12 rounded-full bg-[#EDF7E5] border border-[#D5E8C4] flex items-center justify-center text-primary-dark text-xl shrink-0">
             🔔
           </div>
           <div>
             <div class="flex items-center gap-2">
               <h2 class="text-2xl font-extrabold text-neutral-dark tracking-tight">알림</h2>
-              <span id="unread-count-badge" class="px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-xs font-extrabold">0</span>
+              <span id="unread-count-badge"
+                class="px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-xs font-extrabold">0</span>
             </div>
             <p class="text-xs text-neutral-500 mt-1 font-medium">
               내 서비스 반응과 관심 테스트 소식을 실시간으로 확인하세요.
@@ -4263,7 +4332,8 @@
       </section>
 
       <!-- Bottom Notice & Settings Link -->
-      <section class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
+      <section
+        class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
         <div class="flex items-center gap-1.5 font-medium">
           <span>⏱️</span>
           <span>최근 30일간의 알림만 보관되며 이후 자동 정리됩니다.</span>
@@ -4305,16 +4375,19 @@
           <span>&gt;</span>
           <span class="font-bold text-neutral-700">수신 설정</span>
         </div>
-        <button onclick="navigateTo('notifications')" class="text-neutral-500 hover:text-neutral-800 font-bold">← 알림 목록으로 돌아가기</button>
+        <button onclick="navigateTo('notifications')" class="text-neutral-500 hover:text-neutral-800 font-bold">← 알림
+          목록으로 돌아가기</button>
       </div>
 
-      <section class="bg-white rounded-[24px] border border-neutral-200 p-8 shadow-subtle flex flex-col gap-4 items-center text-center py-16">
+      <section
+        class="bg-white rounded-[24px] border border-neutral-200 p-8 shadow-subtle flex flex-col gap-4 items-center text-center py-16">
         <div class="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center text-3xl mb-2">⚙️</div>
         <h2 class="text-xl font-extrabold text-neutral-dark">알림 수신 설정 (준비 중)</h2>
         <p class="text-xs text-neutral-400 leading-relaxed max-w-md">
           이 화면은 다음 단계에서 상세 수신 옵션(푸시, 이메일, 마케팅 알림 ON/OFF)과 함께 완성될 예정입니다.
         </p>
-        <button onclick="navigateTo('notifications')" class="mt-2 px-5 py-2.5 rounded-xl bg-primary text-neutral-dark font-extrabold text-xs shadow-xs hover:bg-primary-hover transition-all">
+        <button onclick="navigateTo('notifications')"
+          class="mt-2 px-5 py-2.5 rounded-xl bg-primary text-neutral-dark font-extrabold text-xs shadow-xs hover:bg-primary-hover transition-all">
           알림 목록으로 돌아가기
         </button>
       </section>
@@ -5197,6 +5270,79 @@
     // Requirement 1 & 3: Dynamic A/B Test (Diary vs SaaS)
     // Reference: desktop-b-voting-test.png 1:1
     // ========================================================
+    function renderFullPageInternalTestScreen(pId) {
+      const titleEl = document.getElementById('abtest-title');
+      const subEl = document.getElementById('abtest-subtitle');
+      const customContainer = document.getElementById('custom-questions-full-container');
+      const abGrid = document.getElementById('abtest-cards-grid');
+      const submitBtn = document.getElementById('btn-submit-vote');
+      const submitBtnText = document.getElementById('btn-submit-vote-text');
+
+      if (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test')) {
+        if (titleEl) titleEl.textContent = `${myCreatedTest.title} 검증 테스트`;
+        if (subEl) subEl.textContent = myCreatedTest.serviceDesc || '아래 검증 문항에 따라 솔직한 피드백을 작성해 주세요.';
+
+        // Check if mainCategory is none/survey direct or vote
+        if (myCreatedTest.mainCategory === 'vote') {
+          if (customContainer) customContainer.classList.add('hidden');
+          if (abGrid) abGrid.classList.remove('hidden');
+          resetAbSelection();
+        } else {
+          // Direct Questions Full Page Form
+          if (abGrid) abGrid.classList.add('hidden');
+          if (customContainer) {
+            customContainer.classList.remove('hidden');
+            let html = '';
+            myCreatedTest.questions.forEach((q, idx) => {
+              const titleText = typeof q === 'string' ? q : q.title;
+              const choices = (typeof q === 'object' && Array.isArray(q.choices)) ? q.choices : [];
+              
+              if (choices.length === 0) {
+                // 주관식 서술형
+                html += `
+                  <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col gap-3">
+                    <div class="flex items-center justify-between border-b border-neutral-100 pb-2">
+                      <span class="text-sm font-extrabold text-neutral-dark">Q${idx + 1}. ${titleText}</span>
+                      <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded border border-purple-200">주관식 서술형</span>
+                    </div>
+                    <textarea rows="3" placeholder="이 질문에 대해 느낀 솔직한 생각을 자유롭게 서술해 주세요..." class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary font-medium leading-relaxed resize-none"></textarea>
+                  </div>
+                `;
+              } else {
+                // 선택형 (1~5개)
+                html += `
+                  <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col gap-3">
+                    <span class="text-sm font-extrabold text-neutral-dark border-b border-neutral-100 pb-2">Q${idx + 1}. ${titleText}</span>
+                    <div class="flex flex-col gap-2 pt-1">
+                      ${choices.map((cText, cIdx) => `
+                        <label class="p-3.5 border border-neutral-200 hover:border-primary bg-white hover:bg-primary/5 rounded-xl flex items-center gap-3 cursor-pointer font-semibold text-neutral-800 text-xs transition-colors">
+                          <input type="radio" name="full-q${idx}" value="opt${cIdx + 1}" ${cIdx === 0 ? 'checked' : ''} class="accent-[#2F6517] w-4 h-4">
+                          <span>${cText}</span>
+                        </label>
+                      `).join('')}
+                    </div>
+                  </div>
+                `;
+              }
+            });
+            customContainer.innerHTML = html;
+          }
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.className = 'flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-xs shadow-sm transition-all cursor-pointer border border-primary-dark/30';
+          }
+          if (submitBtnText) {
+            submitBtnText.textContent = `🪙 피드백 제출 완료하고 ${myCreatedTest.rewardCoin || 70} 동전 받기`;
+          }
+        }
+      } else {
+        if (customContainer) customContainer.classList.add('hidden');
+        if (abGrid) abGrid.classList.remove('hidden');
+        openAbTest(pId);
+      }
+    }
+
     function openAbTest(mode = 'diary') {
       currentAbMode = mode;
       selectedAbOption = null;
@@ -5535,7 +5681,7 @@
       const tagSpan = document.createElement('span');
       tagSpan.className = 'px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs';
       tagSpan.innerHTML = `<span>🎯</span> ${text} <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>`;
-      
+
       container.appendChild(tagSpan);
       input.value = '';
     }
@@ -5677,7 +5823,7 @@
           typeTag.textContent = `[${test.testType}]`;
           typeTag.className = 'px-3 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-bold border border-[#2F6517]/20';
         }
-        if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 5분';
+        if (timeTag) timeTag.innerHTML = `⏱️ 소요시간: 약 ${test.duration || 5}분`;
         if (rewardTag) rewardTag.innerHTML = `🪙 ${test.rewardCoin} 동전`;
         if (creatorName) creatorName.textContent = '제작자: 바이브코더123 (나)';
         if (creatorTools) creatorTools.innerHTML = `🛠️ 사용 툴: ${test.techTags.join(' ')}`;
@@ -5686,6 +5832,26 @@
         if (extraText) extraText.textContent = `테스터 분들의 피드백을 바탕으로 빠른 기능 개선과 UI 최적화를 진행할 예정입니다. (${test.serviceUrl})`;
         if (mockupUrl) mockupUrl.textContent = test.serviceUrl;
         if (mockupAuthor) mockupAuthor.textContent = '바이브코더123 (나) ▾';
+
+        // Sidebar 2-Column Meta Fields
+        const sideType = document.getElementById('post-side-type');
+        const sideMethod = document.getElementById('post-side-[#2F6517]');
+        const sideDuration = document.getElementById('post-side-duration');
+        const rewardCoinNum = document.getElementById('post-reward-coin-num');
+        const toolsIcons = document.getElementById('post-tools-icons');
+
+        if (sideType) sideType.textContent = test.testType || '프로덕트 테스트';
+        if (sideMethod) {
+          sideMethod.textContent = test.testMethod === 'internal' ? '내부형' : '외부형';
+          sideMethod.className = test.testMethod === 'internal'
+            ? 'inline-block text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200'
+            : 'inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200';
+        }
+        if (sideDuration) sideDuration.textContent = `약 ${test.duration || 5}분`;
+        if (rewardCoinNum) rewardCoinNum.textContent = `${test.rewardCoin} C`;
+        if (toolsIcons && test.techTags) {
+          toolsIcons.innerHTML = test.techTags.map(t => `<span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>⚙️</span> ${t}</span>`).join('');
+        }
 
         if (mockupBody) {
           mockupBody.innerHTML = `
@@ -5720,21 +5886,27 @@
         // Generate missions list based on user's questions
         if (missionsContainer) {
           let missionsHtml = `
-            <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-              <span class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-              <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                웹사이트(https://${test.serviceUrl}) 접속 후 메인 기능 직접 체험해보기
-              </p>
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">웹사이트 접속 및 메인 기능 작동 검증</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                  웹사이트(https://${test.serviceUrl})에 직접 접속하여 핵심 기능을 체험해 주세요.
+                </p>
+              </div>
             </div>
           `;
 
           test.questions.forEach((q, idx) => {
             missionsHtml += `
-              <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-                <span class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">${idx + 2}</span>
-                <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                  ${q}
-                </p>
+              <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">${idx + 2}</span>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-bold text-neutral-800">제작자 전달 질문 응답</span>
+                  <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                    ${q}
+                  </p>
+                </div>
               </div>
             `;
           });
@@ -5763,10 +5935,10 @@
         }
 
       } else if (postId === 'prototype') {
-        // 2. Prototype Test: 노코드 대화형 피그마 온보딩 플로우 사용성 검증
-        if (titleEl) titleEl.textContent = '노코드 대화형 피그마 온보딩 플로우 사용성 검증';
+        // 2. Prototype Test: 온보딩 UI 시안 A/B 투표 검증
+        if (titleEl) titleEl.textContent = '온보딩 UI 시안 A/B 선호도 투표 및 사용성 검증';
         if (typeTag) {
-          typeTag.textContent = '[프로토타입 검증]';
+          typeTag.textContent = '[투표 테스트]';
           typeTag.className = 'px-3 py-1 rounded-md bg-purple-100 text-purple-800 text-xs font-bold';
         }
         if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 3분';
@@ -5774,28 +5946,49 @@
         if (creatorName) creatorName.textContent = '제작자: 프로토타이퍼';
         if (creatorTools) creatorTools.innerHTML = '🛠️ 사용 툴: Figma, Webflow, Relume';
         if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 1인, 5일';
-        if (descText) descText.textContent = '안녕하세요! 노코드로 구현한 대화형 온보딩 플로우의 인터랙티브 프로토타입입니다. 신규 가입자가 복잡한 설정 없이 3분 만에 서비스의 핵심 가치를 이해할 수 있도록 설계했습니다. 버튼 클릭 시 다음 인터랙션으로의 전환 속도와 설명 문구의 가독성을 솔직하게 평가해주세요.';
-        if (extraText) extraText.textContent = '모바일 화면 및 데스크톱 환경에서 프로토타입 온보딩 플로우가 얼마나 매끄럽게 작동하는지 테스터 분들의 생생한 의견을 기다립니다.';
+        if (descText) descText.textContent = '안녕하세요! 노코드로 구현한 대화형 온보딩 플로우의 A안과 B안 시안 비교 검증입니다. 신규 가입자가 복잡한 설정 없이 3분 만에 서비스의 핵심 가치를 이해할 수 있도록 설계된 두 가지 디자인 구조 중 더 직관적인 시안을 선택해 주세요.';
+        if (extraText) extraText.textContent = '모바일 화면 및 데스크톱 환경에서 프로토타입 온보딩 플로우가 얼마나 매끄럽게 작동하는지 테스터 분들의 생생한 투표 소감을 기다립니다.';
         if (mockupUrl) mockupUrl.textContent = 'figma.com/@prototyper/onboarding-flow';
         if (mockupAuthor) mockupAuthor.textContent = '프로토타이퍼 ▾';
+
+        // Sidebar 2-Column Meta Fields
+        const sideType = document.getElementById('post-side-type');
+        const sideMethod = document.getElementById('post-side-[#2F6517]');
+        const sideDuration = document.getElementById('post-side-duration');
+        const rewardCoinNum = document.getElementById('post-reward-coin-num');
+        const toolsIcons = document.getElementById('post-tools-icons');
+
+        if (sideType) sideType.textContent = '투표 테스트';
+        if (sideMethod) {
+          sideMethod.textContent = '내부형';
+          sideMethod.className = 'inline-block text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200';
+        }
+        if (sideDuration) sideDuration.textContent = '약 3분';
+        if (rewardCoinNum) rewardCoinNum.textContent = '350 C';
+        if (toolsIcons) {
+          toolsIcons.innerHTML = `
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>🎨</span> Figma</span>
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>🌐</span> Webflow</span>
+          `;
+        }
 
         if (mockupBody) {
           mockupBody.innerHTML = `
             <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
               <div class="flex items-center gap-2">
                 <span class="text-lg">🎨</span>
-                <span class="font-extrabold text-sm text-purple-950">대화형 온보딩 프로토타입 (Figma)</span>
+                <span class="font-extrabold text-sm text-purple-950">대화형 온보딩 프로토타입 시안 비교</span>
               </div>
-              <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full">인터랙티브 활성</span>
+              <span class="text-xs bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full">내부 투표 진행</span>
             </div>
             <div class="grid grid-cols-3 gap-3 text-center">
               <div class="bg-white p-3 rounded-xl border border-purple-100 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">온보딩 단계</span>
-                <span class="text-lg font-extrabold text-neutral-800">총 3 단계</span>
+                <span class="text-[10px] text-neutral-400 block mb-1">비교 시안</span>
+                <span class="text-lg font-extrabold text-neutral-800">A안 vs B안</span>
               </div>
               <div class="bg-white p-3 rounded-xl border border-purple-100 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">예상 이탈률 감소</span>
-                <span class="text-lg font-extrabold text-primary-dark">-42%</span>
+                <span class="text-[10px] text-neutral-400 block mb-1">A안 득표율</span>
+                <span class="text-lg font-extrabold text-primary-dark">68%</span>
               </div>
               <div class="bg-white p-3 rounded-xl border border-purple-100 shadow-2xs">
                 <span class="text-[10px] text-neutral-400 block mb-1">평균 완료 시간</span>
@@ -5804,30 +5997,39 @@
             </div>
             <div class="w-full h-32 bg-purple-50/70 rounded-xl border border-purple-200 p-4 flex flex-col items-center justify-center text-center">
               <span class="text-xs font-bold text-purple-900 block mb-1">Figma 대화형 프로토타입 프레임</span>
-              <span class="text-[11px] text-purple-600">질문 선택지 클릭 인터랙션 & 축하 모달 애니메이션 내장</span>
+              <span class="text-[11px] text-purple-600">단계별 질문 선택지 클릭 및 A/B 시안 비교 화면 내장</span>
             </div>
           `;
         }
 
         if (missionsContainer) {
           missionsContainer.innerHTML = `
-            <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-              <span class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-              <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                피그마 프로토타입 링크 접속 후 1~3단계 온보딩 질문에 직접 응답해보기
-              </p>
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">A안(3-Step 카드)과 B안(통상 리스트) 시안 확인</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                  제시된 두 가지 온보딩 화면 구성을 꼼꼼하게 둘러보고 가독성과 직관성을 비교해 주세요.
+                </p>
+              </div>
             </div>
-            <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-              <span class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
-              <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                질문 답변 후 최종 완료 화면 및 환영 애니메이션 정상 노출 확인하기
-              </p>
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">선호하는 시안 투표 선택</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                  더 이해하기 쉽고 직관적인 시안(A안 또는 B안)에 표를 던져주세요.
+                </p>
+              </div>
             </div>
-            <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-              <span class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
-              <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                인터랙션 전환 속도와 카피라이팅 이해도에 대한 솔직한 피드백 남기기
-              </p>
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">선택 이유 및 개선 아이디어 서술</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                  해당 시안을 고르신 이유와 추가 개선 피드백을 서술형으로 솔직하게 입력해 주세요.
+                </p>
+              </div>
             </div>
           `;
         }
@@ -5859,12 +6061,196 @@
           if (ctaBtnText) ctaBtnText.textContent = '🚀 테스터로 참여하고 350 동전 받기';
         }
 
+      } else if (postId === 'diary') {
+        // 4. Diary Test: AI 기반 하루 일기 웹앱 A/B 투표
+        if (titleEl) titleEl.textContent = 'AI 기반 하루 일기 웹앱 UX/UI 사용성 및 A/B 선호도 검증';
+        if (typeTag) {
+          typeTag.textContent = '[A/B 투표]';
+          typeTag.className = 'px-3 py-1 rounded-md bg-pink-100 text-[#BE185D] text-xs font-bold';
+        }
+        if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 3분';
+        if (rewardTag) rewardTag.innerHTML = '🪙 200 동전';
+        if (creatorName) creatorName.textContent = '제작자: 인디해커_K';
+        if (creatorTools) creatorTools.innerHTML = '🛠️ 사용 툴: Cursor, Next.js, v0';
+        if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 1인, 7일';
+        if (descText) descText.textContent = '안녕하세요! 텍스트 일기 입력을 바탕으로 하루 감정 상태를 분석해 주는 AI 일기 웹앱입니다. 일기 작성 완료 후 감정 분석 리포트 레이아웃(A안 vs B안)의 시각적 직관성과 폰트 가독성을 평가해 주세요.';
+        if (extraText) extraText.textContent = '실제 작성 과정에서 느껴지는 UX 이탈 요소 및 긍정적 사용감에 대해 솔직하고 구체적인 의견을 남겨주시면 큰 도움이 됩니다.';
+        if (mockupUrl) mockupUrl.textContent = 'ai-diary-app.vercel.app';
+        if (mockupAuthor) mockupAuthor.textContent = '인디해커_K ▾';
+
+        // Sidebar Meta
+        const sideType = document.getElementById('post-side-type');
+        const sideMethod = document.getElementById('post-side-[#2F6517]');
+        const sideDuration = document.getElementById('post-side-duration');
+        const rewardCoinNum = document.getElementById('post-reward-coin-num');
+        const toolsIcons = document.getElementById('post-tools-icons');
+
+        if (sideType) sideType.textContent = 'A/B 투표';
+        if (sideMethod) {
+          sideMethod.textContent = '내부형';
+          sideMethod.className = 'inline-block text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200';
+        }
+        if (sideDuration) sideDuration.textContent = '약 3분';
+        if (rewardCoinNum) rewardCoinNum.textContent = '200 C';
+        if (toolsIcons) {
+          toolsIcons.innerHTML = `
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>🖤</span> Cursor</span>
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>▲</span> Next.js</span>
+          `;
+        }
+
+        if (mockupBody) {
+          mockupBody.innerHTML = `
+            <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">📘</span>
+                <span class="font-extrabold text-sm text-neutral-800">오늘의 일기 AI 감정 분석 대시보드</span>
+              </div>
+              <span class="text-xs bg-pink-100 text-pink-800 font-bold px-2 py-0.5 rounded-full">A/B 선호도 검증</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">감정 분석 정확도</span>
+                <span class="text-lg font-extrabold text-neutral-800">85%</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">A안 득표율</span>
+                <span class="text-lg font-extrabold text-primary-dark">65%</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">보상 동전</span>
+                <span class="text-lg font-extrabold text-[#7E22CE]">200 C</span>
+              </div>
+            </div>
+          `;
+        }
+
+        if (missionsContainer) {
+          missionsContainer.innerHTML = `
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">A안 / B안 감정 리포트 레이아웃 가독성 비교</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">제시된 2가지 일기 분석 결과 화면 레이아웃을 확인해 주세요.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">더 직관적인 시안 선택 투표</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">실제 일기를 썼을 때 더 보고 싶은 디자인 카드에 투표해 주세요.</p>
+              </div>
+            </div>
+          `;
+        }
+
+        if (recruitsText) recruitsText.textContent = '18 / 30명';
+        if (recruitsBar) recruitsBar.style.width = '60%';
+        if (regDate) regDate.textContent = '2024. 11. 17.';
+        if (endDate) endDate.textContent = '2024. 11. 24.';
+        if (rewardMeta) rewardMeta.innerHTML = '200 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">';
+
+        if (sidebarBadge) sidebarBadge.innerHTML = '<span>📢</span> <span>다른 제작자가 등록한 테스트입니다</span>';
+        if (ctaBtn) ctaBtn.classList.remove('hidden');
+
+      } else if (postId === 'saas') {
+        // 5. SaaS Test: SaaS 서비스 랜딩페이지 카피라이팅 선호도 투표
+        if (titleEl) titleEl.textContent = 'SaaS 서비스 랜딩페이지 카피라이팅 A/B 선호도 투표';
+        if (typeTag) {
+          typeTag.textContent = '[A/B 투표]';
+          typeTag.className = 'px-3 py-1 rounded-md bg-amber-100 text-amber-900 text-xs font-bold';
+        }
+        if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 1분';
+        if (rewardTag) rewardTag.innerHTML = '🪙 100 동전';
+        if (creatorName) creatorName.textContent = '제작자: SaaS_Maker';
+        if (creatorTools) creatorTools.innerHTML = '🛠️ 사용 툴: Next.js, Tailwind, Vercel';
+        if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 1인, 14일';
+        if (descText) descText.textContent = '안녕하세요! B2B SaaS 대시보드 랜딩페이지의 메인 히어로 헤드카피 투표입니다. 수익 중심 직접적 카피 vs 업무 효율 중심 설득형 카피 중 타겟 유저의 관심과 가입 클릭을 끌어낼 카피를 골라주세요.';
+        if (extraText) extraText.textContent = '어떤 카피가 더 가치제안을 전달하기 명확한지 짧고 솔직한 선택 이유도 함께 남겨주시면 큰 도움이 됩니다.';
+        if (mockupUrl) mockupUrl.textContent = 'saas-dashboard-preview.io';
+        if (mockupAuthor) mockupAuthor.textContent = 'SaaS_Maker ▾';
+
+        // Sidebar Meta
+        const sideType = document.getElementById('post-side-type');
+        const sideMethod = document.getElementById('post-side-[#2F6517]');
+        const sideDuration = document.getElementById('post-side-duration');
+        const rewardCoinNum = document.getElementById('post-reward-coin-num');
+        const toolsIcons = document.getElementById('post-tools-icons');
+
+        if (sideType) sideType.textContent = 'A/B 투표';
+        if (sideMethod) {
+          sideMethod.textContent = '내부형';
+          sideMethod.className = 'inline-block text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200';
+        }
+        if (sideDuration) sideDuration.textContent = '약 1분';
+        if (rewardCoinNum) rewardCoinNum.textContent = '100 C';
+        if (toolsIcons) {
+          toolsIcons.innerHTML = `
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>▲</span> Next.js</span>
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>▲</span> Vercel</span>
+          `;
+        }
+
+        if (mockupBody) {
+          mockupBody.innerHTML = `
+            <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">⚡</span>
+                <span class="font-extrabold text-sm text-neutral-800">SaaS 랜딩페이지 히어로 카피라이팅 비교</span>
+              </div>
+              <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full">투표 진행 중</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">비교 카피</span>
+                <span class="text-lg font-extrabold text-neutral-800">수익 vs 효율</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">현재 참여</span>
+                <span class="text-lg font-extrabold text-primary-dark">5 명</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">지급 동전</span>
+                <span class="text-lg font-extrabold text-[#7E22CE]">100 C</span>
+              </div>
+            </div>
+          `;
+        }
+
+        if (missionsContainer) {
+          missionsContainer.innerHTML = `
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">Option A(수익 중심)와 Option B(효율 중심) 헤드라인 비교</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">제시된 2가지 헤드라인 문구를 확인해 주세요.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">더 끌리는 시안 투표 선택 및 간단 이유 작성</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">더 클릭하고 싶은 문구에 투표해 주시면 투표 즉시 적립됩니다.</p>
+              </div>
+            </div>
+          `;
+        }
+
+        if (recruitsText) recruitsText.textContent = '5 / 100명';
+        if (recruitsBar) recruitsBar.style.width = '5%';
+        if (regDate) regDate.textContent = '2024. 11. 19.';
+        if (endDate) endDate.textContent = '2024. 12. 03.';
+        if (rewardMeta) rewardMeta.innerHTML = '100 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">';
+
+        if (sidebarBadge) sidebarBadge.innerHTML = '<span>📢</span> <span>다른 제작자가 등록한 테스트입니다</span>';
+        if (ctaBtn) ctaBtn.classList.remove('hidden');
+
       } else {
         // 3. MoneyLog Test: 가계부 앱 베타테스터 모집
         if (titleEl) titleEl.textContent = 'AI 영수증 인식 스마트 가계부 \'머니로그\' 베타테스터 모집';
         if (typeTag) {
           typeTag.textContent = '[프로덕트 테스트]';
-          typeTag.className = 'px-3 py-1 rounded-md bg-[#F4F4F5] text-neutral-600 text-xs font-bold';
+          typeTag.className = 'px-3 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-bold border border-[#2F6517]/20';
         }
         if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 5분';
         if (rewardTag) rewardTag.innerHTML = '🪙 600 동전';
@@ -5875,6 +6261,28 @@
         if (extraText) extraText.textContent = '카메라 영수증 OCR 인식과 대시보드 지출 분석 플로우가 실제 사용 환경에서 얼마나 직관적이고 편리한지 솔직한 피드백을 부탁드립니다.';
         if (mockupUrl) mockupUrl.textContent = 'moneylog-preview.io';
         if (mockupAuthor) mockupAuthor.textContent = '핀테크러버 ▾';
+
+        // Sidebar 2-Column Meta Fields
+        const sideType = document.getElementById('post-side-type');
+        const sideMethod = document.getElementById('post-side-[#2F6517]');
+        const sideDuration = document.getElementById('post-side-duration');
+        const rewardCoinNum = document.getElementById('post-reward-coin-num');
+        const toolsIcons = document.getElementById('post-tools-icons');
+
+        if (sideType) sideType.textContent = '프로덕트 테스트';
+        if (sideMethod) {
+          sideMethod.textContent = '외부형';
+          sideMethod.className = 'inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200';
+        }
+        if (sideDuration) sideDuration.textContent = '약 5분';
+        if (rewardCoinNum) rewardCoinNum.textContent = '600 C';
+        if (toolsIcons) {
+          toolsIcons.innerHTML = `
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>🖤</span> Cursor</span>
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>▲</span> Next.js</span>
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold"><span>⚡</span> v0</span>
+          `;
+        }
 
         if (mockupBody) {
           mockupBody.innerHTML = `
@@ -5957,6 +6365,45 @@
           }
           if (ctaBtnText) ctaBtnText.textContent = '🚀 테스터로 참여하고 600 동전 받기';
         }
+      }
+
+      // Update Mission Tab Card UI according to internal vs external method
+      const missionCardLabel = document.getElementById('post-mission-card-label');
+      const missionTypeBadge = document.getElementById('post-mission-type-badge');
+      const missionUrlRow = document.getElementById('post-mission-url-row');
+      const missionCardSubtext = document.getElementById('post-mission-card-subtext');
+      const missionCardBtnText = document.getElementById('post-mission-card-btn-text');
+
+      const isInternal = ['prototype', 'diary', 'saas'].includes(postId) || (myCreatedTest && (postId === 'my-created-test' || postId === 'my-test') && myCreatedTest.testMethod === 'internal');
+
+      if (isInternal) {
+        if (missionCardLabel) missionCardLabel.textContent = '내부 검증 폼';
+        if (missionTypeBadge) {
+          missionTypeBadge.textContent = '내부 직접 검증형';
+          missionTypeBadge.className = 'text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded';
+        }
+        const hasUrl = myCreatedTest && (postId === 'my-created-test' || postId === 'my-test') && myCreatedTest.typeSpecificData && myCreatedTest.typeSpecificData.url;
+        if (hasUrl) {
+          if (missionUrlRow) missionUrlRow.classList.remove('hidden');
+          const extUrlText = document.getElementById('post-external-url-text');
+          const extUrlLink = document.getElementById('post-external-url-link');
+          const fullUrl = myCreatedTest.typeSpecificData.url.startsWith('http') ? myCreatedTest.typeSpecificData.url : `https://${myCreatedTest.typeSpecificData.url}`;
+          if (extUrlText) extUrlText.textContent = fullUrl;
+          if (extUrlLink) extUrlLink.href = fullUrl;
+        } else {
+          if (missionUrlRow) missionUrlRow.classList.add('hidden');
+        }
+        if (missionCardSubtext) missionCardSubtext.textContent = hasUrl ? '* 위 서비스 URL을 방문하여 체험하신 후 [✍️ 테스트하기] 버튼을 통해 피드백 및 검증을 작성해 주세요.' : '* 외부 이동 없이 이 탭에서 작성 카드 팝업을 열어 검증에 직접 참여합니다.';
+        if (missionCardBtnText) missionCardBtnText.textContent = '✍️ 테스트하기';
+      } else {
+        if (missionCardLabel) missionCardLabel.textContent = '외부 접속 링크';
+        if (missionTypeBadge) {
+          missionTypeBadge.textContent = '외부 웹사이트 링크형';
+          missionTypeBadge.className = 'text-xs font-bold text-[#2F6517] bg-[#EBF7E2] px-2 py-0.5 rounded';
+        }
+        if (missionUrlRow) missionUrlRow.classList.remove('hidden');
+        if (missionCardSubtext) missionCardSubtext.textContent = '* 위 접속 링크를 클릭하면 새 탭에서 서비스가 열리며 테스트를 수행할 수 있습니다.';
+        if (missionCardBtnText) missionCardBtnText.textContent = '🚀 외부 접속 및 참여하기';
       }
 
       switchPostDetailTab('overview');
@@ -6105,24 +6552,115 @@
         const dynamicContent = document.getElementById('part-internal-dynamic-content');
         if (dynamicContent) {
           dynamicContent.innerHTML = `
-            <div class="bg-neutral-50 p-4 rounded-xl border border-neutral-200 flex flex-col gap-3">
-              <span class="text-xs font-bold text-neutral-800">Q1. 더 직관적인 온보딩 화면을 선택해주세요</span>
-              <div class="grid grid-cols-2 gap-3">
-                <label class="border-2 border-primary bg-white p-3 rounded-xl flex flex-col items-center gap-2 cursor-pointer text-center">
-                  <span class="text-xs font-extrabold text-primary-dark">A안 (단계별 3-Step)</span>
-                  <div class="w-full h-20 bg-neutral-100 rounded-lg flex items-center justify-center text-xs text-neutral-400">시안 이미지 A</div>
-                  <input type="radio" name="ab-vote-choice" value="A" checked class="accent-[#2F6517]">
-                </label>
-                <label class="border border-neutral-200 bg-white p-3 rounded-xl flex flex-col items-center gap-2 cursor-pointer text-center hover:border-neutral-300">
-                  <span class="text-xs font-extrabold text-neutral-700">B안 (한 페이지 통상)</span>
-                  <div class="w-full h-20 bg-neutral-100 rounded-lg flex items-center justify-center text-xs text-neutral-400">시안 이미지 B</div>
-                  <input type="radio" name="ab-vote-choice" value="B" class="accent-[#2F6517]">
-                </label>
-              </div>
+            <!-- Top Progress & Header Bar -->
+            <div class="flex items-center justify-between bg-[#F4F9EE] px-4 py-2.5 rounded-xl border border-[#DCE4B8]">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2F6517] text-white text-[11px] font-extrabold shadow-2xs">
+                <span>✓</span> Question 1 of 2
+              </span>
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold">
+                🪙 +350P 투표 즉시 적립
+              </span>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-neutral-800">선택한 이유 (간단 소감)</label>
-              <textarea rows="2" placeholder="이유를 입력해 주세요 (예: A안의 카드 형태 안내가 이해하기 쉽습니다)" class="w-full text-xs p-3 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
+
+            <!-- Question Title & Subtext -->
+            <div class="text-center my-1">
+              <h4 class="text-lg font-extrabold text-neutral-dark tracking-tight">SaaS 서비스 랜딩페이지 카피라이팅 선호도 투표</h4>
+              <p class="text-xs text-neutral-500 mt-1 leading-relaxed">
+                어떤 카피와 히어로 섹션이 핵심 가치('수익 증대와 시간 절약')를 더 강력하게 전달하나요?<br>
+                <strong class="text-[#2F6517]">더 마음이 끌리는 디자인 카드나 버튼을 직접 클릭해주세요!</strong>
+              </p>
+            </div>
+
+            <!-- Option Cards Grid (A안 vs B안) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-1">
+              <!-- Option A Card -->
+              <label id="opt-card-A" onclick="selectInternalVoteOption('A')"
+                class="border-2 border-[#2F6517] bg-[#FAFBF7] rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-subtle hover:shadow-md transition-all relative">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <input type="radio" name="internal-ab-vote" value="A" checked class="w-4 h-4 accent-[#2F6517]">
+                    <span class="text-xs font-extrabold text-neutral-dark">Option A 선택하기</span>
+                  </div>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-neutral-200 text-neutral-700">수익 중심</span>
+                </div>
+
+                <!-- Preview Mockup Area A -->
+                <div class="w-full bg-[#181C28] text-white rounded-xl p-5 flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden min-h-[140px]">
+                  <div class="absolute top-2.5 right-3 flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-red-400"></span>
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  </div>
+                  <span class="text-[10px] uppercase font-bold tracking-widest text-blue-400">REVENUE DASHBOARD</span>
+                  <h5 class="text-sm font-extrabold text-white">돈 벌 기회를 <span class="text-amber-300">확실하게!</span></h5>
+                  <p class="text-[11px] text-neutral-300">쉽고 빠른 수익 관리 대시보드</p>
+                  <button type="button" class="px-3.5 py-1.5 rounded-lg bg-amber-400 text-neutral-dark text-[11px] font-bold shadow-2xs">
+                    14일 무료 체험 시작하기
+                  </button>
+                </div>
+
+                <!-- Description A -->
+                <div>
+                  <h6 class="text-xs font-extrabold text-neutral-dark">직관적인 수익 중심의 직접적 카피</h6>
+                  <p class="text-[11px] text-neutral-500 leading-normal mt-0.5">
+                    수익화와 성과를 전면에 배치해 비즈니스 유저의 호기심을 유도하고 빠른 전환(14일 무료 체험)을 유도합니다.
+                  </p>
+                </div>
+
+                <button type="button" class="w-full py-2.5 rounded-xl bg-[#1F242D] text-white text-xs font-bold flex items-center justify-center gap-1.5">
+                  <span>✓</span> <span>이 디자인 선택하기</span>
+                </button>
+              </label>
+
+              <!-- Option B Card -->
+              <label id="opt-card-B" onclick="selectInternalVoteOption('B')"
+                class="border border-neutral-200 bg-white rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-2xs hover:border-neutral-300 transition-all relative">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <input type="radio" name="internal-ab-vote" value="B" class="w-4 h-4 accent-[#2F6517]">
+                    <span class="text-xs font-extrabold text-neutral-dark">Option B 선택하기</span>
+                  </div>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">효율 중심</span>
+                </div>
+
+                <!-- Preview Mockup Area B -->
+                <div class="w-full bg-gradient-to-b from-[#F0FDF4] to-[#DCFCE7] text-neutral-dark rounded-xl p-5 flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden min-h-[140px] border border-emerald-200">
+                  <div class="absolute top-2.5 right-3">
+                    <span class="text-[10px] font-bold bg-white text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">● Active</span>
+                  </div>
+                  <span class="text-[10px] uppercase font-bold tracking-widest text-emerald-700">WORKFLOW AUTOMATION</span>
+                  <h5 class="text-sm font-extrabold text-neutral-900">반복 업무는 그만, <span class="text-emerald-700">자동화로 3배 빠르게!</span></h5>
+                  <p class="text-[11px] text-neutral-600">업무 시간을 아끼는 스마트 비즈니스 파트너</p>
+                  <button type="button" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-bold shadow-2xs">
+                    지금 바로 시작하기
+                  </button>
+                </div>
+
+                <!-- Description B -->
+                <div>
+                  <h6 class="text-xs font-extrabold text-neutral-dark">효율성과 워크플로우 중심의 설득형 카피</h6>
+                  <p class="text-[11px] text-neutral-500 leading-normal mt-0.5">
+                    반복 업무 자동화와 대시보드 생산성 향상 수치를 구체적으로 제시해 실무자에게 높은 신뢰감을 전달합니다.
+                  </p>
+                </div>
+
+                <button type="button" class="w-full py-2.5 rounded-xl bg-[#1F242D] text-white text-xs font-bold flex items-center justify-center gap-1.5">
+                  <span>✓</span> <span>이 디자인 선택하기</span>
+                </button>
+              </label>
+            </div>
+
+            <!-- Optional Reason Input Box -->
+            <div class="bg-[#FAFBF5] rounded-2xl border border-[#E4EBD3] p-4.5 flex flex-col gap-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-neutral-800 flex items-center gap-1.5">
+                  <span>💬</span> <span>선택하신 이유를 간단히 적어주세요 (선택)</span>
+                </label>
+                <span class="text-[10px] font-bold text-[#2F6517] bg-primary/20 px-2 py-0.5 rounded-full">✍️ 작성 시 +50P 추가 보너스!</span>
+              </div>
+              <p class="text-[11px] text-neutral-500 font-medium">어떤 문구나 디자인 요소가 더 와닿았는지 피드백을 남겨주시면 서비스 개선에 큰 도움이 됩니다.</p>
+              <textarea rows="3" placeholder="예: Option A는 직관적으로 얼마를 벌 수 있을지 기대감을 줘서 클릭률이 더 높을 것 같아요."
+                class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary bg-white leading-relaxed"></textarea>
             </div>
           `;
         }
@@ -6157,6 +6695,20 @@
 
       // 마이페이지 리뷰 작성으로 이동
       navigateTo('feedback');
+    }
+
+    function selectInternalVoteOption(optionKey) {
+      const cardA = document.getElementById('opt-card-A');
+      const cardB = document.getElementById('opt-card-B');
+      if (!cardA || !cardB) return;
+
+      if (optionKey === 'A') {
+        cardA.className = 'border-2 border-[#2F6517] bg-[#FAFBF7] rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-subtle hover:shadow-md transition-all relative';
+        cardB.className = 'border border-neutral-200 bg-white rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-2xs hover:border-neutral-300 transition-all relative';
+      } else {
+        cardB.className = 'border-2 border-[#2F6517] bg-[#FAFBF7] rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-subtle hover:shadow-md transition-all relative';
+        cardA.className = 'border border-neutral-200 bg-white rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-2xs hover:border-neutral-300 transition-all relative';
+      }
     }
 
     // ========================================================
@@ -6307,46 +6859,53 @@
             </label>
             
             <div class="space-y-3 bg-[#FAFBF7] p-4 rounded-xl border border-[#E9EEDC] text-xs">
-              <!-- 문항 1: 객관식 선택형 -->
-              <div class="p-3 bg-white rounded-lg border border-[#E2E8D5] flex flex-col gap-2">
-                <span class="font-extrabold text-neutral-800">Q1. 영수증 OCR 촬영 후 자동 입력된 상호명 인식 정확도는 어땠나요?</span>
-                <div class="grid grid-cols-2 gap-2 text-[11px]">
-                  <label class="p-2 border border-primary bg-primary/5 rounded-md flex items-center gap-1.5 cursor-pointer font-semibold text-primary-dark">
-                    <input type="radio" name="fb-product-q1" value="very_accurate" checked class="accent-[#2F6517]"> 100% 정확하게 인식됨
-                  </label>
-                  <label class="p-2 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
-                    <input type="radio" name="fb-product-q1" value="minor_error" class="accent-[#2F6517]"> 오타가 1~2개 발생함
-                  </label>
-                  <label class="p-2 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
-                    <input type="radio" name="fb-product-q1" value="failed" class="accent-[#2F6517]"> 인식에 실패함
-                  </label>
-                  <label class="p-2 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
-                    <input type="radio" name="fb-product-q1" value="not_tested" class="accent-[#2F6517]"> 영수증 기능을 안 써봄
-                  </label>
+              ${(myCreatedTest && myCreatedTest.questions && myCreatedTest.questions.length > 0) ? 
+                myCreatedTest.questions.map((q, idx) => {
+                  const titleText = typeof q === 'string' ? q : q.title;
+                  const choices = (typeof q === 'object' && Array.isArray(q.choices)) ? q.choices : ['매우 양호함 / 이상 없음', '일부 개선 필요'];
+                  
+                  if (choices.length === 0) {
+                    // Subjective Question (주관식 서술형)
+                    return `
+                      <div class="p-3.5 bg-white rounded-lg border border-[#E2E8D5] flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                          <span class="font-extrabold text-neutral-800">Q${idx + 1}. ${titleText}</span>
+                          <span class="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">주관식 서술형</span>
+                        </div>
+                        <textarea rows="2" placeholder="이 질문에 대한 답변을 자유롭게 서술해 주세요..." class="w-full text-xs p-2.5 rounded-lg border border-neutral-200 focus:outline-none focus:border-primary font-medium leading-relaxed"></textarea>
+                      </div>
+                    `;
+                  } else {
+                    // Multiple Choice Question (선택형 1~5개)
+                    return `
+                      <div class="p-3.5 bg-white rounded-lg border border-[#E2E8D5] flex flex-col gap-2">
+                        <span class="font-extrabold text-neutral-800">Q${idx + 1}. ${titleText}</span>
+                        <div class="flex flex-col gap-1.5 text-[11px]">
+                          ${choices.map((cText, cIdx) => `
+                            <label class="p-2.5 border border-neutral-200 hover:border-primary/60 bg-white hover:bg-primary/5 rounded-md flex items-center gap-2 cursor-pointer font-medium text-neutral-800 transition-colors">
+                              <input type="radio" name="fb-product-custom-q${idx}" value="opt${cIdx + 1}" ${cIdx === 0 ? 'checked' : ''} class="accent-[#2F6517]">
+                              <span>${cText}</span>
+                            </label>
+                          `).join('')}
+                        </div>
+                      </div>
+                    `;
+                  }
+                }).join('')
+                : `
+                <!-- 기본 샘플 문항 1 -->
+                <div class="p-3 bg-white rounded-lg border border-[#E2E8D5] flex flex-col gap-2">
+                  <span class="font-extrabold text-neutral-800">Q1. 영수증 OCR 촬영 후 자동 입력된 상호명 인식 정확도는 어땠나요?</span>
+                  <div class="grid grid-cols-2 gap-2 text-[11px]">
+                    <label class="p-2 border border-primary bg-primary/5 rounded-md flex items-center gap-1.5 cursor-pointer font-semibold text-primary-dark">
+                      <input type="radio" name="fb-product-q1" value="very_accurate" checked class="accent-[#2F6517]"> 100% 정확하게 인식됨
+                    </label>
+                    <label class="p-2 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
+                      <input type="radio" name="fb-product-q1" value="minor_error" class="accent-[#2F6517]"> 오타가 1~2개 발생함
+                    </label>
+                  </div>
                 </div>
-              </div>
-
-              <!-- 문항 2: 객관식 선택형 -->
-              <div class="p-3 bg-white rounded-lg border border-[#E2E8D5] flex flex-col gap-2">
-                <span class="font-extrabold text-neutral-800">Q2. 지출 카테고리별 차트 화면 진입 속도는 어떠셨나요?</span>
-                <div class="flex flex-wrap gap-2 text-[11px]">
-                  <label class="px-3 py-1.5 border border-primary bg-primary/5 rounded-md flex items-center gap-1.5 cursor-pointer font-semibold text-primary-dark">
-                    <input type="radio" name="fb-product-q2" value="fast" checked class="accent-[#2F6517]"> 1초 미만 (매우 쾌적)
-                  </label>
-                  <label class="px-3 py-1.5 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
-                    <input type="radio" name="fb-product-q2" value="normal" class="accent-[#2F6517]"> 2~3초 (보통)
-                  </label>
-                  <label class="px-3 py-1.5 border border-neutral-200 bg-white rounded-md flex items-center gap-1.5 cursor-pointer font-medium text-neutral-700 hover:border-neutral-300">
-                    <input type="radio" name="fb-product-q2" value="slow" class="accent-[#2F6517]"> 5초 이상 (답답함/로딩 렉)
-                  </label>
-                </div>
-              </div>
-
-              <!-- 문항 3: 체크박스 최종 확인 -->
-              <label class="flex items-center justify-between p-2.5 bg-white rounded-lg border border-[#E2E8D5] text-neutral-800 font-medium cursor-pointer">
-                <span>✓ 카테고리별 예산 알림 푸시 수신 여부 확인</span>
-                <input type="checkbox" checked class="w-4 h-4 accent-[#2F6517]">
-              </label>
+              `}
             </div>
           </div>
 
@@ -6410,7 +6969,15 @@
     }
 
     function executeParticipateInCurrentTest() {
-      openTestParticipateModal(currentPostId);
+      const pId = currentPostId || 'moneylog';
+      const isInternal = ['prototype', 'diary', 'saas'].includes(pId) || (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test') && myCreatedTest.testMethod === 'internal');
+
+      if (isInternal) {
+        renderFullPageInternalTestScreen(pId);
+        navigateTo('abtest');
+      } else {
+        openTestParticipateModal(pId);
+      }
     }
 
     function navigateTo(viewKey) {
@@ -6537,8 +7104,7 @@
     // ========================================================
     // Step Form State & Dynamic Field Management
     // ========================================================
-    let currentMainCategory = 'product'; // 'product' | 'vote' | 'survey'
-    let currentVoteSubOption = 'ab'; // 'ab' | 'design' | 'landing'
+    let currentMainCategory = 'product'; // 'product' | 'prototype' | 'vote' | 'none'
 
     function handleMainCategoryChange(cat) {
       currentMainCategory = cat;
@@ -6553,14 +7119,59 @@
         activeCard.className = 'main-category-card cursor-pointer rounded-2xl border-2 border-primary bg-[#F4F9EE] p-5 flex flex-col items-center text-center gap-3 transition-all shadow-xs';
       }
 
-      // Show/Hide Sub Forms (Conditional Rendering)
+      // Show/Hide Sub Forms
+      const subContainer = document.getElementById('sub-category-form-container');
       const subProduct = document.getElementById('sub-form-product');
       const subVote = document.getElementById('sub-form-vote');
-      const subSurvey = document.getElementById('sub-form-survey');
 
-      if (subProduct) subProduct.style.display = cat === 'product' ? 'flex' : 'none';
-      if (subVote) subVote.style.display = cat === 'vote' ? 'flex' : 'none';
-      if (subSurvey) subSurvey.style.display = cat === 'survey' ? 'flex' : 'none';
+      if (cat === 'none') {
+        if (subContainer) subContainer.style.display = 'none';
+      } else {
+        if (subContainer) subContainer.style.display = 'flex';
+        if (subProduct) subProduct.style.display = (cat === 'product' || cat === 'prototype') ? 'flex' : 'none';
+        if (subVote) subVote.style.display = cat === 'vote' ? 'flex' : 'none';
+      }
+
+      toggleProductPlatformFields(document.querySelector('input[name="productSubPlatform"]:checked')?.value || 'web');
+    }
+
+    function handleSkipMainCategory() {
+      handleMainCategoryChange('none');
+      showGenericToast('대분류 선택이 생략되었습니다. 아래 3. 검증 항목(단순 설문)을 입력해 주세요.', '⏩');
+    }
+
+    function toggleProductPlatformFields(platform) {
+      const webFields = document.getElementById('product-web-fields');
+      const appStoreFields = document.getElementById('product-app-store-fields');
+      const appPrototypeFields = document.getElementById('product-app-prototype-fields');
+
+      if (platform === 'web') {
+        if (webFields) webFields.style.display = 'flex';
+        if (appStoreFields) appStoreFields.style.display = 'none';
+        if (appPrototypeFields) appPrototypeFields.style.display = 'none';
+      } else {
+        if (webFields) webFields.style.display = 'none';
+        if (currentMainCategory === 'product') {
+          if (appStoreFields) appStoreFields.style.display = 'flex';
+          if (appPrototypeFields) appPrototypeFields.style.display = 'none';
+        } else {
+          if (appStoreFields) appStoreFields.style.display = 'none';
+          if (appPrototypeFields) appPrototypeFields.style.display = 'flex';
+        }
+      }
+
+      // Update AB fields if active
+      const webAb = document.getElementById('product-ab-web-fields');
+      const appAb = document.getElementById('product-ab-app-fields');
+      if (webAb) webAb.style.display = (isProductAbMode && platform === 'web') ? 'grid' : 'none';
+      if (appAb) appAb.style.display = (isProductAbMode && platform === 'app') ? 'grid' : 'none';
+    }
+
+    function toggleMissionFormatMode(mode) {
+      const directBox = document.getElementById('mission-direct-container');
+      const linkBox = document.getElementById('mission-link-container');
+      if (directBox) directBox.style.display = mode === 'direct' ? 'flex' : 'none';
+      if (linkBox) linkBox.style.display = mode === 'link' ? 'flex' : 'none';
     }
 
     let isProductAbMode = false;
@@ -6691,13 +7302,46 @@
     function addQuestionItem() {
       const list = document.getElementById('questions-list');
       if (!list) return;
+      if (list.children.length >= 10) {
+        alert('검증 문항은 최대 10개까지 등록 가능합니다.');
+        return;
+      }
       const count = list.children.length + 1;
       const div = document.createElement('div');
-      div.className = 'flex items-center gap-3 p-4 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors animate-in fade-in duration-150';
+      div.className = 'question-item p-4 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors flex flex-col gap-3 animate-in fade-in duration-150';
       div.innerHTML = `
-        <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 ${count}</span>
-        <input type="text" placeholder="확인받고 싶은 검증 항목을 작성하세요..." class="flex-1 text-sm font-medium text-neutral-dark focus:outline-none" />
-        <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-2">삭제</button>
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 ${count}</span>
+          <input type="text" placeholder="확인받고 싶은 검증 질문을 입력하세요..." class="question-title-input flex-1 text-xs font-medium text-neutral-dark focus:outline-none" />
+          <button type="button" onclick="this.closest('.question-item').remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-2">삭제</button>
+        </div>
+        <div class="pl-8 flex flex-col gap-2 border-t border-neutral-100 pt-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-neutral-500">선택지 항목 설정 (최대 5개 / 비우면 주관식)</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+              <span class="text-xs text-neutral-400">1.</span>
+              <input type="text" value="매우 양호함 / 이상 없음" placeholder="선택지 1" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+            </div>
+            <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+              <span class="text-xs text-neutral-400">2.</span>
+              <input type="text" value="일부 개선 필요" placeholder="선택지 2" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+            </div>
+            <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+              <span class="text-xs text-neutral-400">3.</span>
+              <input type="text" value="" placeholder="선택지 3 (선택)" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+            </div>
+            <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+              <span class="text-xs text-neutral-400">4.</span>
+              <input type="text" value="" placeholder="선택지 4 (선택)" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+            </div>
+            <div class="flex items-center gap-1.5 bg-[#FAFBF7] px-2.5 py-1.5 rounded-lg border border-neutral-200">
+              <span class="text-xs text-neutral-400">5.</span>
+              <input type="text" value="" placeholder="선택지 5 (선택)" class="choice-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+            </div>
+          </div>
+        </div>
       `;
       list.appendChild(div);
     }
@@ -7009,7 +7653,8 @@
           const surveyInputs = document.querySelectorAll('#survey-questions-list input[type="text"]');
           const surveyQs = [];
           surveyInputs.forEach(i => { if (i.value.trim()) surveyQs.push(i.value.trim()); });
-          typeSpecificData = { surveyMode: 'direct', surveyQuestions: surveyQs };
+          const pUrl = (document.getElementById('input-survey-product-url')?.value || '').trim();
+          typeSpecificData = { surveyMode: 'direct', surveyQuestions: surveyQs, url: pUrl };
         }
       }
 
@@ -7025,19 +7670,46 @@
       const targetAges = Array.from(document.querySelectorAll('input[name="targetAge"]:checked')).map(c => c.value);
       const targetInterests = Array.from(document.querySelectorAll('input[name="targetInterest"]:checked')).map(c => c.value);
 
-      // Extract questions (검증 항목)
-      const qInputs = document.querySelectorAll('#questions-list input[type="text"]');
+      // Extract questions with custom choices (up to 5 choices; empty choices array = subjective question)
+      const questionItemEls = document.querySelectorAll('#questions-list .question-item');
       const questions = [];
-      qInputs.forEach(inp => {
-        const val = inp.value.trim();
-        if (val) questions.push(val);
+      questionItemEls.forEach(item => {
+        const titleVal = item.querySelector('.question-title-input')?.value.trim();
+        const choiceInputs = item.querySelectorAll('.choice-input');
+        const choices = [];
+        choiceInputs.forEach(ci => {
+          const val = ci.value.trim();
+          if (val) choices.push(val);
+        });
+        if (titleVal) {
+          questions.push({
+            title: titleVal,
+            choices: choices // if choices is empty [], it's a subjective question
+          });
+        }
       });
+
       if (questions.length === 0) {
-        questions.push('핵심 기능의 사용 편의성과 UI 가독성은 어떠하셨나요?');
+        questions.push({
+          title: '핵심 기능의 사용 편의성과 UI 가독성은 어떠하셨나요?',
+          choices: ['매우 양호함 / 이상 없음', '일부 개선 필요']
+        });
       }
 
       const sUrl = typeSpecificData.url || 'try-money-pig.io';
       const tags = ['#v0', '#Cursor', '#Next.js', '#Supabase'];
+
+      // Determine internal vs external test method
+      let isInternalMethod = false;
+      if (currentMainCategory === 'none') {
+        isInternalMethod = true; // 대분류 생략 (단순 설문/검증항목 직접입력) -> 내부 테스트 화면으로 이동
+      } else if (currentMainCategory === 'vote') {
+        isInternalMethod = true;
+      } else if (currentMainCategory === 'survey' && typeSpecificData.surveyMode === 'direct' && !typeSpecificData.url) {
+        isInternalMethod = true;
+      } else {
+        isInternalMethod = false; // 웹/앱 프로덕트/프로토타입 및 URL이 있는 검증은 외부 테스트
+      }
 
       // 4. 합쳐서 tests 구조 저장 (데이터베이스 tests 테이블 매핑 통합 데이터)
       myCreatedTest = {
@@ -7047,6 +7719,7 @@
         serviceDesc: sDesc,
         thumbnailUrl: thumbImgSrc,
         testType: testCategoryName,
+        testMethod: isInternalMethod ? 'internal' : 'external',
         mainCategory: currentMainCategory,
         typeSpecificData: typeSpecificData,
         testNotice: sNotice,
