@@ -418,6 +418,116 @@
   </div>
 
   <!-- ========================================================
+       UNIFIED TEST PARTICIPATION MODAL (통합 테스트 참여 신청 & 안내 모달)
+  ======================================================== -->
+  <div id="test-participate-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-neutral-dark/60 backdrop-blur-xs hidden transition-all duration-200">
+    <div
+      class="w-full max-w-[560px] mx-4 bg-white rounded-[24px] border border-neutral-border shadow-float p-6 sm:p-8 flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200 relative max-h-[90vh] overflow-y-auto">
+
+      <!-- Close (X) Button -->
+      <button type="button" onclick="closeTestParticipateModal()"
+        class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-colors text-sm cursor-pointer"
+        title="닫기">
+        ✕
+      </button>
+
+      <!-- [VIEW A: 참여 신청 확인 및 안내 뷰] -->
+      <div id="participate-view-initial" class="flex flex-col gap-5">
+        <!-- 1. 모달 상단 요약 (작은 썸네일 + 서비스명 + 한줄소개) -->
+        <div class="flex items-center gap-4 border-b border-neutral-100 pb-4">
+          <div id="part-modal-thumb-box" class="w-14 h-14 rounded-2xl bg-[#F4F9EE] border border-primary/40 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+            📱
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 mb-1">
+              <span id="part-modal-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-primary/30 text-primary-dark">[프로덕트 테스트]</span>
+              <span id="part-modal-reward" class="text-[11px] font-extrabold text-[#7E22CE] bg-purple-50 px-2 py-0.5 rounded">🪙 600 동전 수령</span>
+            </div>
+            <h3 id="part-modal-title" class="text-base font-extrabold text-neutral-dark truncate">가계부 앱 베타테스트</h3>
+            <p id="part-modal-desc" class="text-xs text-neutral-500 truncate mt-0.5">영수증 사진 한 장으로 지출을 자동 분류하는 스마트 가계부</p>
+          </div>
+        </div>
+
+        <!-- 2. 검증 항목 체크리스트 (안내 목적) -->
+        <div class="flex flex-col gap-2.5">
+          <label class="block text-xs font-bold text-neutral-dark flex items-center gap-1.5">
+            <span>📋</span> <span>테스트 검증 안내 항목</span>
+          </label>
+          <div id="part-modal-checklist" class="space-y-2 bg-[#FAFBF7] p-4 rounded-xl border border-[#E9EEDC] text-xs">
+            <!-- Dynamic checklist items -->
+          </div>
+        </div>
+
+        <!-- 3. 대상 조건 확인용 추가 질문 (있을 시 노출) -->
+        <div id="part-modal-target-box" class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex flex-col gap-1">
+          <span class="font-bold flex items-center gap-1">🎯 권장 대상 조건 확인</span>
+          <p id="part-modal-target-text" class="text-[11px] text-amber-800 leading-relaxed font-medium">연령대: 20대, 30대 | 관심사: 핀테크, 자산관리</p>
+        </div>
+
+        <!-- 4. 모달 하단 버튼 -->
+        <div class="pt-2 flex items-center gap-3">
+          <button type="button" onclick="closeTestParticipateModal()"
+            class="w-1/3 py-3.5 px-4 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">
+            취소
+          </button>
+          <button type="button" onclick="confirmParticipationAndProceed()"
+            class="w-2/3 py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span>확인했어요, 시작하기</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- [VIEW B: 외부형 완료 안내 뷰 (웹/앱/설문URL)] -->
+      <div id="participate-view-external-done" class="flex flex-col gap-5 text-center hidden py-4">
+        <div class="mx-auto w-16 h-16 rounded-full bg-[#EBF7E2] text-primary-dark flex items-center justify-center text-3xl mb-1 shadow-xs">
+          🚀
+        </div>
+        <div>
+          <h3 class="text-xl font-extrabold text-neutral-dark mb-1">외부 테스트 링크로 이동했습니다</h3>
+          <p class="text-xs text-neutral-500 leading-relaxed mt-1">
+            새 탭에서 테스트 접속이 진행 중입니다.<br />
+            테스트를 마치신 후 돌아오셔서 리뷰를 작성해 주세요!
+          </p>
+        </div>
+
+        <div class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 text-xs text-[#2A5E12] font-semibold leading-relaxed">
+          💡 다녀오신 후 <strong class="underline decoration-2">마이페이지 &gt; 참여한 테스트 활동</strong> 또는 <br />
+          결과 대시보드에서 리뷰 작성 시 <strong id="part-external-reward-text" class="text-[#7E22CE]">동전</strong>이 최종 지급됩니다.
+        </div>
+
+        <button type="button" onclick="closeTestParticipateModal()"
+          class="w-full py-3.5 px-4 rounded-xl bg-neutral-dark hover:bg-neutral-800 text-white font-extrabold text-sm transition-all cursor-pointer">
+          확인 (모달 닫기)
+        </button>
+      </div>
+
+      <!-- [VIEW C: 내부형 직접 진행 뷰 (투표/설문직접입력)] -->
+      <div id="participate-view-internal-flow" class="flex flex-col gap-5 hidden">
+        <div class="border-b border-neutral-100 pb-3 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-primary-dark bg-primary/20 px-2 py-0.5 rounded">내부 검증 진행</span>
+            <h3 id="part-internal-title" class="text-base font-extrabold text-neutral-dark">투표 및 검증 작성</h3>
+          </div>
+          <span class="text-xs font-bold text-[#7E22CE]" id="part-internal-reward">+600 동전</span>
+        </div>
+
+        <!-- Dynamic Content (투표 선택 카드 또는 설문 문항) -->
+        <div id="part-internal-dynamic-content" class="flex flex-col gap-4">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <button type="button" onclick="completeInternalTestFlow()"
+          class="w-full py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
+          <span>✓ 검증 완료하고 리워드 수령하기</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
        STEP 5: UPDATE SENT SUCCESS TOAST (최종 클로징 피드백 토스트)
   ======================================================== -->
   <aside id="update-toast"
@@ -1450,37 +1560,50 @@
             </div>
           </div>
 
-          <!-- 2. 제목 (텍스트, 필수) -->
-          <div>
-            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
-              테스트 제목 <span class="text-red-500">*</span>
-            </label>
-            <input id="input-test-title" type="text" value="AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집"
-              placeholder="예: AI 기반 하루 일기 웹앱 UX/UI 사용성 검증"
-              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium" />
-          </div>
-
-          <!-- 3. 서비스명 (텍스트, 필수) -->
-          <div>
-            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
-              서비스명 <span class="text-red-500">*</span>
-            </label>
-            <input id="input-service-name" type="text" value="머니로그 (MoneyLog)" placeholder="예: 돈돼 (DonDwae)"
-              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium" />
-          </div>
-
-          <!-- 4. 한줄소개 (텍스트, 필수, 최대 50자) -->
+          <!-- 2. 제목 (텍스트, 필수, 최대 50자) -->
           <div>
             <div class="flex items-center justify-between mb-1.5">
               <label class="block text-sm font-bold text-neutral-dark">
-                한줄소개 <span class="text-red-500">*</span>
+                테스트 제목 <span class="text-red-500">*</span>
               </label>
-              <span id="service-desc-counter" class="text-xs text-neutral-400 font-mono">0 / 50자</span>
+              <span id="test-title-counter" class="text-xs text-neutral-400 font-mono">0 / 50자</span>
             </div>
-            <input id="input-service-desc" type="text" maxlength="50" value="바이브코딩으로 만든 영수증 자동 분류 스마트 가계부"
-              placeholder="테스터의 흥미를 유발하는 한 줄 소개 (최대 50자)"
+            <input id="input-test-title" type="text" maxlength="50" value="AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집"
+              placeholder="예: AI 기반 하루 일기 웹앱 UX/UI 사용성 검증 (최대 50자)"
               class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium"
-              oninput="document.getElementById('service-desc-counter').textContent = `${this.value.length} / 50자`" />
+              oninput="document.getElementById('test-title-counter').textContent = `${this.value.length} / 50자`" />
+          </div>
+
+          <!-- 3. 서비스명 (텍스트, 필수, 최대 20자) -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-sm font-bold text-neutral-dark">
+                서비스명 <span class="text-red-500">*</span>
+              </label>
+              <span id="service-name-counter" class="text-xs text-neutral-400 font-mono">0 / 20자</span>
+            </div>
+            <input id="input-service-name" type="text" maxlength="20" value="머니로그 (MoneyLog)" placeholder="예: 돈돼 (최대 20자)"
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium"
+              oninput="document.getElementById('service-name-counter').textContent = `${this.value.length} / 20자`" />
+          </div>
+
+          <!-- 4. 서비스 소개 (텍스트, 필수, 200자 내외 권장) -->
+          <div>
+            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
+              서비스 소개 <span class="text-red-500">*</span> <span class="text-xs font-normal text-neutral-400">(200자 내외)</span>
+            </label>
+            <textarea id="input-service-desc" rows="3"
+              placeholder="서비스에 대한 소개를 자유롭게 작성해 주세요 (200자 내외 권장)"
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">바이브코딩으로 만든 영수증 자동 분류 스마트 가계부 서비스입니다. 복잡한 지출 입력을 영수증 사진 한 장으로 손쉽게 해결하며, 카테고리별 실시간 지출 차트와 예산 알림 기능을 제공합니다.</textarea>
+          </div>
+
+          <!-- 5. 안내 내용 / 테스트 목적 (텍스트, 여러 줄, 글자수 제한 없음) -->
+          <div>
+            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
+              안내 내용 / 테스트 목적 <span class="text-red-500">*</span>
+            </label>
+            <textarea id="input-test-notice" rows="3" placeholder="테스터에게 전할 상세 안내 사항 및 테스트의 주요 목적을 자유롭게 작성해 주세요."
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">영수증 사진 한 장만 찍으면 AI가 지출을 자동 분류해 주는 가계부 앱의 사용성과 인식 정확도를 검증하기 위한 목적입니다.</textarea>
           </div>
 
           <!-- Step 1 Navigation Buttons -->
@@ -1539,7 +1662,7 @@
                 </div>
                 <div>
                   <span class="text-base font-extrabold text-neutral-dark block">투표</span>
-                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">A/B 비교, 디자인 시안, 랜딩페이지 등</span>
+                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">다중 시안 및 질문 기반 투표</span>
                 </div>
               </label>
 
@@ -1564,7 +1687,7 @@
           <div id="sub-category-form-container"
             class="bg-[#FAFBF7] border border-[#E9EEDC] rounded-2xl p-6 flex flex-col gap-6 animate-in fade-in duration-200">
 
-            <!-- Sub Form 1: 프로덕트/프로토타입 (웹 vs 앱) -->
+            <!-- Sub Form 1: 프로덕트/프로토타입 (웹 vs 앱 + A/B 비교 토글) -->
             <div id="sub-form-product" class="flex flex-col gap-5">
               <label class="block text-sm font-bold text-neutral-dark">
                 2-1. 매체 구분 선택 <span class="text-red-500">*</span>
@@ -1582,84 +1705,135 @@
                 </label>
               </div>
 
-              <!-- 웹 선택 시 필드 -->
-              <div id="product-web-fields" class="flex flex-col gap-3">
-                <label class="block text-xs font-bold text-neutral-dark">사이트 URL <span
-                    class="text-red-500">*</span></label>
-                <div class="flex items-center rounded-xl border border-[#E5E7EB] px-4 py-2.5 bg-white">
-                  <span class="text-sm text-neutral-muted font-mono pr-2">https://</span>
-                  <input id="input-product-web-url" type="url" value="try-money-pig.io"
-                    placeholder="https://example.com" class="flex-1 text-sm font-medium focus:outline-none" />
-                  <button type="button" id="btn-verify-url" onclick="verifyUrlAction()"
-                    class="px-3 py-1 bg-neutral-100 text-xs font-bold rounded-lg hover:bg-neutral-200 transition-colors">검증</button>
+              <!-- A/B 비교 토글 스위치 -->
+              <div class="p-4 rounded-xl bg-white border border-neutral-200 flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold text-neutral-dark block">A/B 비교 테스트 모드</span>
+                  <span class="text-[11px] text-neutral-400 font-medium">ON 설정 시 A안/B안 2개 시안 비교 및 전용 질문 작성이 추가됩니다.</span>
                 </div>
-                <div id="verify-url-msg" class="text-xs font-semibold hidden transition-all"></div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="toggle-product-ab" onchange="toggleProductAbMode(this.checked)" class="sr-only switch-toggle" />
+                  <div class="w-11 h-6 bg-neutral-200 rounded-full switch-bg transition-colors"></div>
+                  <div class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform switch-dot shadow-2xs"></div>
+                </label>
               </div>
 
-              <!-- 앱 선택 시 필드 -->
-              <div id="product-app-fields" class="flex flex-col gap-4 hidden">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-xs font-bold text-neutral-dark mb-1">패키지명 (Android Package Name)</label>
-                    <input id="input-app-package" type="text" placeholder="com.example.app"
-                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
+              <!-- [OFF 모드] 단일 웹/앱 입력 필드 -->
+              <div id="product-single-fields" class="flex flex-col gap-4">
+                <!-- 웹 선택 시 단일 필드 -->
+                <div id="product-web-fields" class="flex flex-col gap-3">
+                  <label class="block text-xs font-bold text-neutral-dark">사이트 URL <span class="text-red-500">*</span></label>
+                  <div class="flex items-center rounded-xl border border-[#E5E7EB] px-4 py-2.5 bg-white">
+                    <span class="text-sm text-neutral-muted font-mono pr-2">https://</span>
+                    <input id="input-product-web-url" type="url" value="try-money-pig.io"
+                      placeholder="https://example.com" class="flex-1 text-sm font-medium focus:outline-none" />
+                    <button type="button" id="btn-verify-url" onclick="verifyUrlAction()"
+                      class="px-3 py-1 bg-neutral-100 text-xs font-bold rounded-lg hover:bg-neutral-200 transition-colors">검증</button>
                   </div>
+                  <div id="verify-url-msg" class="text-xs font-semibold hidden transition-all"></div>
+                </div>
+
+                <!-- 앱 선택 시 단일 필드 -->
+                <div id="product-app-fields" class="flex flex-col gap-4 hidden">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-xs font-bold text-neutral-dark mb-1">패키지명 (Android Package Name)</label>
+                      <input id="input-app-package" type="text" placeholder="com.example.app"
+                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-bold text-neutral-dark mb-1">번들 ID (iOS Bundle ID)</label>
+                      <input id="input-app-bundle" type="text" placeholder="com.example.appname"
+                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
+                    </div>
+                  </div>
+
                   <div>
-                    <label class="block text-xs font-bold text-neutral-dark mb-1">번들 ID (iOS Bundle ID)</label>
-                    <input id="input-app-bundle" type="text" placeholder="com.example.appname"
-                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-mono" />
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 트랙 구별</label>
+                    <select id="select-app-track"
+                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-semibold">
+                      <option value="internal">내부 테스트 (Internal Test)</option>
+                      <option value="closed" selected>비공개 테스트 (Closed Beta / TestFlight)</option>
+                      <option value="open">공개 테스트 (Open Beta)</option>
+                      <option value="store">스토어 정식 출시 (Store Release)</option>
+                    </select>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-xs font-bold text-neutral-dark mb-1">테스터 그룹 가입 링크</label>
+                      <input id="input-app-group-link" type="text" placeholder="https://groups.google.com/g/my-testers"
+                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 참여 링크 또는 스토어 링크</label>
+                      <input id="input-app-test-link" type="text"
+                        placeholder="https://play.google.com/apps/testing/com.example"
+                        class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- [ON 모드] A안/B안 2세트 입력 필드 및 질문 목록 -->
+              <div id="product-ab-fields" class="flex flex-col gap-5 hidden">
+                <!-- 웹 A/B 2세트 -->
+                <div id="product-ab-web-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                    <span class="text-xs font-extrabold text-primary-dark">A안 사이트 URL</span>
+                    <input id="input-product-ab-web-a" type="url" value="https://a-version.example.com" placeholder="https://a-version.example.com"
+                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none font-medium" />
+                  </div>
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                    <span class="text-xs font-extrabold text-secondary-wine">B안 사이트 URL</span>
+                    <input id="input-product-ab-web-b" type="url" value="https://b-version.example.com" placeholder="https://b-version.example.com"
+                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none font-medium" />
                   </div>
                 </div>
 
-                <div>
-                  <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 트랙 구별</label>
-                  <select id="select-app-track"
-                    class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-semibold">
-                    <option value="internal">내부 테스트 (Internal Test)</option>
-                    <option value="closed" selected>비공개 테스트 (Closed Beta / TestFlight)</option>
-                    <option value="open">공개 테스트 (Open Beta)</option>
-                    <option value="store">스토어 정식 출시 (Store Release)</option>
-                  </select>
+                <!-- 앱 A/B 2세트 -->
+                <div id="product-ab-app-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4 hidden">
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3">
+                    <span class="text-xs font-extrabold text-primary-dark">A안 앱 테스트 정보</span>
+                    <input id="input-product-ab-app-pkg-a" type="text" placeholder="A안 패키지명 (com.a.app)" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                    <input id="input-product-ab-app-link-a" type="text" placeholder="A안 참여 링크" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                  </div>
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3">
+                    <span class="text-xs font-extrabold text-secondary-wine">B안 앱 테스트 정보</span>
+                    <input id="input-product-ab-app-pkg-b" type="text" placeholder="B안 패키지명 (com.b.app)" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                    <input id="input-product-ab-app-link-b" type="text" placeholder="B안 참여 링크" class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                  </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스터 그룹 가입 링크</label>
-                    <input id="input-app-group-link" type="text" placeholder="https://groups.google.com/g/my-testers"
-                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
+                <!-- A/B 비교 질문 입력 (기존 투표 질문 UI 재사용) -->
+                <div class="flex flex-col gap-3 border-t border-neutral-200/80 pt-4">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-neutral-dark">
+                      A/B 비교 질문 입력 <span class="text-red-500">*</span>
+                    </label>
+                    <span class="text-[11px] text-neutral-400 font-normal">A안과 B안을 비교할 가이드 질문을 등록해 주세요.</span>
                   </div>
-                  <div>
-                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 참여 링크 또는 스토어 링크</label>
-                    <input id="input-app-test-link" type="text"
-                      placeholder="https://play.google.com/apps/testing/com.example"
-                      class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white" />
+
+                  <div id="product-ab-questions-list" class="space-y-3">
+                    <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white">
+                      <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문 1</span>
+                      <input type="text" value="A안과 B안 중 어떤 화면의 UI/UX가 더 직관적인가요? 이유를 함께 남겨주세요."
+                        class="flex-1 text-xs font-medium focus:outline-none" />
+                      <button type="button" onclick="this.parentElement.remove()"
+                        class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+                    </div>
                   </div>
+
+                  <button type="button" onclick="addProductAbQuestionItem()"
+                    class="w-full py-3 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <span>+ 질문 추가</span>
+                  </button>
                 </div>
               </div>
             </div>
 
-            <!-- Sub Form 2: 투표 (A/B 테스트 vs 디자인 시안 vs 랜딩페이지) -->
+            <!-- Sub Form 2: 투표 (통합 단일 패턴) -->
             <div id="sub-form-vote" class="flex flex-col gap-6 hidden">
-              <div class="flex flex-col gap-3">
-                <label class="block text-sm font-bold text-neutral-dark">
-                  2-2. 투표 상세 유형 선택 <span class="text-red-500">*</span>
-                </label>
-                <div class="grid grid-cols-3 gap-3 text-center text-xs">
-                  <button type="button" onclick="selectVoteSubOption('ab')" id="btn-vote-sub-ab"
-                    class="py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer">
-                    A/B 테스트
-                  </button>
-                  <button type="button" onclick="selectVoteSubOption('design')" id="btn-vote-sub-design"
-                    class="py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer">
-                    디자인 시안
-                  </button>
-                  <button type="button" onclick="selectVoteSubOption('landing')" id="btn-vote-sub-landing"
-                    class="py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer">
-                    랜딩페이지
-                  </button>
-                </div>
-              </div>
-
               <!-- 1. 콘텐츠 입력 방식 선택 (이미지 업로드 vs URL 링크) -->
               <div class="flex flex-col gap-2 bg-white p-4 rounded-xl border border-neutral-200">
                 <label class="block text-xs font-bold text-neutral-dark">
@@ -1677,112 +1851,59 @@
                 </div>
               </div>
 
-              <!-- 2. 콘텐츠 입력 필드 (하위유형 & 입력방식에 따른 동적 필드) -->
+              <!-- 2. 콘텐츠 입력 (다중 추가 UI, 최소 2개 이상) -->
               <div class="flex flex-col gap-3">
-                <label class="block text-xs font-bold text-neutral-dark">
-                  2. 콘텐츠 입력 <span class="text-red-500">*</span>
-                </label>
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-bold text-neutral-dark">
+                    2. 콘텐츠 추가 (최소 2개 이상) <span class="text-red-500">*</span>
+                  </label>
+                  <span class="text-[11px] text-neutral-400 font-normal">비교할 시안이나 페이지 콘텐츠를 다중으로 추가하세요.</span>
+                </div>
 
-                <!-- [하위유형 1: A/B 테스트] -->
-                <div id="vote-content-ab" class="flex flex-col gap-3">
-                  <!-- 이미지 모드: A안 / B안 파일 업로드 -->
-                  <div id="vote-ab-image-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                      <span class="text-xs font-extrabold text-primary-dark">A안 이미지 업로드</span>
-                      <input id="input-vote-ab-img-a" type="file" accept="image/*"
-                        class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
-                    </div>
-                    <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                      <span class="text-xs font-extrabold text-secondary-wine">B안 이미지 업로드</span>
-                      <input id="input-vote-ab-img-b" type="file" accept="image/*"
-                        class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
-                    </div>
-                  </div>
-
-                  <!-- URL 모드: A안 / B안 URL 입력 -->
-                  <div id="vote-ab-url-fields" class="flex flex-col gap-3 hidden">
-                    <div class="p-3 rounded-xl bg-blue-50/80 border border-blue-100 text-xs text-blue-800 font-medium">
-                      💡 사용자 여정을 추적하려면 URL을 권장해요.
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                        <span class="text-xs font-extrabold text-primary-dark">A안 URL 입력</span>
-                        <input id="input-vote-ab-url-a" type="url" placeholder="https://a-version.example.com"
-                          class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none" />
-                      </div>
-                      <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                        <span class="text-xs font-extrabold text-secondary-wine">B안 URL 입력</span>
-                        <input id="input-vote-ab-url-b" type="url" placeholder="https://b-version.example.com"
-                          class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none" />
-                      </div>
-                    </div>
+                <!-- 이미지 업로드 다중 모드 -->
+                <div id="vote-image-input-container" class="flex flex-col gap-3">
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                    <span class="text-xs font-extrabold text-neutral-dark">이미지 다중 업로드</span>
+                    <input id="input-vote-multi-images" type="file" multiple accept="image/*"
+                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
+                    <p class="text-[11px] text-neutral-400">투표에 부칠 시안 이미지 파일들을 2개 이상 선택해 주세요.</p>
                   </div>
                 </div>
 
-                <!-- [하위유형 2: 디자인 시안] -->
-                <div id="vote-content-design" class="flex flex-col gap-3 hidden">
-                  <!-- 이미지 모드: 시안 이미지 다중 업로드 -->
-                  <div id="vote-design-image-fields" class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                    <span class="text-xs font-extrabold text-neutral-dark">시안 이미지 다중 업로드</span>
-                    <input id="input-vote-design-files" type="file" multiple accept="image/*"
-                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
-                    <p class="text-[11px] text-neutral-400">피드백받고 싶은 디자인 시안 이미지 파일들을 다중 선택해 주세요.</p>
-                  </div>
-
-                  <!-- URL 모드: 시안 URL 다중 추가 -->
-                  <div id="vote-design-url-fields" class="flex flex-col gap-3 hidden">
-                    <div id="vote-design-url-list" class="space-y-2.5">
-                      <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
-                        <span class="text-xs font-bold text-neutral-500 shrink-0">시안 1</span>
-                        <input type="url" placeholder="https://figma.com/file/... 또는 시안 URL"
-                          class="flex-1 text-xs font-medium focus:outline-none" />
-                        <button type="button" onclick="this.parentElement.remove()"
-                          class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
-                      </div>
+                <!-- URL 링크 다중 추가 모드 -->
+                <div id="vote-url-input-container" class="flex flex-col gap-3 hidden">
+                  <div id="vote-url-list" class="space-y-2.5">
+                    <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
+                      <span class="text-xs font-bold text-neutral-500 shrink-0">항목 1</span>
+                      <input type="url" value="https://a-version.example.com" placeholder="https://a-version.example.com"
+                        class="flex-1 text-xs font-medium focus:outline-none" />
                     </div>
-                    <button type="button" onclick="addVoteDesignUrlItem()"
-                      class="w-full py-2.5 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
-                      <span>+ 링크 추가</span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- [하위유형 3: 랜딩페이지] -->
-                <div id="vote-content-landing" class="flex flex-col gap-3 hidden">
-                  <!-- 이미지 모드: 스크린샷 1장 업로드 -->
-                  <div id="vote-landing-image-fields" class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                    <span class="text-xs font-extrabold text-neutral-dark">페이지 스크린샷 업로드 (1장)</span>
-                    <input id="input-vote-landing-img" type="file" accept="image/*"
-                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
-                  </div>
-
-                  <!-- URL 모드: 페이지 URL 1개 입력 -->
-                  <div id="vote-landing-url-fields" class="flex flex-col gap-3 hidden">
-                    <div class="p-3 rounded-xl bg-blue-50/80 border border-blue-100 text-xs text-blue-800 font-medium">
-                      💡 실제 페이지 방문 데이터를 추적하려면 URL을 권장해요.
-                    </div>
-                    <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                      <span class="text-xs font-extrabold text-neutral-dark">랜딩페이지 URL 입력</span>
-                      <input id="input-vote-landing-url" type="url" placeholder="https://my-landing.example.com"
-                        class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none" />
+                    <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
+                      <span class="text-xs font-bold text-neutral-500 shrink-0">항목 2</span>
+                      <input type="url" value="https://b-version.example.com" placeholder="https://b-version.example.com"
+                        class="flex-1 text-xs font-medium focus:outline-none" />
                     </div>
                   </div>
+                  <button type="button" onclick="addVoteUrlItem()"
+                    class="w-full py-2.5 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
+                    <span>+ URL 항목 추가</span>
+                  </button>
                 </div>
               </div>
 
-              <!-- 3. 질문 입력 (콘텐츠 입력 방식과 무관하게 항상 동일한 UI) -->
+              <!-- 3. 질문 입력 -->
               <div class="flex flex-col gap-3 border-t border-neutral-200/80 pt-4">
                 <div class="flex items-center justify-between">
                   <label class="block text-xs font-bold text-neutral-dark">
                     3. 질문 입력 <span class="text-red-500">*</span>
                   </label>
-                  <span class="text-[11px] text-neutral-400 font-normal">피드백받을 질문을 여러 개 등록할 수 있습니다.</span>
+                  <span class="text-[11px] text-neutral-400 font-normal">투표 시 테스터들에게 던질 질문을 작성하세요.</span>
                 </div>
 
                 <div id="vote-questions-list" class="space-y-3">
-                  <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-colors">
+                  <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white">
                     <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문 1</span>
-                    <input type="text" placeholder="예: 어떤 안이 더 좋아 보이나요? 왜 그렇게 생각하시나요?"
+                    <input type="text" value="어떤 안이 더 좋아 보이나요? 왜 그렇게 생각하시나요?"
                       class="flex-1 text-xs font-medium focus:outline-none" />
                     <button type="button" onclick="this.parentElement.remove()"
                       class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
@@ -1866,79 +1987,152 @@
             <span class="text-xs text-neutral-400 font-medium">3 / 3 단계</span>
           </div>
 
-          <!-- 1. 안내 내용 / 테스트 목적 (텍스트, 여러 줄) -->
-          <div>
-            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
-              안내 내용 / 테스트 목적 <span class="text-red-500">*</span>
-            </label>
-            <textarea id="input-test-notice" rows="3" placeholder="테스터에게 전할 상세 안내 사항 및 테스트의 주요 목적을 자유롭게 작성해 주세요."
-              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">영수증 사진 한 장만 찍으면 AI가 지출을 자동 분류해 주는 가계부 앱의 사용성과 인식 정확도를 검증하기 위한 목적입니다.</textarea>
-          </div>
-
-          <!-- 2. 모집기간 (시작일~종료일) & 모집인원 -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <!-- 1. 모집기간 & 소요시간 & 모집인원 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 시작일</label>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 시작일 <span class="text-red-500">*</span></label>
               <input id="input-start-date" type="date" value="2024-11-20"
-                class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold" />
+                class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60" />
             </div>
             <div>
-              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 종료일</label>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 종료일 <span class="text-red-500">*</span></label>
               <input id="input-end-date" type="date" value="2024-12-05"
-                class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold" />
+                class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60" />
             </div>
             <div>
-              <label class="block text-xs font-bold text-neutral-dark mb-1">모집인원 (명)</label>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">예상 소요 시간 <span class="text-red-500">*</span></label>
+              <select id="select-test-duration"
+                class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-primary/60 cursor-pointer">
+                <option value="1분 내외">1분 내외 (매우 간단)</option>
+                <option value="3분 내외" selected>3분 내외 (기본)</option>
+                <option value="5분 내외">5분 내외</option>
+                <option value="10분 내외">10분 내외</option>
+                <option value="15분 이상">15분 이상 (심층 테스트)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집인원 (명) <span class="text-red-500">*</span></label>
               <input id="input-target-count" type="number" value="30" min="30"
-                class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-bold"
+                class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-primary/60"
                 oninput="calculateTotalCost()" />
             </div>
           </div>
 
-          <!-- 3. 대상 조건 (연령대, 관심사 다중선택) -->
-          <div class="p-5 rounded-2xl border border-neutral-200 bg-[#FAFAFA] flex flex-col gap-4">
-            <h3 class="text-xs font-bold text-neutral-dark">타겟 대상 조건 (선택 사항)</h3>
-
+          <!-- 2. 관심사 카테고리 (다중선택 가능) -->
+          <div class="p-5 rounded-2xl border border-neutral-200 bg-[#FAFAFA] flex flex-col gap-3">
             <div>
-              <span class="text-[11px] font-semibold text-neutral-500 block mb-2">연령대 선택 (다중 선택)</span>
-              <div class="flex flex-wrap gap-2 text-xs font-semibold">
-                <label
-                  class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 cursor-pointer">
-                  <input type="checkbox" name="targetAge" value="20s" checked class="accent-primary-dark" /> 20대
-                </label>
-                <label
-                  class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 cursor-pointer">
-                  <input type="checkbox" name="targetAge" value="30s" checked class="accent-primary-dark" /> 30대
-                </label>
-                <label
-                  class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 cursor-pointer">
-                  <input type="checkbox" name="targetAge" value="40s" class="accent-primary-dark" /> 40대 이상
-                </label>
-              </div>
+              <h3 class="text-xs font-bold text-neutral-dark mb-0.5">관심사 카테고리 선택 <span class="text-neutral-400 font-normal">(다중 선택 가능)</span></h3>
+              <p class="text-[11px] text-neutral-400">서비스의 타겟에 알맞은 관심사를 선택해주세요.</p>
             </div>
-
-            <div>
-              <span class="text-[11px] font-semibold text-neutral-500 block mb-2">관심사 선택 (다중 선택)</span>
-              <div class="flex flex-wrap gap-2 text-xs font-semibold">
-                <label
-                  class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 cursor-pointer">
-                  <input type="checkbox" name="targetInterest" value="fintech" checked class="accent-primary-dark" />
-                  핀테크/자산관리
-                </label>
-                <label
-                  class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 cursor-pointer">
-                  <input type="checkbox" name="targetInterest" value="productivity" checked
-                    class="accent-primary-dark" /> 생산성/노코드
-                </label>
-                <label
-                  class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-neutral-200 cursor-pointer">
-                  <input type="checkbox" name="targetInterest" value="design" class="accent-primary-dark" /> UI/UX 디자인
-                </label>
-              </div>
+            <div class="flex flex-wrap gap-2 text-xs font-semibold pt-1">
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="productivity" checked class="accent-[#2F6517]" />
+                생산성/업무도구
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="commerce" class="accent-[#2F6517]" />
+                커머스/쇼핑
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="fintech" checked class="accent-[#2F6517]" />
+                핀테크/금융
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="healthcare" class="accent-[#2F6517]" />
+                헬스케어/웰니스
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="education" class="accent-[#2F6517]" />
+                교육/학습
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="entertainment" class="accent-[#2F6517]" />
+                엔터테인먼트/콘텐츠
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="social" class="accent-[#2F6517]" />
+                소셜/커뮤니티
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="lifestyle" class="accent-[#2F6517]" />
+                라이프스타일
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="ai_dev" checked class="accent-[#2F6517]" />
+                AI/개발도구
+              </label>
+              <label class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="etc" class="accent-[#2F6517]" />
+                기타
+              </label>
             </div>
           </div>
 
-          <!-- 4. 검증 항목 (사용자가 직접 여러 개 추가 가능 — "무엇을 확인해달라고 할지") -->
+          <!-- 3. 권장 참여 대상 조건 (이런 분들의 참여를 원해요) -->
+          <div class="p-6 rounded-2xl border border-[#ECEFE2] bg-[#FAFBF7] flex flex-col gap-4">
+            <div>
+              <h3 class="text-sm font-extrabold text-neutral-dark flex items-center gap-2">
+                <span>🎯</span> <span>이런 분들의 참여를 원해요</span>
+              </h3>
+              <p class="text-xs text-neutral-500 mt-1">
+                아래의 성향이나 환경에 부합하시는 분들의 목소리가 제품 발전에 특히 큰 도움이 됩니다.
+              </p>
+            </div>
+
+            <!-- 권장 태그 입력 및 태그 박스 -->
+            <div>
+              <span class="text-xs font-bold text-neutral-700 block mb-2">권장 테스터 태그 작성 (선택)</span>
+              <div class="flex items-center gap-2 mb-3">
+                <input id="input-target-persona-tag" type="text"
+                  placeholder="예: 🎂 연령대: 20대·30대, 📊 가계부 관심자, 📱 앱 실사용자"
+                  class="flex-1 px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/60"
+                  onkeydown="if(event.key==='Enter'){ event.preventDefault(); addPersonaTag(); }" />
+                <button type="button" onclick="addPersonaTag()"
+                  class="px-4 py-2.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white font-extrabold text-xs shrink-0 cursor-pointer transition-all">
+                  + 태그 추가
+                </button>
+              </div>
+
+              <!-- Persona Tags Container -->
+              <div id="persona-tags-container" class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                  <span>🎂</span> 연령대: 20대·30대
+                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                </span>
+                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                  <span>📊</span> 가계부/자산관리 관심자
+                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                </span>
+                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                  <span>🧾</span> 영수증 모으기 습관 보유자
+                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                </span>
+                <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
+                  <span>📱</span> 모바일 웹/앱 실사용자
+                  <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
+                </span>
+              </div>
+            </div>
+
+            <!-- Soft guidance notice box -->
+            <div class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] flex items-center gap-2 font-medium">
+              <span>💡</span>
+              <span>해당 조건에 100% 부합하지 않더라도 자유롭고 참신한 시각의 피드백은 언제나 환영합니다!</span>
+            </div>
+          </div>
+
+          <!-- 3. 테스트 진행 방법 (가이드) -->
+          <div>
+            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
+              테스트 진행 방법 (가이드) <span class="text-red-500">*</span>
+            </label>
+            <textarea id="input-test-guide" rows="3" placeholder="테스터가 테스트 접속 후 어떤 순서로 진행해야 하는지 단계별 안내 방법을 작성해 주세요."
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">1. 제공된 웹사이트 URL에 접속하여 이메일 간편 가입을 진행합니다.
+2. 메인 지출 입력 화면에서 영수증 카메라 촬영 버튼을 클릭해 샘플 영수증 사진을 업로드합니다.
+3. 자동 분류된 지출 내역 및 이번 달 예산 알림 차트를 확인해 주세요.</textarea>
+          </div>
+
+          <!-- 4. 검증 항목 (사용자가 직접 여러 개 추가 가능) -->
           <div>
             <div class="flex items-center justify-between mb-2">
               <label class="block text-sm font-bold text-neutral-dark">
@@ -1970,6 +2164,34 @@
               class="w-full py-3.5 rounded-xl border border-dashed border-[#D1D5DB] text-xs font-semibold text-neutral-muted hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1.5 mt-3">
               <span>+ 검증 항목 추가하기</span>
             </button>
+          </div>
+
+          <!-- 4. 피드백 공개 / 비공개 설정 -->
+          <div class="p-4 rounded-2xl border border-neutral-200 bg-white flex items-center justify-between shadow-2xs">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-xs font-bold text-neutral-dark flex items-center gap-1.5">
+                🔒 <span>피드백 공개 여부 설정</span>
+              </span>
+              <p class="text-[11px] text-neutral-400">
+                비공개 설정 시 제작자 본인만 참여자들의 피드백 및 리뷰 답변을 조회할 수 있습니다.
+              </p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <span id="feedback-privacy-label" class="text-xs font-bold text-[#2F6517]">전체 공개</span>
+              <label class="relative inline-flex items-center cursor-pointer switch-toggle">
+                <input type="checkbox" id="toggle-feedback-privacy" class="sr-only peer" onchange="
+                  const lbl = document.getElementById('feedback-privacy-label');
+                  if(this.checked) {
+                    lbl.textContent = '제작자만 비공개';
+                    lbl.className = 'text-xs font-bold text-purple-700';
+                  } else {
+                    lbl.textContent = '전체 공개';
+                    lbl.className = 'text-xs font-bold text-[#2F6517]';
+                  }
+                ">
+                <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2F6517] switch-bg"></div>
+              </label>
+            </div>
           </div>
 
           <!-- 5. 보상 설정 (숫자 또는 코인 단위) -->
@@ -2082,92 +2304,30 @@
         <!-- Left Column: Detailed Service & Mission (2/3) -->
         <div class="lg:col-span-2 space-y-6">
 
-          <!-- Card 1: Title & Tags -->
-          <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-3">
-            <div class="flex flex-wrap items-center gap-2">
-              <span id="post-type-tag" class="px-3 py-1 rounded-md bg-[#F4F4F5] text-neutral-600 text-xs font-bold">
-                [프로덕트 테스트]
-              </span>
-              <span id="post-time-tag"
-                class="px-3 py-1 rounded-md bg-[#F4F4F5] text-neutral-600 text-xs font-bold flex items-center gap-1">
-                ⏱️ 소요시간: 약 5분
-              </span>
-              <span id="post-reward-tag"
-                class="px-3 py-1 rounded-full bg-primary/25 text-[#1F450B] text-xs font-extrabold flex items-center gap-1 border border-primary/40">
-                🪙 600 동전
-              </span>
-            </div>
-
-            <h1 id="post-main-title"
-              class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight leading-tight mt-1">
-              AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
-            </h1>
-          </div>
-
-          <!-- Card 2: Creator Profile -->
-          <div class="bg-[#F7F9EE] border border-[#E3E8CF] rounded-[22px] p-5 flex items-center gap-4">
-            <div
-              class="w-14 h-14 rounded-full bg-white border border-[#DDD8A8] p-1 shadow-2xs shrink-0 flex items-center justify-center">
-              <img src="../mascot-hungry.png" alt="제작자 아바타" class="w-10 h-10 object-contain"
-                onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1">
-                <span id="post-creator-name" class="font-extrabold text-sm text-neutral-dark">제작자: 핀테크러버</span>
-                <span
-                  class="px-2 py-0.5 rounded-full bg-[#FDA2BC]/30 text-[#8A2B43] text-[11px] font-extrabold border border-[#FDA2BC]/50 flex items-center gap-1">
-                  ✓ 검증완료 제작자
-                </span>
-              </div>
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#576348] font-medium">
-                <span id="post-creator-tools" class="flex items-center gap-1">🛠️ 사용 툴: Next.js, Supabase, v0</span>
-                <span id="post-creator-meta" class="flex items-center gap-1">👥 참여 인원 및 기간: 총 3인, 10일</span>
-              </div>
-              <div class="text-[11px] text-neutral-400 mt-1 flex items-center gap-1.5">
-                <span>🌐 instagram, linkedin, threads, reddit</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3: Service Introduction -->
-          <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5">
-            <h2 class="text-lg font-bold text-neutral-dark border-b border-neutral-100 pb-3">
-              서비스 소개
-            </h2>
-
-            <p id="post-service-desc-text" class="text-sm text-neutral-700 leading-relaxed font-normal">
-              안녕하세요! 영수증 사진 한 장만 찍으면 AI가 자동으로 지출 품목과 카테고리를 분류해 주는 스마트 가계부 '머니로그'를 만들었습니다. 기존 뱅킹앱이나 복잡한 가계부의 번거로움을 줄이고,
-              이번 달 예산 초과 알림과 지출 패턴 분석 기능을 중점적으로 검증하고자 합니다.
-            </p>
-
-            <!-- Preview Screenshot Box -->
-            <div id="post-mockup-container"
-              class="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-4 overflow-hidden shadow-2xs">
+          <!-- Card 1: Top Mockup Banner & Title + Tech Tags -->
+          <div class="bg-white rounded-[24px] border border-[#E5E7EB] p-6 sm:p-7 shadow-subtle flex flex-col gap-5">
+            <!-- Preview Mockup Banner Image Container -->
+            <div id="post-mockup-container" class="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3 overflow-hidden shadow-2xs">
               <div class="rounded-xl border border-neutral-200 bg-white overflow-hidden shadow-xs">
                 <!-- Mockup Browser Header -->
-                <div
-                  class="bg-[#F1F5F9] px-4 py-2 border-b border-neutral-200 flex items-center justify-between text-[11px] text-neutral-500">
+                <div class="bg-[#F1F5F9] px-4 py-2 border-b border-neutral-200 flex items-center justify-between text-[11px] text-neutral-500">
                   <div class="flex items-center gap-1.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"></span>
                     <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
-                    <span id="post-mockup-url"
-                      class="ml-2 font-mono text-[10px] text-neutral-400">moneylog-preview.io</span>
+                    <span id="post-mockup-url" class="ml-2 font-mono text-[10px] text-neutral-400">moneylog-preview.io</span>
                   </div>
                   <span id="post-mockup-author" class="font-semibold text-neutral-600">핀테크러버 ▾</span>
                 </div>
-
-                <!-- Mockup Content -->
+                <!-- Mockup Content Body -->
                 <div id="post-mockup-body" class="p-6 bg-gradient-to-b from-white to-[#F9FAFB] flex flex-col gap-4">
                   <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
                     <div class="flex items-center gap-2">
                       <span class="text-lg">🐷</span>
                       <span class="font-extrabold text-sm text-neutral-800">종목 알림 봇 대시보드 & 머니로그 AI</span>
                     </div>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">실시간
-                      가동중</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">실시간 가동중</span>
                   </div>
-
                   <div class="grid grid-cols-3 gap-3 text-center">
                     <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
                       <span class="text-[10px] text-neutral-400 block mb-1">오늘 인식 영수증</span>
@@ -2182,9 +2342,7 @@
                       <span class="text-lg font-extrabold text-[#BE185D]">185,000원</span>
                     </div>
                   </div>
-
-                  <div
-                    class="w-full h-32 bg-[#EFF6FF] rounded-xl border border-blue-100 p-4 flex items-center justify-center text-center">
+                  <div class="w-full h-28 bg-[#EFF6FF] rounded-xl border border-blue-100 p-4 flex items-center justify-center text-center">
                     <div>
                       <span class="text-xs font-bold text-blue-900 block mb-1">머니로그 AI 가계부 앱 UI 프리뷰</span>
                       <span class="text-[11px] text-blue-600">지출 분석 차트, 예산 알림, 영수증 OCR 인식 모듈 탑재</span>
@@ -2194,39 +2352,263 @@
               </div>
             </div>
 
-            <p id="post-service-extra-text" class="text-sm text-neutral-600 leading-relaxed font-normal">
-              카메라 영수증 OCR 인식과 대시보드 지출 분석 플로우가 실제 사용 환경에서 얼마나 직관적이고 편리한지 솔직한 피드백을 부탁드립니다.
-            </p>
+            <!-- Tech / Keyword Tags -->
+            <div id="post-tech-tags-list" class="flex flex-wrap gap-2 pt-1">
+              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크/금융</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성/업무도구</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI영수증</span>
+              <span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#OCR</span>
+            </div>
+
+            <h1 id="post-main-title" class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight leading-tight">
+              AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
+            </h1>
           </div>
 
-          <!-- Card 4: Test Missions -->
-          <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
-            <h2 class="text-lg font-bold text-neutral-dark flex items-center gap-2">
-              <span class="text-primary-dark">✅</span> 테스트 미션
-            </h2>
+          <!-- Card 2: 3-Tabs Navigation Bar (개요 / 테스트 미션 / 리뷰) -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-2 shadow-xs flex items-center gap-2">
+            <button type="button" id="tab-btn-overview" onclick="switchPostDetailTab('overview')"
+              class="flex-1 py-3 px-4 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 bg-[#FAFBF5] text-[#2F6517] border border-[#E2E8D3] shadow-2xs">
+              <span>📜 개요</span>
+            </button>
+            <button type="button" id="tab-btn-mission" onclick="switchPostDetailTab('mission')"
+              class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50">
+              <span>🎯 테스트 미션</span>
+              <span id="tab-count-mission" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-neutral-200 text-neutral-700">3</span>
+            </button>
+            <button type="button" id="tab-btn-reviews" onclick="switchPostDetailTab('reviews')"
+              class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50">
+              <span>⭐ 리뷰</span>
+              <span id="tab-count-reviews" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">14</span>
+            </button>
+          </div>
 
-            <div id="post-missions-container" class="space-y-3">
-              <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-                <span
-                  class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-                <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                  이메일 간편가입 후 영수증 사진 1장 업로드 또는 간편 지출 입력해보기
+          <!-- TAB 1 CONTENT: 개요 (Overview) -->
+          <div id="tab-content-overview" class="space-y-6">
+            <!-- 1. 서비스 정보 (서비스명 + 한 줄 소개) -->
+            <div class="bg-[#FAFBF5] border border-[#E3EBD3] rounded-[22px] p-5 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-[#2F6517] text-white text-[11px] font-extrabold">서비스 정보</span>
+                <h3 class="text-sm font-extrabold text-neutral-dark" id="post-service-name-text">서비스명: 머니로그 (MoneyLog)</h3>
+              </div>
+              <p class="text-xs text-neutral-700 font-semibold bg-white p-3.5 rounded-xl border border-[#E4EBD5]" id="post-service-short-intro">
+                <strong class="text-neutral-800">한 줄 소개:</strong> 영수증 사진 한 장으로 끝내는 AI 자동 지출 분류 및 예산 관리 비서
+              </p>
+            </div>
+
+            <!-- 2. 서비스 소개 (상세) -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <h2 class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+                <span>📖 서비스 소개</span>
+              </h2>
+              <p id="post-service-desc-text" class="text-xs sm:text-sm text-neutral-700 leading-relaxed font-normal">
+                안녕하세요! 영수증 사진 한 장만 찍으면 AI가 자동으로 지출 품목과 카테고리를 분류해 주는 스마트 가계부 '머니로그'를 만들었습니다. 기존 뱅킹앱이나 복잡한 가계부의 번거로움을 줄이고, 이번 달 예산 초과 알림과 지출 패턴 분석 기능을 중점적으로 검증하고자 합니다.
+              </p>
+              <p id="post-service-extra-text" class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] font-medium leading-relaxed">
+                💡 카메라 영수증 OCR 인식과 대시보드 지출 분석 플로우가 실제 사용 환경에서 얼마나 직관적이고 편리한지 솔직한 피드백을 부탁드립니다.
+              </p>
+            </div>
+
+            <!-- 3. 안내 내용 / 테스트 목적 및 이런 분들의 참여를 원해요 -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5">
+              <h2 class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+                <span>🎯 테스트 목적 및 참여 대상</span>
+              </h2>
+
+              <!-- 테스트 목적 -->
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">테스트 목적:</span>
+                <p id="post-notice-text" class="text-xs text-neutral-600 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-200">
+                  실제 다양한 영수증 OCR 인식을 검증 및 지출 분석 대시보드 사용성 검증
                 </p>
               </div>
 
-              <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-                <span
-                  class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
-                <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                  '이번 달 지출 리포트' 탭에서 카테고리별 차트 및 예산 알림 확인하기
+              <!-- 이런 분들의 참여를 원해요 -->
+              <div class="p-5 rounded-2xl border border-[#ECEFE2] bg-[#FAFBF7] flex flex-col gap-3">
+                <div>
+                  <h4 class="text-xs font-extrabold text-neutral-dark flex items-center gap-1.5">
+                    <span>🎯</span> <span>이런 분들의 참여를 원해요</span>
+                  </h4>
+                  <p class="text-[11px] text-neutral-500 mt-0.5">
+                    아래의 성향이나 환경에 부합하시는 분들의 목소리가 제품 발전에 특히 큰 도움이 됩니다.
+                  </p>
+                </div>
+                <!-- Persona Tags List -->
+                <div id="post-persona-tags-list" class="flex flex-wrap gap-2 pt-1">
+                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🎂 연령대: 20대·30대</span>
+                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📊 가계부/자산관리 관심자</span>
+                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🧾 영수증 모으기 습관 보유자</span>
+                  <span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📱 모바일 웹/앱 실사용자</span>
+                </div>
+                <div class="p-3 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-[11px] text-[#6B5A14] font-medium flex items-center gap-1.5 mt-1">
+                  <span>💡</span>
+                  <span>해당 조건에 100% 부합하지 않더라도 자유롭고 참신한 시각의 피드백은 언제나 환영합니다!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2 CONTENT: 테스트 미션 (Test Mission) -->
+          <div id="tab-content-mission" class="space-y-6 hidden">
+            <!-- 1. 외부 접속 링크 직접 제공 카드 -->
+            <div class="bg-[#F4F9EE] border-2 border-primary/40 rounded-[24px] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-subtle">
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-md bg-[#2F6517] text-white text-[11px] font-extrabold">외부 접속 링크</span>
+                  <span id="post-mission-type-badge" class="text-xs font-bold text-[#2F6517]">외부 웹사이트 링크형</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-neutral-500">URL:</span>
+                  <a id="post-external-url-link" href="https://example.com/test-link" target="_blank" class="text-sm font-extrabold text-[#2F6517] hover:underline flex items-center gap-1">
+                    <span id="post-external-url-text">https://try-money-pig.io</span> ↗
+                  </a>
+                </div>
+                <p class="text-[11px] text-neutral-500 font-medium">
+                  * 위 접속 링크를 클릭하면 새 탭에서 서비스가 열리며 테스트를 수행할 수 있습니다.
+                </p>
+              </div>
+              <button type="button" onclick="executeParticipateInCurrentTest()"
+                class="px-6 py-3.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-95 text-white text-xs font-extrabold shadow-md shrink-0 transition-all cursor-pointer flex items-center gap-2">
+                <span>🚀 외부 접속 및 참여하기</span>
+                <span>→</span>
+              </button>
+            </div>
+
+            <!-- 2. 테스트 진행 방법 (가이드) -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <h2 class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+                <span>💡 테스트 진행 방법 (가이드)</span>
+              </h2>
+              <div id="post-test-guide-box" class="p-4.5 rounded-2xl bg-[#FAFBF7] border border-[#EAEFE0] text-xs text-neutral-700 font-medium leading-relaxed whitespace-pre-line">
+                1. 제공된 외부 접속 링크(try-money-pig.io)에 접속하여 이메일 간편 가입을 진행합니다.
+                2. 메인 지출 입력 화면에서 영수증 카메라 촬영 버튼을 클릭해 샘플 영수증 사진을 업로드합니다.
+                3. 자동 분류된 지출 내역 및 이번 달 예산 알림 차트를 확인해 주세요.
+              </div>
+            </div>
+
+            <!-- 3. 검증 항목 체크리스트 -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+                <h2 class="text-base font-extrabold text-neutral-dark flex items-center gap-2">
+                  <span>📋 제작자가 요청한 검증 항목 체크리스트</span>
+                </h2>
+                <span class="text-xs text-neutral-400 font-medium">총 3개 필수 항목</span>
+              </div>
+
+              <div id="post-missions-container" class="space-y-3">
+                <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                  <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-bold text-neutral-800">회원가입 및 영수증 자동 인식 테스트</span>
+                    <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                      이메일 간편가입 후 카메라로 영수증 사진 1장을 직접 업로드해보거나 간편 지출 입력을 진행해 주세요.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                  <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-bold text-neutral-800">지출 분석 리포트 & 예산 알림 시각화 확인</span>
+                    <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                      '이번 달 지출 리포트' 탭에서 카테고리별 분할 차트와 예산 초과 시 노출되는 알림 UI를 확인해 주세요.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                  <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-bold text-neutral-800">인식 속도 및 화면 가독성 피드백</span>
+                    <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                      영수증 OCR 인식 처리 속도와 지출 차트의 가독성에 대한 솔직하고 직관적인 소감을 피드백으로 작성해 주세요.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3 CONTENT: 리뷰 (Reviews) -->
+          <div id="tab-content-reviews" class="space-y-6 hidden">
+            <!-- Review Summary Header Card -->
+            <div class="bg-white rounded-[24px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col sm:flex-row items-center justify-between gap-5">
+              <div class="flex items-center gap-5 w-full sm:w-auto">
+                <div class="w-16 h-16 rounded-2xl bg-[#FAFBF5] border border-[#E2E8D3] flex flex-col items-center justify-center text-[#2F6517] shrink-0 shadow-2xs">
+                  <span class="text-[10px] font-bold text-neutral-400">평점</span>
+                  <span class="text-xl font-extrabold">4.8</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <h3 class="text-sm font-extrabold text-neutral-dark flex items-center gap-2">
+                    <span>테스터 만족도 및 리뷰 요약</span>
+                    <span class="text-amber-500 text-xs">⭐⭐⭐⭐⭐</span>
+                  </h3>
+                  <p class="text-xs text-neutral-500">
+                    참여 완료한 테스터 <strong class="text-[#2F6517] font-bold">14명</strong>이 작성한 소중한 검증 피드백입니다.
+                  </p>
+                </div>
+              </div>
+              <span class="text-xs font-bold text-[#2F6517] bg-[#EBF7E2] px-3.5 py-1.5 rounded-full border border-primary/30 shrink-0">
+                🔒 피드백 공개됨
+              </span>
+            </div>
+
+            <!-- Review Items List -->
+            <div class="space-y-4">
+              <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
+                    <div>
+                      <span class="text-xs font-extrabold text-neutral-dark block">테스터 핀테크조아</span>
+                      <span class="text-[10px] text-neutral-400">앱 실사용자 · 20대</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-amber-500">⭐⭐⭐⭐⭐ 5.0</span>
+                    <span class="text-[11px] text-neutral-400">2024.11.21</span>
+                  </div>
+                </div>
+                <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
+                  "영수증 사진을 올리자마자 OCR 로딩 1초 만에 항목이 자동 분류되어 매우 신기했습니다! 카테고리 수정도 간편해서 자주 쓸 것 같아요."
                 </p>
               </div>
 
-              <div class="flex items-start gap-3.5 bg-[#FAFBF8] border border-[#EAEFE0] p-4 rounded-xl">
-                <span
-                  class="w-6 h-6 rounded-full bg-primary-dark text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
-                <p class="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
-                  UI 가독성 및 영수증 인식 정확도/속도에 대한 솔직한 피드백 남기기
+              <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
+                    <div>
+                      <span class="text-xs font-extrabold text-neutral-dark block">테스터 바이브유저</span>
+                      <span class="text-[10px] text-neutral-400">자산관리 관심자 · 30대</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-amber-500">⭐⭐⭐⭐ 4.5</span>
+                    <span class="text-[11px] text-neutral-400">2024.11.20</span>
+                  </div>
+                </div>
+                <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
+                  "대시보드 지출 분석 차트 색감이 직관적이고 깔끔합니다. 예산 초과 경고 푸시 알림 타이밍이 인상적이네요!"
+                </p>
+              </div>
+
+              <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
+                    <div>
+                      <span class="text-xs font-extrabold text-neutral-dark block">테스터 서비스마니아</span>
+                      <span class="text-[10px] text-neutral-400">노코드 관심자 · 20대</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-amber-500">⭐⭐⭐⭐⭐ 5.0</span>
+                    <span class="text-[11px] text-neutral-400">2024.11.19</span>
+                  </div>
+                </div>
+                <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
+                  "UX 디자인과 가독성이 훌륭합니다. 실제 오픈되면 메인 가계부 앱으로 정착해서 사용하고 싶습니다."
                 </p>
               </div>
             </div>
@@ -2234,32 +2616,71 @@
 
         </div>
 
-        <!-- Right Sidebar (1/3): 타인 테스트 테스터 참여 뷰 (요청 반영) -->
-        <div class="space-y-6">
+        <!-- Right Sidebar (1/3): 참고 이미지 1:1 2열 메타 카드 구조 적용 -->
+        <div class="space-y-5">
 
-          <!-- Dynamic Action Side Card: 테스터 참여하기 버튼 탑재 -->
-          <div class="bg-[#F8F6DF]/80 border-2 border-[#E7E2B4] rounded-[22px] p-6 shadow-subtle flex flex-col gap-5">
-            <div class="flex items-center gap-2 text-sm font-extrabold text-neutral-dark" id="post-sidebar-badge">
-              <span>📢</span>
-              <span>다른 제작자가 등록한 테스트입니다</span>
-            </div>
+          <!-- Main Sidebar Card: 2열 메타 라벨 배치 + 참여하기 버튼 + 제작자 프로필 + 태그 -->
+          <div class="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-subtle flex flex-col gap-5">
 
-            <div>
-              <div class="flex items-center justify-between text-xs font-bold mb-2">
-                <span class="text-neutral-700">현재 참여 현황</span>
-                <span class="text-neutral-dark font-extrabold text-sm" id="post-recruits-text">28 / 50명</span>
+            <!-- 1행: 모집구분 & 진행방식 -->
+            <div class="grid grid-cols-2 gap-4 border-b border-neutral-100 pb-4">
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">모집 구분</span>
+                <span id="post-side-type" class="text-sm font-extrabold text-neutral-dark">프로덕트 테스트</span>
               </div>
-              <div class="w-full h-2.5 bg-white rounded-full overflow-hidden border border-[#E0DAA2]">
-                <div id="post-recruits-bar" class="h-full bg-primary rounded-full transition-all duration-500"
-                  style="width: 56%;"></div>
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">진행 방식</span>
+                <span id="post-side-[#2F6517]" class="inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">외부형</span>
               </div>
             </div>
 
-            <!-- User Test Participation CTA Button (내가 등록한 서비스가 아니므로 참여 가능!) -->
+            <!-- 2행: 모집인원 & 마감일 -->
+            <div class="grid grid-cols-2 gap-4 border-b border-neutral-100 pb-4">
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">모집 인원</span>
+                <span id="post-recruits-text" class="text-sm font-extrabold text-[#2F6517]">28 / 50명</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">마감일</span>
+                <span id="post-meta-enddate" class="text-sm font-extrabold text-neutral-dark">2026.09.19</span>
+              </div>
+            </div>
+
+            <!-- 3행: 소요시간 & 보상 -->
+            <div class="grid grid-cols-2 gap-4 border-b border-neutral-100 pb-4">
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">소요 시간</span>
+                <span id="post-side-duration" class="text-sm font-extrabold text-neutral-dark">약 5분</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">보상</span>
+                <span id="post-meta-reward" class="text-sm font-extrabold text-[#7E22CE] flex items-center gap-1">
+                  🪙 <span id="post-reward-coin-num">600 C</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- 4행: 사용 도구 (전체 폭) -->
+            <div class="border-b border-neutral-100 pb-4">
+              <span class="text-[11px] font-semibold text-neutral-400 block mb-2">사용 도구</span>
+              <div id="post-tools-icons" class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                  <span>🖤</span> Cursor
+                </span>
+                <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                  <span>▲</span> Next.js
+                </span>
+                <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                  <span>⚡</span> v0
+                </span>
+              </div>
+            </div>
+
+            <!-- User Test Participation CTA Button (큰 초록색 버튼) -->
             <button type="button" id="btn-participate-test" onclick="executeParticipateInCurrentTest()"
-              class="w-full py-4 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-[0.98] text-white font-extrabold text-sm shadow-card transition-all flex items-center justify-center gap-2">
+              class="w-full py-4 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-[0.98] text-white font-extrabold text-sm shadow-card transition-all flex items-center justify-center gap-2 cursor-pointer">
               <span>🚀</span>
-              <span id="btn-participate-test-text">테스터로 참여하고 600 동전 받기</span>
+              <span id="btn-participate-test-text">참여하기</span>
             </button>
 
             <!-- Creator view alternative actions (hidden for other's post) -->
@@ -2274,37 +2695,49 @@
                 게시글 수정
               </button>
             </div>
-          </div>
 
-          <!-- Summary Meta Box -->
-          <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col gap-4 text-xs">
-            <h3 class="font-bold text-sm text-neutral-dark border-b border-neutral-100 pb-3">
-              테스트 정보 요약
-            </h3>
+            <hr class="border-neutral-100 my-1" />
 
-            <div class="flex items-center justify-between py-1 border-b border-neutral-50">
-              <span class="text-neutral-muted">등록일</span>
-              <span class="font-semibold text-neutral-dark" id="post-meta-regdate">2024. 11. 15.</span>
+            <!-- 제작자 미니 카드 -->
+            <div class="flex items-center gap-3.5 bg-[#FAFBF7] border border-[#E9EEDC] p-3.5 rounded-xl">
+              <div class="w-10 h-10 rounded-full bg-white border border-[#DDD8A8] p-0.5 shadow-2xs shrink-0 flex items-center justify-center">
+                <img src="../mascot-hungry.png" alt="제작자 프로필" class="w-8 h-8 object-contain"
+                  onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span id="post-creator-name-sidebar" class="font-extrabold text-xs text-neutral-dark">핀테크러버</span>
+                  <span class="px-1.5 py-0.5 rounded bg-[#FDA2BC]/30 text-[#8A2B43] text-[9px] font-extrabold">✓ 검증제작자</span>
+                </div>
+                <span class="text-[10px] text-neutral-400 block mt-0.5">기획자 · 핀테크 메이커</span>
+              </div>
             </div>
 
-            <div class="flex items-center justify-between py-1 border-b border-neutral-50">
-              <span class="text-neutral-muted">마감일</span>
-              <span class="font-semibold text-neutral-dark" id="post-meta-enddate">2024. 11. 30.</span>
+            <!-- 관심분야 태그 (알약 형태) -->
+            <div>
+              <span class="text-[11px] font-semibold text-neutral-400 block mb-2">관심분야</span>
+              <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크</span>
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성</span>
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI가계부</span>
+              </div>
             </div>
 
-            <div class="flex items-center justify-between py-1 pt-2">
-              <span class="text-neutral-muted font-medium">참여 리워드 동전</span>
-              <span class="font-extrabold text-primary-dark text-sm flex items-center gap-1" id="post-meta-reward">
-                600 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">
-              </span>
-            </div>
           </div>
 
           <!-- Back to Feed button -->
           <button onclick="navigateTo('explore')"
-            class="w-full py-3 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-2xs">
+            class="w-full py-3 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
             ← 메인 피드로 돌아가기
           </button>
+
+          <!-- Encouraging Banner -->
+          <div class="bg-[#FFFDF0] border border-[#F5EDBA] rounded-2xl p-4 text-xs text-[#6B5A14] flex items-center gap-3">
+            <span class="text-xl">🐷</span>
+            <p class="leading-relaxed font-medium text-[11px]">
+              <strong>돈 돼? 검증 팁:</strong> 테스트 후 솔직하고 구체적인 피드백을 작성해주실수록 제작자에게 더 큰 힘이 됩니다!
+            </p>
+          </div>
 
         </div>
 
@@ -3696,6 +4129,149 @@
   </div>
 
 
+
+  <!-- ========================================================
+       VIEW 9: NOTIFICATIONS PAGE (알림 화면)
+  ======================================================== -->
+  <div id="view-notifications" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
+    <!-- Left Sidebar LNB -->
+    <aside
+      class="w-64 bg-[#F2F5E8] border-r border-[#E5EAD4] flex flex-col justify-between p-6 shrink-0 sticky top-0 h-screen overflow-y-auto">
+      <div class="flex flex-col gap-6">
+        <!-- Logo -->
+        <div class="cursor-pointer" onclick="navigateTo('landing')">
+          <div class="flex items-center gap-2.5 mb-1">
+            <img src="../logo-default.png" alt="돈 돼?" class="h-8 w-auto object-contain"
+              onerror="this.onerror=null; this.src='./logo-default.png';" />
+            <span class="text-lg font-extrabold text-[#2F6517]">돈 돼?</span>
+          </div>
+          <p class="text-[11px] font-medium text-[#7A8A62] tracking-wide">Gentle Accountability</p>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav data-service-sidebar-nav class="flex flex-col gap-1.5 text-[15px]" aria-label="주요 메뉴"></nav>
+      </div>
+
+      <!-- Bottom Pink Promo Box -->
+      <div
+        class="bg-[#FFF5F7] rounded-xl border border-[#FED7E2] p-3 text-[11px] text-[#9B2C4E] flex flex-col gap-1.5 mt-4">
+        <span class="font-extrabold flex items-center gap-1">💡 문방구 신상 입고!</span>
+        <p class="leading-relaxed text-[10px] text-neutral-600">
+          네이버페이 5천원권과 피그마 UI 키트가 추가 입고되었습니다.
+        </p>
+        <button onclick="navigateTo('market')" class="text-left font-bold text-[#BE185D] hover:underline text-[10px]">
+          상점 바로가기 →
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-8 lg:p-10 max-w-[1040px] flex flex-col gap-6 overflow-y-auto">
+
+      <!-- Top Breadcrumb & Live Sync Badge -->
+      <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
+        <div class="flex items-center gap-2 font-medium">
+          <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+          <span>&gt;</span>
+          <span class="cursor-pointer hover:underline" onclick="navigateTo('mypage')">MY</span>
+          <span>&gt;</span>
+          <span class="font-bold text-neutral-700">알림 목록</span>
+        </div>
+
+        <div class="flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]">
+          <span class="w-2 h-2 rounded-full bg-[#2F6517] animate-pulse"></span>
+          실시간 수신 활성
+        </div>
+      </div>
+
+      <!-- Header Card -->
+      <section class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex items-start justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-[#EDF7E5] border border-[#D5E8C4] flex items-center justify-center text-primary-dark text-xl shrink-0">
+            🔔
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-2xl font-extrabold text-neutral-dark tracking-tight">알림</h2>
+              <span id="unread-count-badge" class="px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-xs font-extrabold">0</span>
+            </div>
+            <p class="text-xs text-neutral-500 mt-1 font-medium">
+              내 서비스 반응과 관심 테스트 소식을 실시간으로 확인하세요.
+            </p>
+          </div>
+        </div>
+
+        <button type="button" onclick="markAllNotificationsAsRead()"
+          class="text-xs font-bold text-neutral-500 hover:text-[#2F6517] transition-colors flex items-center gap-1 cursor-pointer pt-2">
+          <span>✓</span> 모두 읽음으로 표시
+        </button>
+      </section>
+
+      <!-- Notifications Dynamic List Container -->
+      <section id="notifications-list-container" class="flex flex-col gap-6">
+        <!-- Rendered via JavaScript renderNotificationsUI() -->
+      </section>
+
+      <!-- Bottom Notice & Settings Link -->
+      <section class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
+        <div class="flex items-center gap-1.5 font-medium">
+          <span>⏱️</span>
+          <span>최근 30일간의 알림만 보관되며 이후 자동 정리됩니다.</span>
+        </div>
+        <button type="button" onclick="navigateTo('notification-settings')"
+          class="text-xs font-bold text-neutral-500 hover:text-neutral-800 underline underline-offset-2 transition-colors cursor-pointer">
+          일괄 수신 설정 편집
+        </button>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================
+       VIEW 10: NOTIFICATION SETTINGS PAGE (알림 수신 설정 빈 화면 라우트)
+  ======================================================== -->
+  <div id="view-notification-settings" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
+    <aside
+      class="w-64 bg-[#F2F5E8] border-r border-[#E5EAD4] flex flex-col justify-between p-6 shrink-0 sticky top-0 h-screen overflow-y-auto">
+      <div class="flex flex-col gap-6">
+        <div class="cursor-pointer" onclick="navigateTo('landing')">
+          <div class="flex items-center gap-2.5 mb-1">
+            <img src="../logo-default.png" alt="돈 돼?" class="h-8 w-auto object-contain"
+              onerror="this.onerror=null; this.src='./logo-default.png';" />
+            <span class="text-lg font-extrabold text-[#2F6517]">돈 돼?</span>
+          </div>
+          <p class="text-[11px] font-medium text-[#7A8A62] tracking-wide">Gentle Accountability</p>
+        </div>
+        <nav data-service-sidebar-nav class="flex flex-col gap-1.5 text-[15px]" aria-label="주요 메뉴"></nav>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-8 lg:p-10 max-w-[900px] flex flex-col gap-6 overflow-y-auto">
+      <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
+        <div class="flex items-center gap-2 font-medium">
+          <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+          <span>&gt;</span>
+          <span class="cursor-pointer hover:underline" onclick="navigateTo('notifications')">알림</span>
+          <span>&gt;</span>
+          <span class="font-bold text-neutral-700">수신 설정</span>
+        </div>
+        <button onclick="navigateTo('notifications')" class="text-neutral-500 hover:text-neutral-800 font-bold">← 알림 목록으로 돌아가기</button>
+      </div>
+
+      <section class="bg-white rounded-[24px] border border-neutral-200 p-8 shadow-subtle flex flex-col gap-4 items-center text-center py-16">
+        <div class="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center text-3xl mb-2">⚙️</div>
+        <h2 class="text-xl font-extrabold text-neutral-dark">알림 수신 설정 (준비 중)</h2>
+        <p class="text-xs text-neutral-400 leading-relaxed max-w-md">
+          이 화면은 다음 단계에서 상세 수신 옵션(푸시, 이메일, 마케팅 알림 ON/OFF)과 함께 완성될 예정입니다.
+        </p>
+        <button onclick="navigateTo('notifications')" class="mt-2 px-5 py-2.5 rounded-xl bg-primary text-neutral-dark font-extrabold text-xs shadow-xs hover:bg-primary-hover transition-all">
+          알림 목록으로 돌아가기
+        </button>
+      </section>
+    </main>
+  </div>
+
+
   <!-- ========================================================
        INTERVIEWER MINI CONTROLLER (FLOATING VIEW SWITCHER)
   ======================================================== -->
@@ -3755,8 +4331,22 @@
         </button>
       </div>
 
+      <!-- Gating Bypass Toggle Switch inside Controller -->
+      <div class="mt-2 pt-2 border-t border-neutral-border/70 flex items-center justify-between">
+        <div class="flex flex-col">
+          <span class="text-[11px] font-bold text-neutral-dark flex items-center gap-1">
+            <span>🛡️</span> 3회 게이팅 충족
+          </span>
+          <span class="text-[9px] text-neutral-400">ON 시 테스트 등록 즉시 허용</span>
+        </div>
+        <button type="button" id="btn-toggle-gating-bypass" onclick="toggleGatingBypassMode()"
+          class="px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all bg-neutral-200 text-neutral-600 shadow-2xs border border-neutral-300 cursor-pointer">
+          OFF
+        </button>
+      </div>
+
       <div
-        class="mt-2.5 pt-2 border-t border-neutral-border/70 text-[11px] text-neutral-muted flex items-center justify-between">
+        class="mt-2 pt-2 border-t border-neutral-border/70 text-[11px] text-neutral-muted flex items-center justify-between">
         <span>현재 뷰:</span>
         <span id="current-view-badge" class="font-semibold text-neutral-dark bg-primary-sub/70 px-2 py-0.5 rounded">랜딩
           페이지</span>
@@ -3789,7 +4379,9 @@
       'abtest': { title: 'A/B 투표 테스트 (SCR-06)' },
       'feedback': { title: '피드백 결과 분석 (SCR-16/17)' },
       'market': { title: '문방구 (동전 상점)' },
-      'mypage': { title: '마이페이지 (dektop-mypage)' }
+      'mypage': { title: '마이페이지 (dektop-mypage)' },
+      'notifications': { title: '알림 목록' },
+      'notification-settings': { title: '알림 수신 설정' }
     };
 
     let currentViewKey = 'landing';
@@ -3870,7 +4462,7 @@
         </div>
 
         <button type="button" data-sidebar-item="notifications"
-          onclick="showSidebarFeatureNotice('알림', '🔔')"
+          onclick="navigateTo('notifications'); return false;"
           class="${sidebarTopItemBaseClass} ${sidebarTopItemInactiveClass}">
           <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -3894,9 +4486,11 @@
         ? 'all-projects'
         : viewKey === 'market'
           ? 'market'
-          : ['mypage', 'feedback'].includes(viewKey)
-            ? 'my-info'
-            : null;
+          : viewKey === 'notifications'
+            ? 'notifications'
+            : ['mypage', 'feedback'].includes(viewKey)
+              ? 'my-info'
+              : null;
       const activeSubItem = viewKey === 'feedback'
         ? 'my-projects'
         : viewKey === 'mypage'
@@ -4021,7 +4615,7 @@
         </div>
 
         <button type="button" data-top-nav-item="notifications"
-          onclick="showTopNavigationFeatureNotice('알림', '🔔')"
+          onclick="navigateTo('notifications'); return false;"
           class="${topNavItemBaseClass} ${topNavItemInactiveClass}">
           <span>알림</span>
         </button>
@@ -4041,9 +4635,11 @@
         ? 'all-projects'
         : viewKey === 'market'
           ? 'market'
-          : ['mypage', 'feedback', 'create'].includes(viewKey)
-            ? 'my-info'
-            : null;
+          : viewKey === 'notifications'
+            ? 'notifications'
+            : ['mypage', 'feedback', 'create'].includes(viewKey)
+              ? 'my-info'
+              : null;
       const activeSubItem = ['feedback', 'create'].includes(viewKey)
         ? 'my-projects'
         : viewKey === 'mypage'
@@ -4119,6 +4715,327 @@
 
 
     // ========================================================
+    // ========================================================
+    // Notifications Data Model & UI Controller
+    // ========================================================
+    const dummyNotifications = [
+      {
+        id: 'notif-1',
+        user_id: 'user-001',
+        type: 'review_new',
+        title: 'AI 채용 서류 분석기에 새 리뷰가 등록됐어요',
+        content: '인디해커_K님이 별점 5점과 함께 상세 피드백을 남겼어요. "온보딩 과정이 직관적이라 좋았습니다."',
+        related_id: 'feedback',
+        is_read: false,
+        created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString() // 3분 전
+      },
+      {
+        id: 'notif-2',
+        user_id: 'user-001',
+        type: 'reply',
+        title: '내가 남긴 리뷰에 제작자가 답글을 남겼어요',
+        content: '\'가계부 앱 베타테스트\' 제작자 UIUX_Master님이 "피드백 주신 영수증 인식 오류를 다음 패치에 개선할 예정입니다"라고 남겼습니다.',
+        related_id: 'moneylog',
+        is_read: false,
+        created_at: new Date(Date.now() - 42 * 60 * 1000).toISOString() // 42분 전
+      },
+      {
+        id: 'notif-3',
+        user_id: 'user-001',
+        type: 'approval',
+        title: '\'노코드 템플릿 마켓플레이스\' 게시가 승인됐어요. 모집이 시작됩니다!',
+        content: '운영진 검토가 완료되어 메인 피드에 공개되었습니다. 테스터 피드백을 기다려보세요.',
+        related_id: 'my-created-test',
+        is_read: false,
+        created_at: new Date(Date.now() - 2 * 3600 * 1000).toISOString() // 2시간 전
+      },
+      {
+        id: 'notif-4',
+        user_id: 'user-001',
+        type: 'recommend',
+        title: '관심사 \'SaaS\'에 맞는 새 테스트가 등록됐어요',
+        content: '노션 연동 자동 인보이스 발행 SaaS (간단한 온보딩 플로우 UX 피드백, +300 C)',
+        related_id: 'saas',
+        is_read: true,
+        created_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString() // 어제 (1일 전)
+      },
+      {
+        id: 'notif-5',
+        user_id: 'user-001',
+        type: 'shop_new',
+        title: '돼코상점에 새로운 교환 품목이 입고됐어요 🐷',
+        content: '신규 입고: 배달의민족 모바일 상품권 1만원권 과 실전 SaaS 피그마 UI 키트 를 확인해보세요.',
+        related_id: 'market',
+        is_read: true,
+        created_at: new Date(Date.now() - 2 * 86400 * 1000).toISOString() // 2일 전
+      },
+      {
+        id: 'notif-6',
+        user_id: 'user-001',
+        type: 'approval',
+        title: '프로젝트 \'AI 하루 일기\' 게시 요청이 반려됐어요',
+        content: '사유: 서비스 링크 접속 오류 확인 필요. 프로젝트 수정 후 재신청해주세요.',
+        related_id: 'diary',
+        is_read: true,
+        is_rejected: true, // 반려 항목 구분을 위한 플래그
+        created_at: new Date(Date.now() - 3 * 86400 * 1000).toISOString() // 3일 전
+      },
+      {
+        id: 'notif-7',
+        user_id: 'user-001',
+        type: 'app_update',
+        title: '참여했던 가계부 앱 베타테스트가 업데이트됐어요',
+        content: 'v1.2 버전이 배포되었습니다. 내 피드백이 어떻게 반영됐는지 확인해보세요!',
+        related_id: 'moneylog',
+        is_read: true,
+        created_at: new Date(Date.now() - 5 * 86400 * 1000).toISOString() // 5일 전
+      }
+    ];
+
+    function formatRelativeTime(dateStr) {
+      const now = new Date();
+      const date = new Date(dateStr);
+      const diffSec = Math.floor((now - date) / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHour = Math.floor(diffMin / 60);
+      const diffDay = Math.floor(diffHour / 24);
+
+      if (diffMin < 1) return '방금 전';
+      if (diffMin < 60) return `${diffMin}분 전`;
+      if (diffHour < 24) return `${diffHour}시간 전`;
+      if (diffDay === 1) return '어제';
+      if (diffDay < 7) return `${diffDay}일 전`;
+      return `${Math.floor(diffDay / 7)}주 전`;
+    }
+
+    function getNotificationTypeIconHTML(item) {
+      switch (item.type) {
+        case 'review_new':
+          return `
+            <div class="w-10 h-10 rounded-full bg-[#FEF3C7] border border-[#FDE68A] flex items-center justify-center shrink-0">
+              <span class="text-base">📝</span>
+            </div>
+          `;
+        case 'reply':
+          return `
+            <div class="w-10 h-10 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center shrink-0">
+              <span class="text-base">💬</span>
+            </div>
+          `;
+        case 'approval':
+          if (item.is_rejected) {
+            return `
+              <div class="w-10 h-10 rounded-full bg-[#FEE2E2] border border-[#FCA5A5] flex items-center justify-center shrink-0">
+                <span class="text-base">⚠️</span>
+              </div>
+            `;
+          }
+          return `
+            <div class="w-10 h-10 rounded-full bg-[#DCFCE7] border border-[#86EFAC] flex items-center justify-center shrink-0">
+              <span class="text-base">✅</span>
+            </div>
+          `;
+        case 'recommend':
+          return `
+            <div class="w-10 h-10 rounded-full bg-[#FAF5FF] border border-[#E9D5FF] flex items-center justify-center shrink-0">
+              <span class="text-base">✨</span>
+            </div>
+          `;
+        case 'shop_new':
+          return `
+            <div class="w-10 h-10 rounded-full bg-[#FCE7F3] border border-[#FBCFE8] flex items-center justify-center shrink-0">
+              <span class="text-base">🛍️</span>
+            </div>
+          `;
+        case 'app_update':
+          return `
+            <div class="w-10 h-10 rounded-full bg-[#E0F2FE] border border-[#BAE6FD] flex items-center justify-center shrink-0">
+              <span class="text-base">🔄</span>
+            </div>
+          `;
+        default:
+          return `
+            <div class="w-10 h-10 rounded-full bg-[#F4F4F5] border border-[#E4E4E7] flex items-center justify-center shrink-0">
+              <span class="text-base">🔔</span>
+            </div>
+          `;
+      }
+    }
+
+    function getNotificationTargetActionText(item) {
+      switch (item.type) {
+        case 'review_new': return '테스트 결과 상세화면으로 이동 ›';
+        case 'reply': return '피드백 테스트 활동(내 서재) 화면으로 이동 ›';
+        case 'approval': return item.is_rejected ? '등록한 서비스 글 수정화면으로 이동 ›' : '등록한 서비스 글 상세화면으로 이동 ›';
+        case 'recommend': return '서비스 글 상세화면으로 이동 ›';
+        case 'shop_new': return '돼코 상점 구경가기 ›';
+        case 'app_update': return '서비스 글 상세화면으로 이동 ›';
+        default: return '관련 화면으로 이동 ›';
+      }
+    }
+
+    function handleNotificationItemClick(notifId, relatedId) {
+      // Mark as read
+      const item = dummyNotifications.find(n => n.id === notifId);
+      if (item) item.is_read = true;
+      renderNotificationsUI();
+
+      // Navigate based on related_id
+      if (relatedId === 'market') {
+        navigateTo('market');
+      } else if (relatedId === 'feedback') {
+        navigateTo('feedback');
+      } else if (relatedId === 'moneylog' || relatedId === 'prototype' || relatedId === 'my-created-test' || relatedId === 'diary') {
+        openPostDetail(relatedId);
+      } else if (relatedId === 'saas') {
+        openAbTest('saas');
+      } else {
+        navigateTo('explore');
+      }
+    }
+
+    function deleteNotification(event, notifId) {
+      event.stopPropagation();
+      const idx = dummyNotifications.findIndex(n => n.id === notifId);
+      if (idx !== -1) {
+        dummyNotifications.splice(idx, 1);
+        renderNotificationsUI();
+        showGenericToast('알림이 목록에서 삭제되었습니다.', '🗑️');
+      }
+    }
+
+    function markAllNotificationsAsRead() {
+      dummyNotifications.forEach(n => n.is_read = true);
+      renderNotificationsUI();
+      showGenericToast('모든 알림을 읽음으로 표시했습니다.', '✓');
+    }
+
+    function renderNotificationsUI() {
+      const container = document.getElementById('notifications-list-container');
+      const badge = document.getElementById('unread-count-badge');
+      if (!container) return;
+
+      const unreadCount = dummyNotifications.filter(n => !n.is_read).length;
+      if (badge) badge.textContent = String(unreadCount);
+
+      if (dummyNotifications.length === 0) {
+        // Empty State (귀여운 돼지 일러스트)
+        container.innerHTML = `
+          <div class="bg-white rounded-[24px] border border-neutral-200 p-12 text-center flex flex-col items-center justify-center gap-4 shadow-subtle min-h-[380px]">
+            <div class="w-32 h-32 mb-2 flex items-center justify-center">
+              <img src="../mascot-hungry.png" alt="돈돼 마스코트" class="w-full h-full object-contain filter drop-shadow-sm"
+                onerror="this.onerror=null; this.src='./mascot-hungry.png';" />
+            </div>
+            <h3 class="text-xl font-extrabold text-neutral-dark">아직 받은 알림이 없어요</h3>
+            <p class="text-xs text-neutral-400 font-medium leading-relaxed max-w-sm">
+              새로운 서비스 검증 참여 소식이나 테스터 피드백이 도착하면 실시간으로 알려드릴게요!
+            </p>
+            <button onclick="navigateTo('explore')" class="mt-2 px-6 py-3 rounded-xl bg-primary text-neutral-dark font-extrabold text-xs shadow-xs hover:bg-primary-hover transition-all">
+              다른 테스트 탐색하러 가기
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Group into '오늘' vs '지난 일주일'
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+      const todayList = [];
+      const pastWeekList = [];
+
+      dummyNotifications.forEach(item => {
+        const itemTime = new Date(item.created_at).getTime();
+        if (itemTime >= todayStart) {
+          todayList.push(item);
+        } else {
+          pastWeekList.push(item);
+        }
+      });
+
+      let html = '';
+
+      // 1. Today Section
+      if (todayList.length > 0) {
+        html += `
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-bold text-[#2F6517] bg-[#F2F7EC] px-2.5 py-1 rounded-md">오늘</span>
+              <div class="flex-1 h-px bg-neutral-200/80"></div>
+            </div>
+            <div class="flex flex-col gap-3">
+              ${todayList.map(item => createNotificationCardHTML(item)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // 2. Past Week Section
+      if (pastWeekList.length > 0) {
+        html += `
+          <div class="flex flex-col gap-3 mt-2">
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-bold text-neutral-500 bg-neutral-100 px-2.5 py-1 rounded-md">지난 일주일</span>
+              <div class="flex-1 h-px bg-neutral-200/80"></div>
+            </div>
+            <div class="flex flex-col gap-3">
+              ${pastWeekList.map(item => createNotificationCardHTML(item)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function createNotificationCardHTML(item) {
+      const isUnread = !item.is_read;
+      const bgClass = isUnread ? 'bg-[#F6FAEF] border-[#D9EA80] shadow-card' : 'bg-white border-neutral-200/80 shadow-subtle';
+      const iconHTML = getNotificationTypeIconHTML(item);
+      const actionText = getNotificationTargetActionText(item);
+      const relTime = formatRelativeTime(item.created_at);
+
+      return `
+        <article onclick="handleNotificationItemClick('${item.id}', '${item.related_id}')"
+          class="rounded-[20px] border p-5 transition-all duration-200 cursor-pointer hover:border-primary/80 hover:-translate-y-0.5 relative group ${bgClass}">
+          <div class="flex items-start gap-4">
+            
+            <!-- Unread Green Dot + Icon -->
+            <div class="relative shrink-0 flex items-center">
+              ${isUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-[#2F6517] absolute -left-3 top-4"></span>' : ''}
+              ${iconHTML}
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 min-w-0 pr-6">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <h4 class="text-sm font-extrabold text-neutral-dark leading-snug line-clamp-1 group-hover:text-primary-dark transition-colors">
+                  ${item.title}
+                </h4>
+                <span class="text-xs text-neutral-400 font-medium shrink-0">${relTime}</span>
+              </div>
+
+              <p class="text-xs text-neutral-600 leading-relaxed font-medium mb-2.5">
+                ${item.is_rejected ? `<span class="text-red-600 font-bold">사유: </span>` : ''}${item.content}
+              </p>
+
+              <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#2F6517] group-hover:underline">
+                <span>${actionText}</span>
+              </span>
+            </div>
+
+            <!-- Individual Close (X) Button -->
+            <button type="button" onclick="deleteNotification(event, '${item.id}')"
+              class="absolute top-4 right-4 w-7 h-7 rounded-full bg-black/5 hover:bg-black/10 text-neutral-400 hover:text-neutral-700 flex items-center justify-center text-xs transition-colors cursor-pointer"
+              title="삭제">
+              ✕
+            </button>
+          </div>
+        </article>
+      `;
+    }
+
     // Global State for Scraps, Coins, A/B Testing & Market
     // ========================================================
     let userScrapCount = 7;
@@ -4558,6 +5475,21 @@
       }
     }
 
+    function addPersonaTag() {
+      const input = document.getElementById('input-target-persona-tag');
+      const container = document.getElementById('persona-tags-container');
+      if (!input || !container) return;
+      const text = input.value.trim();
+      if (!text) return;
+
+      const tagSpan = document.createElement('span');
+      tagSpan.className = 'px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs';
+      tagSpan.innerHTML = `<span>🎯</span> ${text} <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>`;
+      
+      container.appendChild(tagSpan);
+      input.value = '';
+    }
+
     function scrollToMypageMarket() {
       navigateToMypageSection('mypage-market-section', 'coins');
     }
@@ -4977,18 +5909,128 @@
         }
       }
 
+      switchPostDetailTab('overview');
       navigateTo('post');
     }
 
-    function executeParticipateInCurrentTest() {
-      const reward = currentPostId === 'prototype' ? 350 : 600;
-      const testName = currentPostId === 'prototype' ? '노코드 온보딩 프로토타입' : '스마트 가계부 머니로그';
+    function switchPostDetailTab(tabKey) {
+      const tabOverview = document.getElementById('tab-content-overview');
+      const tabMission = document.getElementById('tab-content-mission');
+      const tabReviews = document.getElementById('tab-content-reviews');
 
-      userParticipatedTests[currentPostId] = true;
-      userCoinBalance += reward;
-      updateAllCoinDisplays();
-      updatePledgeModalUI();
+      const btnOverview = document.getElementById('tab-btn-overview');
+      const btnMission = document.getElementById('tab-btn-mission');
+      const btnReviews = document.getElementById('tab-btn-reviews');
 
+      if (!tabOverview || !tabMission || !tabReviews) return;
+
+      // Hide all tab contents
+      tabOverview.classList.add('hidden');
+      tabMission.classList.add('hidden');
+      tabReviews.classList.add('hidden');
+
+      // Reset button styles
+      [btnOverview, btnMission, btnReviews].forEach(btn => {
+        if (btn) {
+          btn.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50';
+        }
+      });
+
+      // Active selected tab
+      if (tabKey === 'overview') {
+        tabOverview.classList.remove('hidden');
+        if (btnOverview) btnOverview.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 bg-[#FAFBF5] text-[#2F6517] border border-[#E2E8D3] shadow-2xs';
+      } else if (tabKey === 'mission') {
+        tabMission.classList.remove('hidden');
+        if (btnMission) btnMission.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 bg-[#FAFBF5] text-[#2F6517] border border-[#E2E8D3] shadow-2xs';
+      } else if (tabKey === 'reviews') {
+        tabReviews.classList.remove('hidden');
+        if (btnReviews) btnReviews.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 bg-[#FAFBF5] text-[#2F6517] border border-[#E2E8D3] shadow-2xs';
+      }
+    }
+
+    // Modal state tracking
+    let currentParticipatingPostId = null;
+
+    function openTestParticipateModal(postId) {
+      const targetPostId = postId || currentPostId || 'moneylog';
+      currentParticipatingPostId = targetPostId;
+
+      const modal = document.getElementById('test-participate-modal');
+      const viewInitial = document.getElementById('participate-view-initial');
+      const viewExternal = document.getElementById('participate-view-external-done');
+      const viewInternal = document.getElementById('participate-view-internal-flow');
+
+      if (!modal) return;
+
+      // Reset views
+      viewInitial.classList.remove('hidden');
+      viewExternal.classList.add('hidden');
+      viewInternal.classList.add('hidden');
+
+      // Populate content based on post data
+      const isPrototype = targetPostId === 'prototype';
+      const thumbBox = document.getElementById('part-modal-thumb-box');
+      const badge = document.getElementById('part-modal-badge');
+      const reward = document.getElementById('part-modal-reward');
+      const title = document.getElementById('part-modal-title');
+      const desc = document.getElementById('part-modal-desc');
+      const checklist = document.getElementById('part-modal-checklist');
+
+      if (isPrototype) {
+        if (thumbBox) thumbBox.innerHTML = '⚡';
+        if (badge) badge.textContent = '[투표/A-B 테스트]';
+        if (reward) reward.textContent = '🪙 350 동전 수령';
+        if (title) title.textContent = '노코드 온보딩 프로토타입 비교';
+        if (desc) desc.textContent = '신규 가입자 온보딩 A안 vs B안 화면 비교 및 선호도 평가';
+        if (checklist) {
+          checklist.innerHTML = `
+            <div class="flex items-center gap-2 text-neutral-700">
+              <span class="text-primary font-bold">✓</span> A안/B안 시안 확인 후 직관적인 안 선택
+            </div>
+            <div class="flex items-center gap-2 text-neutral-700">
+              <span class="text-primary font-bold">✓</span> 선택 이유 및 이탈 원인 1줄 작성
+            </div>
+          `;
+        }
+      } else {
+        if (thumbBox) thumbBox.innerHTML = '📱';
+        if (badge) badge.textContent = '[프로덕트 테스트]';
+        if (reward) reward.textContent = '🪙 600 동전 수령';
+        if (title) title.textContent = '스마트 가계부 머니로그';
+        if (desc) desc.textContent = '영수증 사진 한 장으로 지출을 자동 분류하는 스마트 가계부';
+        if (checklist) {
+          checklist.innerHTML = `
+            <div class="flex items-center gap-2 text-neutral-700">
+              <span class="text-primary font-bold">✓</span> 이메일 가입 후 영수증 사진 1장 업로드 테스트
+            </div>
+            <div class="flex items-center gap-2 text-neutral-700">
+              <span class="text-primary font-bold">✓</span> 카테고리별 지출 차트 및 예산 알림 확인
+            </div>
+            <div class="flex items-center gap-2 text-neutral-700">
+              <span class="text-primary font-bold">✓</span> UI 가독성 및 영수증 OCR 인식 속도 피드백 작성
+            </div>
+          `;
+        }
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeTestParticipateModal() {
+      const modal = document.getElementById('test-participate-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function confirmParticipationAndProceed() {
+      const pId = currentParticipatingPostId || currentPostId || 'moneylog';
+      const isPrototype = pId === 'prototype';
+
+      // 1. 참여 Record 생성 및 동전 처리 준비
+      userParticipatedTests[pId] = true;
+      const rewardVal = isPrototype ? 350 : 600;
+
+      // Update CTA button in post detail view if open
       const ctaBtn = document.getElementById('btn-participate-test');
       const ctaBtnText = document.getElementById('btn-participate-test-text');
       if (ctaBtn) {
@@ -4996,15 +6038,79 @@
         ctaBtn.className = 'w-full py-4 px-4 rounded-xl bg-neutral-200 text-neutral-500 font-extrabold text-sm cursor-not-allowed flex items-center justify-center gap-2';
       }
       if (ctaBtnText) {
-        ctaBtnText.textContent = `✓ 테스터 참여 완료됨 (+${reward} 동전 수령)`;
+        ctaBtnText.textContent = `✓ 테스터 참여 완료됨 (+${rewardVal} 동전 수령)`;
       }
+
+      // 2. 분기 처리 (외부형 vs 내부형)
+      // prototype -> 내부형 (투표/AB), moneylog -> 외부형 (프로덕트 앱)
+      const viewInitial = document.getElementById('participate-view-initial');
+      const viewExternal = document.getElementById('participate-view-external-done');
+      const viewInternal = document.getElementById('participate-view-internal-flow');
+
+      viewInitial.classList.add('hidden');
+
+      if (isPrototype) {
+        // 내부형 분기
+        viewInternal.classList.remove('hidden');
+        const dynamicContent = document.getElementById('part-internal-dynamic-content');
+        if (dynamicContent) {
+          dynamicContent.innerHTML = `
+            <div class="bg-neutral-50 p-4 rounded-xl border border-neutral-200 flex flex-col gap-3">
+              <span class="text-xs font-bold text-neutral-800">Q1. 더 직관적인 온보딩 화면을 선택해주세요</span>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="border-2 border-primary bg-white p-3 rounded-xl flex flex-col items-center gap-2 cursor-pointer text-center">
+                  <span class="text-xs font-extrabold text-primary-dark">A안 (단계별 3-Step)</span>
+                  <div class="w-full h-20 bg-neutral-100 rounded-lg flex items-center justify-center text-xs text-neutral-400">시안 이미지 A</div>
+                  <input type="radio" name="ab-vote-choice" value="A" checked class="accent-[#2F6517]">
+                </label>
+                <label class="border border-neutral-200 bg-white p-3 rounded-xl flex flex-col items-center gap-2 cursor-pointer text-center hover:border-neutral-300">
+                  <span class="text-xs font-extrabold text-neutral-700">B안 (한 페이지 통상)</span>
+                  <div class="w-full h-20 bg-neutral-100 rounded-lg flex items-center justify-center text-xs text-neutral-400">시안 이미지 B</div>
+                  <input type="radio" name="ab-vote-choice" value="B" class="accent-[#2F6517]">
+                </label>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-xs font-bold text-neutral-800">선택한 이유 (간단 소감)</label>
+              <textarea rows="2" placeholder="이유를 입력해 주세요 (예: A안의 카드 형태 안내가 이해하기 쉽습니다)" class="w-full text-xs p-3 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
+            </div>
+          `;
+        }
+      } else {
+        // 외부형 분기
+        // 새 탭으로 외부 링크 오픈
+        window.open('https://example.com/test-link', '_blank');
+
+        // 모달을 외부 완료 안내 뷰로 전환
+        const externalRewardText = document.getElementById('part-external-reward-text');
+        if (externalRewardText) externalRewardText.textContent = `${rewardVal} 동전`;
+        viewExternal.classList.remove('hidden');
+      }
+    }
+
+    function completeInternalTestFlow() {
+      const pId = currentParticipatingPostId || currentPostId || 'prototype';
+      const reward = pId === 'prototype' ? 350 : 600;
+
+      userCoinBalance += reward;
+      updateAllCoinDisplays();
+      updatePledgeModalUI();
+
+      closeTestParticipateModal();
 
       const count = getCompletedTestCount();
       const countNotice = count >= 3
         ? ` 🎉 [내 테스트 등록 자격 충족!] (총 ${count}회 완료)`
         : ` (내 테스트 등록 조건 달성률: ${count}/3회 완료)`;
 
-      showGenericToast(`🎉 '${testName}' 테스터 참여 완료! +${reward} 동전이 지급되었습니다.${countNotice}`, '🪙');
+      showGenericToast(`🎉 검증 제출 완료! +${reward} 동전이 지급되었습니다.${countNotice}`, '🪙');
+
+      // 마이페이지 리뷰 작성으로 이동
+      navigateTo('feedback');
+    }
+
+    function executeParticipateInCurrentTest() {
+      openTestParticipateModal(currentPostId);
     }
 
     function navigateTo(viewKey) {
@@ -5027,7 +6133,9 @@
         });
       }
 
-      currentViewKey = viewKey;
+      if (viewKey === 'notifications') {
+        renderNotificationsUI();
+      }
 
       if (viewKey === 'mypage') currentMypageSection = 'profile';
       if (['mypage', 'feedback'].includes(viewKey)) {
@@ -5062,8 +6170,27 @@
       }
     }
 
-    // Modal Controls
+    // Modal Controls & Gating Bypass
+    let isGatingBypassActive = false;
+
+    function toggleGatingBypassMode() {
+      isGatingBypassActive = !isGatingBypassActive;
+      const btn = document.getElementById('btn-toggle-gating-bypass');
+      if (btn) {
+        if (isGatingBypassActive) {
+          btn.textContent = 'ON';
+          btn.className = 'px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all bg-[#2F6517] text-white shadow-xs cursor-pointer';
+          showGenericToast('🛡️ [3회 게이팅 충족] 상태가 ON으로 활성화되었습니다!', '✅');
+        } else {
+          btn.textContent = 'OFF';
+          btn.className = 'px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all bg-neutral-200 text-neutral-600 shadow-2xs border border-neutral-300 cursor-pointer';
+          showGenericToast('🛡️ [3회 게이팅 충족] 상태가 OFF로 변경되었습니다.', 'ℹ️');
+        }
+      }
+    }
+
     function getCompletedTestCount() {
+      if (isGatingBypassActive) return 3;
       return Object.keys(userParticipatedTests).length;
     }
 
@@ -5136,36 +6263,38 @@
       if (subSurvey) subSurvey.style.display = cat === 'survey' ? 'flex' : 'none';
     }
 
-    function toggleProductPlatformFields(platform) {
-      const webFields = document.getElementById('product-web-fields');
-      const appFields = document.getElementById('product-app-fields');
-      if (webFields) webFields.style.display = platform === 'web' ? 'flex' : 'none';
-      if (appFields) appFields.style.display = platform === 'app' ? 'flex' : 'none';
+    let isProductAbMode = false;
+
+    function toggleProductAbMode(isAbOn) {
+      isProductAbMode = isAbOn;
+      const singleFields = document.getElementById('product-single-fields');
+      const abFields = document.getElementById('product-ab-fields');
+      if (singleFields) singleFields.style.display = isAbOn ? 'none' : 'flex';
+      if (abFields) abFields.style.display = isAbOn ? 'flex' : 'none';
+
+      // Update AB sub fields based on platform
+      const platform = document.querySelector('input[name="productSubPlatform"]:checked')?.value || 'web';
+      const webAb = document.getElementById('product-ab-web-fields');
+      const appAb = document.getElementById('product-ab-app-fields');
+      if (webAb) webAb.style.display = (isAbOn && platform === 'web') ? 'grid' : 'none';
+      if (appAb) appAb.style.display = (isAbOn && platform === 'app') ? 'grid' : 'none';
+    }
+
+    function addProductAbQuestionItem() {
+      const list = document.getElementById('product-ab-questions-list');
+      if (!list) return;
+      const count = list.children.length + 1;
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white animate-in fade-in duration-150';
+      div.innerHTML = `
+        <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문 ${count}</span>
+        <input type="text" placeholder="A안과 B안을 비교할 질문을 입력하세요..." class="flex-1 text-xs font-medium focus:outline-none" />
+        <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+      `;
+      list.appendChild(div);
     }
 
     let currentVoteInputMode = 'image'; // 'image' | 'url'
-
-    function selectVoteSubOption(opt) {
-      currentVoteSubOption = opt;
-      const abBtn = document.getElementById('btn-vote-sub-ab');
-      const designBtn = document.getElementById('btn-vote-sub-design');
-      const landingBtn = document.getElementById('btn-vote-sub-landing');
-
-      if (abBtn) abBtn.className = opt === 'ab' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer';
-      if (designBtn) designBtn.className = opt === 'design' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer';
-      if (landingBtn) landingBtn.className = opt === 'landing' ? 'py-2.5 px-3 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer' : 'py-2.5 px-3 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer';
-
-      // Toggle containers for AB / Design / Landing
-      const contentAb = document.getElementById('vote-content-ab');
-      const contentDesign = document.getElementById('vote-content-design');
-      const contentLanding = document.getElementById('vote-content-landing');
-
-      if (contentAb) contentAb.style.display = opt === 'ab' ? 'flex' : 'none';
-      if (contentDesign) contentDesign.style.display = opt === 'design' ? 'flex' : 'none';
-      if (contentLanding) contentLanding.style.display = opt === 'landing' ? 'flex' : 'none';
-
-      updateVoteSubFieldsDisplay();
-    }
 
     function setVoteInputMode(mode) {
       currentVoteInputMode = mode;
@@ -5175,52 +6304,22 @@
       if (btnImage) btnImage.className = mode === 'image' ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5' : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
       if (btnUrl) btnUrl.className = mode === 'url' ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5' : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
 
-      resetVoteInputs();
-      updateVoteSubFieldsDisplay();
+      const imgBox = document.getElementById('vote-image-input-container');
+      const urlBox = document.getElementById('vote-url-input-container');
+
+      if (imgBox) imgBox.style.display = mode === 'image' ? 'flex' : 'none';
+      if (urlBox) urlBox.style.display = mode === 'url' ? 'flex' : 'none';
     }
 
-    function resetVoteInputs() {
-      // Reset text & file inputs in vote sub form when input mode toggles
-      const inputs = document.querySelectorAll('#sub-form-vote input[type="text"], #sub-form-vote input[type="url"], #sub-form-vote input[type="file"]');
-      inputs.forEach(inp => {
-        if (!inp.closest('#vote-questions-list')) {
-          inp.value = '';
-        }
-      });
-    }
-
-    function updateVoteSubFieldsDisplay() {
-      const mode = currentVoteInputMode;
-      const subOpt = currentVoteSubOption;
-
-      // AB
-      const abImg = document.getElementById('vote-ab-image-fields');
-      const abUrl = document.getElementById('vote-ab-url-fields');
-      if (abImg) abImg.style.display = (subOpt === 'ab' && mode === 'image') ? 'grid' : 'none';
-      if (abUrl) abUrl.style.display = (subOpt === 'ab' && mode === 'url') ? 'flex' : 'none';
-
-      // Design
-      const designImg = document.getElementById('vote-design-image-fields');
-      const designUrl = document.getElementById('vote-design-url-fields');
-      if (designImg) designImg.style.display = (subOpt === 'design' && mode === 'image') ? 'flex' : 'none';
-      if (designUrl) designUrl.style.display = (subOpt === 'design' && mode === 'url') ? 'flex' : 'none';
-
-      // Landing
-      const landingImg = document.getElementById('vote-landing-image-fields');
-      const landingUrl = document.getElementById('vote-landing-url-fields');
-      if (landingImg) landingImg.style.display = (subOpt === 'landing' && mode === 'image') ? 'flex' : 'none';
-      if (landingUrl) landingUrl.style.display = (subOpt === 'landing' && mode === 'url') ? 'flex' : 'none';
-    }
-
-    function addVoteDesignUrlItem() {
-      const list = document.getElementById('vote-design-url-list');
+    function addVoteUrlItem() {
+      const list = document.getElementById('vote-url-list');
       if (!list) return;
       const count = list.children.length + 1;
       const div = document.createElement('div');
       div.className = 'flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white animate-in fade-in duration-150';
       div.innerHTML = `
-        <span class="text-xs font-bold text-neutral-500 shrink-0">시안 ${count}</span>
-        <input type="url" placeholder="https://figma.com/file/... 또는 시안 URL" class="flex-1 text-xs font-medium focus:outline-none" />
+        <span class="text-xs font-bold text-neutral-500 shrink-0">항목 ${count}</span>
+        <input type="url" placeholder="https://example.com" class="flex-1 text-xs font-medium focus:outline-none" />
         <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
       `;
       list.appendChild(div);
@@ -6236,6 +7335,7 @@
       updateAllCoinDisplays();
       updatePledgeModalUI();
       calculateTotalCost();
+      renderNotificationsUI();
       navigateTo('landing');
     });
   </script>
