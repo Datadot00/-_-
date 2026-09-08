@@ -3054,15 +3054,14 @@
   </div>
 
 
-  <!-- ========================================================
-       VIEW 6: CREATOR FEEDBACK DASHBOARD (SCR-16 / SCR-17 완벽 1:1 복제)
-       Step 5: 5초 후 90% -> 100% 목표 달성 애니메이션 + 축하 모달 + 답글 등록 + 테스터 업데이트 알림 전송
-  ======================================================== -->
+  <!-- ==========================================================
+       VIEW 6: CREATOR FEEDBACK DASHBOARD (SCR-16 / SCR-17)
+  ========================================================== -->
   <div id="view-feedback" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
 
-    <!-- Left Sidebar (Feedback Dashboard LNB) -->
+    <!-- Left Sidebar (Home standard layout) -->
     <aside
-      class="w-64 bg-[#F2F5E8] border-r border-[#E5EAD4] flex flex-col justify-between p-6 shrink-0 sticky top-0 h-screen">
+      class="w-64 bg-[#F2F5E8] border-r border-[#E5EAD4] flex flex-col justify-between p-6 shrink-0 sticky top-0 h-screen overflow-y-auto">
       <div class="flex flex-col gap-8">
         <div class="cursor-pointer" onclick="navigateTo('landing')">
           <div class="flex items-center gap-2.5 mb-1">
@@ -3076,39 +3075,130 @@
         <nav data-service-sidebar-nav class="flex flex-col gap-1.5 text-[15px]" aria-label="주요 메뉴"></nav>
       </div>
 
-      <button onclick="navigateTo('explore')"
-        class="w-full py-3 rounded-xl border border-[#D5DCBF] text-neutral-dark font-bold text-xs hover:bg-white/80 transition-all">
-        ← 피드로 돌아가기
+      <!-- Bottom Start New Project Button -->
+      <button onclick="navigateTo('create')"
+        class="w-full py-3 bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] rounded-2xl font-black text-sm transition-all shadow-xs flex items-center justify-center gap-2 border border-[#96D15E]">
+        <span class="text-base font-bold">+</span>
+        <span>Start New Project</span>
       </button>
     </aside>
 
-    <!-- Main Feedback Analytics Content Area -->
-    <main class="flex-1 p-8 lg:p-10 max-w-[1240px] flex flex-col gap-8 overflow-y-auto">
-
-      <!-- Top Title Area with Status Badge & Primary CTA Button -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200/70 pb-6">
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Utility Header Bar -->
+      <header
+        class="h-20 border-b border-[#ECEFE2] bg-white/80 backdrop-blur-sm px-8 flex items-center justify-between sticky top-0 z-20 shrink-0">
         <div>
-          <div class="flex items-center gap-3 mb-1.5">
-            <h1 class="text-3xl font-extrabold text-neutral-dark tracking-tight">
-              테스터 피드백 리포트
-            </h1>
-            <!-- Status Badge: Dynamic toggle between [모집 중] -> [테스트 종료] -->
-            <span id="test-status-badge"
-              class="px-3 py-1 rounded-full bg-primary/30 text-[#214c0c] text-xs font-extrabold border border-primary/60 transition-all">
-              [모집 중]
-            </span>
-          </div>
-          <p class="text-sm text-neutral-muted">
-            참여한 테스터들의 생생한 의견을 확인하고, 유저 피드백을 반영해 프로덕트를 고도화하세요.
-          </p>
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">ANALYTICS & FEEDBACK</p>
+          <h2 class="text-base font-extrabold text-neutral-dark">피드백 리포트</h2>
         </div>
 
-        <!-- Primary CTA: [🚀 유저 리뷰 기반 업데이트 완료 알림 테스터에게 보내기] -->
-        <button id="btn-notify-testers" onclick="openNotifyModal()"
-          class="px-5 py-3 rounded-xl bg-primary text-neutral-dark font-extrabold text-xs shadow-sm hover:bg-primary-hover active:scale-98 transition-all flex items-center justify-center gap-2 border border-primary-dark/20 shrink-0">
-          <span>🚀 유저 리뷰 기반 업데이트 완료 알림 테스터에게 보내기</span>
-        </button>
-      </div>
+        <div class="flex items-center gap-3.5">
+          <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
+            title="내 보유 동전">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 동전</span>
+            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+              onerror="this.onerror=null; this.src='./logo-coin.png';" />
+            <span class="text-xs font-bold text-[#574B1A]">1,250 C</span>
+          </div>
+
+          <div onclick="navigateToMypageSection('mypage-profile-section', 'profile')"
+            class="flex items-center gap-2 pl-2 cursor-pointer group">
+            <div
+              class="w-9 h-9 rounded-full border border-neutral-200 bg-[#FAFBF7] overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+              <span class="text-sm">👤</span>
+            </div>
+            <div class="hidden sm:flex flex-col text-left">
+              <span class="text-[10px] text-neutral-400">환영해요!</span>
+              <span data-auth-email
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">sknye1004@gmail.com</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Feedback Analytics Content Area -->
+      <main class="flex-1 p-8 lg:p-10 max-w-[1240px] w-full mx-auto flex flex-col gap-8">
+
+        <!-- Top Navigation Bar (Back Icon Button placed in Main Area) -->
+        <div class="flex items-center justify-between pb-2 border-b border-neutral-200/60">
+          <button onclick="window.history.length > 1 ? window.history.back() : navigateToMypageSection('mypage-projects-section', 'my-projects')"
+            class="w-9 h-9 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-extrabold text-sm transition-all shadow-2xs flex items-center justify-center cursor-pointer"
+            title="직전 화면으로 돌아가기">
+            <span>←</span>
+          </button>
+
+          <div class="flex items-center gap-2 text-xs text-neutral-400 font-medium">
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+            <span>&gt;</span>
+            <span class="cursor-pointer hover:underline" onclick="navigateToMypageSection('mypage-projects-section', 'my-projects')">내 프로젝트</span>
+            <span>&gt;</span>
+            <span class="font-bold text-neutral-700">피드백 리포트</span>
+          </div>
+        </div>
+
+        <!-- Project Display Card (Fixed Title without Select Toggle) -->
+        <div class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <!-- Icon -->
+            <div class="w-10 h-10 rounded-xl bg-[#E8F5E9] border border-[#C8E6C9] flex items-center justify-center text-lg shrink-0">
+              📋
+            </div>
+
+            <!-- Project Title & Subtitle -->
+            <div class="flex flex-col gap-0.5 min-w-0">
+              <div class="flex items-center gap-2">
+                <h3 id="feedback-project-title" class="text-base font-extrabold text-neutral-dark tracking-tight">
+                  머니로그
+                </h3>
+                <span class="px-2 py-0.5 rounded bg-neutral-100 text-neutral-500 text-[10px] font-bold">v1.2.0-rc</span>
+              </div>
+              <p id="feedback-project-subtext" class="text-xs text-neutral-500 font-medium truncate">
+                AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
+              </p>
+            </div>
+          </div>
+
+          <!-- Tags & Detail Button -->
+          <div class="flex items-center gap-3 shrink-0">
+            <span id="feedback-project-category-tag" class="px-2.5 py-1 rounded-lg bg-neutral-100 text-neutral-600 text-xs font-bold">
+              프로덕트 테스트
+            </span>
+            <span id="feedback-project-status-tag" class="px-2.5 py-1 rounded-lg bg-[#EBF7E2] text-[#25500F] text-xs font-extrabold border border-[#D0E8BD]">
+              모집 완료
+            </span>
+            <span class="text-neutral-300">|</span>
+            <button onclick="navigateTo('post')"
+              class="text-xs font-bold text-neutral-700 hover:text-neutral-dark flex items-center gap-1 transition-colors">
+              <span>테스트 상세보기</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Title Area with Status Badge & Primary CTA Button -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200/70 pb-6">
+          <div>
+            <div class="flex items-center gap-3 mb-1.5">
+              <h1 class="text-3xl font-extrabold text-neutral-dark tracking-tight">
+                테스터 피드백 리포트
+              </h1>
+              <!-- Status Badge: Dynamic toggle between [모집 중] -> [테스트 종료] -->
+              <span id="test-status-badge"
+                class="px-3 py-1 rounded-full bg-primary/30 text-[#214c0c] text-xs font-extrabold border border-primary/60 transition-all">
+                [모집 중]
+              </span>
+            </div>
+            <p class="text-sm text-neutral-muted">
+              참여한 테스터들의 생생한 의견을 확인하고, 유저 피드백을 반영해 프로덕트를 고도화하세요.
+            </p>
+          </div>
+
+          <!-- Primary CTA: [🚀 유저 리뷰 기반 업데이트 완료 알림 테스터에게 보내기] -->
+          <button id="btn-notify-testers" onclick="openNotifyModal()"
+            class="px-5 py-3 rounded-xl bg-primary text-neutral-dark font-extrabold text-xs shadow-sm hover:bg-primary-hover active:scale-98 transition-all flex items-center justify-center gap-2 border border-primary-dark/20 shrink-0">
+            <span>🚀 유저 리뷰 기반 업데이트 완료 알림 테스터에게 보내기</span>
+          </button>
+        </div>
 
       <!-- 3 Summary Metrics Cards -->
       <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -3375,6 +3465,7 @@
 
     </main>
   </div>
+</div>
 
 
 
@@ -3765,7 +3856,7 @@
   ======================================================== -->
   <div id="view-mypage" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
 
-    <!-- Left Sidebar LNB (Reference: dektop-mypage.png) -->
+    <!-- Left Sidebar LNB (Home standard layout) -->
     <aside
       class="w-64 bg-[#F2F5E8] border-r border-[#E5EAD4] flex flex-col justify-between p-6 shrink-0 sticky top-0 h-screen overflow-y-auto">
       <div class="flex flex-col gap-6">
@@ -3780,54 +3871,70 @@
           <p class="text-[11px] font-medium text-[#7A8A62] tracking-wide">Gentle Accountability</p>
         </div>
 
-        <!-- Mini Profile Card -->
-        <div class="bg-white/80 rounded-xl p-3 border border-[#E0E7CF] flex items-center gap-2.5 shadow-2xs">
-          <div
-            class="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-sm shrink-0">
-            🐶
-          </div>
-          <div class="min-w-0">
-            <span data-auth-email class="font-extrabold text-xs text-neutral-dark block truncate">로그인 사용자</span>
-            <span class="text-[10px] text-primary-dark font-bold">🏆 상위 3% 테스터</span>
-          </div>
-        </div>
-
         <!-- Navigation Menu -->
         <nav data-service-sidebar-nav class="flex flex-col gap-1.5 text-[15px]" aria-label="주요 메뉴"></nav>
       </div>
 
-      <!-- Bottom Pink Promo Box -->
-      <div
-        class="bg-[#FFF5F7] rounded-xl border border-[#FED7E2] p-3 text-[11px] text-[#9B2C4E] flex flex-col gap-1.5 mt-4">
-        <span class="font-extrabold flex items-center gap-1">💡 문방구 신상 입고!</span>
-        <p class="leading-relaxed text-[10px] text-neutral-600">
-          네이버페이 5천원권과 피그마 UI 키트가 추가 입고되었습니다.
-        </p>
-        <button onclick="navigateTo('market')" class="text-left font-bold text-[#BE185D] hover:underline text-[10px]">
-          상점 바로가기 →
-        </button>
-      </div>
+      <!-- Bottom Start New Project Button -->
+      <button onclick="navigateTo('create')"
+        class="w-full py-3 bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] rounded-2xl font-black text-sm transition-all shadow-xs flex items-center justify-center gap-2 border border-[#96D15E]">
+        <span class="text-base font-bold">+</span>
+        <span>Start New Project</span>
+      </button>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-8 lg:p-10 max-w-[1180px] flex flex-col gap-7 overflow-y-auto" id="mypage-main-scroll">
-
-      <!-- Top Breadcrumb & Live Sync -->
-      <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
-        <div class="flex items-center gap-2 font-medium">
-          <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
-          <span>&gt;</span>
-          <span class="cursor-pointer hover:underline" onclick="navigateTo('mypage')">마이페이지</span>
-          <span>&gt;</span>
-          <span class="font-bold text-neutral-700">내 정보</span>
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto" id="mypage-main-scroll">
+      <!-- Utility Header Bar -->
+      <header
+        class="h-20 border-b border-[#ECEFE2] bg-white/80 backdrop-blur-sm px-8 flex items-center justify-between sticky top-0 z-20 shrink-0">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">MY ACCOUNT & PROFILE</p>
+          <h2 class="text-base font-extrabold text-neutral-dark">내 정보</h2>
         </div>
 
-        <div
-          class="flex items-center gap-1.5 text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          실시간 활동 동기화 중
+        <div class="flex items-center gap-3.5">
+          <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
+            title="내 보유 동전">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 동전</span>
+            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+              onerror="this.onerror=null; this.src='./logo-coin.png';" />
+            <span class="text-xs font-bold text-[#574B1A]">1,250 C</span>
+          </div>
+
+          <div onclick="navigateToMypageSection('mypage-profile-section', 'profile')"
+            class="flex items-center gap-2 pl-2 cursor-pointer group">
+            <div
+              class="w-9 h-9 rounded-full border border-neutral-200 bg-[#FAFBF7] overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+              <span class="text-sm">👤</span>
+            </div>
+            <div class="hidden sm:flex flex-col text-left">
+              <span class="text-[10px] text-neutral-400">환영해요!</span>
+              <span data-auth-email
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">sknye1004@gmail.com</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 p-8 lg:p-10 max-w-[1180px] w-full mx-auto flex flex-col gap-7">
+
+        <!-- Top Breadcrumb & Live Sync -->
+        <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
+          <div class="flex items-center gap-2 font-medium">
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+            <span>&gt;</span>
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('mypage')">마이페이지</span>
+            <span>&gt;</span>
+            <span class="font-bold text-neutral-700" id="mypage-breadcrumb-current">프로필</span>
+          </div>
+
+          <div
+            class="flex items-center gap-1.5 text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            실시간 활동 동기화 중
+          </div>
+        </div>
 
       <!-- User Profile Header Card (With Circular 100% Progress Ring) -->
       <section id="mypage-profile-section"
@@ -3934,7 +4041,7 @@
       </section>
 
       <!-- Special Reward Banner (다른 바이브코딩 프로젝트 피드백 3회 완료로 티켓 획득) -->
-      <section
+      <section id="mypage-profile-banner"
         class="bg-[#F8F9F0] border border-[#E4EACF] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <span
@@ -3957,7 +4064,7 @@
       </section>
 
       <!-- 2-Column Recommended Cards -->
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <section id="mypage-profile-cards" class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
         <!-- Card 1: 참여 대기 중인 맞춤 테스트 -->
         <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col justify-between">
@@ -4012,88 +4119,262 @@
 
       </section>
 
-      <!-- Section: 내 서비스 관리 -->
-      <section id="mypage-projects-section" class="flex flex-col gap-4 scroll-mt-6">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🍱</span>
-            <h3 class="text-base font-extrabold text-neutral-dark">내 서비스 관리</h3>
-            <span class="text-xs text-neutral-400 font-normal">등록한 프로젝트의 모집 현황과 테스터들이 작성한 피드백을 실시간 확인하세요.</span>
+      <!-- Section: 내 프로젝트 (User Reference Design 1:1) -->
+      <section id="mypage-projects-section" class="flex flex-col gap-5 scroll-mt-6">
+
+        <!-- Top Header & User Coin / Profile Row -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <h2 class="text-2xl font-black text-neutral-dark tracking-tight">내 프로젝트</h2>
+            <span class="px-2.5 py-0.5 rounded-full bg-neutral-200 text-neutral-600 text-xs font-bold">총 6개</span>
           </div>
+
+          <!-- User Coin & Profile Badge -->
+          <div class="flex items-center gap-3">
+            <div class="bg-[#FFFDF0] border border-[#F5E8B8] px-3 py-1.5 rounded-full flex items-center gap-2 shadow-2xs">
+              <div class="w-5 h-5 rounded-full bg-[#E5A93B] text-white flex items-center justify-center text-xs font-black">🪙</div>
+              <span class="text-xs font-medium text-neutral-600">내 보유 돼지코인:</span>
+              <span class="text-sm font-black text-neutral-dark">3,450 C</span>
+            </div>
+
+            <div class="flex items-center gap-2 bg-white border border-neutral-200 px-3 py-1.5 rounded-full shadow-2xs">
+              <div class="w-6 h-6 rounded-full bg-neutral-100 flex items-center justify-center text-xs overflow-hidden border border-neutral-200">
+                🐶
+              </div>
+              <span class="text-xs font-extrabold text-neutral-dark">바이브코더102</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-neutral-500 font-medium -mt-2">
+          내가 등록한 피드백 모집 프로젝트와 테스터 현황을 한눈에 관리하세요.
+        </p>
+
+        <!-- Main Nav Tabs (등록 프로젝트 관리 / 참여 프로젝트 관리 / 동전 내역 & 적립 + 프로젝트 등록 버튼) -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2">
+          <div class="inline-flex items-center bg-[#EDEDED] p-1 rounded-2xl gap-1 max-w-full overflow-x-auto">
+            <button type="button" onclick="switchMyProjectTab('registered')" id="myproj-tab-registered"
+              class="px-4 py-2 rounded-xl text-xs font-extrabold bg-[#191A1C] text-white shadow-xs flex items-center gap-2 transition-all">
+              <span>📂 등록 프로젝트 관리</span>
+              <span class="w-4 h-4 rounded-full bg-neutral-700 text-white text-[10px] flex items-center justify-center font-bold">6</span>
+            </button>
+            <button type="button" onclick="switchMyProjectTab('participated')" id="myproj-tab-participated"
+              class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
+              <span>📝 참여 프로젝트 관리</span>
+              <span class="px-2 py-0.5 rounded-full bg-[#FCE7F3] text-[#BE185D] text-[10px] font-extrabold">리뷰 대기 1</span>
+            </button>
+            <button type="button" onclick="switchMyProjectTab('coins')" id="myproj-tab-coins"
+              class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
+              <span>🪙 동전 내역 & 적립</span>
+            </button>
+          </div>
+
           <button onclick="navigateTo('create')"
-            class="px-3 py-1.5 rounded-lg bg-primary-dark text-white text-xs font-bold hover:bg-neutral-800 transition-colors flex items-center gap-1">
-            <span>+</span> 새 테스트 등록하기
+            class="px-5 py-2.5 rounded-2xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-xs transition-all shadow-xs flex items-center justify-center gap-1.5 shrink-0">
+            <span class="text-sm font-bold">+</span> 프로젝트 등록
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <!-- Card: 결과 및 피드백 -->
-          <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between text-xs mb-3">
-                <span class="font-bold text-neutral-dark flex items-center gap-1.5">
-                  <span>📊</span> 결과 및 피드백
-                </span>
-                <span class="px-2 py-0.5 rounded-full bg-primary/20 text-[#25500F] text-[10px] font-extrabold">누적 8건
-                  도착</span>
-              </div>
-              <p class="text-xs text-neutral-500 mb-3 font-normal">등록된 2개 프로젝트의 테스터 피드백 요약 및 상세 리포트</p>
+        <!-- Filter Sub-Tabs & Sorting -->
+        <div class="flex items-center justify-between pt-2 border-t border-neutral-200/50">
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="filterMyProjects('all')" id="myproj-filter-all"
+              class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-[#B4E380] text-[#1E3E0B] transition-all">
+              전체 (6)
+            </button>
+            <button type="button" onclick="filterMyProjects('active')" id="myproj-filter-active"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
+              진행중인 프로젝트 (2)
+            </button>
+            <button type="button" onclick="filterMyProjects('completed')" id="myproj-filter-completed"
+              class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
+              진행완료 프로젝트 (4)
+            </button>
+          </div>
 
-              <div class="space-y-2 text-xs">
-                <div class="p-2.5 bg-[#FAFBF8] rounded-xl border border-neutral-100 flex items-center justify-between">
-                  <span class="font-bold text-neutral-700">AI 채용 서류 분석기 (Ver 1.0)</span>
-                  <span class="text-primary-dark font-extrabold">피드백 5건</span>
+          <button type="button" class="text-xs font-semibold text-neutral-500 hover:text-neutral-800 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M6 12h12M9 20h6" />
+            </svg>
+            최신 등록순
+          </button>
+        </div>
+
+        <!-- Project Cards Container -->
+        <div class="flex flex-col gap-4" id="myproj-cards-list">
+
+          <!-- Card 1: [진행중] AI 영수증 인식 스마트 가계부 베타테스터 모집 -->
+          <div class="myproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle" data-status="active">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-4">
+                <!-- Thumbnail -->
+                <div class="w-16 h-16 rounded-2xl bg-[#E8F5E9] border border-[#C8E6C9] flex flex-col items-center justify-center relative p-1 shrink-0">
+                  <div class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">📱</div>
+                  <span class="text-[9px] font-black text-white bg-[#43A047] px-1 rounded mt-1">APP</span>
                 </div>
-                <div class="p-2.5 bg-[#FAFBF8] rounded-xl border border-neutral-100 flex items-center justify-between">
-                  <span class="font-bold text-neutral-700">노코드 템플릿 마켓플레이스</span>
-                  <span class="text-primary-dark font-extrabold">피드백 3건</span>
+
+                <!-- Content Info -->
+                <div class="flex flex-col gap-1.5">
+                  <div class="flex items-center gap-2 flex-wrap text-xs">
+                    <span class="px-2.5 py-0.5 rounded-full bg-[#B4E380] text-[#1E3E0B] font-extrabold text-[11px]">
+                      ● 진행중
+                    </span>
+                    <span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-bold">
+                      [프로덕트 테스트]
+                    </span>
+                    <span class="text-[11px] text-neutral-400 font-medium">
+                      📅 등록일: 2026.09.01 (마감 D-4)
+                    </span>
+                  </div>
+
+                  <h3 class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors" onclick="navigateTo('post')">
+                    AI 영수증 인식 스마트 가계부 베타테스터 모집
+                  </h3>
+
+                  <!-- Progress & Reward Details -->
+                  <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs pt-1">
+                    <div class="flex items-center gap-2 min-w-[200px]">
+                      <span class="font-bold text-neutral-700">모집률 <strong class="text-neutral-dark font-black">28/50명</strong></span>
+                      <div class="w-28 h-2 bg-neutral-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-[#B4E380] rounded-full" style="width: 56%;"></div>
+                      </div>
+                      <span class="font-extrabold text-emerald-700 text-[11px]">56% 달성</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 bg-[#FFFDF0] px-2.5 py-1 rounded-lg border border-[#F5E8B8]">
+                      <span class="text-neutral-500 font-medium text-[11px]">지급 리워드</span>
+                      <span class="font-black text-[#D97706] text-xs">🪙 500 C / 명</span>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              <!-- Top Right Action Icons -->
+              <div class="flex items-center gap-1 text-neutral-400">
+                <button type="button" onclick="alert('프로젝트 수정 화면으로 이동합니다.')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors" title="수정">
+                  ✏️
+                </button>
+                <button type="button" onclick="confirm('프로젝트를 삭제하시겠습니까?') && alert('삭제되었습니다.')" class="p-1.5 hover:text-red-600 rounded-lg hover:bg-neutral-100 transition-colors" title="삭제">
+                  🗑️
+                </button>
               </div>
             </div>
 
-            <div class="flex items-center justify-between pt-3 border-t border-neutral-100 mt-4 text-xs">
-              <span class="text-[11px] text-neutral-400">최근 피드백: 35분 전 접수</span>
-              <button onclick="navigateTo('feedback')" class="font-bold text-primary-dark hover:underline">
-                피드백 전체보기 ›
+            <!-- Card Bottom Buttons -->
+            <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+              <button onclick="navigateTo('post')"
+                class="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+                <span>👁️ 상세 화면</span>
+              </button>
+              <button onclick="navigateTo('feedback')"
+                class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 relative">
+                <span>📊 결과 및 피드백</span>
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
               </button>
             </div>
           </div>
 
-          <!-- Card: 등록한 테스트 관리 -->
-          <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between text-xs mb-3">
-                <span class="font-bold text-neutral-dark flex items-center gap-1.5">
-                  <span>📋</span> 등록한 테스트 관리
-                </span>
-                <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-extrabold">모집 진행중
-                  1건</span>
-              </div>
-              <p class="text-xs text-neutral-500 mb-3 font-normal">모집 목표 달성률 및 테스터 진행 현황 실시간 트래킹</p>
+          <!-- Card 2: [진행완료] SaaS 카피라이팅 A/B 테스트 -->
+          <div class="myproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle" data-status="completed">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-4">
+                <!-- Thumbnail -->
+                <div class="w-16 h-16 rounded-2xl bg-neutral-100 border border-neutral-200 flex flex-col items-center justify-center relative p-1 shrink-0">
+                  <div class="text-xs font-extrabold text-neutral-500">A vs B</div>
+                  <span class="text-[9px] font-bold text-neutral-500 mt-1">A/B</span>
+                </div>
 
-              <div class="p-3 bg-[#FAFBF8] rounded-xl border border-neutral-100 flex flex-col gap-2">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="font-bold text-neutral-800">AI 채용 서류 분석기</span>
-                  <span class="text-[10px] text-[#25500F] font-bold bg-primary/20 px-2 py-0.5 rounded">모집중 (D-3)</span>
+                <!-- Content Info -->
+                <div class="flex flex-col gap-1.5">
+                  <div class="flex items-center gap-2 flex-wrap text-xs">
+                    <span class="px-2 py-0.5 rounded-md bg-neutral-200 text-neutral-700 text-[11px] font-bold">
+                      진행 완료
+                    </span>
+                    <span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-bold">
+                      [A/B 투표]
+                    </span>
+                    <span class="text-[11px] text-neutral-400 font-medium">
+                      완료일: 2026.08.20
+                    </span>
+                  </div>
+
+                  <h3 class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors" onclick="navigateTo('post')">
+                    SaaS 카피라이팅 A/B 테스트
+                  </h3>
+
+                  <!-- Details Row -->
+                  <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-600 pt-1">
+                    <span>최종 완료 인원: <strong class="text-neutral-dark font-extrabold">30/30명(100%)</strong></span>
+                    <span class="text-neutral-300">|</span>
+                    <span class="flex items-center gap-1 font-bold text-amber-900">
+                      ⭐ 평균 만족도 <strong class="text-neutral-dark font-extrabold">4.8</strong> /5.0
+                    </span>
+                    <span class="text-neutral-300">|</span>
+                    <span>지급 완료 동전: <strong class="text-neutral-dark font-extrabold">6,000C</strong></span>
+                  </div>
                 </div>
-                <div class="w-full h-2 bg-neutral-200 rounded-full overflow-hidden">
-                  <div class="h-full bg-primary rounded-full" style="width: 75%;"></div>
-                </div>
-                <div class="flex items-center justify-between text-[10px] text-neutral-500">
-                  <span>참여율 15 / 20명 (75%)</span>
-                  <span>보상 500 C 지급 완료 5건</span>
-                </div>
+              </div>
+
+              <!-- Top Right Action Icons (Disabled or muted for completed) -->
+              <div class="flex items-center gap-1 text-neutral-300">
+                <span class="p-1.5 cursor-not-allowed" title="완료된 프로젝트">⚔️</span>
+                <button type="button" onclick="confirm('프로젝트를 삭제하시겠습니까?') && alert('삭제되었습니다.')" class="p-1.5 hover:text-red-600 rounded-lg hover:bg-neutral-100 transition-colors" title="삭제">
+                  🗑️
+                </button>
               </div>
             </div>
 
-            <div class="flex items-center justify-between pt-3 border-t border-neutral-100 mt-4 text-xs">
-              <span class="text-[11px] text-neutral-400">완료된 테스트 1건 보관됨</span>
-              <button onclick="navigateTo('post')" class="font-bold text-neutral-700 hover:underline">
-                테스트 상세 관리 ›
+            <!-- Card Bottom Buttons -->
+            <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+              <button onclick="navigateTo('post')"
+                class="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+                <span>👁️ 상세 화면</span>
+              </button>
+              <button onclick="navigateTo('abtest')"
+                class="px-4 py-2 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] text-xs font-black transition-all shadow-xs flex items-center gap-1.5">
+                <span>📊 결과 리포트 보기</span>
               </button>
             </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Promo Banner (User Screenshot 1:1) -->
+        <div class="bg-[#FFFDF0] border border-[#F5E8B8] rounded-2xl p-5 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4 mt-2">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-[#FFF3C4] border border-[#F3E297] flex items-center justify-center text-2xl shrink-0">
+              🐷
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-sm font-extrabold text-neutral-dark">
+                  테스트를 제공하고 모은 동전, 지금 바로 바꿔보세요!
+                </h4>
+                <span class="px-2 py-0.5 rounded-full bg-white border border-[#E9D68A] text-[#8C6D1F] text-[10px] font-black">
+                  즉시 수령
+                </span>
+              </div>
+              <p class="text-xs text-neutral-600 font-medium mt-1 flex items-center gap-2 flex-wrap">
+                <span class="text-emerald-700 font-bold">📈 최근 적립: +600 C (어제 완료 건)</span>
+                <span class="text-neutral-300">·</span>
+                <span>교환 가능한 기프티콘 14개 대기 중</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="navigateToMypageSection('mypage-market-section', 'coins')"
+              class="px-4 py-2.5 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-800 text-xs font-bold transition-all shadow-2xs">
+              📋 동전 내역 상세
+            </button>
+            <button onclick="navigateTo('market')"
+              class="px-4 py-2.5 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1">
+              <span>돼코상점 전체 보기</span>
+              <span>→</span>
+            </button>
           </div>
         </div>
+
       </section>
 
       <!-- ========================================================
@@ -4242,6 +4523,7 @@
 
     </main>
   </div>
+</div>
 
 
 
@@ -4249,7 +4531,7 @@
        VIEW 9: NOTIFICATIONS PAGE (알림 화면)
   ======================================================== -->
   <div id="view-notifications" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
-    <!-- Left Sidebar LNB -->
+    <!-- Left Sidebar LNB (Home standard layout) -->
     <aside
       class="w-64 bg-[#F2F5E8] border-r border-[#E5EAD4] flex flex-col justify-between p-6 shrink-0 sticky top-0 h-screen overflow-y-auto">
       <div class="flex flex-col gap-6">
@@ -4267,84 +4549,113 @@
         <nav data-service-sidebar-nav class="flex flex-col gap-1.5 text-[15px]" aria-label="주요 메뉴"></nav>
       </div>
 
-      <!-- Bottom Pink Promo Box -->
-      <div
-        class="bg-[#FFF5F7] rounded-xl border border-[#FED7E2] p-3 text-[11px] text-[#9B2C4E] flex flex-col gap-1.5 mt-4">
-        <span class="font-extrabold flex items-center gap-1">💡 문방구 신상 입고!</span>
-        <p class="leading-relaxed text-[10px] text-neutral-600">
-          네이버페이 5천원권과 피그마 UI 키트가 추가 입고되었습니다.
-        </p>
-        <button onclick="navigateTo('market')" class="text-left font-bold text-[#BE185D] hover:underline text-[10px]">
-          상점 바로가기 →
-        </button>
-      </div>
+      <!-- Bottom Start New Project Button -->
+      <button onclick="navigateTo('create')"
+        class="w-full py-3 bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] rounded-2xl font-black text-sm transition-all shadow-xs flex items-center justify-center gap-2 border border-[#96D15E]">
+        <span class="text-base font-bold">+</span>
+        <span>Start New Project</span>
+      </button>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-8 lg:p-10 max-w-[1040px] flex flex-col gap-6 overflow-y-auto">
-
-      <!-- Top Breadcrumb & Live Sync Badge -->
-      <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
-        <div class="flex items-center gap-2 font-medium">
-          <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
-          <span>&gt;</span>
-          <span class="cursor-pointer hover:underline" onclick="navigateTo('mypage')">MY</span>
-          <span>&gt;</span>
-          <span class="font-bold text-neutral-700">알림 목록</span>
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Utility Header Bar -->
+      <header
+        class="h-20 border-b border-[#ECEFE2] bg-white/80 backdrop-blur-sm px-8 flex items-center justify-between sticky top-0 z-20 shrink-0">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">REALTIME ACTIVITY</p>
+          <h2 class="text-base font-extrabold text-neutral-dark">알림</h2>
         </div>
 
-        <div
-          class="flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]">
-          <span class="w-2 h-2 rounded-full bg-[#2F6517] animate-pulse"></span>
-          실시간 수신 활성
-        </div>
-      </div>
-
-      <!-- Header Card -->
-      <section
-        class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex items-start justify-between">
-        <div class="flex items-center gap-4">
-          <div
-            class="w-12 h-12 rounded-full bg-[#EDF7E5] border border-[#D5E8C4] flex items-center justify-center text-primary-dark text-xl shrink-0">
-            🔔
+        <div class="flex items-center gap-3.5">
+          <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
+            title="내 보유 동전">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 동전</span>
+            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+              onerror="this.onerror=null; this.src='./logo-coin.png';" />
+            <span class="text-xs font-bold text-[#574B1A]">1,250 C</span>
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-2xl font-extrabold text-neutral-dark tracking-tight">알림</h2>
-              <span id="unread-count-badge"
-                class="px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-xs font-extrabold">0</span>
+
+          <div onclick="navigateToMypageSection('mypage-profile-section', 'profile')"
+            class="flex items-center gap-2 pl-2 cursor-pointer group">
+            <div
+              class="w-9 h-9 rounded-full border border-neutral-200 bg-[#FAFBF7] overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+              <span class="text-sm">👤</span>
             </div>
-            <p class="text-xs text-neutral-500 mt-1 font-medium">
-              내 서비스 반응과 관심 테스트 소식을 실시간으로 확인하세요.
-            </p>
+            <div class="hidden sm:flex flex-col text-left">
+              <span class="text-[10px] text-neutral-400">환영해요!</span>
+              <span data-auth-email
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">sknye1004@gmail.com</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 p-8 lg:p-10 max-w-[1040px] w-full mx-auto flex flex-col gap-6">
+
+        <!-- Top Breadcrumb & Live Sync Badge -->
+        <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
+          <div class="flex items-center gap-2 font-medium">
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+            <span>&gt;</span>
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('mypage')">MY</span>
+            <span>&gt;</span>
+            <span class="font-bold text-neutral-700">알림 목록</span>
+          </div>
+
+          <div
+            class="flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]">
+            <span class="w-2 h-2 rounded-full bg-[#2F6517] animate-pulse"></span>
+            실시간 수신 활성
           </div>
         </div>
 
-        <button type="button" onclick="markAllNotificationsAsRead()"
-          class="text-xs font-bold text-neutral-500 hover:text-[#2F6517] transition-colors flex items-center gap-1 cursor-pointer pt-2">
-          <span>✓</span> 모두 읽음으로 표시
-        </button>
-      </section>
+        <!-- Header Card -->
+        <section
+          class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex items-start justify-between">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-12 h-12 rounded-full bg-[#EDF7E5] border border-[#D5E8C4] flex items-center justify-center text-primary-dark text-xl shrink-0">
+              🔔
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-2xl font-extrabold text-neutral-dark tracking-tight">알림</h2>
+                <span id="unread-count-badge"
+                  class="px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-xs font-extrabold">0</span>
+              </div>
+              <p class="text-xs text-neutral-500 mt-1 font-medium">
+                내 서비스 반응과 관심 테스트 소식을 실시간으로 확인하세요.
+              </p>
+            </div>
+          </div>
 
-      <!-- Notifications Dynamic List Container -->
-      <section id="notifications-list-container" class="flex flex-col gap-6">
-        <!-- Rendered via JavaScript renderNotificationsUI() -->
-      </section>
+          <button type="button" onclick="markAllNotificationsAsRead()"
+            class="text-xs font-bold text-neutral-500 hover:text-[#2F6517] transition-colors flex items-center gap-1 cursor-pointer pt-2">
+            <span>✓</span> 모두 읽음으로 표시
+          </button>
+        </section>
 
-      <!-- Bottom Notice & Settings Link -->
-      <section
-        class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
-        <div class="flex items-center gap-1.5 font-medium">
-          <span>⏱️</span>
-          <span>최근 30일간의 알림만 보관되며 이후 자동 정리됩니다.</span>
-        </div>
-        <button type="button" onclick="navigateTo('notification-settings')"
-          class="text-xs font-bold text-neutral-500 hover:text-neutral-800 underline underline-offset-2 transition-colors cursor-pointer">
-          일괄 수신 설정 편집
-        </button>
-      </section>
+        <!-- Notifications Dynamic List Container -->
+        <section id="notifications-list-container" class="flex flex-col gap-6">
+          <!-- Rendered via JavaScript renderNotificationsUI() -->
+        </section>
 
-    </main>
+        <!-- Bottom Notice & Settings Link -->
+        <section
+          class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
+          <div class="flex items-center gap-1.5 font-medium">
+            <span>⏱️</span>
+            <span>최근 30일간의 알림만 보관되며 이후 자동 정리됩니다.</span>
+          </div>
+          <button type="button" onclick="navigateTo('notification-settings')"
+            class="text-xs font-bold text-neutral-500 hover:text-neutral-800 underline underline-offset-2 transition-colors cursor-pointer">
+            일괄 수신 설정 편집
+          </button>
+        </section>
+
+      </main>
+    </div>
   </div>
 
   <!-- ========================================================
@@ -4524,7 +4835,7 @@
 
     function getServiceSidebarNavigationMarkup() {
       return `
-        <a href="#all-projects" data-sidebar-item="all-projects"
+        <button type="button" data-sidebar-item="all-projects"
           onclick="navigateTo('explore'); return false;"
           class="${sidebarTopItemBaseClass} ${sidebarTopItemInactiveClass}">
           <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -4532,9 +4843,9 @@
               d="M4 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z" />
           </svg>
           <span>전체 프로젝트</span>
-        </a>
+        </button>
 
-        <a href="#market" data-sidebar-item="market"
+        <button type="button" data-sidebar-item="market"
           onclick="navigateTo('market'); return false;"
           class="${sidebarTopItemBaseClass} ${sidebarTopItemInactiveClass}">
           <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -4542,7 +4853,7 @@
               d="M3 10h18M5 10l1-5h12l1 5m-14 0v9h14v-9M9 14h6v5" />
           </svg>
           <span>돼코 상점</span>
-        </a>
+        </button>
 
         <div class="flex flex-col gap-1">
           <button type="button" data-sidebar-item="my-info" aria-expanded="false"
@@ -4560,22 +4871,22 @@
 
           <div data-sidebar-submenu class="hidden ml-6 pl-3 border-l border-[#D5DCBF] flex flex-col gap-0.5"
             aria-label="내정보 하위 메뉴">
-            <a href="#profile" data-sidebar-subitem="profile"
+            <button type="button" data-sidebar-subitem="profile"
               onclick="navigateToMypageSection('mypage-profile-section', 'profile'); return false;"
               class="${sidebarSubItemBaseClass} ${sidebarSubItemInactiveClass}">
               <span>프로필</span>
-            </a>
-            <a href="#my-projects" data-sidebar-subitem="my-projects"
+            </button>
+            <button type="button" data-sidebar-subitem="my-projects"
               onclick="navigateToMypageSection('mypage-projects-section', 'my-projects'); return false;"
               class="${sidebarSubItemBaseClass} ${sidebarSubItemInactiveClass}">
               <span>내 프로젝트</span>
-            </a>
-            <a href="#coin-history" data-sidebar-subitem="coins"
+            </button>
+            <button type="button" data-sidebar-subitem="coins"
               onclick="navigateToMypageSection('mypage-market-section', 'coins'); return false;"
               class="${sidebarSubItemBaseClass} ${sidebarSubItemInactiveClass}">
               <span>동전내역&amp;적립</span>
               <span data-sidebar-coin class="text-[10px] font-bold text-primary-dark whitespace-nowrap"></span>
-            </a>
+            </button>
             <button type="button" data-sidebar-subitem="support"
               onclick="showSidebarFeatureNotice('고객센터', '🎧')"
               class="${sidebarSubItemBaseClass} ${sidebarSubItemInactiveClass}">
@@ -4662,21 +4973,123 @@
       updateMyInfoSidebarDisclosure();
     }
 
+    function showMypageSectionOnly(sectionKey = 'profile') {
+      const profileSec = document.getElementById('mypage-profile-section');
+      const profileExtraSec1 = document.getElementById('mypage-profile-banner');
+      const profileExtraSec2 = document.getElementById('mypage-profile-cards');
+      const projectsSec = document.getElementById('mypage-projects-section');
+      const marketSec = document.getElementById('mypage-market-section');
+
+      if (profileSec) profileSec.classList.add('hidden');
+      if (profileExtraSec1) profileExtraSec1.classList.add('hidden');
+      if (profileExtraSec2) profileExtraSec2.classList.add('hidden');
+      if (projectsSec) projectsSec.classList.add('hidden');
+      if (marketSec) marketSec.classList.add('hidden');
+
+      const breadcrumbLabel = document.getElementById('mypage-breadcrumb-current');
+
+      if (sectionKey === 'profile') {
+        if (profileSec) profileSec.classList.remove('hidden');
+        if (profileExtraSec1) profileExtraSec1.classList.remove('hidden');
+        if (profileExtraSec2) profileExtraSec2.classList.remove('hidden');
+        if (breadcrumbLabel) breadcrumbLabel.textContent = '프로필';
+      } else if (sectionKey === 'my-projects' || sectionKey === 'my-projects-section' || sectionKey === 'projects') {
+        if (projectsSec) projectsSec.classList.remove('hidden');
+        if (breadcrumbLabel) breadcrumbLabel.textContent = '내 프로젝트';
+      } else if (sectionKey === 'coins') {
+        if (marketSec) marketSec.classList.remove('hidden');
+        if (breadcrumbLabel) breadcrumbLabel.textContent = '동전내역 & 적립';
+      }
+    }
+
     function navigateToMypageSection(sectionId, sectionKey = 'profile') {
       isMyInfoSidebarExpanded = true;
-      navigateTo('mypage');
       currentMypageSection = sectionKey;
+
+      navigateTo('mypage');
+      showMypageSectionOnly(sectionKey);
+
       updateServiceSidebarNavigation('mypage', sectionKey);
       updateServiceTopNavigation('mypage', sectionKey);
 
-      setTimeout(() => {
-        const target = document.getElementById(sectionId);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      const mainScroll = document.getElementById('mypage-main-scroll');
+      if (mainScroll) mainScroll.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function changeFeedbackReportProject(pVal) {
+      const subtext = document.getElementById('feedback-project-subtext');
+      const catTag = document.getElementById('feedback-project-category-tag');
+      const statusTag = document.getElementById('feedback-project-status-tag');
+      const statusBadge = document.getElementById('test-status-badge');
+
+      const projectData = {
+        p1: { sub: "AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집", cat: "프로덕트 테스트", status: "모집 완료", badge: "[테스트 종료]" },
+        p2: { sub: "영수증 사진 촬영으로 자동 지출 분류 가계부 체험", cat: "앱 테스트", status: "모집 진행중", badge: "[모집 중]" },
+        p3: { sub: "SaaS 랜딩페이지 헤더 메인 카피 A/B 테스트", cat: "A/B 투표", status: "모집 완료", badge: "[테스트 종료]" },
+        p4: { sub: "노코드 피그마 연동 템플릿 마켓플레이스 사용성 검증", cat: "웹 테스트", status: "모집 진행중", badge: "[모집 중]" }
+      };
+
+      const item = projectData[pVal] || projectData.p1;
+      if (subtext) subtext.textContent = item.sub;
+      if (catTag) catTag.textContent = item.cat;
+      if (statusTag) statusTag.textContent = item.status;
+      if (statusBadge) statusBadge.textContent = item.badge;
+
+      showGenericToast(`'${item.cat}' 피드백 리포트 데이터로 전환되었습니다.`, '📊');
     }
 
     function showSidebarFeatureNotice(label, icon) {
       showGenericToast(`${label} 화면은 다음 작업에서 연결할 예정입니다.`, icon);
+    }
+
+    function switchMyProjectTab(tabKey) {
+      const tabs = {
+        registered: document.getElementById('myproj-tab-registered'),
+        participated: document.getElementById('myproj-tab-participated'),
+        coins: document.getElementById('myproj-tab-coins')
+      };
+
+      if (tabKey === 'coins') {
+        navigateToMypageSection('mypage-market-section', 'coins');
+        return;
+      }
+
+      Object.keys(tabs).forEach(k => {
+        if (!tabs[k]) return;
+        if (k === tabKey) {
+          tabs[k].className = 'px-4 py-2 rounded-xl text-xs font-extrabold bg-[#191A1C] text-white shadow-xs flex items-center gap-2 transition-all';
+        } else {
+          tabs[k].className = 'px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all';
+        }
+      });
+    }
+
+    function filterMyProjects(filterType) {
+      const cards = document.querySelectorAll('.myproj-card');
+      cards.forEach(card => {
+        const status = card.dataset.status;
+        if (filterType === 'all' || status === filterType) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      const filters = {
+        all: document.getElementById('myproj-filter-all'),
+        active: document.getElementById('myproj-filter-active'),
+        completed: document.getElementById('myproj-filter-completed')
+      };
+
+      Object.keys(filters).forEach(f => {
+        if (!filters[f]) return;
+        if (f === filterType) {
+          filters[f].className = 'px-3 py-1.5 rounded-xl text-xs font-extrabold bg-[#B4E380] text-[#1E3E0B] transition-all';
+        } else {
+          filters[f].className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all';
+        }
+      });
     }
 
     const topNavItemBaseClass = 'flex items-center gap-1.5 py-2 border-b-2 transition-colors whitespace-nowrap';
@@ -4688,17 +5101,17 @@
 
     function getServiceTopNavigationMarkup() {
       return `
-        <a href="#all-projects" data-top-nav-item="all-projects"
+        <button type="button" data-top-nav-item="all-projects"
           onclick="navigateTo('explore'); return false;"
           class="${topNavItemBaseClass} ${topNavItemInactiveClass}">
           <span>전체 프로젝트</span>
-        </a>
+        </button>
 
-        <a href="#market" data-top-nav-item="market"
+        <button type="button" data-top-nav-item="market"
           onclick="navigateTo('market'); return false;"
           class="${topNavItemBaseClass} ${topNavItemInactiveClass}">
           <span>돼코 상점</span>
-        </a>
+        </button>
 
         <div data-top-myinfo-wrapper class="relative">
           <button type="button" data-top-nav-item="my-info" data-top-myinfo-trigger aria-expanded="false"
@@ -4714,21 +5127,21 @@
           <div data-top-myinfo-menu
             class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 rounded-xl border border-neutral-200 bg-white p-2 shadow-card z-50"
             aria-label="내정보 하위 메뉴">
-            <a href="#profile" data-top-nav-subitem="profile"
+            <button type="button" data-top-nav-subitem="profile"
               onclick="navigateToMypageSection('mypage-profile-section', 'profile'); return false;"
               class="${topNavSubItemBaseClass} ${topNavSubItemInactiveClass}">
               <span>프로필</span>
-            </a>
-            <a href="#my-projects" data-top-nav-subitem="my-projects"
+            </button>
+            <button type="button" data-top-nav-subitem="my-projects"
               onclick="navigateToMypageSection('mypage-projects-section', 'my-projects'); return false;"
               class="${topNavSubItemBaseClass} ${topNavSubItemInactiveClass}">
               <span>내 프로젝트</span>
-            </a>
-            <a href="#coin-history" data-top-nav-subitem="coins"
+            </button>
+            <button type="button" data-top-nav-subitem="coins"
               onclick="navigateToMypageSection('mypage-market-section', 'coins'); return false;"
               class="${topNavSubItemBaseClass} ${topNavSubItemInactiveClass}">
               <span>동전내역&amp;적립</span>
-            </a>
+            </button>
             <button type="button" data-top-nav-subitem="support"
               onclick="showTopNavigationFeatureNotice('고객센터', '🎧')"
               class="${topNavSubItemBaseClass} ${topNavSubItemInactiveClass}">
@@ -7004,7 +7417,9 @@
         renderNotificationsUI();
       }
 
-      if (viewKey === 'mypage') currentMypageSection = 'profile';
+      if (viewKey === 'mypage') {
+        showMypageSectionOnly(currentMypageSection || 'profile');
+      }
       if (['mypage', 'feedback'].includes(viewKey)) {
         isMyInfoSidebarExpanded = true;
       } else if (['explore', 'market'].includes(viewKey)) {
