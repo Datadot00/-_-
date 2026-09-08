@@ -734,68 +734,164 @@
           <img src="../logo-default.png" alt="로고" class="w-full h-full object-contain"
             onerror="this.onerror=null; this.src='./logo-default.png';" />
         </div>
-        <h2 class="text-2xl font-extrabold text-neutral-dark mb-1 tracking-tight text-center">
+        <h2 id="auth-title" class="text-2xl font-extrabold text-neutral-dark mb-1 tracking-tight text-center">
           돈 돼? 로그인
         </h2>
-        <p class="text-xs text-neutral-muted mb-8 text-center">
-          이메일과 비밀번호로 로그인하거나 새 계정을 만드세요.
+        <p id="auth-description" class="text-xs text-neutral-muted mb-8 text-center">
+          가입한 이메일과 비밀번호를 입력해 주세요.
         </p>
 
-        <!-- Supabase Email Auth Form -->
-        <form id="auth-form" class="w-full flex flex-col gap-4">
-          <div>
-            <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">아이디 또는 이메일</label>
-            <input id="auth-email-input" type="text" placeholder="아이디 또는 이메일을 입력하세요"
-              class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
-              required />
+        <div id="auth-error-msg" role="alert" aria-live="assertive"
+          class="w-full text-xs font-bold text-red-500 hidden text-center mb-4"></div>
+        <div id="auth-success-msg" role="status" aria-live="polite"
+          class="w-full text-xs font-bold text-[#2F6517] hidden text-center mb-4"></div>
+
+        <div id="auth-form-panel" class="w-full">
+          <div id="auth-mode-tabs" class="w-full grid grid-cols-2 gap-1 bg-neutral-100 rounded-xl p-1 mb-6" role="tablist"
+            aria-label="인증 방식 선택">
+            <button type="button" id="auth-mode-login" role="tab" aria-selected="true" aria-controls="auth-form"
+              class="py-2.5 rounded-lg bg-white text-neutral-dark text-xs font-extrabold shadow-sm transition-all">
+              로그인
+            </button>
+            <button type="button" id="auth-mode-signup" role="tab" aria-selected="false" aria-controls="auth-form"
+              class="py-2.5 rounded-lg text-neutral-500 text-xs font-bold transition-all">
+              회원가입
+            </button>
           </div>
 
-          <div>
-            <label for="auth-password-input" class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호</label>
-            <input id="auth-password-input" type="password" autocomplete="current-password"
-              placeholder="비밀번호를 입력하세요"
-              class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
-              required />
+          <!-- Supabase Email Auth Form -->
+          <form id="auth-form" class="w-full flex flex-col gap-4" novalidate>
+            <div>
+              <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">이메일</label>
+              <input id="auth-email-input" type="email" inputmode="email" autocomplete="email" autocapitalize="none"
+                spellcheck="false" placeholder="이메일을 입력하세요"
+                class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
+                required />
+            </div>
+
+            <div id="auth-password-group">
+              <label for="auth-password-input" class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호</label>
+              <div class="relative">
+                <input id="auth-password-input" type="password" autocomplete="current-password" minlength="6"
+                  placeholder="비밀번호를 입력하세요"
+                  class="w-full px-4 py-3 pr-16 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
+                  required />
+                <button type="button" data-password-toggle data-password-target="auth-password-input"
+                  class="absolute inset-y-0 right-3 text-[11px] font-bold text-neutral-400 hover:text-neutral-dark transition-colors"
+                  aria-label="비밀번호 표시" aria-pressed="false">보기</button>
+              </div>
+              <p id="auth-password-hint" class="hidden mt-1.5 text-[11px] font-medium text-neutral-400">
+                비밀번호는 6자 이상 입력해 주세요.
+              </p>
+              <button type="button" id="btn-auth-forgot-password"
+                class="mt-2 text-[11px] font-bold text-[#568A32] hover:text-[#2F6517] transition-colors">
+                비밀번호를 잊으셨나요?
+              </button>
+            </div>
+
+            <div id="auth-password-confirm-group" class="hidden">
+              <label for="auth-password-confirm-input"
+                class="block text-xs font-bold text-neutral-dark mb-1.5">비밀번호 확인</label>
+              <div class="relative">
+                <input id="auth-password-confirm-input" type="password" autocomplete="new-password" minlength="6"
+                  placeholder="비밀번호를 한 번 더 입력하세요"
+                  class="w-full px-4 py-3 pr-16 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
+                  disabled />
+                <button type="button" data-password-toggle data-password-target="auth-password-confirm-input"
+                  class="absolute inset-y-0 right-3 text-[11px] font-bold text-neutral-400 hover:text-neutral-dark transition-colors"
+                  aria-label="비밀번호 확인 표시" aria-pressed="false">보기</button>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-auth-submit"
+              class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20 cursor-pointer mt-1">
+              <span id="btn-auth-submit-text">로그인하기</span>
+              <span>→</span>
+            </button>
+
+            <button type="button" id="btn-auth-recovery-back"
+              class="hidden w-full py-3 px-4 rounded-xl bg-white hover:bg-neutral-50 active:scale-98 text-neutral-600 font-bold text-sm transition-all border border-neutral-300 cursor-pointer">
+              로그인으로 돌아가기
+            </button>
+          </form>
+
+          <div id="auth-social-section">
+            <div class="w-full flex items-center my-6">
+              <div class="flex-1 border-t border-neutral-200"></div>
+              <span class="px-3 text-[11px] text-neutral-400 font-medium">또는</span>
+              <div class="flex-1 border-t border-neutral-200"></div>
+            </div>
+
+            <!-- Google OAuth is intentionally disabled until its provider is configured. -->
+            <button type="button" disabled
+              class="w-full h-[52px] bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-center gap-3 px-4 cursor-not-allowed opacity-60">
+              <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                <path fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+              </svg>
+              <span class="text-xs font-bold text-neutral-500">Google 로그인 (준비 중)</span>
+            </button>
           </div>
-
-          <div id="auth-error-msg" role="alert" aria-live="assertive"
-            class="text-xs font-bold text-red-500 hidden text-center"></div>
-          <div id="auth-success-msg" role="status" aria-live="polite"
-            class="text-xs font-bold text-[#2F6517] hidden text-center"></div>
-
-          <button type="submit" id="btn-email-login"
-            class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20 cursor-pointer mt-1">
-            <span id="btn-email-login-text">로그인하기</span>
-            <span>→</span>
-          </button>
-
-          <button type="button" id="btn-email-signup"
-            class="w-full py-3 px-4 rounded-xl bg-white hover:bg-neutral-50 active:scale-98 text-neutral-700 font-bold text-sm transition-all border border-neutral-300 cursor-pointer">
-            이메일로 회원가입
-          </button>
-        </form>
-
-        <div class="w-full flex items-center my-6">
-          <div class="flex-1 border-t border-neutral-200"></div>
-          <span class="px-3 text-[11px] text-neutral-400 font-medium">또는</span>
-          <div class="flex-1 border-t border-neutral-200"></div>
         </div>
 
-        <!-- Google OAuth is intentionally disabled until its provider is configured. -->
-        <button type="button" disabled
-          class="w-full h-[52px] bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-center gap-3 px-4 cursor-not-allowed opacity-60">
-          <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
-            <path fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-            <path fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-            <path fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-            <path fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-          </svg>
-          <span class="text-xs font-bold text-neutral-500">Google 로그인 (준비 중)</span>
-        </button>
+        <div id="auth-confirmation-panel" class="hidden w-full text-center">
+          <div class="mx-auto w-16 h-16 rounded-full bg-[#EEF7DE] flex items-center justify-center text-3xl mb-5"
+            aria-hidden="true">✉️</div>
+          <p id="auth-email-sent-title" class="text-sm font-extrabold text-neutral-dark mb-2">인증 메일을 확인해 주세요</p>
+          <p id="auth-email-sent-description" class="text-xs leading-5 text-neutral-muted mb-6">
+            <strong id="auth-confirmation-email" class="text-neutral-dark"></strong><br />
+            <span id="auth-email-sent-message">위 주소로 가입 확인을 요청했습니다.<br />메일의 인증 링크를 누르면 가입이 완료됩니다.</span>
+          </p>
+          <button type="button" id="btn-auth-resend"
+            class="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm transition-all border border-primary-dark/20 cursor-pointer">
+            인증 메일 다시 보내기
+          </button>
+          <button type="button" id="btn-auth-back-to-login"
+            class="w-full mt-3 py-3 px-4 rounded-xl bg-white hover:bg-neutral-50 active:scale-98 text-neutral-600 font-bold text-sm transition-all border border-neutral-300 cursor-pointer">
+            로그인으로 돌아가기
+          </button>
+        </div>
+
+        <form id="auth-password-update-panel" class="hidden w-full flex-col gap-4" novalidate>
+          <div>
+            <label for="auth-new-password-input" class="block text-xs font-bold text-neutral-dark mb-1.5">새 비밀번호</label>
+            <div class="relative">
+              <input id="auth-new-password-input" type="password" autocomplete="new-password" minlength="6"
+                placeholder="새 비밀번호를 입력하세요"
+                class="w-full px-4 py-3 pr-16 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
+                required />
+              <button type="button" data-password-toggle data-password-target="auth-new-password-input"
+                class="absolute inset-y-0 right-3 text-[11px] font-bold text-neutral-400 hover:text-neutral-dark transition-colors"
+                aria-label="새 비밀번호 표시" aria-pressed="false">보기</button>
+            </div>
+            <p class="mt-1.5 text-[11px] font-medium text-neutral-400">비밀번호는 6자 이상 입력해 주세요.</p>
+          </div>
+
+          <div>
+            <label for="auth-new-password-confirm-input"
+              class="block text-xs font-bold text-neutral-dark mb-1.5">새 비밀번호 확인</label>
+            <div class="relative">
+              <input id="auth-new-password-confirm-input" type="password" autocomplete="new-password" minlength="6"
+                placeholder="새 비밀번호를 한 번 더 입력하세요"
+                class="w-full px-4 py-3 pr-16 rounded-xl border border-neutral-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
+                required />
+              <button type="button" data-password-toggle data-password-target="auth-new-password-confirm-input"
+                class="absolute inset-y-0 right-3 text-[11px] font-bold text-neutral-400 hover:text-neutral-dark transition-colors"
+                aria-label="새 비밀번호 확인 표시" aria-pressed="false">보기</button>
+            </div>
+          </div>
+
+          <button type="submit" id="btn-auth-password-update"
+            class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm shadow-sm transition-all border border-primary-dark/20 cursor-pointer mt-1">
+            새 비밀번호 저장하기
+          </button>
+        </form>
       </div>
     </main>
   </div>
