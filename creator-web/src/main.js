@@ -3,39 +3,11 @@
 // Reference: SCHEMA_DESIGN.md
 // ========================================================
 
-import {
-  supabase,
-  fetchUserProfile,
-  fetchExploreProjects,
-  fetchProjectById,
-  createProjectRecord,
-  updateProjectRecord,
-  deleteProjectRecord,
-  submitReviewRecord,
-  fetchProjectReviews,
-  fetchUserWallet,
-  fetchMarketplaceItems,
-  fetchUserScraps,
-  fetchUserNotifications
-} from './dataService.js';
+import * as dataService from './dataService.js';
 
 // Expose DataService to Window for Inline Event Handlers in index.html
 if (typeof window !== 'undefined') {
-  window.donDwaeDataService = {
-    supabase,
-    fetchUserProfile,
-    fetchExploreProjects,
-    fetchProjectById,
-    createProjectRecord,
-    updateProjectRecord,
-    deleteProjectRecord,
-    submitReviewRecord,
-    fetchProjectReviews,
-    fetchUserWallet,
-    fetchMarketplaceItems,
-    fetchUserScraps,
-    fetchUserNotifications
-  };
+  window.donDwaeDataService = dataService;
 }
 
 /**
@@ -44,21 +16,20 @@ if (typeof window !== 'undefined') {
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('[Don Dwae] Initializing Live Data Layer with Supabase...');
 
-  if (!supabase) {
-    console.warn('[Don Dwae] Supabase client not initialized, using local fallback state.');
+  if (!dataService.supabase) {
+    console.warn('[Don Dwae] Supabase client not initialized.');
     return;
   }
 
   try {
-    // 1. Check active Auth Session
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await dataService.supabase.auth.getSession();
     if (session && session.user) {
-      const profile = await fetchUserProfile(session.user.id);
+      const profile = await dataService.fetchUserProfile(session.user.id);
       if (profile && typeof window.updateProfileUI === 'function') {
         window.updateProfileUI(profile);
       }
 
-      const wallet = await fetchUserWallet(session.user.id);
+      const wallet = await dataService.fetchUserWallet(session.user.id);
       if (wallet && typeof window.userCoinBalance !== 'undefined') {
         window.userCoinBalance = wallet.earned_coins + wallet.paid_coins;
         if (typeof window.updateAllCoinDisplays === 'function') {
@@ -67,14 +38,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // 2. Pre-fetch Explore Feed Projects
-    const liveProjects = await fetchExploreProjects();
+    const liveProjects = await dataService.fetchExploreProjects();
     if (liveProjects && liveProjects.length > 0) {
       console.log(`[Don Dwae] Loaded ${liveProjects.length} live projects from Supabase DB.`);
     }
 
-    // 3. Pre-fetch Marketplace items
-    const marketItems = await fetchMarketplaceItems();
+    const marketItems = await dataService.fetchMarketplaceItems();
     if (marketItems && marketItems.length > 0) {
       console.log(`[Don Dwae] Loaded ${marketItems.length} active items from Supabase Marketplace.`);
     }

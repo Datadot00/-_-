@@ -664,7 +664,7 @@
             <label class="font-bold text-neutral-800">닉네임 <span class="text-red-500">*</span></label>
             <span class="text-[10px] text-neutral-400" id="profile-nick-count">9/20자</span>
           </div>
-          <input type="text" id="profile-edit-nickname" value="바이브코더123" maxlength="20"
+          <input type="text" id="profile-edit-nickname" value="" placeholder="닉네임을 입력하세요" maxlength="20"
             class="w-full p-3.5 rounded-xl border border-neutral-300 font-semibold text-neutral-dark outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
           <span class="text-[10px] text-neutral-400">한글, 영문, 숫자 조합으로 최대 20자까지 입력 가능합니다.</span>
         </div>
@@ -992,14 +992,14 @@
         </div>
 
         <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium text-[#4B5563]" aria-label="서비스 소개 메뉴">
-          <a href="#features" class="hover:text-neutral-dark transition-colors">Features</a>
-          <a href="#testers" class="hover:text-neutral-dark transition-colors">Testers</a>
-          <a href="#stats" class="hover:text-neutral-dark transition-colors">Stats</a>
-          <a href="#faq" class="hover:text-neutral-dark transition-colors">FAQ</a>
+          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">Features</a>
+          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">Testers</a>
+          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">Stats</a>
+          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">FAQ</a>
         </nav>
 
         <div class="flex items-center gap-3">
-          <button onclick="navigateTo('login')"
+          <button onclick="navigateTo('landing')"
             class="px-5 py-2.5 rounded-full border border-[#D1D5DB] text-sm font-medium text-[#374151] hover:bg-neutral-50 transition-all focus:outline-none cursor-pointer">
             로그인
           </button>
@@ -1024,7 +1024,7 @@
             백을 모으고 리워드를 받아가세요.
           </p>
 
-          <button id="google-login-btn" onclick="navigateTo('login')"
+          <button id="google-login-btn" onclick="navigateTo('landing')"
             class="group w-full sm:w-[320px] h-[58px] bg-[#191A1C] hover:bg-[#27272A] border-2 border-[#191A1C] rounded-2xl flex items-center justify-center gap-3 px-6 shadow-sm hover:shadow-md transition-all duration-200 transform active:scale-98 focus:outline-none cursor-pointer">
             <span class="text-xl">🚀</span>
             <span
@@ -1649,7 +1649,7 @@
             class="feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative">
 
             <div class="relative bg-[#F0FDF4] border-b border-[#F0F2F5] p-3">
-              <div
+              <div id="home-card-moneylog-thumbnail"
                 class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
                 <div
                   class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
@@ -2991,6 +2991,18 @@
               id="header-user-nickname">바이브코더123 ▾</span>
           </div>
         </div>
+
+        <div class="flex items-center gap-1.5 border-l border-neutral-200 pl-3" id="header-auth-buttons-container">
+          <!-- Rendered dynamically by updateHeaderAuthUI() -->
+          <button type="button" onclick="navigateTo('landing')" id="btn-header-login"
+            class="px-3 py-1.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white text-xs font-bold transition-all cursor-pointer shadow-2xs">
+            로그인
+          </button>
+          <button type="button" onclick="handleUserLogout()" id="btn-header-logout"
+            class="px-3 py-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-100 transition-all cursor-pointer">
+            로그아웃
+          </button>
+        </div>
       </div>
     </header>
 
@@ -3290,75 +3302,8 @@
             </div>
 
             <!-- Review Items List -->
-            <div class="space-y-4">
-              <div
-                class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2.5">
-                    <div
-                      class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">
-                      👤</div>
-                    <div>
-                      <span class="text-xs font-extrabold text-neutral-dark block">테스터 핀테크조아</span>
-                      <span class="text-[10px] text-neutral-400">앱 실사용자 · 20대</span>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-amber-500">⭐⭐⭐⭐⭐ 5.0</span>
-                    <span class="text-[11px] text-neutral-400">2024.11.21</span>
-                  </div>
-                </div>
-                <p
-                  class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
-                  "영수증 사진을 올리자마자 OCR 로딩 1초 만에 항목이 자동 분류되어 매우 신기했습니다! 카테고리 수정도 간편해서 자주 쓸 것 같아요."
-                </p>
-              </div>
-
-              <div
-                class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2.5">
-                    <div
-                      class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">
-                      👤</div>
-                    <div>
-                      <span class="text-xs font-extrabold text-neutral-dark block">테스터 바이브유저</span>
-                      <span class="text-[10px] text-neutral-400">자산관리 관심자 · 30대</span>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-amber-500">⭐⭐⭐⭐ 4.5</span>
-                    <span class="text-[11px] text-neutral-400">2024.11.20</span>
-                  </div>
-                </div>
-                <p
-                  class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
-                  "대시보드 지출 분석 차트 색감이 직관적이고 깔끔합니다. 예산 초과 경고 푸시 알림 타이밍이 인상적이네요!"
-                </p>
-              </div>
-
-              <div
-                class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2.5">
-                    <div
-                      class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">
-                      👤</div>
-                    <div>
-                      <span class="text-xs font-extrabold text-neutral-dark block">테스터 서비스마니아</span>
-                      <span class="text-[10px] text-neutral-400">노코드 관심자 · 20대</span>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold text-amber-500">⭐⭐⭐⭐⭐ 5.0</span>
-                    <span class="text-[11px] text-neutral-400">2024.11.19</span>
-                  </div>
-                </div>
-                <p
-                  class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
-                  "UX 디자인과 가독성이 훌륭합니다. 실제 오픈되면 메인 가계부 앱으로 정착해서 사용하고 싶습니다."
-                </p>
-              </div>
+            <div id="detail-reviews-container" class="space-y-4">
+              <!-- Dynamically populated via fetchProjectReviews(projectId) -->
             </div>
           </div>
 
@@ -3442,9 +3387,9 @@
                 <span>참여 현황 & 테스터 리뷰 보기</span>
                 <span>→</span>
               </button>
-              <button onclick="alert('게시글 수정 모드로 전환됩니다.');"
-                class="w-full py-2.5 px-4 rounded-xl bg-[#EFECCB]/80 hover:bg-[#E6E2B9] text-neutral-800 font-bold text-xs border border-[#DDD6A7] transition-all">
-                게시글 수정
+              <button onclick="openEditPostModal()"
+                class="w-full py-2.5 px-4 rounded-xl bg-[#EFECCB]/80 hover:bg-[#E6E2B9] text-neutral-800 font-bold text-xs border border-[#DDD6A7] transition-all cursor-pointer">
+                ✏️ 게시글 수정
               </button>
             </div>
 
@@ -3459,24 +3404,20 @@
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-1.5">
-                  <span id="post-creator-name-sidebar" class="font-extrabold text-xs text-neutral-dark">핀테크러버</span>
-                  <span class="px-1.5 py-0.5 rounded bg-[#FDA2BC]/30 text-[#8A2B43] text-[9px] font-extrabold">✓
-                    검증제작자</span>
+                  <span id="post-creator-name-sidebar" class="font-extrabold text-xs text-neutral-dark">프로필 로딩 중...</span>
+                  <span id="post-creator-badge-sidebar" class="px-1.5 py-0.5 rounded bg-[#FDA2BC]/30 text-[#8A2B43] text-[9px] font-extrabold">✓ 마스터 크리에이터</span>
                 </div>
-                <span class="text-[10px] text-neutral-400 block mt-0.5">기획자 · 핀테크 메이커</span>
+                <span id="post-creator-bio-sidebar" class="text-[10px] text-neutral-400 block mt-0.5">돈돼 멤버입니다.</span>
               </div>
             </div>
 
             <!-- 관심분야 태그 (알약 형태) -->
             <div>
               <span class="text-[11px] font-semibold text-neutral-400 block mb-2">관심분야</span>
-              <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
-                <span
-                  class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크</span>
-                <span
-                  class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성</span>
-                <span
-                  class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI가계부</span>
+              <div id="post-creator-tags-sidebar" class="flex flex-wrap gap-1.5 text-xs font-semibold">
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크</span>
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성</span>
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI가계부</span>
               </div>
             </div>
 
@@ -3941,182 +3882,7 @@
 
         <!-- Feedback Cards List (SCR-16 / SCR-17) -->
         <section id="feedback-cards-container" class="space-y-6">
-
-          <!-- Feedback Card 1: vib*** (답글 없음) -->
-          <article id="feedback-card-1" data-has-reply="false"
-            class="feedback-card bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-9 h-9 rounded-full bg-[#F3F4F6] flex items-center justify-center font-bold text-xs text-neutral-700">
-                  V
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-sm text-neutral-dark">vib***</span>
-                    <span class="text-xs text-neutral-muted">2시간 전</span>
-                  </div>
-                  <div class="text-[#8D2B44] text-xs flex gap-0.5">
-                    ★ ★ ★ ★ ★
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2 text-xs">
-                <span class="px-3 py-1 rounded-full bg-neutral-100 text-neutral-600 font-medium">[버그 경험 없음]</span>
-                <span class="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] font-semibold">[재방문 의사 있음]</span>
-              </div>
-            </div>
-
-            <!-- Review Quote Box with Screenshot Thumbnail -->
-            <div
-              class="bg-canvas-cream/60 border border-[#E9E4C2] rounded-xl p-5 relative flex flex-col sm:flex-row gap-4 items-start">
-              <div class="flex-1">
-                <span class="text-2xl text-[#D8D2A4] font-serif select-none block mb-1">“</span>
-                <p class="text-sm font-medium text-neutral-dark leading-relaxed">
-                  온보딩 설명이 너무 직관적이라 좋았어요! 다만 모바일 사파리에서 결제 버튼 텍스트가 살짝 잘립니다. 프롬프트에 overflow-hidden 속성을 체크해보세요.
-                </p>
-              </div>
-
-              <!-- Required Screenshot Proof Thumbnail -->
-              <div
-                class="w-32 h-24 rounded-lg bg-white border border-[#D9D3A0] shadow-2xs overflow-hidden p-1.5 flex flex-col justify-between shrink-0 group cursor-pointer hover:border-primary transition-all">
-                <div class="text-[9px] font-bold text-neutral-600 flex items-center justify-between">
-                  <span>📱 사파리 증빙</span>
-                  <span class="text-[8px] text-primary-dark">✓ 확인됨</span>
-                </div>
-                <div
-                  class="h-12 bg-neutral-100 rounded flex flex-col items-center justify-center text-[8px] text-neutral-400">
-                  <span>[버튼 잘림 현상]</span>
-                  <span>📸 스크린샷 증빙</span>
-                </div>
-                <span class="text-[8px] text-neutral-400 text-center">클릭하여 확대</span>
-              </div>
-            </div>
-
-            <div class="text-[11px] text-neutral-muted flex items-center gap-1.5">
-              <span>🔒</span> 비공개 서술형 피드백 (제작자에게만 노출)
-            </div>
-
-            <!-- Existing / Appended Replies Container -->
-            <div id="replies-box-1" class="space-y-2 empty:hidden"></div>
-
-            <!-- Inline Creator Reply Box -->
-            <div class="border-t border-neutral-100 pt-4 flex flex-col gap-2.5">
-              <span class="text-xs font-bold text-neutral-dark flex items-center gap-1">
-                <span>↳</span> 제작자 답글 달기
-              </span>
-              <div class="flex gap-2">
-                <textarea id="reply-input-1" placeholder="피드백에 대한 감사 답글을 남겨주세요."
-                  class="flex-1 p-3 text-xs rounded-xl border border-neutral-border focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none h-16 bg-white"></textarea>
-                <button type="button" onclick="submitCreatorReply('1')"
-                  class="px-4 bg-primary text-neutral-dark font-bold text-xs rounded-xl hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1 shrink-0 shadow-xs border border-primary-dark/20">
-                  <span>답글 등록</span>
-                  <span>▷</span>
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <!-- Feedback Card 2: use*** (답글 있음) -->
-          <article id="feedback-card-2" data-has-reply="true"
-            class="feedback-card bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-9 h-9 rounded-full bg-[#F3F4F6] flex items-center justify-center font-bold text-xs text-neutral-700">
-                  U
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-sm text-neutral-dark">use***</span>
-                    <span class="text-xs text-neutral-muted">5시간 전</span>
-                  </div>
-                  <div class="text-[#8D2B44] text-xs flex gap-0.5">
-                    ★ ★ ★ ★ ☆
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2 text-xs">
-                <span class="px-3 py-1 rounded-full bg-neutral-100 text-neutral-600 font-medium">[개선 요청]</span>
-              </div>
-            </div>
-
-            <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-border text-sm text-neutral-700">
-              전반적으로 유용하지만 로딩 속도가 조금 느린 것 같습니다. 첫 접속 시 스켈레톤 UI가 있으면 더 매끄러울 것 같아요!
-            </div>
-
-            <!-- Existing Creator Reply Box -->
-            <div id="replies-box-2" class="space-y-2">
-              <div
-                class="bg-[#F8FAF5] rounded-xl p-4 border border-[#E4EBD5] text-xs text-neutral-dark flex flex-col gap-1">
-                <span class="font-bold text-primary-dark">나의 답글 <span class="font-normal text-neutral-muted">1시간
-                    전</span></span>
-                <p class="text-neutral-600">소중한 의견 감사합니다! 다음 업데이트에 스켈레톤 로딩 및 성능 최적화를 반영하도록 하겠습니다.</p>
-              </div>
-            </div>
-
-            <!-- Inline Creator Reply Box -->
-            <div class="border-t border-neutral-100 pt-3 flex flex-col gap-2">
-              <div class="flex gap-2">
-                <textarea id="reply-input-2" placeholder="추가 답글을 남겨주세요..."
-                  class="flex-1 p-3 text-xs rounded-xl border border-neutral-border focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none h-14 bg-white"></textarea>
-                <button type="button" onclick="submitCreatorReply('2')"
-                  class="px-4 bg-primary text-neutral-dark font-bold text-xs rounded-xl hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1 shrink-0 shadow-xs border border-primary-dark/20">
-                  <span>답글 등록</span>
-                  <span>▷</span>
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <!-- Feedback Card 3: New Realtime Review (방금 도착, 답글 없음) -->
-          <article id="feedback-card-3" data-has-reply="false"
-            class="feedback-card bg-white rounded-2xl border border-primary/60 p-7 shadow-subtle flex flex-col gap-4 animate-in fade-in">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-9 h-9 rounded-full bg-primary/30 flex items-center justify-center font-bold text-xs text-primary-dark">
-                  D
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-sm text-neutral-dark">dev_hacker</span>
-                    <span class="text-xs font-bold text-primary-dark bg-primary/20 px-2 py-0.5 rounded-full">방금 전</span>
-                  </div>
-                  <div class="text-[#8D2B44] text-xs flex gap-0.5">
-                    ★ ★ ★ ★ ★
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2 text-xs">
-                <span class="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] font-semibold">[강력 추천]</span>
-                <span id="feedback-card3-participant-badge"
-                  class="px-3 py-1 rounded-full bg-primary-sub text-[#25500F] font-bold">[30번째 참여자]</span>
-              </div>
-            </div>
-
-            <div class="bg-neutral-50 rounded-xl p-4 border border-neutral-border text-sm text-neutral-800 font-medium">
-              아이디어가 정말 신선해요! 바이브코딩 프로덕트를 만들고 항상 테스터를 어디서 구할지 막막했는데, 돈돼 덕분에 진짜 사용자 피드백을 빠르게 얻을 수 있었습니다.
-            </div>
-
-            <div id="replies-box-3" class="space-y-2 empty:hidden"></div>
-
-            <div class="border-t border-neutral-100 pt-3 flex flex-col gap-2">
-              <div class="flex gap-2">
-                <textarea id="reply-input-3" placeholder="피드백에 대한 감사 답글을 남겨주세요."
-                  class="flex-1 p-3 text-xs rounded-xl border border-neutral-border focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none h-14 bg-white"></textarea>
-                <button type="button" onclick="submitCreatorReply('3')"
-                  class="px-4 bg-primary text-neutral-dark font-bold text-xs rounded-xl hover:bg-primary-hover active:scale-95 transition-all flex items-center gap-1 shrink-0 shadow-xs border border-primary-dark/20">
-                  <span>답글 등록</span>
-                  <span>▷</span>
-                </button>
-              </div>
-            </div>
-          </article>
-
+          <!-- Dynamically populated via openFeedbackReport(projectId) -->
         </section>
 
       </main>
@@ -4624,7 +4390,7 @@
               <!-- Profile Info Details -->
               <div class="flex flex-col gap-1.5">
                 <div class="flex flex-wrap items-center gap-2">
-                  <h2 class="text-xl font-extrabold text-neutral-dark" id="mypage-user-nickname">바이브코더123</h2>
+                  <h2 class="text-xl font-extrabold text-neutral-dark" id="mypage-user-nickname">프로필 로딩 중...</h2>
                   <span
                     class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold border border-amber-200 flex items-center gap-1">
                     🏆 상위 3% 슈퍼 테스터
@@ -4678,19 +4444,19 @@
             <div class="bg-[#FAFBF7] rounded-xl border border-[#E9EFE0] p-4 flex flex-col gap-1">
               <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">참여한 테스트</span>
               <div class="text-2xl font-extrabold text-neutral-dark">
-                14<span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
+                <span id="mypage-overview-part-count">0</span><span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
               </div>
               <span class="text-[10px] text-primary-dark font-bold">상위 3% 활약</span>
             </div>
 
             <div
               class="bg-[#FAFBF7] rounded-xl border border-[#E9EFE0] p-4 flex flex-col gap-1 cursor-pointer hover:bg-[#F2F7EB] transition-colors"
-              onclick="navigateTo('post')">
+              onclick="navigateTo('mypage')">
               <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">내 프로젝트 ›</span>
               <div class="text-2xl font-extrabold text-neutral-dark">
-                2<span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
+                <span id="mypage-overview-reg-count">6</span><span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
               </div>
-              <span class="text-[10px] text-emerald-700 font-bold">모집 진행중 1건</span>
+              <span id="mypage-overview-active-sub" class="text-[10px] text-emerald-700 font-bold">모집 진행중 6건</span>
             </div>
           </div>
 
@@ -4803,7 +4569,7 @@
                   class="w-6 h-6 rounded-full bg-neutral-100 flex items-center justify-center text-xs overflow-hidden border border-neutral-200">
                   🐶
                 </div>
-                <span class="text-xs font-extrabold text-neutral-dark">바이브코더102</span>
+                <span data-user-nickname class="text-xs font-extrabold text-neutral-dark">프로필 로딩 중...</span>
               </div>
             </div>
           </div>
@@ -4818,14 +4584,13 @@
               <button type="button" onclick="switchMyProjectTab('registered')" id="myproj-tab-registered"
                 class="px-4 py-2 rounded-xl text-xs font-extrabold bg-[#191A1C] text-white shadow-xs flex items-center gap-2 transition-all">
                 <span>📂 등록 프로젝트 관리</span>
-                <span
+                <span id="myproj-registered-count-badge"
                   class="w-4 h-4 rounded-full bg-neutral-700 text-white text-[10px] flex items-center justify-center font-bold">6</span>
               </button>
               <button type="button" onclick="switchMyProjectTab('participated')" id="myproj-tab-participated"
                 class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
                 <span>📝 참여 프로젝트 관리</span>
-                <span class="px-2 py-0.5 rounded-full bg-[#FCE7F3] text-[#BE185D] text-[10px] font-extrabold">리뷰 대기
-                  1</span>
+                <span id="myproj-part-count-badge" class="px-2 py-0.5 rounded-full bg-[#FCE7F3] text-[#BE185D] text-[10px] font-extrabold">리뷰 대기 0</span>
               </button>
               <button type="button" onclick="switchMyProjectTab('scraped')" id="myproj-tab-scraped"
                 class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
@@ -4847,15 +4612,15 @@
             <div class="flex items-center gap-2">
               <button type="button" onclick="filterMyProjects('all')" id="myproj-filter-all"
                 class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-[#B4E380] text-[#1E3E0B] transition-all">
-                전체 (6)
+                전체 (<span id="myproj-filter-all-count">6</span>)
               </button>
               <button type="button" onclick="filterMyProjects('active')" id="myproj-filter-active"
                 class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
-                진행중인 프로젝트 (2)
+                진행중인 프로젝트 (<span id="myproj-filter-active-count">6</span>)
               </button>
               <button type="button" onclick="filterMyProjects('completed')" id="myproj-filter-completed"
                 class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
-                진행완료 프로젝트 (4)
+                진행완료 프로젝트 (<span id="myproj-filter-completed-count">0</span>)
               </button>
             </div>
 
@@ -4870,172 +4635,23 @@
 
           <!-- Project Cards Container -->
           <div class="flex flex-col gap-4" id="myproj-cards-list">
+            <!-- Dynamically populated via fetchMyProjects(userId) -->
 
-            <!-- Card 1: [진행중] AI 영수증 인식 스마트 가계부 베타테스터 모집 -->
-            <div
-              class="myproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle"
-              data-status="active">
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex items-start gap-4">
-                  <!-- Thumbnail -->
-                  <div
-                    class="w-16 h-16 rounded-2xl bg-[#E8F5E9] border border-[#C8E6C9] flex flex-col items-center justify-center relative p-1 shrink-0">
-                    <div
-                      class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">
-                      📱</div>
-                    <span class="text-[9px] font-black text-white bg-[#43A047] px-1 rounded mt-1">APP</span>
-                  </div>
-
-                  <!-- Content Info -->
-                  <div class="flex flex-col gap-1.5">
-                    <div class="flex items-center gap-2 flex-wrap text-xs">
-                      <span class="px-2.5 py-0.5 rounded-full bg-[#B4E380] text-[#1E3E0B] font-extrabold text-[11px]">
-                        ● 진행중
-                      </span>
-                      <span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-bold">
-                        [프로덕트 테스트]
-                      </span>
-                      <span class="text-[11px] text-neutral-400 font-medium">
-                        📅 등록일: 2026.09.01 (마감 D-4)
-                      </span>
-                    </div>
-
-                    <h3
-                      class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors"
-                      onclick="navigateTo('post')">
-                      AI 영수증 인식 스마트 가계부 베타테스터 모집
-                    </h3>
-
-                    <!-- Progress & Reward Details -->
-                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs pt-1">
-                      <div class="flex items-center gap-2 min-w-[200px]">
-                        <span class="font-bold text-neutral-700">모집률 <strong
-                            class="text-neutral-dark font-black">28/50명</strong></span>
-                        <div class="w-28 h-2 bg-neutral-100 rounded-full overflow-hidden">
-                          <div class="h-full bg-[#B4E380] rounded-full" style="width: 56%;"></div>
-                        </div>
-                        <span class="font-extrabold text-emerald-700 text-[11px]">56% 달성</span>
-                      </div>
-
-                      <div class="flex items-center gap-1 bg-[#FFFDF0] px-2.5 py-1 rounded-lg border border-[#F5E8B8]">
-                        <span class="text-neutral-500 font-medium text-[11px]">지급 리워드</span>
-                        <span class="font-black text-[#D97706] text-xs">🪙 500 C / 명</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Top Right Action Icons -->
-                <div class="flex items-center gap-1 text-neutral-400">
-                  <button type="button" onclick="alert('프로젝트 수정 화면으로 이동합니다.')"
-                    class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors" title="수정">
-                    ✏️
-                  </button>
-                  <button type="button" onclick="confirm('프로젝트를 삭제하시겠습니까?') && alert('삭제되었습니다.')"
-                    class="p-1.5 hover:text-red-600 rounded-lg hover:bg-neutral-100 transition-colors" title="삭제">
-                    🗑️
-                  </button>
-                </div>
+            <!-- My Projects Empty State -->
+            <div id="myproj-empty-state"
+              class="hidden py-14 flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
+              <div
+                class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl mb-3">
+                📂
               </div>
-
-              <!-- Card Bottom Buttons -->
-              <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
-                <button onclick="navigateTo('post')"
-                  class="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
-                  <span>👁️ 상세 화면</span>
-                </button>
-                <button onclick="navigateTo('feedback')"
-                  class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 relative">
-                  <span>📊 결과 및 피드백</span>
-                  <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Card 2: [진행완료] SaaS 카피라이팅 A/B 테스트 -->
-            <div
-              class="myproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle"
-              data-status="completed">
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex items-start gap-4">
-                  <!-- Thumbnail -->
-                  <div
-                    class="w-16 h-16 rounded-2xl bg-neutral-100 border border-neutral-200 flex flex-col items-center justify-center relative p-1 shrink-0">
-                    <div class="text-xs font-extrabold text-neutral-500">A vs B</div>
-                    <span class="text-[9px] font-bold text-neutral-500 mt-1">A/B</span>
-                  </div>
-
-                  <!-- Content Info -->
-                  <div class="flex flex-col gap-1.5">
-                    <div class="flex items-center gap-2 flex-wrap text-xs">
-                      <span class="px-2 py-0.5 rounded-md bg-neutral-200 text-neutral-700 text-[11px] font-bold">
-                        진행 완료
-                      </span>
-                      <span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-bold">
-                        [A/B 투표]
-                      </span>
-                      <span class="text-[11px] text-neutral-400 font-medium">
-                        완료일: 2026.08.20
-                      </span>
-                    </div>
-
-                    <h3
-                      class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors"
-                      onclick="navigateTo('post')">
-                      SaaS 카피라이팅 A/B 테스트
-                    </h3>
-
-                    <!-- Details Row -->
-                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-600 pt-1">
-                      <span>최종 완료 인원: <strong class="text-neutral-dark font-extrabold">30/30명(100%)</strong></span>
-                      <span class="text-neutral-300">|</span>
-                      <span class="flex items-center gap-1 font-bold text-amber-900">
-                        ⭐ 평균 만족도 <strong class="text-neutral-dark font-extrabold">4.8</strong> /5.0
-                      </span>
-                      <span class="text-neutral-300">|</span>
-                      <span>지급 완료 동전: <strong class="text-neutral-dark font-extrabold">6,000C</strong></span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Top Right Action Icons (Disabled or muted for completed) -->
-                <div class="flex items-center gap-1 text-neutral-300">
-                  <span class="p-1.5 cursor-not-allowed" title="완료된 프로젝트">⚔️</span>
-                  <button type="button" onclick="confirm('프로젝트를 삭제하시겠습니까?') && alert('삭제되었습니다.')"
-                    class="p-1.5 hover:text-red-600 rounded-lg hover:bg-neutral-100 transition-colors" title="삭제">
-                    🗑️
-                  </button>
-                </div>
-              </div>
-
-              <!-- Card Bottom Buttons -->
-              <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
-                <button onclick="navigateTo('post')"
-                  class="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
-                  <span>👁️ 상세 화면</span>
-                </button>
-                <button onclick="navigateTo('abtest')"
-                  class="px-4 py-2 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] text-xs font-black transition-all shadow-xs flex items-center gap-1.5">
-                  <span>📊 결과 리포트 보기</span>
-                </button>
-              </div>
-              <!-- My Projects Empty State -->
-              <div id="myproj-empty-state"
-                class="hidden py-14 flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
-                <div
-                  class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl mb-3">
-                  📂
-                </div>
-                <h4 class="text-sm font-extrabold text-neutral-dark mb-1">등록된 프로젝트가 없습니다</h4>
-                <p class="text-xs text-neutral-400 font-medium max-w-xs mb-4">
-                  새로운 피드백 모집 프로젝트를 등록하고 사용자의 목소리를 들어보세요!
-                </p>
-                <button onclick="navigateTo('create')"
-                  class="px-4 py-2 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-xs transition-all shadow-xs">
-                  + 첫 프로젝트 등록하기
-                </button>
-              </div>
-
+              <h4 class="text-sm font-extrabold text-neutral-dark mb-1">등록된 프로젝트가 없습니다</h4>
+              <p class="text-xs text-neutral-400 font-medium max-w-xs mb-4">
+                새로운 피드백 모집 프로젝트를 등록하고 사용자의 목소리를 들어보세요!
+              </p>
+              <button onclick="navigateTo('create')"
+                class="px-4 py-2 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-xs transition-all shadow-xs">
+                + 첫 프로젝트 등록하기
+              </button>
             </div>
 
             <!-- Scraped Projects List Container (Hidden by default) -->
@@ -6143,16 +5759,13 @@
 
     const testCreationStore = {
       testType: '프로덕트 테스트',
-      serviceName: '돈돼 (DonDwae)',
-      serviceDesc: '바이브코딩으로 만든 서비스 검증 및 피드백 플랫폼',
-      serviceUrl: 'try-money-pig.io',
-      techTags: ['Cursor', 'v0', 'Claude', 'Supabase'],
-      requireScreenshot: true,
-      questions: [
-        '회원가입 플로우 만족도 및 이탈 지점이 있었나요?',
-        '첫인상을 3단어로 평가한다면 어떤 느낌인가요?'
-      ],
-      rewardCoin: 50,
+      serviceName: '',
+      serviceDesc: '',
+      serviceUrl: '',
+      techTags: [],
+      requireScreenshot: false,
+      questions: [],
+      rewardCoin: 0,
       targetCount: 10
     };
 
@@ -6161,79 +5774,7 @@
     // ========================================================
     // Notifications Data Model & UI Controller
     // ========================================================
-    const dummyNotifications = [
-      {
-        id: 'notif-1',
-        user_id: 'user-001',
-        type: 'review_new',
-        title: 'AI 채용 서류 분석기에 새 리뷰가 등록됐어요',
-        content: '인디해커_K님이 별점 5점과 함께 상세 피드백을 남겼어요. "온보딩 과정이 직관적이라 좋았습니다."',
-        related_id: 'feedback',
-        is_read: false,
-        created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString() // 3분 전
-      },
-      {
-        id: 'notif-2',
-        user_id: 'user-001',
-        type: 'reply',
-        title: '내가 남긴 리뷰에 제작자가 답글을 남겼어요',
-        content: '\'가계부 앱 베타테스트\' 제작자 UIUX_Master님이 "피드백 주신 영수증 인식 오류를 다음 패치에 개선할 예정입니다"라고 남겼습니다.',
-        related_id: 'moneylog',
-        is_read: false,
-        created_at: new Date(Date.now() - 42 * 60 * 1000).toISOString() // 42분 전
-      },
-      {
-        id: 'notif-3',
-        user_id: 'user-001',
-        type: 'approval',
-        title: '\'노코드 템플릿 마켓플레이스\' 게시가 승인됐어요. 모집이 시작됩니다!',
-        content: '운영진 검토가 완료되어 메인 피드에 공개되었습니다. 테스터 피드백을 기다려보세요.',
-        related_id: 'my-created-test',
-        is_read: false,
-        created_at: new Date(Date.now() - 2 * 3600 * 1000).toISOString() // 2시간 전
-      },
-      {
-        id: 'notif-4',
-        user_id: 'user-001',
-        type: 'recommend',
-        title: '관심사 \'SaaS\'에 맞는 새 테스트가 등록됐어요',
-        content: '노션 연동 자동 인보이스 발행 SaaS (간단한 온보딩 플로우 UX 피드백, +300 C)',
-        related_id: 'saas',
-        is_read: true,
-        created_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString() // 어제 (1일 전)
-      },
-      {
-        id: 'notif-5',
-        user_id: 'user-001',
-        type: 'shop_new',
-        title: '돼코상점에 새로운 교환 품목이 입고됐어요 🐷',
-        content: '신규 입고: 배달의민족 모바일 상품권 1만원권 과 실전 SaaS 피그마 UI 키트 를 확인해보세요.',
-        related_id: 'market',
-        is_read: true,
-        created_at: new Date(Date.now() - 2 * 86400 * 1000).toISOString() // 2일 전
-      },
-      {
-        id: 'notif-6',
-        user_id: 'user-001',
-        type: 'approval',
-        title: '프로젝트 \'AI 하루 일기\' 게시 요청이 반려됐어요',
-        content: '사유: 서비스 링크 접속 오류 확인 필요. 프로젝트 수정 후 재신청해주세요.',
-        related_id: 'diary',
-        is_read: true,
-        is_rejected: true, // 반려 항목 구분을 위한 플래그
-        created_at: new Date(Date.now() - 3 * 86400 * 1000).toISOString() // 3일 전
-      },
-      {
-        id: 'notif-7',
-        user_id: 'user-001',
-        type: 'app_update',
-        title: '참여했던 가계부 앱 베타테스트가 업데이트됐어요',
-        content: 'v1.2 버전이 배포되었습니다. 내 피드백이 어떻게 반영됐는지 확인해보세요!',
-        related_id: 'moneylog',
-        is_read: true,
-        created_at: new Date(Date.now() - 5 * 86400 * 1000).toISOString() // 5일 전
-      }
-    ];
+    window.notificationsData = [];
 
     function formatRelativeTime(dateStr) {
       const now = new Date();
@@ -6319,7 +5860,7 @@
 
     function handleNotificationItemClick(notifId, relatedId) {
       // Mark as read
-      const item = dummyNotifications.find(n => n.id === notifId);
+      const item = (window.notificationsData || []).find(n => n.id === notifId);
       if (item) item.is_read = true;
       renderNotificationsUI();
 
@@ -6339,16 +5880,17 @@
 
     function deleteNotification(event, notifId) {
       event.stopPropagation();
-      const idx = dummyNotifications.findIndex(n => n.id === notifId);
+      const list = window.notificationsData || [];
+      const idx = list.findIndex(n => n.id === notifId);
       if (idx !== -1) {
-        dummyNotifications.splice(idx, 1);
+        list.splice(idx, 1);
         renderNotificationsUI();
         showGenericToast('알림이 목록에서 삭제되었습니다.', '🗑️');
       }
     }
 
     function markAllNotificationsAsRead() {
-      dummyNotifications.forEach(n => n.is_read = true);
+      (window.notificationsData || []).forEach(n => n.is_read = true);
       renderNotificationsUI();
       showGenericToast('모든 알림을 읽음으로 표시했습니다.', '✓');
     }
@@ -6358,10 +5900,11 @@
       const badge = document.getElementById('unread-count-badge');
       if (!container) return;
 
-      const unreadCount = dummyNotifications.filter(n => !n.is_read).length;
+      const list = window.notificationsData || [];
+      const unreadCount = list.filter(n => !n.is_read).length;
       if (badge) badge.textContent = String(unreadCount);
 
-      if (dummyNotifications.length === 0) {
+      if (list.length === 0) {
         // Empty State (귀여운 돼지 일러스트)
         container.innerHTML = `
           <div class="bg-white rounded-[24px] border border-neutral-200 p-12 text-center flex flex-col items-center justify-center gap-4 shadow-subtle min-h-[380px]">
@@ -6388,7 +5931,7 @@
       const todayList = [];
       const pastWeekList = [];
 
-      dummyNotifications.forEach(item => {
+      list.forEach(item => {
         const itemTime = new Date(item.created_at).getTime();
         if (itemTime >= todayStart) {
           todayList.push(item);
@@ -7231,10 +6774,170 @@
       }
     }
 
-    // Dynamic Post View (moneylog vs prototype) & Tester Participation
-    function openPostDetail(postId = 'moneylog') {
-      currentPostId = postId;
+    let isProjectEditMode = false;
 
+    // Open project edit mode
+    function openEditPostModal() {
+      if (!myCreatedTest) return;
+      isProjectEditMode = true;
+      const test = myCreatedTest;
+
+      const titleInput = document.getElementById('input-test-title');
+      const nameInput = document.getElementById('input-service-name');
+      const descInput = document.getElementById('input-service-desc');
+      const noticeInput = document.getElementById('input-test-notice');
+      const urlInput = document.getElementById('input-product-web-url');
+      const targetCountInput = document.getElementById('input-target-count');
+      const rewardCoinInput = document.getElementById('input-reward-coin');
+
+      if (titleInput) titleInput.value = test.title || '';
+      if (nameInput) nameInput.value = test.serviceName || '';
+      if (descInput) descInput.value = test.serviceDesc || '';
+      if (noticeInput) noticeInput.value = test.testNotice || '';
+      
+      // Lock immutable fields (URL, 모집인원, 보상 동전)
+      if (urlInput) {
+        urlInput.value = test.serviceUrl || '';
+        urlInput.disabled = true;
+        urlInput.title = '이미 생성된 프로젝트의 서비스 URL은 수정할 수 없습니다.';
+        urlInput.classList.add('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+      }
+
+      if (targetCountInput) {
+        targetCountInput.value = test.targetCount || 30;
+        targetCountInput.disabled = true;
+        targetCountInput.title = '이미 모집 중인 프로젝트의 인원수는 수정할 수 없습니다.';
+        targetCountInput.classList.add('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+      }
+
+      if (rewardCoinInput) {
+        rewardCoinInput.value = test.rewardCoin || 50;
+        rewardCoinInput.disabled = true;
+        rewardCoinInput.title = '이미 결제된 프로젝트의 1인당 보상 동전은 수정할 수 없습니다.';
+        rewardCoinInput.classList.add('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+      }
+
+      // Populate existing questions into Step 2 DOM
+      const qList = document.getElementById('questions-list');
+      if (qList && test.questions && test.questions.length > 0) {
+        qList.innerHTML = '';
+        test.questions.forEach((qObj, idx) => {
+          const qTitle = typeof qObj === 'string' ? qObj : (qObj.title || '');
+          const qType = (typeof qObj === 'object' && qObj.type) ? qObj.type : 'single';
+          const choices = (typeof qObj === 'object' && qObj.choices) ? qObj.choices : [];
+          
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'question-item p-5 rounded-2xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-all flex flex-col gap-3.5 shadow-2xs';
+          itemDiv.setAttribute('data-question-type', qType);
+
+          let choicesHtml = '';
+          choices.forEach((cText, cIdx) => {
+            choicesHtml += `
+              <div class="option-item flex items-center gap-2 bg-[#FAFBF7] px-3 py-2 rounded-xl border border-neutral-200">
+                <span class="text-xs text-neutral-400 font-mono option-num">${cIdx + 1}.</span>
+                <input type="text" value="${cText}" placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                <button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>
+              </div>
+            `;
+          });
+
+          itemDiv.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 ${idx + 1}</span>
+              <input type="text" value="${qTitle}" placeholder="질문 내용을 입력하세요..."
+                class="question-title-input flex-1 text-xs font-semibold text-neutral-dark focus:outline-none border-b border-neutral-200 pb-1" />
+              
+              <select class="question-type-select text-xs font-bold bg-[#F4F4F5] px-3 py-1.5 rounded-lg border border-neutral-200 focus:outline-none cursor-pointer" onchange="handleQuestionTypeChange(this)">
+                <option value="essay" ${qType === 'essay' ? 'selected' : ''}>📝 서술형</option>
+                <option value="single" ${qType === 'single' ? 'selected' : ''}>🔘 객관식 (단일선택)</option>
+                <option value="multiple" ${qType === 'multiple' ? 'selected' : ''}>☑️ 객관식 (복수선택)</option>
+              </select>
+
+              <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer shrink-0 bg-neutral-50 px-2.5 py-1.5 rounded-lg border border-neutral-200">
+                <input type="checkbox" class="question-required-toggle accent-primary-dark w-3.5 h-3.5" checked />
+                <span class="text-neutral-700">필수</span>
+              </label>
+
+              <button type="button" onclick="this.closest('.question-item').remove(); reindexQuestionTitles();"
+                class="text-neutral-400 hover:text-red-500 text-xs px-1 font-bold">✕ 삭제</button>
+            </div>
+
+            <div class="question-options-box pl-6 flex flex-col gap-2 border-t border-neutral-100 pt-3" style="${qType === 'essay' ? 'display: none;' : ''}">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold text-neutral-500">선택지 (최대 5개)</span>
+                <button type="button" onclick="addOptionToQuestion(this)" class="text-[11px] text-[#2F6517] font-extrabold hover:underline cursor-pointer">+ 선택지 추가</button>
+              </div>
+              <div class="options-container grid grid-cols-1 sm:grid-cols-2 gap-2">
+                ${choicesHtml || `
+                  <div class="option-item flex items-center gap-2 bg-[#FAFBF7] px-3 py-2 rounded-xl border border-neutral-200">
+                    <span class="text-xs text-neutral-400 font-mono option-num">1.</span>
+                    <input type="text" value="매우 양호함 / 이상 없음" placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                    <button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>
+                  </div>
+                `}
+              </div>
+            </div>
+          `;
+          qList.appendChild(itemDiv);
+        });
+      }
+
+      // Populate existing quizzes into Step 2 DOM
+      const quizList = document.getElementById('quiz-questions-list');
+      if (quizList && test.quizzes && test.quizzes.length > 0) {
+        quizList.innerHTML = '';
+        test.quizzes.forEach((qz, qzIdx) => {
+          const quizDiv = document.createElement('div');
+          quizDiv.className = 'quiz-item p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3 shadow-2xs';
+          quizDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-neutral-dark flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-primary/30 text-primary-dark flex items-center justify-center text-[11px] font-bold">${qzIdx + 1}</span>
+                <span>퀴즈 질문 ${qzIdx + 1}</span>
+              </span>
+              <button type="button" onclick="this.closest('.quiz-item').remove(); reindexQuizTitles();" class="text-neutral-400 hover:text-red-500 text-xs font-bold">✕ 삭제</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="sm:col-span-2">
+                <input type="text" placeholder="질문 입력" class="quiz-question-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-medium focus:outline-none" value="${qz.question || ''}" />
+              </div>
+              <div>
+                <input type="text" placeholder="정답 입력" class="quiz-answer-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-bold bg-[#F9FAFB] focus:outline-none text-emerald-800" value="${qz.answer || ''}" />
+              </div>
+            </div>
+          `;
+          quizList.appendChild(quizDiv);
+        });
+      }
+
+      // Update STEP 3 Publish button text for Edit Mode
+      const step3PublishBtnText = document.getElementById('btn-publish-step3-text');
+      const step3PublishBtnIcon = document.getElementById('btn-publish-step3-icon');
+      if (step3PublishBtnText) step3PublishBtnText.textContent = '수정 완료하기 (추가 결제 없음)';
+      if (step3PublishBtnIcon) step3PublishBtnIcon.textContent = '✏️';
+
+      showGenericToast('✏️ 프로젝트 수정 모드입니다. 검증 문항과 퀴즈를 자유롭게 수정하세요.', '📝');
+      navigateTo('create');
+      goToStep(1);
+    }
+
+    function updateHomeFeedThumbnails() {
+      if (!myCreatedTest || !myCreatedTest.thumbnailUrl) return;
+      const cardThumb = document.getElementById('home-card-moneylog-thumbnail');
+      if (cardThumb) {
+        cardThumb.innerHTML = `
+          <img src="${myCreatedTest.thumbnailUrl}" class="w-full h-full object-cover rounded-lg" alt="썸네일 이미지" />
+        `;
+        cardThumb.classList.remove('p-3', 'flex-col', 'justify-between');
+        cardThumb.classList.add('p-0');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateHomeFeedThumbnails();
+    });
+
+    window.renderDBProjectToDetail = function(test) {
       const titleEl = document.getElementById('post-main-title');
       const typeTag = document.getElementById('post-type-tag');
       const timeTag = document.getElementById('post-time-tag');
@@ -7253,13 +6956,329 @@
       const regDate = document.getElementById('post-meta-regdate');
       const endDate = document.getElementById('post-meta-enddate');
       const rewardMeta = document.getElementById('post-meta-reward');
-      const sidebarBadge = document.getElementById('post-sidebar-badge');
-      const ctaBtn = document.getElementById('btn-participate-test');
-      const ctaBtnText = document.getElementById('btn-participate-test-text');
-      const creatorOnlyActions = document.getElementById('creator-only-actions');
+
+      const categoryNameMap = {
+        abtest: 'A/B테스트',
+        product: '프로덕트 테스트',
+        vote: '투표 테스트',
+        prototype: '프로토타입 검증',
+        survey: '설문조사'
+      };
+
+      const catName = categoryNameMap[test.category] || test.category || '테스트';
+      const creatorNick = test.users?.nickname || '크리에이터';
+
+      if (titleEl) titleEl.textContent = test.title;
+      if (typeTag) {
+        typeTag.textContent = `[${catName}]`;
+        typeTag.className = 'px-3 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-bold border border-[#2F6517]/20';
+      }
+      if (timeTag) timeTag.innerHTML = `⏱️ 소요시간: 약 ${test.duration || '3분'}`;
+      if (rewardTag) rewardTag.innerHTML = `🪙 ${test.reward_coin || 500} 동전`;
+      if (creatorName) creatorName.textContent = `제작자: ${creatorNick}`;
+      if (creatorTools) creatorTools.innerHTML = `🛠️ 플랫폼: ${test.platform || 'web'}`;
+      if (creatorMeta) creatorMeta.innerHTML = `👥 모집 현황: ${test.current_count || 0}/${test.target_count || 10}명`;
+      if (descText) descText.textContent = test.service_desc;
+      if (extraText) extraText.textContent = '테스터 분들의 생생한 피드백을 바탕으로 서비스 개선과 UI 최적화를 진행할 예정입니다.';
+      if (mockupUrl) mockupUrl.textContent = test.service_url || 'https://don-dwae.com';
+      if (mockupAuthor) mockupAuthor.textContent = `${creatorNick} ▾`;
+
+      const serviceNameEl = document.getElementById('post-service-name-text');
+      const serviceShortIntroEl = document.getElementById('post-service-short-intro');
+      const noticeTextEl = document.getElementById('post-notice-text');
+
+      if (serviceNameEl) serviceNameEl.textContent = `서비스명: ${test.service_name || test.title}`;
+      if (serviceShortIntroEl) serviceShortIntroEl.innerHTML = `<strong class="text-neutral-800">서비스 소개:</strong> ${test.service_desc}`;
+      if (noticeTextEl) noticeTextEl.textContent = test.test_notice || '실제 서비스를 직접 사용해보고 유익한 피드백을 남겨주세요.';
+
+      if (mockupBody) {
+        if (test.thumbnail_url) {
+          mockupBody.innerHTML = `
+            <div class="w-full rounded-2xl overflow-hidden shadow-subtle border border-neutral-200 bg-white p-2">
+              <img src="${test.thumbnail_url}" class="w-full h-auto max-h-[480px] object-contain rounded-xl" alt="서비스 첨부 이미지 미리보기" />
+            </div>
+          `;
+        } else {
+          mockupBody.innerHTML = `
+            <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">✨</span>
+                <span class="font-extrabold text-sm text-neutral-800">${test.service_name || test.title} 서비스 대시보드</span>
+              </div>
+              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full animate-pulse">실시간 모집 중</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-center my-3">
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">목표 테스터</span>
+                <span class="text-lg font-extrabold text-neutral-800">${test.target_count || 10} 명</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">현재 참여 테스터</span>
+                <span class="text-lg font-extrabold text-primary-dark">${test.current_count || 0} 명</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 동전</span>
+                <span class="text-lg font-extrabold text-[#7E22CE]">${test.reward_coin || 500} 동전</span>
+              </div>
+            </div>
+            <div class="w-full h-36 bg-[#F9FBEC] rounded-xl border border-[#DCE4B8] p-3 flex flex-col items-center justify-center text-center overflow-hidden">
+              <span class="text-3xl filter drop-shadow-xs">🎉</span>
+              <span class="text-xs font-extrabold text-[#2F6517] block mt-1">${test.service_name || test.title} 서비스 미리보기</span>
+              <span class="text-[11px] text-neutral-600">${test.service_url || ''} 에서 테스터를 맞이할 준비가 완료되었습니다.</span>
+            </div>
+          `;
+        }
+      }
+
+      if (missionsContainer) {
+        let missionsHtml = `
+          <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+            <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-bold text-neutral-800">웹/앱 서비스 직접 체험 및 핵심 기능 검증</span>
+              <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                서비스 주소(${test.service_url || '서비스 URL'})에 접속하여 주요 기능을 검증해 주세요.
+              </p>
+            </div>
+          </div>
+        `;
+
+        const questions = typeof test.questions === 'string' ? JSON.parse(test.questions) : (test.questions || []);
+        let mIdx = 2;
+        questions.forEach(q => {
+          const qTitle = typeof q === 'string' ? q : q.title;
+          missionsHtml += `
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">${mIdx++}</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">${qTitle}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        const quizzes = typeof test.quizzes === 'string' ? JSON.parse(test.quizzes) : (test.quizzes || []);
+        quizzes.forEach(qz => {
+          missionsHtml += `
+            <div class="flex items-start gap-4 bg-[#FFFDF0] border border-[#F5EDBA] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-amber-500 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">❓</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-amber-900">검증 퀴즈 (성실도 확인)</span>
+                <p class="text-xs text-neutral-700 leading-relaxed font-semibold">Q. ${qz.question}</p>
+              </div>
+            </div>
+          `;
+        });
+
+        missionsContainer.innerHTML = missionsHtml;
+      }
+
+      const percent = Math.round(((test.current_count || 0) / (test.target_count || 10)) * 100);
+      if (recruitsText) recruitsText.textContent = `${test.current_count || 0} / ${test.target_count || 10}명`;
+      if (recruitsBar) recruitsBar.style.width = `${Math.max(percent, 4)}%`;
+      if (regDate) regDate.textContent = test.created_at ? test.created_at.split('T')[0] : '2026-09-08';
+      if (endDate) endDate.textContent = test.end_date || '2026-09-22';
+      if (rewardMeta) rewardMeta.innerHTML = `${test.reward_coin || 500} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">`;
+
+      // Update Sidebar Creator Card from DB
+      const creatorSidebarName = document.getElementById('post-creator-name-sidebar');
+      const creatorSidebarBio = document.getElementById('post-creator-bio-sidebar');
+      const creatorSidebarBadge = document.getElementById('post-creator-badge-sidebar');
+      const creatorSidebarTags = document.getElementById('post-creator-tags-sidebar');
+
+      if (creatorSidebarName) creatorSidebarName.textContent = creatorNick;
+      if (creatorSidebarBio && test.users?.bio) creatorSidebarBio.textContent = test.users.bio;
+      if (creatorSidebarBadge && test.users?.rank_badge) creatorSidebarBadge.textContent = test.users.rank_badge;
+
+      if (creatorSidebarTags && test.users?.interests && Array.isArray(test.users.interests)) {
+        creatorSidebarTags.innerHTML = test.users.interests.map(t => `<span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#${t}</span>`).join('');
+      }
+
+      // Check Creator Ownership to show creator-only management actions
+      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
+        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
+          const activeUserId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+          const isCreatorOwner = (activeUserId === test.creator_id);
+
+          const ctaBtn = document.getElementById('btn-participate-test');
+          const creatorActions = document.getElementById('creator-only-actions');
+          const sidebarBadge = document.getElementById('post-sidebar-badge');
+
+          if (isCreatorOwner) {
+            if (ctaBtn) ctaBtn.classList.add('hidden');
+            if (creatorActions) {
+              creatorActions.classList.remove('hidden');
+              creatorActions.classList.add('flex');
+            }
+            if (sidebarBadge) {
+              sidebarBadge.innerHTML = '<span>📢</span> <span>내가 등록한 테스트입니다 (제작자 전용 관리 뷰).</span>';
+            }
+          } else {
+            if (ctaBtn) ctaBtn.classList.remove('hidden');
+            if (creatorActions) {
+              creatorActions.classList.add('hidden');
+              creatorActions.classList.remove('flex');
+            }
+            if (sidebarBadge) {
+              sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 동전이 수령됩니다.</span>';
+            }
+          }
+        });
+      }
+    };
+
+    async function openFeedbackReport(projectId = 'moneylog') {
+      currentPostId = projectId;
+      navigateTo('feedback');
+
+      if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
+        try {
+          const project = await window.donDwaeDataService.fetchProjectById(projectId);
+          if (project) {
+            // Update Header & Project Info
+            const titleEl = document.getElementById('feedback-project-title');
+            const subtextEl = document.getElementById('feedback-project-subtext');
+            const catTagEl = document.getElementById('feedback-project-category-tag');
+            const statusTagEl = document.getElementById('feedback-project-status-tag');
+            const statusBadgeEl = document.getElementById('test-status-badge');
+
+            if (titleEl) titleEl.textContent = project.service_name || project.title;
+            if (subtextEl) subtextEl.textContent = project.service_desc || project.title;
+            if (catTagEl) catTagEl.textContent = project.category === 'abtest' ? 'A/B 테스트' : (project.category === 'vote' ? '투표 테스트' : (project.category === 'prototype' ? '프로토타입' : '프로덕트 테스트'));
+            if (statusTagEl) statusTagEl.textContent = project.status === 'completed' ? '모집 완료' : '모집 중';
+            if (statusBadgeEl) statusBadgeEl.textContent = project.status === 'completed' ? '[테스트 종료]' : '[모집 중]';
+
+            // Update Metrics Cards
+            const recruitsNumEl = document.getElementById('feedback-recruits-num');
+            const targetCountEl = document.getElementById('feedback-target-count-text');
+            const progressBarEl = document.getElementById('feedback-progress-bar');
+            const recruitsRateEl = document.getElementById('feedback-recruits-rate');
+            const totalRewardEl = document.getElementById('feedback-total-reward-num');
+            const perPersonRewardEl = document.getElementById('feedback-per-person-reward-text');
+
+            const current = project.current_count || 0;
+            const target = project.target_count || 10;
+            const pct = Math.min(100, Math.round((current / target) * 100));
+
+            if (recruitsNumEl) recruitsNumEl.textContent = current;
+            if (targetCountEl) targetCountEl.textContent = `/ ${target}명`;
+            if (progressBarEl) progressBarEl.style.width = `${Math.max(pct, 4)}%`;
+            if (recruitsRateEl) recruitsRateEl.textContent = `${pct}% 달성`;
+            if (totalRewardEl) totalRewardEl.textContent = (current * (project.reward_coin || 500)).toLocaleString();
+            if (perPersonRewardEl) perPersonRewardEl.textContent = `1인당 ${project.reward_coin || 500} 동전 정상 지급 완료`;
+          }
+
+          // Fetch & Render Real DB Reviews
+          const fbContainer = document.getElementById('feedback-cards-container');
+          if (fbContainer) {
+            const reviews = await window.donDwaeDataService.fetchProjectReviews(projectId);
+            if (!reviews || reviews.length === 0) {
+              fbContainer.innerHTML = `
+                <div class="bg-white rounded-2xl border border-dashed border-neutral-300 p-12 text-center flex flex-col items-center justify-center gap-3 shadow-xs">
+                  <div class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl">
+                    💬
+                  </div>
+                  <h4 class="text-sm font-extrabold text-neutral-dark mb-0.5">아직 등록된 테스터 리뷰가 없습니다</h4>
+                  <p class="text-xs text-neutral-400 font-medium max-w-xs">
+                    테스터들이 참여를 완료하면 생생한 피드백과 평가가 이곳에 실시간으로 기록됩니다.
+                  </p>
+                </div>
+              `;
+            } else {
+              fbContainer.innerHTML = reviews.map((r, idx) => {
+                const userNick = r.users?.nickname || '익명 테스터';
+                const ratingStars = '★ '.repeat(Math.round(r.rating || 5));
+                return `
+                  <article class="feedback-card bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-[#F3F4F6] flex items-center justify-center font-bold text-xs text-neutral-700">
+                          ${userNick.charAt(0)}
+                        </div>
+                        <div>
+                          <div class="flex items-center gap-2">
+                            <span class="font-bold text-sm text-neutral-dark">${userNick}</span>
+                            <span class="text-xs text-neutral-muted">${r.created_at ? r.created_at.split('T')[0] : '방금 전'}</span>
+                          </div>
+                          <div class="text-[#8D2B44] text-xs flex gap-0.5 mt-0.5">
+                            ${ratingStars}
+                          </div>
+                        </div>
+                      </div>
+                      <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold">[참여자 #${idx + 1}]</span>
+                    </div>
+
+                    <div class="bg-canvas-cream/60 border border-[#E9E4C2] rounded-xl p-5 relative">
+                      <p class="text-sm font-medium text-neutral-dark leading-relaxed">
+                        "${r.content || r.feedback_text || '유용한 경험이었습니다.'}"
+                      </p>
+                    </div>
+                  </article>
+                `;
+              }).join('');
+            }
+          }
+        } catch (err) {
+          console.warn('[openFeedbackReport] Warning:', err.message);
+        }
+      }
+    }
+
+    // Dynamic Post View (moneylog vs prototype) & Tester Participation
+    async function openPostDetail(postId = 'moneylog') {
+      currentPostId = postId;
+      navigateTo('post');
+
+      if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
+        try {
+          const dbProj = await window.donDwaeDataService.fetchProjectById(postId);
+          if (dbProj) {
+            window.renderDBProjectToDetail(dbProj);
+
+            // Fetch and render actual DB reviews for this project
+            const reviewsContainer = document.getElementById('detail-reviews-container');
+            if (reviewsContainer) {
+              const reviews = await window.donDwaeDataService.fetchProjectReviews(postId);
+              if (!reviews || reviews.length === 0) {
+                reviewsContainer.innerHTML = `
+                  <div class="bg-white rounded-2xl border border-neutral-200 p-8 text-center flex flex-col items-center justify-center gap-2 shadow-2xs">
+                    <span class="text-2xl">💬</span>
+                    <span class="text-xs font-bold text-neutral-600">아직 등록된 리뷰가 없어요</span>
+                    <span class="text-[11px] text-neutral-400">첫 번째 테스터가 되어 피드백을 남겨보세요!</span>
+                  </div>
+                `;
+              } else {
+                reviewsContainer.innerHTML = reviews.map(r => `
+                  <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
+                        <div>
+                          <span class="text-xs font-extrabold text-neutral-dark block">${r.users?.nickname || '익명 테스터'}</span>
+                          <span class="text-[10px] text-neutral-400">테스터 참여자</span>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-amber-500">⭐ ${Number(r.rating || 5).toFixed(1)}</span>
+                        <span class="text-[11px] text-neutral-400">${r.created_at ? r.created_at.split('T')[0] : '방금 전'}</span>
+                      </div>
+                    </div>
+                    <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
+                      "${r.content || r.feedback_text || ''}"
+                    </p>
+                  </div>
+                `).join('');
+              }
+            }
+
+            return;
+          }
+        } catch (err) {
+          console.warn('[openPostDetail] DB fetch notice:', err);
+        }
+      }
 
       if (postId === 'my-created-test' || postId === 'my-test') {
-        // 1. [내가 등록한 서비스 상세 페이지] - 실제 사용자가 등록한 폼 데이터 반영
         const test = myCreatedTest;
 
         if (titleEl) titleEl.textContent = test.title ? test.title : `${test.serviceName} 베타테스터 모집`;
@@ -7294,44 +7313,85 @@
 
         // Update mockup preview with thumbnail if available
         if (mockupBody) {
-          let previewVisualHTML = `<span class="text-3xl filter drop-shadow-xs">🎉</span>`;
           if (test.thumbnailUrl) {
-            previewVisualHTML = `<img src="${test.thumbnailUrl}" class="w-full h-full object-cover rounded-xl" alt="썸네일" />`;
+            mockupBody.innerHTML = `
+              <div class="w-full rounded-2xl overflow-hidden shadow-subtle border border-neutral-200 bg-white p-2">
+                <img src="${test.thumbnailUrl}" class="w-full h-auto max-h-[480px] object-contain rounded-xl" alt="서비스 첨부 이미지 미리보기" />
+              </div>
+            `;
+          } else {
+            mockupBody.innerHTML = `
+              <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">✨</span>
+                  <span class="font-extrabold text-sm text-neutral-800">${test.serviceName} 서비스 대시보드</span>
+                </div>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full animate-pulse">실시간 모집 중</span>
+              </div>
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                  <span class="text-[10px] text-neutral-400 block mb-1">목표 테스터</span>
+                  <span class="text-lg font-extrabold text-neutral-800">${test.targetCount} 명</span>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                  <span class="text-[10px] text-neutral-400 block mb-1">현재 참여 테스터</span>
+                  <span class="text-lg font-extrabold text-primary-dark">${test.currentRecruits} 명</span>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                  <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 동전</span>
+                  <span class="text-lg font-extrabold text-[#7E22CE]">${test.rewardCoin} 동전</span>
+                </div>
+              </div>
+              <div class="w-full h-36 bg-[#F9FBEC] rounded-xl border border-[#DCE4B8] p-3 flex flex-col items-center justify-center text-center overflow-hidden">
+                <span class="text-3xl filter drop-shadow-xs">🎉</span>
+                <span class="text-xs font-extrabold text-[#2F6517] block mt-1">${test.serviceName} 서비스 미리보기</span>
+                <span class="text-[11px] text-neutral-600">${test.serviceUrl} 에서 테스터를 맞이할 준비가 완료되었습니다.</span>
+              </div>
+            `;
           }
-
-          mockupBody.innerHTML = `
-            <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
-              <div class="flex items-center gap-2">
-                <span class="text-lg">✨</span>
-                <span class="font-extrabold text-sm text-neutral-800">${test.serviceName} 서비스 대시보드</span>
-              </div>
-              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full animate-pulse">실시간 모집 중</span>
-            </div>
-            <div class="grid grid-cols-3 gap-3 text-center">
-              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">목표 테스터</span>
-                <span class="text-lg font-extrabold text-neutral-800">${test.targetCount} 명</span>
-              </div>
-              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">현재 참여 테스터</span>
-                <span class="text-lg font-extrabold text-primary-dark">${test.currentRecruits} 명</span>
-              </div>
-              <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 동전</span>
-                <span class="text-lg font-extrabold text-[#7E22CE]">${test.rewardCoin} 동전</span>
-              </div>
-            </div>
-            <div class="w-full h-36 bg-[#F9FBEC] rounded-xl border border-[#DCE4B8] p-3 flex flex-col items-center justify-center text-center overflow-hidden">
-              ${previewVisualHTML}
-              <span class="text-xs font-extrabold text-[#2F6517] block mt-1">${test.serviceName} 서비스 미리보기</span>
-              <span class="text-[11px] text-neutral-600">${test.serviceUrl} 에서 테스터를 맞이할 준비가 완료되었습니다.</span>
-            </div>
-          `;
         }
 
-        // Generate missions list based on user's questions & quizzes
+        // Generate missions list based on user's questions & quizzes & login requirement
         if (missionsContainer) {
-          let missionsHtml = `
+          let missionsHtml = '';
+
+          // STEP 02 Login Requirement info block
+          if (test.loginRequired === 'required') {
+            missionsHtml += `
+              <div class="flex items-start gap-4 bg-[#F0FDF4] border border-[#BBF7D0] p-4.5 rounded-2xl">
+                <span class="w-7 h-7 rounded-xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">🔒</span>
+                <div class="flex flex-col gap-1.5 w-full">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold text-emerald-900">로그인 안내 & 체험 계정 정보</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-extrabold text-[10px]">로그인 필수</span>
+                  </div>
+                  ${test.loginId || test.loginPw ? `
+                    <div class="flex items-center gap-3 bg-white p-2.5 rounded-xl border border-emerald-200 text-xs font-mono">
+                      <span>ID: <strong>${test.loginId || '제공 계정 참고'}</strong></span>
+                      <span>PW: <strong>${test.loginPw || '제공 계정 참고'}</strong></span>
+                    </div>
+                  ` : ''}
+                  ${test.privacyItems ? `
+                    <p class="text-[11px] text-emerald-800 font-medium">
+                      📋 수집/취급 개인정보: <strong>${test.privacyItems}</strong>
+                    </p>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          } else {
+            missionsHtml += `
+              <div class="flex items-start gap-4 bg-[#F8FAFC] border border-[#E2E8F0] p-3.5 rounded-2xl">
+                <span class="w-7 h-7 rounded-xl bg-slate-500 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">🔑</span>
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-xs font-bold text-slate-800">로그인 불필요 (자유 접근)</span>
+                  <p class="text-[11px] text-slate-500 font-medium">별도 로그인 절차 없이 자유롭게 서비스를 둘러보실 수 있습니다.</p>
+                </div>
+              </div>
+            `;
+          }
+
+          missionsHtml += `
             <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
               <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
               <div class="flex flex-col gap-1">
@@ -8211,25 +8271,16 @@
     // ========================================================
     // TEST TYPE FEEDBACK SUBMISSION MODAL LOGIC
     // ========================================================
-    function openFeedbackWriteModal(postId) {
+    async function openFeedbackWriteModal(postId) {
       closeTestParticipateModal();
 
-      const pId = postId || currentParticipatingPostId || currentPostId || 'moneylog';
-      const postsMap = typeof testPosts !== 'undefined' ? testPosts : {};
-      let post = postsMap[pId];
-      if (!post) {
-        if ((pId === 'my-created-test' || pId === 'my-test') && myCreatedTest) {
-          post = {
-            title: myCreatedTest.title || `${myCreatedTest.serviceName} 베타테스트`,
-            type: myCreatedTest.mainCategory === 'vote' ? 'Vote' : (myCreatedTest.mainCategory === 'survey' ? 'Survey' : 'Product'),
-            reward: myCreatedTest.rewardCoin || 600
-          };
-        } else {
-          post = {
-            title: pId === 'prototype' ? '온보딩 UI 시안 A/B 투표' : '스마트 가계부 머니로그 테스트',
-            type: pId === 'prototype' ? 'Vote' : 'Product',
-            reward: pId === 'prototype' ? 350 : 600
-          };
+      const pId = postId || currentParticipatingPostId || currentPostId || '11111111-1111-1111-1111-111111111111';
+      let dbProj = null;
+      if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
+        try {
+          dbProj = await window.donDwaeDataService.fetchProjectById(pId);
+        } catch (e) {
+          console.warn('[openFeedbackWriteModal] DB fetch warning:', e.message);
         }
       }
 
@@ -8241,28 +8292,28 @@
 
       if (!modal || !body) return;
 
-      const typeMap = {
-        'Product': '📱 프로덕트 테스트',
-        'Vote': '🗳️ 투표 테스트',
-        'Survey': '📋 설문조사'
-      };
+      const titleText = dbProj?.title || dbProj?.service_name || '테스트 피드백';
+      const rewardCoin = dbProj?.reward_coin || 500;
+      const categoryText = dbProj?.category === 'vote' ? '🗳️ 투표 테스트' : (dbProj?.category === 'survey' ? '📋 설문조사' : '📱 프로덕트 테스트');
 
-      if (badge) badge.textContent = `${typeMap[post.type] || '📱 프로덕트 테스트'} 피드백`;
-      if (reward) reward.textContent = `🪙 +${post.reward || 600} 동전 지급`;
-      if (title) title.textContent = `${post.title} 피드백 작성`;
+      if (badge) badge.textContent = `${categoryText} 피드백`;
+      if (reward) reward.textContent = `🪙 +${rewardCoin} 동전 지급`;
+      if (title) title.textContent = `${titleText} 피드백 작성`;
 
-      // Render content based on test type
-      renderFeedbackFormByTestType(post.type || 'Product', body);
+      // Render content based on test type & DB questions/quizzes
+      renderFeedbackFormByTestType(dbProj?.category || 'product', body, dbProj);
 
       modal.classList.remove('hidden');
     }
+    window.openFeedbackWriteModal = openFeedbackWriteModal;
 
     function closeFeedbackWriteModal() {
       const modal = document.getElementById('write-feedback-modal');
       if (modal) modal.classList.add('hidden');
     }
+    window.closeFeedbackWriteModal = closeFeedbackWriteModal;
 
-    function renderFeedbackFormByTestType(testType, container) {
+    function renderFeedbackFormByTestType(testType, container, dbProj = null) {
       if (testType === 'Vote') {
         container.innerHTML = `
           <!-- 별점 평가 -->
@@ -8367,10 +8418,19 @@
             </label>
             
             <div class="space-y-3 bg-[#FAFBF7] p-4 rounded-xl border border-[#E9EEDC] text-xs">
-              ${(myCreatedTest && ((myCreatedTest.questions && myCreatedTest.questions.length > 0) || (myCreatedTest.quizzes && myCreatedTest.quizzes.length > 0))) ?
+              ${(() => {
+                const questionsList = dbProj?.questions ? (typeof dbProj.questions === 'string' ? JSON.parse(dbProj.questions) : dbProj.questions) : (myCreatedTest?.questions || []);
+                const quizzesList = dbProj?.quizzes ? (typeof dbProj.quizzes === 'string' ? JSON.parse(dbProj.quizzes) : dbProj.quizzes) : (myCreatedTest?.quizzes || []);
+                const combined = [
+                  ...questionsList.map((q, idx) => ({ q, idx, isQuiz: false })),
+                  ...quizzesList.map((q, idx) => ({ q, idx: questionsList.length + idx, isQuiz: true }))
+                ];
+                if (combined.length === 0) return '';
+                return combined;
+              })() ?
             [
-              ...(myCreatedTest.questions || []).map((q, idx) => ({ q, idx, isQuiz: false })),
-              ...(myCreatedTest.quizzes || []).map((q, idx) => ({ q, idx: (myCreatedTest.questions ? myCreatedTest.questions.length : 0) + idx, isQuiz: true }))
+              ...((dbProj?.questions ? (typeof dbProj.questions === 'string' ? JSON.parse(dbProj.questions) : dbProj.questions) : (myCreatedTest?.questions || []))).map((q, idx) => ({ q, idx, isQuiz: false })),
+              ...((dbProj?.quizzes ? (typeof dbProj.quizzes === 'string' ? JSON.parse(dbProj.quizzes) : dbProj.quizzes) : (myCreatedTest?.quizzes || []))).map((q, idx) => ({ q, idx: ((dbProj?.questions ? (typeof dbProj.questions === 'string' ? JSON.parse(dbProj.questions) : dbProj.questions) : (myCreatedTest?.questions || []))).length + idx, isQuiz: true }))
             ].map(({ q, idx, isQuiz }) => {
               if (isQuiz) {
                 const quizQuestionText = q.question || '퀴즈 질문';
@@ -8402,8 +8462,8 @@
               }
 
               const titleText = typeof q === 'string' ? q : q.title;
-              const qType = (typeof q === 'object' && q.type) ? q.type : (choices.length > 0 ? 'single' : 'essay');
               const choices = (typeof q === 'object' && Array.isArray(q.choices)) ? q.choices : [];
+              const qType = (typeof q === 'object' && q.type) ? q.type : (choices.length > 0 ? 'single' : 'essay');
 
               if (choices.length === 0 || qType === 'essay') {
                 // Subjective Question (주관식 서술형)
@@ -8567,22 +8627,24 @@
         fbContainer.prepend(cardArticle);
       }
 
-      // [Supabase DB Integration] Insert review into 'reviews' table
+      // [Supabase DB Integration] Insert review into 'reviews' table with active user and project ID
       if (window.donDwaeDataService && typeof window.donDwaeDataService.submitReviewRecord === 'function') {
-        const dummyUserId = '00000000-0000-0000-0000-000000000001';
-        const dummyProjectId = '00000000-0000-0000-0000-000000000002';
-        const reviewPayload = {
-          project_id: dummyProjectId,
-          user_id: dummyUserId,
-          rating: selectedFeedbackStarCount || 5.0,
-          reuse_intention: true,
-          answers: { review_text: reviewText },
-          status: 'submitted'
-        };
-        window.donDwaeDataService.submitReviewRecord(reviewPayload).then(res => {
-          if (res) console.log('[Supabase DB] Successfully saved review to DB:', res);
-        }).catch(err => {
-          console.warn('[Supabase DB] Review insert warning:', err);
+        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
+          const activeUserId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+          const activeProjectId = currentPostId || '11111111-1111-1111-1111-111111111111';
+          const reviewPayload = {
+            project_id: activeProjectId,
+            user_id: activeUserId,
+            rating: selectedFeedbackStarCount || 5.0,
+            reuse_intention: true,
+            answers: { review_text: reviewText },
+            status: 'submitted'
+          };
+          window.donDwaeDataService.submitReviewRecord(reviewPayload).then(res => {
+            if (res) console.log('[Supabase DB] Successfully saved review to DB:', res);
+          }).catch(err => {
+            console.warn('[Supabase DB] Review insert warning:', err);
+          });
         });
       }
 
@@ -8694,19 +8756,45 @@
       }
     }
 
+    window.userHasPassedGating = false;
+
     function getCompletedTestCount() {
-      if (isGatingBypassActive) return 3;
+      if (isGatingBypassActive || window.userHasPassedGating) return 3;
       return Object.keys(userParticipatedTests).length;
     }
 
+    function checkAuthOrPromptLogin() {
+      const session = window.donDwaeDataService?.supabase?.auth?.getSession();
+      // If user is not logged in or in guest session
+      if (window.donDwaeDataService && !window.donDwaeDataService.activeUser) {
+        // We will check session synchronously if available
+      }
+      return true;
+    }
+
     window.openPledgeModalLocal = function () {
+      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
+        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!session || !session.user) {
+            alert('프로젝트를 등록하시려면 먼저 로그인해 주세요!');
+            navigateTo('landing');
+            return;
+          }
+          proceedPledgeModal();
+        });
+      } else {
+        proceedPledgeModal();
+      }
+    };
+
+    function proceedPledgeModal() {
       const modal = document.getElementById('pledge-modal');
       const viewBlocked = document.getElementById('pledge-view-blocked');
       const viewAllowed = document.getElementById('pledge-view-allowed');
 
       const count = getCompletedTestCount();
 
-      if (count < 3) {
+      if (count < 3 && !window.userHasPassedGating) {
         if (viewBlocked) viewBlocked.classList.remove('hidden');
         if (viewAllowed) viewAllowed.classList.add('hidden');
 
@@ -8719,18 +8807,14 @@
         if (viewAllowed) viewAllowed.classList.remove('hidden');
 
         const countEl = document.getElementById('pledge-user-completed-count');
-        if (countEl) countEl.textContent = `${count}회`;
+        if (countEl) countEl.textContent = `${count >= 3 ? count : '게이팅 완료 (1회 충족)'}`;
       }
 
       if (modal) modal.classList.remove('hidden');
-    };
+    }
 
     function openPledgeModal() {
-      if (window.dondwaeDB?.checkPledgeGatingState) {
-        window.dondwaeDB.checkPledgeGatingState();
-      } else {
-        window.openPledgeModalLocal();
-      }
+      window.openPledgeModalLocal();
     }
 
     function closePledgeModal() {
@@ -8738,13 +8822,60 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function confirmPledgeAndProceed() {
-      if (window.dondwaeDB?.passPledgeGatingInDB) {
-        window.dondwaeDB.passPledgeGatingInDB();
+    function openTestParticipateModal(postId) {
+      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
+        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!session || !session.user) {
+            alert('테스트에 참여하시려면 먼저 로그인해 주세요!');
+            navigateTo('landing');
+            return;
+          }
+          proceedTestParticipateModal(postId);
+        });
       } else {
-        closePledgeModal();
-        navigateTo('create');
+        proceedTestParticipateModal(postId);
       }
+    }
+
+    function proceedTestParticipateModal(postId) {
+      const targetPostId = postId || currentPostId || 'moneylog';
+      currentParticipatingPostId = targetPostId;
+
+      const modal = document.getElementById('test-participate-modal');
+      const viewInitial = document.getElementById('participate-view-initial');
+      const viewExternal = document.getElementById('participate-view-external-done');
+      const viewInternal = document.getElementById('participate-view-internal-flow');
+
+      if (!modal) return;
+
+      // Reset views
+      viewInitial.classList.remove('hidden');
+      viewExternal.classList.add('hidden');
+      viewInternal.classList.add('hidden');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closePledgeModal() {
+      const modal = document.getElementById('pledge-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function confirmPledgeAndProceed() {
+      window.userHasPassedGating = true;
+      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
+        try {
+          const { data: { session } } = await window.donDwaeDataService.supabase.auth.getSession();
+          if (session && session.user) {
+            await window.donDwaeDataService.updateUserProfile(session.user.id, { has_passed_gating: true });
+            console.log('[Supabase DB] 3회 게이팅 영구 통과 상태가 DB에 저장되었습니다:', session.user.id);
+          }
+        } catch (err) {
+          console.warn('[Supabase DB] Gating update notice:', err);
+        }
+      }
+      closePledgeModal();
+      navigateTo('create');
     }
 
     // [Removed duplicate old goToStep]
@@ -9237,6 +9368,14 @@
       if (target < 30) target = 30;
       const totalCost = reward * target;
 
+      if (isProjectEditMode) {
+        // 이미 생성된 프로젝트 수정 모드: 코인 결제나 차감 없이 저장 후 대시보드 반영
+        isProjectEditMode = false;
+        publishNewTestAndReturnToDashboard(false, 0);
+        showGenericToast('✏️ 프로젝트 수정 내용이 성공적으로 저장되었습니다!', '🎉');
+        return;
+      }
+
       if (totalCost > userCoinBalance) {
         // 코인 부족 -> 결제창 모달 오픈
         const deficit = totalCost - userCoinBalance;
@@ -9541,11 +9680,12 @@
       };
       saveMyCreatedTestToStorage();
 
-      // [Supabase DB Integration] Insert into 'projects' table
+      // [Supabase DB Integration] Insert into 'projects' table with active user ID
       if (window.donDwaeDataService && typeof window.donDwaeDataService.createProjectRecord === 'function') {
-        const dummyUserId = '00000000-0000-0000-0000-000000000001';
-        const dbPayload = {
-          creator_id: dummyUserId,
+        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
+          const activeCreatorId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+          const dbPayload = {
+            creator_id: activeCreatorId,
           title: tTitle,
           service_name: sName,
           service_desc: sDesc,
@@ -9563,12 +9703,13 @@
           total_funded_cost: rCoin * tCount,
           tech_tags: tags
         };
-        window.donDwaeDataService.createProjectRecord(dbPayload).then(res => {
-          if (res) {
-            console.log('[Supabase DB] Successfully saved project to DB:', res);
-          }
-        }).catch(err => {
-          console.warn('[Supabase DB] Insert project warning:', err);
+          window.donDwaeDataService.createProjectRecord(dbPayload).then(res => {
+            if (res) {
+              console.log('[Supabase DB] Successfully saved project to DB:', res);
+            }
+          }).catch(err => {
+            console.warn('[Supabase DB] Insert project warning:', err);
+          });
         });
       }
 
@@ -9677,14 +9818,14 @@
     }
 
     function originalPublishOld() {
-      testCreationStore.serviceName = document.getElementById('input-service-name').value.trim() || '돈돼 (DonDwae)';
-      testCreationStore.serviceDesc = document.getElementById('input-service-desc').value.trim() || '바이브코딩으로 만든 서비스 검증 및 피드백 플랫폼';
-      testCreationStore.serviceUrl = document.getElementById('input-service-url').value.trim() || 'try-money-pig.io';
-      testCreationStore.rewardCoin = parseInt(document.getElementById('input-reward-coin').value) || 50;
+      testCreationStore.serviceName = document.getElementById('input-service-name').value.trim();
+      testCreationStore.serviceDesc = document.getElementById('input-service-desc').value.trim();
+      testCreationStore.serviceUrl = document.getElementById('input-service-url').value.trim();
+      testCreationStore.rewardCoin = parseInt(document.getElementById('input-reward-coin').value) || 0;
       testCreationStore.targetCount = parseInt(document.getElementById('input-target-count').value) || 10;
       testCreationStore.requireScreenshot = document.getElementById('toggle-screenshot').checked;
 
-      const activeNickname = document.getElementById('mypage-user-nickname')?.textContent.trim() || '바이브코더123';
+      const activeNickname = document.getElementById('mypage-user-nickname')?.textContent.trim() || '크리에이터';
 
       const grid = document.getElementById('dashboard-cards-grid');
       if (grid) {
@@ -10225,7 +10366,7 @@
       container.appendChild(div);
     }
 
-    window.saveProfileChangesLocal = function (newNick, newBio) {
+    window.saveProfileChangesLocal = function (newNick, newBio, showToast = false) {
       const mypageNick = document.getElementById('mypage-user-nickname');
       const mypageBio = document.getElementById('mypage-user-bio');
       if (mypageNick) mypageNick.textContent = newNick;
@@ -10233,14 +10374,54 @@
 
       const homeGreeting = document.getElementById('home-greeting-title');
       const headerNick = document.getElementById('header-user-nickname');
+      const sidebarNick = document.getElementById('post-creator-name-sidebar');
+      const sidebarBio = document.getElementById('post-creator-bio-sidebar');
+
+      document.querySelectorAll('[data-user-nickname]').forEach(el => {
+        el.textContent = newNick;
+      });
+
       if (homeGreeting) homeGreeting.textContent = `안녕하세요, ${newNick}님! 👋`;
       if (headerNick) headerNick.textContent = `${newNick} ▾`;
+      if (sidebarNick) sidebarNick.textContent = newNick;
+      if (sidebarBio && newBio) sidebarBio.textContent = newBio;
 
-      showGenericToast('✨ 프로필 정보가 성공적으로 수정되었습니다!', '👤');
-      closeEditProfileModal();
+      if (showToast) {
+        showGenericToast('✨ 프로필 정보가 성공적으로 수정되었습니다!', '👤');
+        closeEditProfileModal();
+      }
     };
 
-    function saveProfileChanges() {
+    window.handleUserLogout = async function() {
+      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
+        try {
+          await window.donDwaeDataService.supabase.auth.signOut();
+        } catch (e) {
+          console.warn('[Logout] Supabase signOut warning:', e.message);
+        }
+      }
+      showGenericToast('👋 안전하게 로그아웃 되었습니다.', '🚪');
+      updateHeaderAuthUI(false);
+      setTimeout(() => {
+        navigateTo('landing');
+      }, 300);
+    };
+
+    window.updateHeaderAuthUI = function(isLoggedIn) {
+      const loginBtn = document.getElementById('btn-header-login');
+      const logoutBtn = document.getElementById('btn-header-logout');
+      if (loginBtn && logoutBtn) {
+        if (isLoggedIn) {
+          loginBtn.classList.add('hidden');
+          logoutBtn.classList.remove('hidden');
+        } else {
+          loginBtn.classList.remove('hidden');
+          logoutBtn.classList.add('hidden');
+        }
+      }
+    };
+
+    async function saveProfileChanges() {
       const nickInput = document.getElementById('profile-edit-nickname');
       const bioInput = document.getElementById('profile-edit-bio');
 
@@ -10252,10 +10433,32 @@
         return;
       }
 
-      if (window.dondwaeDB?.saveProfileToSupabase) {
-        window.dondwaeDB.saveProfileToSupabase(newNick, newBio);
-      } else {
-        window.saveProfileChangesLocal(newNick, newBio);
+      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
+        try {
+          const { data: { session } } = await window.donDwaeDataService.supabase.auth.getSession();
+          const userId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+          await window.donDwaeDataService.updateUserProfile(userId, {
+            nickname: newNick,
+            bio: newBio
+          });
+          console.log('[Don Dwae DB] Profile updated in Supabase DB for user:', userId);
+        } catch (err) {
+          console.error('[Don Dwae DB] Failed to save profile to Supabase DB:', err);
+        }
+      }
+
+      window.saveProfileChangesLocal(newNick, newBio, true);
+
+      // Refresh explore feed & detail view so creator nickname updates everywhere
+      if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchExploreProjects === 'function') {
+        const liveProjects = await window.donDwaeDataService.fetchExploreProjects();
+        if (liveProjects && liveProjects.length > 0) {
+          window.renderLiveProjectsToFeed(liveProjects);
+        }
+      }
+      if (typeof currentPostId !== 'undefined' && currentPostId) {
+        const dbProj = await window.donDwaeDataService.fetchProjectById(currentPostId);
+        if (dbProj) window.renderDBProjectToDetail(dbProj);
       }
     }
 
@@ -10405,6 +10608,242 @@
       grid.insertBefore(newCard, grid.firstChild);
     }
 
+    window.renderLiveProjectsToFeed = function(projects) {
+      const grid = document.getElementById('dashboard-cards-grid');
+      if (!grid || !projects || projects.length === 0) return;
+
+      grid.innerHTML = '';
+      projects.forEach(p => {
+        const card = document.createElement('article');
+        card.setAttribute('data-category', p.category || 'product');
+        card.setAttribute('data-reward', p.reward_coin || 500);
+        card.setAttribute('data-time', p.duration || '3분');
+        card.setAttribute('data-date', p.created_at ? p.created_at.split('T')[0] : '');
+        card.setAttribute('data-card-id', p.id);
+        card.className = 'feed-card bg-white rounded-2xl border border-[#E5E7EB] shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group relative';
+        card.onclick = () => openPostDetail(p.id);
+
+        const remaining = Math.max(0, (p.target_count || 10) - (p.current_count || 0));
+        const isAb = p.is_ab_test || p.category === 'abtest' || p.category === 'vote';
+        const creatorNick = p.users?.nickname || '크리에이터';
+
+        card.innerHTML = `
+          <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
+            <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                <span class="font-bold text-neutral-700">${p.service_name || p.title}</span>
+                <span class="text-blue-600 font-bold">${isAb ? 'A/B 안' : '베타테스트'}</span>
+              </div>
+              ${p.thumbnail_url ? `<img src="${p.thumbnail_url}" class="w-full h-24 object-cover rounded my-1" alt="미리보기" />` : `
+              <div class="flex items-center justify-center flex-1 bg-blue-50/50 rounded my-1 text-center">
+                <span class="text-xs font-bold text-blue-900">${p.service_name || '서비스 테스트'}</span>
+              </div>`}
+            </div>
+            <div class="absolute top-5 left-5 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">
+                ${isAb ? 'A/B테스트' : '프로덕트'} · ${p.duration || '3분'}
+              </span>
+              <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
+                <span>🪙</span> +${p.reward_coin || 500} C
+              </span>
+            </div>
+            <button type="button" onclick="toggleBookmark(event, this, '${p.id}')"
+              class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+              title="스크랩 저장">
+              <span>🔖</span>
+            </button>
+          </div>
+          <div class="p-5 flex flex-col flex-1 justify-between gap-4">
+            <h3 class="text-sm sm:text-base font-bold text-neutral-dark line-clamp-2 leading-snug group-hover:text-primary-dark transition-colors">
+              ${p.title}
+            </h3>
+            <div class="flex items-center justify-between text-xs border-t border-dashed border-neutral-200 pt-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">● ${remaining}명 남음</span>
+                <span class="text-neutral-400 text-[11px]">(${p.current_count || 0}/${p.target_count || 10} 모집)</span>
+              </div>
+              <span class="text-neutral-400 text-[11px]">⏱ ${p.duration || '3분'}</span>
+            </div>
+          </div>
+          <div class="px-5 py-3 bg-[#FAFBF7] border-t border-[#E5E7EB] flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+              <div class="w-5 h-5 rounded-full bg-pink-100 text-[10px] flex items-center justify-center">🐷</div>
+              <span class="font-medium text-neutral-700">${creatorNick}</span>
+            </div>
+            <div class="flex items-center gap-3 text-neutral-400 text-[11px]">
+              <span class="font-bold text-emerald-600">진행 중</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    };
+
+    window.initSupabaseLiveDB = async function() {
+      if (!window.donDwaeDataService || !window.donDwaeDataService.supabase) return;
+      const ds = window.donDwaeDataService;
+
+      try {
+        const { data: { session } } = await ds.supabase.auth.getSession();
+        const isLoggedIn = !!session?.user;
+        if (typeof window.updateHeaderAuthUI === 'function') {
+          window.updateHeaderAuthUI(isLoggedIn);
+        }
+        const userId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+
+        if (userId) {
+          const profile = await ds.fetchUserProfile(userId);
+          const activeNick = profile?.nickname || '옹에';
+          const activeBio = profile?.bio || '돈돼 대표 크리에이터 옹에입니다.';
+          window.userHasPassedGating = profile?.has_passed_gating || false;
+          window.saveProfileChangesLocal(activeNick, activeBio);
+
+          const stats = await ds.fetchUserAggregateStats(userId);
+          const regCountEl = document.getElementById('mypage-reg-count');
+          const partCountEl = document.getElementById('mypage-part-count');
+          const scrapCountEl = document.getElementById('mypage-scrap-count');
+          if (regCountEl) regCountEl.textContent = stats.registeredCount;
+          if (partCountEl) partCountEl.textContent = stats.participatedCount;
+          if (scrapCountEl) scrapCountEl.textContent = stats.scrapCount;
+
+          // Populate overview cards & tab count badges from DB stats
+          const ovPartEl = document.getElementById('mypage-overview-part-count');
+          const ovRegEl = document.getElementById('mypage-overview-reg-count');
+          const ovActiveSubEl = document.getElementById('mypage-overview-active-sub');
+          const tabRegBadge = document.getElementById('myproj-registered-count-badge');
+          const tabPartBadge = document.getElementById('myproj-part-count-badge');
+          const filterAllCountEl = document.getElementById('myproj-filter-all-count');
+          const filterActiveCountEl = document.getElementById('myproj-filter-active-count');
+          const filterCompletedCountEl = document.getElementById('myproj-filter-completed-count');
+
+          if (ovPartEl) ovPartEl.textContent = stats.participatedCount;
+          if (ovRegEl) ovRegEl.textContent = stats.registeredCount;
+          if (ovActiveSubEl) ovActiveSubEl.textContent = `모집 진행중 ${stats.registeredCount}건`;
+          if (tabRegBadge) tabRegBadge.textContent = stats.registeredCount;
+          if (tabPartBadge) tabPartBadge.textContent = `리뷰 대기 0`;
+          if (filterAllCountEl) filterAllCountEl.textContent = stats.registeredCount;
+          if (filterActiveCountEl) filterActiveCountEl.textContent = stats.registeredCount;
+          if (filterCompletedCountEl) filterCompletedCountEl.textContent = 0;
+
+          // Populate My Registered Projects List dynamically from DB
+          const myProjects = await ds.fetchMyProjects(userId, 'registered');
+          const myprojCardsList = document.getElementById('myproj-cards-list');
+          if (myprojCardsList && myProjects && myProjects.length > 0) {
+            myprojCardsList.innerHTML = myProjects.map(p => `
+              <div class="myproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle" data-status="${p.status || 'active'}">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-[#E8F5E9] border border-[#C8E6C9] flex flex-col items-center justify-center relative p-1 shrink-0">
+                      <div class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">📱</div>
+                      <span class="text-[9px] font-black text-white bg-[#43A047] px-1 rounded mt-1">${(p.platform || 'web').toUpperCase()}</span>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                      <div class="flex items-center gap-2 flex-wrap text-xs">
+                        <span class="px-2.5 py-0.5 rounded-full bg-[#B4E380] text-[#1E3E0B] font-extrabold text-[11px]">● ${p.status === 'completed' ? '진행완료' : '진행중'}</span>
+                        <span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-bold">[${p.category || '프로젝트'}]</span>
+                        <span class="text-[11px] text-neutral-400 font-medium">📅 등록일: ${p.created_at ? p.created_at.split('T')[0] : '2026.09.01'}</span>
+                      </div>
+
+                      <h3 class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors" onclick="openPostDetail('${p.id}')">
+                        ${p.title}
+                      </h3>
+
+                      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs pt-1">
+                        <div class="flex items-center gap-2 min-w-[200px]">
+                          <span class="font-bold text-neutral-700">모집률 <strong class="text-neutral-dark font-black">${p.current_count || 0}/${p.target_count || 10}명</strong></span>
+                          <div class="w-28 h-2 bg-neutral-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#B4E380] rounded-full" style="width: ${Math.min(100, Math.round(((p.current_count || 0)/(p.target_count || 10))*100))}%"></div>
+                          </div>
+                          <span class="font-extrabold text-emerald-700 text-[11px]">${Math.round(((p.current_count || 0)/(p.target_count || 10))*100)}% 달성</span>
+                        </div>
+
+                        <div class="flex items-center gap-1 bg-[#FFFDF0] px-2.5 py-1 rounded-lg border border-[#F5E8B8]">
+                          <span class="text-neutral-500 font-medium text-[11px]">지급 리워드</span>
+                          <span class="font-black text-[#D97706] text-xs">🪙 ${p.reward_coin || 500} C / 명</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-1 text-neutral-400">
+                    <button type="button" onclick="openPostDetail('${p.id}')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors" title="수정">✏️</button>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+                  <button onclick="openPostDetail('${p.id}')" class="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
+                    <span>👁️ 상세 화면</span>
+                  </button>
+                  <button onclick="openFeedbackReport('${p.id}')" class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 relative">
+                    <span>📊 결과 및 피드백</span>
+                  </button>
+                </div>
+              </div>
+            `).join('');
+          }
+
+          const wallet = await ds.fetchUserWallet(userId);
+          if (wallet) {
+            window.userCoinBalance = wallet.earned_coins + wallet.paid_coins;
+            if (typeof window.updateAllCoinDisplays === 'function') window.updateAllCoinDisplays();
+          }
+
+          const notifications = await ds.fetchUserNotifications(userId);
+          if (notifications) {
+            window.notificationsData = notifications.map(n => ({
+              id: n.id,
+              user_id: n.user_id,
+              type: n.type || 'app_update',
+              title: n.title,
+              content: n.message || n.content || '',
+              related_id: n.related_id || 'explore',
+              is_read: n.is_read,
+              created_at: n.created_at
+            }));
+            if (typeof window.renderNotificationsUI === 'function') window.renderNotificationsUI();
+          }
+        }
+
+        const liveProjects = await ds.fetchExploreProjects();
+        if (liveProjects && liveProjects.length > 0) {
+          window.renderLiveProjectsToFeed(liveProjects);
+        }
+
+        const marketItems = await ds.fetchMarketplaceItems();
+        if (marketItems && marketItems.length > 0) {
+          const grid = document.getElementById('market-product-grid');
+          if (grid) {
+            grid.innerHTML = marketItems.map((item, idx) => `
+              <div data-market-item="${item.id}" data-market-category="${item.category || 'gift'}"
+                onclick="selectMarketProduct('${item.id}', '${item.title}', ${item.price_coin}, '${item.category || '상품'}', '${item.icon || '🎁'}')"
+                class="market-item-card ${idx === 0 ? 'ring-2 ring-[#2F6517] border-primary' : 'border-neutral-200'} bg-white rounded-2xl border p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group relative">
+                ${idx === 0 ? '<span class="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-[10px] font-extrabold shadow-xs flex items-center gap-1">✓ 현재 선택됨</span>' : ''}
+                <div>
+                  <div class="relative w-full h-32 rounded-xl bg-[#F8FAFC] border border-neutral-100 flex items-center justify-center mb-3">
+                    <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">${item.stock_count > 0 ? 'In-stock' : '품절'}</span>
+                    <span class="text-4xl">${item.icon || '🎁'}</span>
+                  </div>
+                  <span class="text-[11px] text-neutral-400 font-medium">${item.category || '상품'}</span>
+                  <h3 class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
+                    ${item.title}
+                  </h3>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                  <span class="text-sm font-extrabold text-neutral-dark">${(item.price_coin || 0).toLocaleString()} C</span>
+                  <span class="text-[11px] font-bold ${idx === 0 ? 'text-[#2F6517] bg-primary/20 px-2 py-0.5 rounded' : 'text-neutral-500 group-hover:text-primary-dark'}">
+                    ${idx === 0 ? '교환 가능' : '선택하기 >'}
+                  </span>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        console.warn('[Don Dwae DB] Live sync init warning:', err.message);
+      }
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
       document.addEventListener('click', event => {
         if (!event.target.closest('[data-top-myinfo-wrapper]')) closeTopMyInfoNavigation();
@@ -10419,6 +10858,10 @@
       renderNotificationsUI();
       restoreUserCreatedProjectToFeed();
       navigateTo('landing');
+
+      setTimeout(() => {
+        window.initSupabaseLiveDB();
+      }, 300);
     });
   </script>
   <script type="module" src="/src/dataService.js"></script>
