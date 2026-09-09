@@ -999,9 +999,13 @@
         </nav>
 
         <div class="flex items-center gap-3">
-          <button onclick="navigateTo('landing')"
+          <button id="btn-landing-login" onclick="navigateTo('login')"
             class="px-5 py-2.5 rounded-full border border-[#D1D5DB] text-sm font-medium text-[#374151] hover:bg-neutral-50 transition-all focus:outline-none cursor-pointer">
             로그인
+          </button>
+          <button id="btn-landing-logout" onclick="handleUserLogout()"
+            class="hidden px-5 py-2.5 rounded-full border border-[#D1D5DB] text-sm font-medium text-[#374151] hover:bg-neutral-50 transition-all focus:outline-none cursor-pointer">
+            로그아웃
           </button>
           <button onclick="openPledgeModal()"
             class="px-5 py-2.5 rounded-full bg-primary text-sm font-semibold text-neutral-dark hover:bg-primary-hover transition-all focus:outline-none shadow-sm cursor-pointer">
@@ -1024,7 +1028,7 @@
             백을 모으고 리워드를 받아가세요.
           </p>
 
-          <button id="google-login-btn" onclick="navigateTo('landing')"
+          <button id="google-login-btn" onclick="navigateTo('explore')"
             class="group w-full sm:w-[320px] h-[58px] bg-[#191A1C] hover:bg-[#27272A] border-2 border-[#191A1C] rounded-2xl flex items-center justify-center gap-3 px-6 shadow-sm hover:shadow-md transition-all duration-200 transform active:scale-98 focus:outline-none cursor-pointer">
             <span class="text-xl">🚀</span>
             <span
@@ -1174,7 +1178,7 @@
           </div>
 
           <!-- Supabase Email Auth Form -->
-          <form id="auth-form" class="w-full flex flex-col gap-4" novalidate onsubmit="event.preventDefault(); navigateTo('explore'); showGenericToast('🎉 환영합니다! 로그인되었습니다.', '👋'); return false;">
+          <form id="auth-form" class="w-full flex flex-col gap-4" novalidate onsubmit="event.preventDefault(); updateHeaderAuthUI(true); navigateTo('explore'); showGenericToast('🎉 환영합니다! 로그인되었습니다.', '👋'); return false;">
             <div>
               <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">이메일</label>
               <input id="auth-email-input" type="email" inputmode="email" autocomplete="email" autocapitalize="none"
@@ -2994,7 +2998,7 @@
 
         <div class="flex items-center gap-1.5 border-l border-neutral-200 pl-3" id="header-auth-buttons-container">
           <!-- Rendered dynamically by updateHeaderAuthUI() -->
-          <button type="button" onclick="navigateTo('landing')" id="btn-header-login"
+          <button type="button" onclick="navigateTo('login')" id="btn-header-login"
             class="px-3 py-1.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white text-xs font-bold transition-all cursor-pointer shadow-2xs">
             로그인
           </button>
@@ -8777,7 +8781,7 @@
         window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
           if (!session || !session.user) {
             alert('프로젝트를 등록하시려면 먼저 로그인해 주세요!');
-            navigateTo('landing');
+            navigateTo('login');
             return;
           }
           proceedPledgeModal();
@@ -8827,7 +8831,7 @@
         window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
           if (!session || !session.user) {
             alert('테스트에 참여하시려면 먼저 로그인해 주세요!');
-            navigateTo('landing');
+            navigateTo('login');
             return;
           }
           proceedTestParticipateModal(postId);
@@ -10419,6 +10423,18 @@
           logoutBtn.classList.add('hidden');
         }
       }
+
+      const landingLoginBtn = document.getElementById('btn-landing-login');
+      const landingLogoutBtn = document.getElementById('btn-landing-logout');
+      if (landingLoginBtn && landingLogoutBtn) {
+        if (isLoggedIn) {
+          landingLoginBtn.classList.add('hidden');
+          landingLogoutBtn.classList.remove('hidden');
+        } else {
+          landingLoginBtn.classList.remove('hidden');
+          landingLogoutBtn.classList.add('hidden');
+        }
+      }
     };
 
     async function saveProfileChanges() {
@@ -10689,9 +10705,9 @@
         if (typeof window.updateHeaderAuthUI === 'function') {
           window.updateHeaderAuthUI(isLoggedIn);
         }
-        const userId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+        const userId = session?.user?.id || null;
 
-        if (userId) {
+        if (isLoggedIn && userId) {
           const profile = await ds.fetchUserProfile(userId);
           const activeNick = profile?.nickname || '옹에';
           const activeBio = profile?.bio || '돈돼 대표 크리에이터 옹에입니다.';
