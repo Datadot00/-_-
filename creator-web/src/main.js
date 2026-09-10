@@ -30,11 +30,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const wallet = await dataService.fetchUserWallet(session.user.id);
-      if (wallet && typeof window.userCoinBalance !== 'undefined') {
-        window.userCoinBalance = wallet.earned_coins + wallet.paid_coins;
-        if (typeof window.updateAllCoinDisplays === 'function') {
-          window.updateAllCoinDisplays();
-        }
+      if (wallet && typeof window.setUserCoinBalance === 'function') {
+        window.setUserCoinBalance(wallet.earned_coins + wallet.paid_coins);
       }
     }
 

@@ -36,7 +36,7 @@ Vite 로컬 개발 주소는 `http://localhost:3000`입니다. `creator-web/pack
 ├── tester-mobile/        # 모바일 플로우 참고용 프로토타입(배포 제외)
 ├── index(mode).html      # 과거 웹/모바일 선택 포털(배포 제외)
 ├── assets/               # 공통 이미지 리소스
-└── docs/                 # 설계 및 리서치 문서
+└── docs/                 # 설계, 리서치 및 체크리스트 문서
 ```
 
 ## 배포 기준

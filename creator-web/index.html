@@ -477,7 +477,7 @@
             class="w-1/3 py-3.5 px-4 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">
             취소
           </button>
-          <button type="button" onclick="confirmParticipationAndProceed()"
+          <button type="button" id="btn-confirm-participation" onclick="confirmParticipationAndProceed()"
             class="w-2/3 py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
             <span>확인했어요, 시작하기</span>
             <span>→</span>
@@ -577,7 +577,7 @@
           class="px-5 py-3 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">
           나중에 작성
         </button>
-        <button type="button" onclick="submitFeedbackForm()"
+        <button type="button" id="btn-submit-feedback" onclick="submitFeedbackForm()"
           class="px-6 py-3 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
           <span>✓ 피드백 제출하고 리워드 받기</span>
         </button>
@@ -664,7 +664,7 @@
             <label class="font-bold text-neutral-800">닉네임 <span class="text-red-500">*</span></label>
             <span class="text-[10px] text-neutral-400" id="profile-nick-count">9/20자</span>
           </div>
-          <input type="text" id="profile-edit-nickname" value="" placeholder="닉네임을 입력하세요" maxlength="20"
+          <input type="text" id="profile-edit-nickname" value="" placeholder="닉네임을 입력하세요" maxlength="20" oninput="updateProfileInputCounts()"
             class="w-full p-3.5 rounded-xl border border-neutral-300 font-semibold text-neutral-dark outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
           <span class="text-[10px] text-neutral-400">한글, 영문, 숫자 조합으로 최대 20자까지 입력 가능합니다.</span>
         </div>
@@ -675,7 +675,7 @@
             <label class="font-bold text-neutral-800">한줄소개 <span class="text-red-500">*</span></label>
             <span class="text-[10px] text-neutral-400" id="profile-bio-count">24/50자</span>
           </div>
-          <textarea id="profile-edit-bio" rows="2" maxlength="50"
+          <textarea id="profile-edit-bio" rows="2" maxlength="50" oninput="updateProfileInputCounts()"
             class="w-full p-3.5 rounded-xl border border-neutral-300 font-semibold text-neutral-dark outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none">풀스택 바이브코더 · Cursor & v0 메이커</textarea>
           <span class="text-[10px] text-neutral-400">테스터 및 프로덕트 등록 시 프로필에 노출됩니다.</span>
         </div>
@@ -684,11 +684,11 @@
         <div class="flex flex-col gap-1.5">
           <label class="font-bold text-neutral-800">휴대폰 번호</label>
           <div class="flex items-center gap-2">
-            <input type="text" value="010-9876-5432" readonly
+            <input type="text" id="profile-edit-phone" value="" placeholder="등록된 번호 없음" readonly
               class="flex-1 p-3.5 rounded-xl border border-neutral-200 bg-white font-semibold text-neutral-700 outline-none">
-            <button type="button" onclick="alert('휴대폰 본인인증 창으로 연결됩니다.')"
-              class="px-4 py-3.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-extrabold text-xs transition-colors shrink-0">
-              인증 변경
+            <button type="button" disabled
+              class="px-4 py-3.5 rounded-xl bg-neutral-100 text-neutral-400 font-extrabold text-xs shrink-0 cursor-not-allowed">
+              준비 중
             </button>
           </div>
           <span class="text-[10px] text-neutral-400">기프티콘 및 중요 알림 수신용으로 사용됩니다.</span>
@@ -702,22 +702,22 @@
           </div>
           <div
             class="flex items-center justify-between p-3.5 rounded-xl border border-neutral-200 bg-neutral-50 text-neutral-500 font-semibold">
-            <span>admin001@dondwae.io</span>
-            <span
+            <span id="profile-edit-email">로그인 정보 확인 중...</span>
+            <span id="profile-edit-provider"
               class="px-2.5 py-1 rounded-full bg-white border border-neutral-200 text-neutral-600 text-[10px] font-bold flex items-center gap-1">
-              🌐 구글 계정 연동
+              이메일 계정
             </span>
           </div>
-          <span class="text-[10px] text-neutral-400">구글 간편 로그인으로 가입된 계정은 이메일을 임의로 변경할 수 없습니다 (비밀번호 변경 불필요).</span>
+          <span class="text-[10px] text-neutral-400">로그인 계정 이메일은 이 화면에서 변경할 수 없습니다.</span>
         </div>
 
         <!-- Birthdate (Disabled) -->
         <div class="flex flex-col gap-1.5">
           <div class="flex items-center justify-between text-neutral-400 text-[11px]">
             <label class="font-bold text-neutral-800">생년월일</label>
-            <span class="flex items-center gap-1">🔒 수정 불가 (본인 확인 완료)</span>
+            <span class="flex items-center gap-1">추후 본인인증 연결 예정</span>
           </div>
-          <input type="text" value="1995. 08. 24" disabled
+          <input type="text" value="등록된 정보 없음" disabled
             class="w-full p-3.5 rounded-xl border border-neutral-200 bg-neutral-50 text-neutral-500 font-semibold cursor-not-allowed">
           <span class="text-[10px] text-neutral-400">실명 인증 및 리워드 지급 시 성인 검증 용도로 등록된 정보로 직접 변경이 불가능합니다.</span>
         </div>
@@ -728,27 +728,25 @@
           <span class="text-[10px] text-neutral-400 mb-1">관심 있는 분야를 선택해주세요 (다중 선택 가능)</span>
 
           <div class="flex flex-wrap gap-2" id="interest-chips-box">
-            <button type="button" onclick="toggleInterestChip(this)"
-              class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#B4E380] text-[#1E3E0B] transition-all">✓
-              생산성/업무도구</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="생산성/업무도구" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">생산성/업무도구</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="커머스/쇼핑" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">커머스/쇼핑</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="핀테크/금융" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">핀테크/금융</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="헬스케어/웰니스" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">헬스케어/웰니스</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="교육/학습" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">교육/학습</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="엔터테인먼트/콘텐츠" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">엔터테인먼트/콘텐츠</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="소셜/커뮤니티" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">소셜/커뮤니티</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="라이프스타일" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">라이프스타일</button>
-            <button type="button" onclick="toggleInterestChip(this)"
-              class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#B4E380] text-[#1E3E0B] transition-all">✓
-              AI/개발도구</button>
-            <button type="button" onclick="toggleInterestChip(this)"
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="AI/개발도구" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">AI/개발도구</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="기타" aria-pressed="false"
               class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">기타</button>
           </div>
         </div>
@@ -758,29 +756,7 @@
           <label class="font-bold text-neutral-800">SNS / 링크</label>
           <span class="text-[10px] text-neutral-400 mb-1">프로필에 노출할 포트폴리오, 소셜 채널 링크를 등록하세요.</span>
 
-          <div class="flex flex-col gap-2.5" id="sns-links-container">
-            <div class="flex items-center gap-2">
-              <span
-                class="px-3 py-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-600 text-xs font-bold shrink-0 flex items-center gap-1">
-                <span>🌐</span> 개인 웹사이트
-              </span>
-              <input type="text" value="https://vibecoder.dev"
-                class="flex-1 p-2.5 rounded-xl border border-neutral-300 text-neutral-800 font-semibold outline-none focus:border-primary">
-              <button type="button" onclick="this.parentElement.remove()"
-                class="w-8 h-8 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-500 flex items-center justify-center text-xs">✕</button>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <span
-                class="px-3 py-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-600 text-xs font-bold shrink-0 flex items-center gap-1">
-                <span>✖</span> SNS 링크
-              </span>
-              <input type="text" value="https://x.com/vibecoder"
-                class="flex-1 p-2.5 rounded-xl border border-neutral-300 text-neutral-800 font-semibold outline-none focus:border-primary">
-              <button type="button" onclick="this.parentElement.remove()"
-                class="w-8 h-8 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-500 flex items-center justify-center text-xs">✕</button>
-            </div>
-          </div>
+          <div class="flex flex-col gap-2.5" id="sns-links-container"></div>
 
           <button type="button" onclick="addSnsLinkInput()"
             class="self-start mt-1 px-3.5 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs shadow-2xs transition-colors flex items-center gap-1">
@@ -792,7 +768,7 @@
 
       <!-- Footer Action Buttons -->
       <div class="flex flex-col items-center gap-3 pt-4 border-t border-neutral-100">
-        <button type="button" onclick="saveProfileChanges()"
+        <button type="button" id="btn-save-profile" onclick="saveProfileChanges()"
           class="w-full py-3.5 rounded-2xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-sm transition-all shadow-xs">
           저장하기
         </button>
@@ -2318,8 +2294,7 @@
                 <label class="block text-xs font-bold text-neutral-dark">사이트 URL <span
                     class="text-red-500">*</span></label>
                 <div class="flex items-center rounded-xl border border-[#E5E7EB] px-4 py-2.5 bg-white">
-                  <span class="text-sm text-neutral-muted font-mono pr-2">https://</span>
-                  <input id="input-product-web-url" type="url" value="try-money-pig.io"
+                  <input id="input-product-web-url" type="url" value="https://try-money-pig.io"
                     placeholder="https://example.com" class="flex-1 text-sm font-medium focus:outline-none" />
                 </div>
               </div>
@@ -2717,13 +2692,13 @@
             <div>
               <label class="block text-xs font-bold text-neutral-dark mb-1">모집 시작일 <span
                   class="text-red-500">*</span></label>
-              <input id="input-start-date" type="date" value="2024-11-20"
+              <input id="input-start-date" type="date"
                 class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60" />
             </div>
             <div>
               <label class="block text-xs font-bold text-neutral-dark mb-1">모집 종료일 <span
                   class="text-red-500">*</span></label>
-              <input id="input-end-date" type="date" value="2024-12-05"
+              <input id="input-end-date" type="date"
                 class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60" />
             </div>
             <div>
@@ -4428,7 +4403,7 @@
               </button>
               <span class="text-[10px] text-neutral-400">최근 정보 갱신: 2시간 전</span>
               <div class="flex items-center gap-2 text-xs font-semibold text-neutral-600">
-                <span>스크랩 <strong class="text-neutral-dark font-extrabold" id="mypage-scrap-count">7</strong>개</span>
+                <span>스크랩 <strong class="text-neutral-dark font-extrabold" id="mypage-scrap-count">0</strong>개</span>
                 <span class="text-neutral-300">|</span>
                 <span>최근 본 <strong class="text-neutral-dark font-extrabold">12</strong>개</span>
               </div>
@@ -4443,7 +4418,7 @@
               onclick="scrollToMypageMarket()">
               <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">🪙 보유 동전 ›</span>
               <div class="text-2xl font-extrabold text-neutral-dark flex items-baseline gap-1">
-                <span id="mypage-metric-coin">1,300</span>
+                <span id="mypage-metric-coin">0</span>
                 <span class="text-sm text-primary-dark font-bold">C</span>
               </div>
               <span class="text-[10px] text-neutral-400">적립/교환 가능</span>
@@ -4462,7 +4437,7 @@
               onclick="navigateTo('mypage')">
               <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">내 프로젝트 ›</span>
               <div class="text-2xl font-extrabold text-neutral-dark">
-                <span id="mypage-overview-reg-count">6</span><span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
+                <span id="mypage-overview-reg-count">0</span><span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
               </div>
               <span id="mypage-overview-active-sub" class="text-[10px] text-emerald-700 font-bold">모집 진행중 6건</span>
             </div>
@@ -4530,7 +4505,7 @@
                 <span class="font-extrabold text-neutral-dark flex items-center gap-1.5">
                   <span>🎁</span> 내 동전으로 바로 교환 가능!
                 </span>
-                <span class="text-[10px] text-primary-dark font-extrabold">현재 2,450 C 보유</span>
+                <span class="text-[10px] text-primary-dark font-extrabold">현재 <span data-wallet-balance>0 C</span> 보유</span>
               </div>
               <div class="bg-[#FAFBF8] rounded-xl border border-neutral-100 p-3 mb-3 flex items-center justify-between">
                 <div>
@@ -4557,7 +4532,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="flex items-center gap-3">
               <h2 class="text-2xl font-black text-neutral-dark tracking-tight">내 프로젝트</h2>
-              <span class="px-2.5 py-0.5 rounded-full bg-neutral-200 text-neutral-600 text-xs font-bold">총 6개</span>
+              <span id="myproj-total-count" class="px-2.5 py-0.5 rounded-full bg-neutral-200 text-neutral-600 text-xs font-bold">총 0개</span>
             </div>
 
             <!-- User Coin & Profile Badge -->
@@ -4568,7 +4543,7 @@
                   class="w-5 h-5 rounded-full bg-[#E5A93B] text-white flex items-center justify-center text-xs font-black">
                   🪙</div>
                 <span class="text-xs font-medium text-neutral-600">내 보유 돼지코인:</span>
-                <span class="text-sm font-black text-neutral-dark">3,450 C</span>
+                <span class="text-sm font-black text-neutral-dark" data-wallet-balance>0 C</span>
               </div>
 
               <div
@@ -4593,7 +4568,7 @@
                 class="px-4 py-2 rounded-xl text-xs font-extrabold bg-[#191A1C] text-white shadow-xs flex items-center gap-2 transition-all">
                 <span>📂 등록 프로젝트 관리</span>
                 <span id="myproj-registered-count-badge"
-                  class="w-4 h-4 rounded-full bg-neutral-700 text-white text-[10px] flex items-center justify-center font-bold">6</span>
+                  class="w-4 h-4 rounded-full bg-neutral-700 text-white text-[10px] flex items-center justify-center font-bold">0</span>
               </button>
               <button type="button" onclick="switchMyProjectTab('participated')" id="myproj-tab-participated"
                 class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
@@ -4616,15 +4591,15 @@
           </div>
 
           <!-- Filter Sub-Tabs & Sorting -->
-          <div class="flex items-center justify-between pt-2 border-t border-neutral-200/50">
+          <div id="myproj-filter-bar" class="flex items-center justify-between pt-2 border-t border-neutral-200/50">
             <div class="flex items-center gap-2">
               <button type="button" onclick="filterMyProjects('all')" id="myproj-filter-all"
                 class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-[#B4E380] text-[#1E3E0B] transition-all">
-                전체 (<span id="myproj-filter-all-count">6</span>)
+                전체 (<span id="myproj-filter-all-count">0</span>)
               </button>
               <button type="button" onclick="filterMyProjects('active')" id="myproj-filter-active"
                 class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
-                진행중인 프로젝트 (<span id="myproj-filter-active-count">6</span>)
+                진행중인 프로젝트 (<span id="myproj-filter-active-count">0</span>)
               </button>
               <button type="button" onclick="filterMyProjects('completed')" id="myproj-filter-completed"
                 class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
@@ -4863,7 +4838,7 @@
             <div class="border-r border-neutral-100 pr-4">
               <span class="text-xs text-neutral-400 font-medium">현재 보유 동전</span>
               <div class="text-xl font-extrabold text-neutral-dark mt-1 flex items-baseline gap-1">
-                <span id="mypage-section-coin">1,300</span>
+                <span id="mypage-section-coin">0</span>
                 <span class="text-xs font-bold text-primary-dark">C</span>
               </div>
               <span class="text-[10px] text-neutral-400">즉시 교환 가능</span>
@@ -4872,17 +4847,29 @@
             <div class="border-r border-neutral-100 pr-4">
               <span class="text-xs text-neutral-400 font-medium">이번 달 누적 획득 동전</span>
               <div class="text-xl font-extrabold text-[#2F6517] mt-1 flex items-baseline gap-1">
-                +1,850 <span class="text-xs font-bold">C</span>
+                <span id="mypage-monthly-earned">+0</span> <span class="text-xs font-bold">C</span>
               </div>
-              <span class="text-[10px] text-neutral-400">피드백 6회 완료 리워드</span>
+              <span id="mypage-monthly-earned-caption" class="text-[10px] text-neutral-400">이번 달 적립 내역 없음</span>
             </div>
 
             <div>
               <span class="text-xs text-neutral-400 font-medium">교환 완료 내역</span>
               <div class="text-xl font-extrabold text-neutral-dark mt-1">
-                1<span class="text-xs font-semibold text-neutral-500 ml-0.5">건</span>
+                <span id="mypage-exchange-count">0</span><span class="text-xs font-semibold text-neutral-500 ml-0.5">건</span>
               </div>
-              <span class="text-[10px] text-neutral-400">스타벅스 Tall 1회 사용</span>
+              <span id="mypage-exchange-caption" class="text-[10px] text-neutral-400">교환 내역 없음</span>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h4 class="text-sm font-extrabold text-neutral-dark">최근 동전 내역</h4>
+                <p class="text-[11px] text-neutral-400 mt-0.5">실제 적립·사용 기록을 최신순으로 보여줍니다.</p>
+              </div>
+            </div>
+            <div id="mypage-coin-transactions-list" class="flex flex-col divide-y divide-neutral-100">
+              <p class="py-8 text-center text-xs text-neutral-400">동전 내역을 불러오는 중입니다.</p>
             </div>
           </div>
 
@@ -4978,12 +4965,64 @@
 
               <div class="w-full bg-white rounded-xl border border-[#E5DFB0] p-2.5 shadow-2xs">
                 <span class="text-[10px] text-neutral-400 block mb-0.5">내 교환 가능 잔액</span>
-                <span class="text-sm font-extrabold text-primary-dark" id="mypage-widget-coin">1,300 C</span>
+                <span class="text-sm font-extrabold text-primary-dark" id="mypage-widget-coin">0 C</span>
               </div>
             </div>
 
           </div>
 
+        </section>
+
+        <section id="mypage-support-section" class="hidden flex-col gap-5 pt-4 scroll-mt-6">
+          <div>
+            <h2 class="text-2xl font-black text-neutral-dark tracking-tight">고객센터</h2>
+            <p class="text-xs text-neutral-500 mt-1">문의 등록부터 답변 상태까지 내 계정에서 안전하게 확인할 수 있습니다.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            <form id="support-ticket-form" onsubmit="submitSupportTicket(event)"
+              class="lg:col-span-2 bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col gap-4">
+              <h3 class="text-sm font-extrabold text-neutral-dark">새 문의 등록</h3>
+              <label class="flex flex-col gap-1.5 text-xs font-bold text-neutral-700">
+                문의 유형
+                <select id="support-ticket-category" required
+                  class="w-full p-3 rounded-xl border border-neutral-300 bg-white outline-none focus:border-primary font-semibold">
+                  <option value="account">계정/로그인</option>
+                  <option value="project">프로젝트</option>
+                  <option value="coin">동전/교환</option>
+                  <option value="bug">오류 신고</option>
+                  <option value="other">기타</option>
+                </select>
+              </label>
+              <label class="flex flex-col gap-1.5 text-xs font-bold text-neutral-700">
+                제목
+                <input id="support-ticket-subject" type="text" maxlength="100" required placeholder="문의 제목을 입력해 주세요"
+                  class="w-full p-3 rounded-xl border border-neutral-300 outline-none focus:border-primary font-semibold">
+              </label>
+              <label class="flex flex-col gap-1.5 text-xs font-bold text-neutral-700">
+                문의 내용
+                <textarea id="support-ticket-message" rows="6" maxlength="2000" required placeholder="확인이 필요한 내용을 자세히 적어 주세요"
+                  class="w-full p-3 rounded-xl border border-neutral-300 outline-none focus:border-primary font-semibold resize-y"></textarea>
+              </label>
+              <button id="support-ticket-submit" type="submit"
+                class="w-full py-3 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] text-xs font-black transition-colors">
+                문의 등록하기
+              </button>
+            </form>
+
+            <div class="lg:col-span-3 bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-sm font-extrabold text-neutral-dark">내 문의 내역</h3>
+                  <p class="text-[11px] text-neutral-400 mt-0.5">내가 등록한 문의만 표시됩니다.</p>
+                </div>
+                <button type="button" onclick="loadSupportTickets()" class="text-xs font-bold text-[#2F6517] hover:underline">새로고침</button>
+              </div>
+              <div id="support-ticket-list" class="flex flex-col gap-3">
+                <p class="py-10 text-center text-xs text-neutral-400">문의 내역을 불러오는 중입니다.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
       </main>
@@ -5353,7 +5392,7 @@
               <span data-sidebar-coin class="text-[10px] font-bold text-primary-dark whitespace-nowrap"></span>
             </button>
             <button type="button" data-sidebar-subitem="support"
-              onclick="showSidebarFeatureNotice('고객센터', '🎧')"
+              onclick="navigateToMypageSection('mypage-support-section', 'support'); return false;"
               class="${sidebarSubItemBaseClass} ${sidebarSubItemInactiveClass}">
               <span>고객센터</span>
             </button>
@@ -5444,12 +5483,17 @@
       const profileExtraSec2 = document.getElementById('mypage-profile-cards');
       const projectsSec = document.getElementById('mypage-projects-section');
       const marketSec = document.getElementById('mypage-market-section');
+      const supportSec = document.getElementById('mypage-support-section');
 
       if (profileSec) profileSec.classList.add('hidden');
       if (profileExtraSec1) profileExtraSec1.classList.add('hidden');
       if (profileExtraSec2) profileExtraSec2.classList.add('hidden');
       if (projectsSec) projectsSec.classList.add('hidden');
       if (marketSec) marketSec.classList.add('hidden');
+      if (supportSec) {
+        supportSec.classList.add('hidden');
+        supportSec.classList.remove('flex');
+      }
 
       const breadcrumbLabel = document.getElementById('mypage-breadcrumb-current');
 
@@ -5464,6 +5508,12 @@
       } else if (sectionKey === 'coins') {
         if (marketSec) marketSec.classList.remove('hidden');
         if (breadcrumbLabel) breadcrumbLabel.textContent = '동전내역 & 적립';
+      } else if (sectionKey === 'support') {
+        if (supportSec) {
+          supportSec.classList.remove('hidden');
+          supportSec.classList.add('flex');
+        }
+        if (breadcrumbLabel) breadcrumbLabel.textContent = '고객센터';
       }
     }
 
@@ -5480,6 +5530,8 @@
       const mainScroll = document.getElementById('mypage-main-scroll');
       if (mainScroll) mainScroll.scrollTop = 0;
       window.scrollTo({ top: 0, behavior: 'instant' });
+
+      if (sectionKey === 'support') loadSupportTickets();
     }
 
     function changeFeedbackReportProject(pVal) {
@@ -5508,39 +5560,110 @@
       showGenericToast(`${label} 화면은 다음 작업에서 연결할 예정입니다.`, icon);
     }
 
-    function updateScrapedEmptyState() {
-      const scrapedList = document.getElementById('myproj-scraped-cards-list');
-      if (!scrapedList) return;
-      const cards = scrapedList.querySelectorAll('.scrapedproj-card');
-      const emptyState = document.getElementById('scraped-empty-state');
-      const countBadge = document.getElementById('myproj-scraped-count');
+    window.myProjectCollections = { registered: [], participated: [], scraped: [] };
+    let currentMyProjectTab = 'registered';
 
-      let visibleCount = 0;
-      cards.forEach(c => {
-        if (!c.classList.contains('hidden') && c.style.display !== 'none') {
-          visibleCount++;
-        }
-      });
-
-      if (countBadge) countBadge.textContent = visibleCount;
-
-      if (emptyState) {
-        if (visibleCount === 0) {
-          emptyState.classList.remove('hidden');
-          emptyState.classList.add('flex');
-        } else {
-          emptyState.classList.add('hidden');
-          emptyState.classList.remove('flex');
-        }
-      }
+    function normalizeMyProjectStatus(status) {
+      return status === 'completed' ? 'completed' : 'active';
     }
 
-    function deleteScrapedItem(btn) {
-      const card = btn.closest('.scrapedproj-card');
-      if (card) {
-        card.remove();
+    function renderMyProjectCollection(tabKey = currentMyProjectTab) {
+      const list = document.getElementById('myproj-cards-list');
+      if (!list) return;
+      currentMyProjectTab = tabKey;
+      const projects = window.myProjectCollections[tabKey] || [];
+      const emptyLabels = {
+        registered: ['등록된 프로젝트가 없습니다', '새 프로젝트를 등록하고 사용자의 목소리를 들어보세요.'],
+        participated: ['참여한 프로젝트가 없습니다', '전체 프로젝트에서 관심 있는 테스트에 참여해 보세요.'],
+        scraped: ['스크랩한 프로젝트가 없습니다', '관심 있는 프로젝트를 스크랩하면 이곳에서 다시 볼 수 있습니다.']
+      };
+
+      if (projects.length === 0) {
+        const [title, description] = emptyLabels[tabKey] || emptyLabels.registered;
+        list.innerHTML = `
+          <div id="myproj-empty-state" class="py-14 flex flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
+            <div class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl mb-3">📂</div>
+            <h4 class="text-sm font-extrabold text-neutral-dark mb-1">${title}</h4>
+            <p class="text-xs text-neutral-400 font-medium max-w-xs mb-4">${description}</p>
+            <button onclick="navigateTo('${tabKey === 'registered' ? 'create' : 'explore'}')"
+              class="px-4 py-2 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-xs transition-all shadow-xs">
+              ${tabKey === 'registered' ? '+ 프로젝트 등록하기' : '전체 프로젝트 보기'}
+            </button>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = projects.map(project => {
+        const id = String(project.id || '');
+        const title = escapeHtml(project.title || project.service_name || '제목 없는 프로젝트');
+        const category = escapeHtml(project.category || '프로젝트');
+        const platform = escapeHtml((project.platform || 'web').toUpperCase());
+        const currentCount = Number(project.current_count) || 0;
+        const targetCount = Math.max(1, Number(project.target_count) || 1);
+        const progress = Math.min(100, Math.round((currentCount / targetCount) * 100));
+        const status = normalizeMyProjectStatus(project.status);
+        const statusLabel = status === 'completed' ? '진행완료' : '진행중';
+        const createdDate = project.created_at ? new Date(project.created_at).toLocaleDateString('ko-KR') : '-';
+        const ownerActions = tabKey === 'registered'
+          ? `<button type="button" onclick="openEditPostModal('${id}')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100" title="수정">✏️</button>`
+          : '';
+        const scrapAction = tabKey === 'scraped'
+          ? `<button type="button" onclick="deleteScrapedItem(this, '${id}')" class="px-3 py-2 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50">스크랩 해제</button>`
+          : '';
+
+        return `
+          <article class="myproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle" data-status="${status}">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-4 min-w-0">
+                <div class="w-16 h-16 rounded-2xl bg-[#E8F5E9] border border-[#C8E6C9] flex flex-col items-center justify-center shrink-0">
+                  <span class="text-xl">📱</span><span class="text-[9px] font-black text-white bg-[#43A047] px-1 rounded mt-1">${platform}</span>
+                </div>
+                <div class="flex flex-col gap-1.5 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap text-xs">
+                    <span class="px-2.5 py-0.5 rounded-full bg-[#B4E380] text-[#1E3E0B] font-extrabold text-[11px]">● ${statusLabel}</span>
+                    <span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-bold">[${category}]</span>
+                    <span class="text-[11px] text-neutral-400 font-medium">📅 ${createdDate}</span>
+                  </div>
+                  <h3 class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer truncate" onclick="openPostDetail('${id}')">${title}</h3>
+                  <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs pt-1">
+                    <span class="font-bold text-neutral-700">참여 <strong>${currentCount}/${targetCount}명</strong></span>
+                    <div class="w-28 h-2 bg-neutral-100 rounded-full overflow-hidden"><div class="h-full bg-[#B4E380]" style="width:${progress}%"></div></div>
+                    <span class="font-extrabold text-emerald-700 text-[11px]">${progress}%</span>
+                    <span class="font-black text-[#D97706] text-xs">🪙 ${Number(project.reward_coin || 0).toLocaleString()} C / 명</span>
+                  </div>
+                </div>
+              </div>
+              <div>${ownerActions}</div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+              ${scrapAction}
+              <button onclick="openPostDetail('${id}')" class="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-bold">상세 화면</button>
+              ${tabKey === 'registered' ? `<button onclick="openFeedbackReport('${id}')" class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold">결과 및 피드백</button>` : ''}
+            </div>
+          </article>`;
+      }).join('') + `
+        <div id="myproj-empty-state" class="hidden py-14 flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
+          <div class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl mb-3">📂</div>
+          <h4 class="text-sm font-extrabold text-neutral-dark mb-1">조건에 맞는 프로젝트가 없습니다</h4>
+          <p class="text-xs text-neutral-400 font-medium">다른 진행 상태를 선택해 주세요.</p>
+        </div>`;
+    }
+
+    async function deleteScrapedItem(btn, projectId) {
+      const ds = window.donDwaeDataService;
+      try {
+        const { data: { session } } = await ds.supabase.auth.getSession();
+        if (!session?.user) throw new Error('로그인이 필요합니다.');
+        const removed = await ds.toggleScrap(session.user.id, projectId, true);
+        if (!removed) throw new Error('스크랩 해제에 실패했습니다.');
+        window.myProjectCollections.scraped = window.myProjectCollections.scraped.filter(project => project.id !== projectId);
+        const badge = document.getElementById('myproj-scraped-count');
+        if (badge) badge.textContent = window.myProjectCollections.scraped.length;
+        renderMyProjectCollection('scraped');
         showGenericToast('스크랩 항목이 해제되었습니다.', '🔖');
-        updateScrapedEmptyState();
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to remove scrap:', err);
+        showGenericToast(err?.message || '스크랩 해제에 실패했습니다.', '⚠️');
       }
     }
 
@@ -5551,26 +5674,10 @@
         scraped: document.getElementById('myproj-tab-scraped')
       };
 
-      const myprojList = document.getElementById('myproj-cards-list');
-      const scrapedList = document.getElementById('myproj-scraped-cards-list');
-      const filterBar = document.querySelector('#mypage-projects-section .flex.items-center.justify-between.pt-2');
-
-      if (tabKey === 'scraped') {
-        if (myprojList) myprojList.classList.add('hidden');
-        if (scrapedList) {
-          scrapedList.classList.remove('hidden');
-          scrapedList.classList.add('flex');
-        }
-        if (filterBar) filterBar.classList.add('hidden');
-        updateScrapedEmptyState();
-      } else {
-        if (scrapedList) {
-          scrapedList.classList.add('hidden');
-          scrapedList.classList.remove('flex');
-        }
-        if (myprojList) myprojList.classList.remove('hidden');
-        if (filterBar) filterBar.classList.remove('hidden');
-      }
+      const filterBar = document.getElementById('myproj-filter-bar');
+      if (filterBar) filterBar.classList.toggle('hidden', tabKey !== 'registered');
+      renderMyProjectCollection(tabKey);
+      if (tabKey === 'registered') filterMyProjects('all');
 
       Object.keys(tabs).forEach(k => {
         if (!tabs[k]) return;
@@ -5674,7 +5781,7 @@
               <span>동전내역&amp;적립</span>
             </button>
             <button type="button" data-top-nav-subitem="support"
-              onclick="showTopNavigationFeatureNotice('고객센터', '🎧')"
+              onclick="navigateToMypageSection('mypage-support-section', 'support'); return false;"
               class="${topNavSubItemBaseClass} ${topNavSubItemInactiveClass}">
               <span>고객센터</span>
             </button>
@@ -6032,8 +6139,8 @@
 
     // Global State for Scraps, Coins, A/B Testing & Market
     // ========================================================
-    let userScrapCount = 7;
-    let userCoinBalance = 1250;
+    let userScrapCount = 0;
+    let userCoinBalance = 0;
     let currentAbMode = 'diary'; // 'diary' | 'saas'
     let selectedAbOption = null;
 
@@ -6583,26 +6690,53 @@
       }
     }
 
-    function executeExchange() {
+    async function executeExchange() {
       if (!selectedMarketProduct) return;
       if (userCoinBalance < selectedMarketProduct.price) {
-        alert('보유 동전이 부족합니다!');
+        showGenericToast('보유 동전이 부족합니다.', '⚠️');
         return;
       }
+      const actionButton = document.getElementById('btn-exchange-action');
+      if (actionButton) {
+        actionButton.disabled = true;
+        actionButton.textContent = '교환 처리 중...';
+      }
 
-      userCoinBalance -= selectedMarketProduct.price;
-      updateAllCoinDisplays();
+      try {
+        const result = await window.donDwaeDataService.exchangeMarketplaceItem(selectedMarketProduct.id);
+        window.setUserCoinBalance(Number(result.wallet_total || 0));
+        selectMarketProduct(
+          selectedMarketProduct.id,
+          selectedMarketProduct.name,
+          selectedMarketProduct.price,
+          selectedMarketProduct.category,
+          selectedMarketProduct.icon
+        );
+        const voucherNotice = result.voucher_code ? ` 발급 코드: ${result.voucher_code}` : '';
+        showGenericToast(`🎁 [${result.item_name}] 교환 완료!${voucherNotice}`, '🎉');
 
-      // Recalculate exchange sheet
-      selectMarketProduct(
-        selectedMarketProduct.id,
-        selectedMarketProduct.name,
-        selectedMarketProduct.price,
-        selectedMarketProduct.category,
-        selectedMarketProduct.icon
-      );
-
-      showGenericToast(`🎁 [${selectedMarketProduct.name}] 교환 완료! 마이페이지 쿠폰함으로 발급되었습니다.`, '🎉');
+        const { data: { session } } = await window.donDwaeDataService.supabase.auth.getSession();
+        if (session?.user) {
+          const [wallet, transactions, exchanges] = await Promise.all([
+            window.donDwaeDataService.fetchUserWallet(session.user.id),
+            window.donDwaeDataService.fetchCoinTransactions(session.user.id),
+            window.donDwaeDataService.fetchUserExchanges(session.user.id)
+          ]);
+          window.renderMyCoinData(wallet, transactions, exchanges);
+        }
+      } catch (err) {
+        console.error('[Don Dwae DB] Transactional marketplace exchange failed:', err);
+        showGenericToast(err?.message || '상품 교환에 실패했습니다.', '⚠️');
+      } finally {
+        if (actionButton) actionButton.disabled = false;
+        selectMarketProduct(
+          selectedMarketProduct.id,
+          selectedMarketProduct.name,
+          selectedMarketProduct.price,
+          selectedMarketProduct.category,
+          selectedMarketProduct.icon
+        );
+      }
     }
 
     function updateAllCoinDisplays() {
@@ -6637,6 +6771,9 @@
       document.querySelectorAll('[data-sidebar-coin]').forEach(el => {
         el.textContent = valWithC;
       });
+      document.querySelectorAll('[data-wallet-balance]').forEach(el => {
+        el.textContent = valWithC;
+      });
 
       if (typeof calculateTotalCost === 'function') {
         calculateTotalCost();
@@ -6664,17 +6801,8 @@
 
 
     // State for tests participation & current post view
-    // Store for user's own created test
-    // Persistent storage for user's own created test
-    function loadMyCreatedTestFromStorage() {
-      try {
-        const saved = localStorage.getItem('don_dwae_my_created_test');
-        if (saved) {
-          return JSON.parse(saved);
-        }
-      } catch (e) {
-        console.error('Failed to load myCreatedTest from localStorage', e);
-      }
+    // Legacy detail-view fallback. Real user projects are loaded from Supabase.
+    function createDefaultProjectPreview() {
       return {
         id: 'my-created-test',
         testType: '프로덕트 테스트',
@@ -6694,22 +6822,29 @@
       };
     }
 
-    function saveMyCreatedTestToStorage() {
-      try {
-        if (myCreatedTest) {
-          localStorage.setItem('don_dwae_my_created_test', JSON.stringify(myCreatedTest));
-        }
-      } catch (e) {
-        console.error('Failed to save myCreatedTest to localStorage', e);
-      }
-    }
-
-    let myCreatedTest = loadMyCreatedTestFromStorage();
+    let myCreatedTest = createDefaultProjectPreview();
 
     let currentPostId = 'moneylog';
     // Supabase 데이터 연동 전까지 현재 브라우저 세션의 참여 상태만 보관합니다.
     let userParticipatedTests = {};
     let currentCreateStep = 1;
+
+    function initializeProjectDateDefaults() {
+      const startInput = document.getElementById('input-start-date');
+      const endInput = document.getElementById('input-end-date');
+      const formatLocalDate = date => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
+      const today = new Date();
+      const defaultEnd = new Date(today);
+      defaultEnd.setDate(defaultEnd.getDate() + 14);
+      if (startInput && !startInput.value) startInput.value = formatLocalDate(today);
+      if (endInput && !endInput.value) endInput.value = formatLocalDate(defaultEnd);
+    }
 
     // Multi-Step Form Logic (Step 1, 2, 3)
     function goToStep(stepNum) {
@@ -6799,8 +6934,21 @@
               thumbnailUrl: dbP.thumbnail_url,
               testType: dbP.category,
               mainCategory: dbP.category,
+              platform: dbP.platform || 'web',
+              isAbTest: dbP.is_ab_test || false,
               testNotice: dbP.test_notice || '',
               serviceUrl: dbP.service_url || '',
+              abUrlA: dbP.ab_url_a || '',
+              abUrlB: dbP.ab_url_b || '',
+              playstoreUrl: dbP.app_playstore_url || '',
+              appstoreUrl: dbP.app_appstore_url || '',
+              externalSurveyUrl: dbP.external_survey_url || '',
+              loginRequired: dbP.login_required || false,
+              privacyItems: dbP.privacy_items || '',
+              testGuide: dbP.test_guide || '',
+              reviewsPublic: dbP.is_reviews_public !== false,
+              startDate: dbP.start_date,
+              endDate: dbP.end_date,
               targetCount: dbP.target_count || 10,
               currentRecruits: dbP.current_count || 0,
               rewardCoin: dbP.reward_coin || 500,
@@ -6825,11 +6973,56 @@
       const urlInput = document.getElementById('input-product-web-url');
       const targetCountInput = document.getElementById('input-target-count');
       const rewardCoinInput = document.getElementById('input-reward-coin');
+      const startDateInput = document.getElementById('input-start-date');
+      const endDateInput = document.getElementById('input-end-date');
+      const privacyInput = document.getElementById('input-privacy-items');
+      const guideInput = document.getElementById('input-test-guide');
+      const feedbackPrivacyInput = document.getElementById('toggle-feedback-privacy');
 
       if (titleInput) titleInput.value = test.title || '';
       if (nameInput) nameInput.value = test.serviceName || '';
       if (descInput) descInput.value = test.serviceDesc || '';
       if (noticeInput) noticeInput.value = test.testNotice || '';
+      if (startDateInput && test.startDate) startDateInput.value = test.startDate;
+      if (endDateInput && test.endDate) endDateInput.value = test.endDate;
+      if (privacyInput) privacyInput.value = test.privacyItems || '';
+      if (guideInput) guideInput.value = test.testGuide || '';
+      if (feedbackPrivacyInput) feedbackPrivacyInput.checked = !test.reviewsPublic;
+
+      const editableCategory = ['product', 'prototype', 'vote'].includes(test.mainCategory)
+        ? test.mainCategory
+        : 'product';
+      const categoryRadio = document.querySelector(`input[name="mainCategory"][value="${editableCategory}"]`);
+      if (categoryRadio) categoryRadio.checked = true;
+      handleMainCategoryChange(editableCategory);
+
+      const platformRadio = document.querySelector(`input[name="productSubPlatform"][value="${test.platform || 'web'}"]`);
+      if (platformRadio) platformRadio.checked = true;
+      toggleProductPlatformFields(test.platform || 'web');
+
+      const abToggle = document.getElementById('toggle-product-ab');
+      if (abToggle) abToggle.checked = !!test.isAbTest;
+      toggleProductAbMode(!!test.isAbTest);
+      const abAInput = document.getElementById('input-product-ab-web-a');
+      const abBInput = document.getElementById('input-product-ab-web-b');
+      const playstoreInput = document.getElementById('input-app-playstore-url');
+      const appstoreInput = document.getElementById('input-app-appstore-url');
+      if (abAInput) abAInput.value = test.abUrlA || '';
+      if (abBInput) abBInput.value = test.abUrlB || '';
+      if (playstoreInput) playstoreInput.value = test.playstoreUrl || '';
+      if (appstoreInput) appstoreInput.value = test.appstoreUrl || '';
+
+      const loginMode = test.loginRequired ? 'required' : 'none';
+      const loginRadio = document.querySelector(`input[name="loginRequirementMode"][value="${loginMode}"]`);
+      if (loginRadio) loginRadio.checked = true;
+      handleLoginRequirementChange(loginMode);
+
+      const missionMode = test.externalSurveyUrl ? 'link' : 'direct';
+      const missionRadio = document.querySelector(`input[name="missionFormatMode"][value="${missionMode}"]`);
+      if (missionRadio) missionRadio.checked = true;
+      const externalSurveyInput = document.getElementById('input-external-survey-url');
+      if (externalSurveyInput) externalSurveyInput.value = test.externalSurveyUrl || '';
+      toggleMissionFormatMode(missionMode);
       
       // URL은 고정 (수정 불가 사전 서약 준수)
       if (urlInput) {
@@ -6881,7 +7074,6 @@
       });
 
       // 3. 테스트 진행 방법 (가이드): 언제나 자유롭게 수정 가능
-      const guideInput = document.getElementById('input-test-guide');
       if (guideInput) guideInput.disabled = false;
 
       // Populate existing questions into Step 2 DOM
@@ -8170,9 +8362,41 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function confirmParticipationAndProceed() {
+    function isDatabaseProjectId(projectId) {
+      return /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(projectId || '');
+    }
+
+    async function ensureDatabaseParticipation(projectId) {
+      if (!isDatabaseProjectId(projectId)) return null;
+      const ds = window.donDwaeDataService;
+      if (!ds?.supabase) throw new Error('Supabase 데이터 연결을 확인해 주세요.');
+      const { data: { session }, error } = await ds.supabase.auth.getSession();
+      if (error || !session?.user) throw new Error('로그인 후 테스트에 참여할 수 있습니다.');
+      const existing = await ds.checkUserParticipation(projectId, session.user.id);
+      return existing || ds.applyParticipation(projectId);
+    }
+
+    async function confirmParticipationAndProceed() {
       const pId = currentParticipatingPostId || currentPostId || 'moneylog';
       const isPrototype = pId === 'prototype';
+      const confirmButton = document.getElementById('btn-confirm-participation');
+
+      if (confirmButton) {
+        confirmButton.disabled = true;
+        confirmButton.textContent = '참여 등록 중...';
+      }
+      try {
+        await ensureDatabaseParticipation(pId);
+      } catch (err) {
+        console.error('[Don Dwae DB] Transactional participation failed:', err);
+        showGenericToast(err?.message || '참여 등록에 실패했습니다.', '⚠️');
+        return;
+      } finally {
+        if (confirmButton) {
+          confirmButton.disabled = false;
+          confirmButton.innerHTML = '<span>확인했어요, 시작하기</span><span>→</span>';
+        }
+      }
 
       // 1. 참여 Record 생성 및 동전 처리 준비
       userParticipatedTests[pId] = true;
@@ -8186,7 +8410,7 @@
         ctaBtn.className = 'w-full py-4 px-4 rounded-xl bg-neutral-200 text-neutral-500 font-extrabold text-sm cursor-not-allowed flex items-center justify-center gap-2';
       }
       if (ctaBtnText) {
-        ctaBtnText.textContent = `✓ 테스터 참여 완료됨 (+${rewardVal} 동전 수령)`;
+        ctaBtnText.textContent = `✓ 참여 등록 완료 · 리뷰 작성 시 +${rewardVal} 동전`;
       }
 
       // 2. 분기 처리 (외부형 vs 내부형)
@@ -8344,23 +8568,9 @@
 
     function completeInternalTestFlow() {
       const pId = currentParticipatingPostId || currentPostId || 'prototype';
-      const reward = pId === 'prototype' ? 350 : 600;
-
-      userCoinBalance += reward;
-      updateAllCoinDisplays();
-      updatePledgeModalUI();
-
       closeTestParticipateModal();
-
-      const count = getCompletedTestCount();
-      const countNotice = count >= 3
-        ? ` 🎉 [내 테스트 등록 자격 충족!] (총 ${count}회 완료)`
-        : ` (내 테스트 등록 조건 달성률: ${count}/3회 완료)`;
-
-      showGenericToast(`🎉 검증 제출 완료! +${reward} 동전이 지급되었습니다.${countNotice}`, '🪙');
-
-      // 마이페이지 리뷰 작성으로 이동
-      navigateTo('feedback');
+      showGenericToast('검증을 완료했습니다. 피드백 저장이 완료되면 리워드가 지급됩니다.', '✍️');
+      openFeedbackWriteModal(pId);
     }
 
     function selectInternalVoteOption(optionKey) {
@@ -8384,6 +8594,7 @@
       closeTestParticipateModal();
 
       const pId = postId || currentParticipatingPostId || currentPostId || '11111111-1111-1111-1111-111111111111';
+      currentParticipatingPostId = pId;
       let dbProj = null;
       if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
         try {
@@ -8662,129 +8873,110 @@
       if (valText) valText.textContent = `${count}.0 / 5.0`;
     }
 
-    function submitFeedbackForm() {
-      const pId = currentParticipatingPostId || currentPostId || 'moneylog';
-      const postsMap = typeof testPosts !== 'undefined' ? testPosts : {};
-      const post = postsMap[pId] || { reward: pId === 'prototype' ? 350 : 600 };
-      const reward = post.reward || 600;
+    async function submitFeedbackForm() {
+      const projectId = currentParticipatingPostId || currentPostId || '';
+      const submitButton = document.getElementById('btn-submit-feedback');
+      if (!isDatabaseProjectId(projectId)) {
+        showGenericToast('실제 DB 프로젝트에서 참여한 뒤 피드백을 제출해 주세요.', '⚠️');
+        return;
+      }
 
-      // Extract user input from dynamic modal
       const modalBody = document.getElementById('fb-modal-dynamic-body');
-      let reviewText = '';
-      if (modalBody) {
-        const ta = modalBody.querySelector('textarea');
-        if (ta && ta.value.trim()) reviewText = ta.value.trim();
+      const textareas = [...(modalBody?.querySelectorAll('textarea') || [])];
+      const reviewText = textareas.map(input => input.value.trim()).filter(Boolean).join('\n\n');
+      if (!reviewText) {
+        showGenericToast('피드백 내용을 입력해 주세요.', '✍️');
+        return;
+      }
 
-        // Check for custom feedback inputs or quiz inputs
-        const quizInputs = modalBody.querySelectorAll('.fb-quiz-answer-input');
-        const quizAnswers = [];
-        quizInputs.forEach((qi, i) => {
-          if (qi.value.trim()) quizAnswers.push(`퀴즈${i + 1}: ${qi.value.trim()}`);
+      const quizAnswers = {};
+      modalBody?.querySelectorAll('.fb-quiz-answer-input').forEach((input, index) => {
+        if (input.value.trim()) quizAnswers[`quiz_${index + 1}`] = input.value.trim();
+      });
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = '피드백 저장 및 리워드 지급 중...';
+      }
+
+      try {
+        const result = await window.donDwaeDataService.submitProjectReview({
+          projectId,
+          rating: selectedFeedbackStarCount || 5,
+          reuseIntention: true,
+          answers: { review_text: reviewText },
+          quizAnswers,
+          isQuizPassed: true
         });
-        if (quizAnswers.length > 0) {
-          reviewText += `\n[입력한 퀴즈 정답: ${quizAnswers.join(', ')}]`;
+        const reward = Number(result?.reward_amount || 0);
+        const walletTotal = Number(result?.wallet_total || 0);
+
+        userParticipatedTests[projectId] = {
+          completedAt: new Date().toISOString(),
+          reviewId: result?.review_id
+        };
+        window.userHasPassedGating = !!result?.has_passed_gating;
+        window.completedTestCountFromDB = Number(result?.completed_test_count || 0);
+        window.setUserCoinBalance(walletTotal);
+        updatePledgeModalUI();
+
+        const fbContainer = document.getElementById('feedback-cards-container');
+        if (fbContainer) {
+          const nickname = document.getElementById('mypage-user-nickname')?.textContent || '나';
+          const cardArticle = document.createElement('article');
+          cardArticle.id = `feedback-card-${result.review_id}`;
+          cardArticle.setAttribute('data-has-reply', 'false');
+          cardArticle.className = 'feedback-card bg-white rounded-2xl border border-primary/40 p-7 shadow-subtle flex flex-col gap-5 animate-in fade-in duration-300';
+          cardArticle.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center font-bold text-xs text-primary-dark">나</div>
+                <div>
+                  <span class="font-bold text-sm text-neutral-dark">${escapeHtml(nickname)} (방금 작성)</span>
+                  <div class="text-[#8D2B44] text-xs mt-0.5">${'★ '.repeat(selectedFeedbackStarCount || 5)} (${selectedFeedbackStarCount || 5}.0)</div>
+                </div>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] text-xs font-semibold">피드백 저장 완료</span>
+            </div>
+            <div class="bg-canvas-cream/80 border border-[#E9E4C2] rounded-xl p-5">
+              <p class="text-sm font-medium text-neutral-dark leading-relaxed whitespace-pre-line">${escapeHtml(reviewText)}</p>
+            </div>
+            <div class="text-[11px] text-neutral-muted flex items-center justify-between">
+              <span>리뷰·참여 상태·리워드가 하나의 트랜잭션으로 저장되었습니다.</span>
+              <span class="font-bold text-primary-dark">+${reward.toLocaleString()} 동전</span>
+            </div>`;
+          fbContainer.prepend(cardArticle);
+        }
+
+        closeFeedbackWriteModal();
+        const countNotice = result.completed_test_count >= 3
+          ? ` 등록 자격을 충족했습니다. (총 ${result.completed_test_count}회)`
+          : ` (등록 조건 ${result.completed_test_count}/3회)`;
+        showGenericToast(`피드백 저장 완료! +${reward.toLocaleString()} 동전이 지급되었습니다.${countNotice}`, '🪙');
+        navigateTo('feedback');
+      } catch (err) {
+        console.error('[Don Dwae DB] Transactional review failed:', err);
+        showGenericToast(err?.message || '피드백 저장과 리워드 지급에 실패했습니다.', '⚠️');
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = '<span>✓ 피드백 제출하고 리워드 받기</span>';
         }
       }
-      if (!reviewText) {
-        reviewText = '입력해주신 피드백을 바탕으로 UI 개선 및 버그 수정을 완료했습니다. 매우 유익한 서비스였습니다!';
-      }
-
-      // Add to Feedback Cards List dynamically
-      const fbContainer = document.getElementById('feedback-cards-container');
-      if (fbContainer) {
-        const newCardId = Date.now();
-        const starHTML = '★ '.repeat(selectedFeedbackStarCount || 5);
-        const cardArticle = document.createElement('article');
-        cardArticle.id = `feedback-card-${newCardId}`;
-        cardArticle.setAttribute('data-has-reply', 'false');
-        cardArticle.className = 'feedback-card bg-white rounded-2xl border border-primary/40 p-7 shadow-subtle flex flex-col gap-5 animate-in fade-in duration-300';
-        cardArticle.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center font-bold text-xs text-primary-dark">
-                나
-              </div>
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="font-bold text-sm text-neutral-dark">바이브코더123 (방금 작성)</span>
-                  <span class="text-xs font-bold text-primary-dark bg-primary/20 px-2 py-0.5 rounded">NEW</span>
-                </div>
-                <div class="text-[#8D2B44] text-xs flex gap-0.5 mt-0.5">
-                  ${starHTML} (${selectedFeedbackStarCount || 5}.0)
-                </div>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 text-xs">
-              <span class="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] font-semibold">[피드백 작성 완료]</span>
-            </div>
-          </div>
-
-          <div class="bg-canvas-cream/80 border border-[#E9E4C2] rounded-xl p-5 relative flex flex-col sm:flex-row gap-4 items-start">
-            <div class="flex-1">
-              <span class="text-2xl text-[#D8D2A4] font-serif select-none block mb-1">“</span>
-              <p class="text-sm font-medium text-neutral-dark leading-relaxed whitespace-pre-line">
-                ${reviewText}
-              </p>
-            </div>
-          </div>
-
-          <div class="text-[11px] text-neutral-muted flex items-center justify-between">
-            <span>🔒 생생한 리뷰가 제작자 피드백 리포트에 즉시 등록되었습니다.</span>
-            <span class="font-bold text-primary-dark">+${reward} 동전 획득</span>
-          </div>
-        `;
-        fbContainer.prepend(cardArticle);
-      }
-
-      // [Supabase DB Integration] Insert review into 'reviews' table with active user and project ID
-      if (window.donDwaeDataService && typeof window.donDwaeDataService.submitReviewRecord === 'function') {
-        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session }, error }) => {
-          if (error || !session?.user) {
-            console.warn('[Supabase DB] Review insert skipped: authenticated session required.');
-            showGenericToast('로그인 세션을 확인한 뒤 다시 시도해 주세요.', '⚠️');
-            return;
-          }
-          const activeUserId = session.user.id;
-          const activeProjectId = currentPostId || '11111111-1111-1111-1111-111111111111';
-          const reviewPayload = {
-            project_id: activeProjectId,
-            user_id: activeUserId,
-            rating: selectedFeedbackStarCount || 5.0,
-            reuse_intention: true,
-            answers: { review_text: reviewText },
-            status: 'submitted'
-          };
-          window.donDwaeDataService.submitReviewRecord(reviewPayload).then(res => {
-            if (res) console.log('[Supabase DB] Successfully saved review to DB:', res);
-          }).catch(err => {
-            console.warn('[Supabase DB] Review insert warning:', err);
-          });
-        });
-      }
-
-      // Reward & Participation status update
-      userCoinBalance += reward;
-      updateAllCoinDisplays();
-      updatePledgeModalUI();
-
-      closeFeedbackWriteModal();
-
-      const count = getCompletedTestCount();
-      const countNotice = count >= 3
-        ? ` 🎉 [내 테스트 등록 자격 충족!] (총 ${count}회 완료)`
-        : ` (내 테스트 등록 조건 달성률: ${count}/3회 완료)`;
-
-      showGenericToast(`🎉 피드백 제출 완료! +${reward} 동전이 지급되었습니다.${countNotice}`, '🪙');
-
-      // Navigate to MyPage feedback section
-      navigateTo('feedback');
     }
 
-    function executeParticipateInCurrentTest() {
+    async function executeParticipateInCurrentTest() {
       const pId = currentPostId || 'moneylog';
       const isInternal = ['prototype', 'diary', 'saas'].includes(pId) || (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test') && myCreatedTest.testMethod === 'internal');
 
       if (isInternal) {
+        try {
+          await ensureDatabaseParticipation(pId);
+        } catch (err) {
+          console.error('[Don Dwae DB] Transactional participation failed:', err);
+          showGenericToast(err?.message || '참여 등록에 실패했습니다.', '⚠️');
+          return;
+        }
         renderFullPageInternalTestScreen(pId);
         navigateTo('abtest');
       } else {
@@ -8871,10 +9063,14 @@
     }
 
     window.userHasPassedGating = false;
+    window.completedTestCountFromDB = 0;
 
     function getCompletedTestCount() {
-      if (isGatingBypassActive || window.userHasPassedGating) return 3;
-      return Object.keys(userParticipatedTests).length;
+      const storedCount = Number(window.completedTestCountFromDB || 0);
+      const localCount = Object.keys(userParticipatedTests).length;
+      const gatedMinimum = window.userHasPassedGating ? 3 : 0;
+      const bypassMinimum = isGatingBypassActive ? 3 : 0;
+      return Math.max(storedCount, localCount, gatedMinimum, bypassMinimum);
     }
 
     window.openPledgeModalLocal = function () {
@@ -8932,15 +9128,23 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function openTestParticipateModal(postId) {
+    async function openTestParticipateModal(postId) {
       if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
-        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
+        window.donDwaeDataService.supabase.auth.getSession().then(async ({ data: { session } }) => {
           if (!session?.user) {
             alert('테스트에 참여하시려면 먼저 로그인해 주세요!');
             navigateTo('login');
             return;
           }
-          proceedTestParticipateModal(postId);
+          let project = null;
+          if (isDatabaseProjectId(postId)) {
+            try {
+              project = await window.donDwaeDataService.fetchProjectById(postId);
+            } catch (error) {
+              console.warn('[openTestParticipateModal] Project fetch warning:', error.message);
+            }
+          }
+          proceedTestParticipateModal(postId, project);
         });
       } else {
         if (!window.isUserLoggedIn) {
@@ -8952,7 +9156,7 @@
       }
     }
 
-    function proceedTestParticipateModal(postId) {
+    function proceedTestParticipateModal(postId, project = null) {
       const targetPostId = postId || currentPostId || 'moneylog';
       currentParticipatingPostId = targetPostId;
 
@@ -8968,6 +9172,39 @@
       viewExternal.classList.add('hidden');
       viewInternal.classList.add('hidden');
 
+      if (project) {
+        const thumbBox = document.getElementById('part-modal-thumb-box');
+        const badge = document.getElementById('part-modal-badge');
+        const reward = document.getElementById('part-modal-reward');
+        const title = document.getElementById('part-modal-title');
+        const desc = document.getElementById('part-modal-desc');
+        const checklist = document.getElementById('part-modal-checklist');
+        const categoryLabels = {
+          vote: '[투표 테스트]',
+          survey: '[설문조사]',
+          abtest: '[A/B 테스트]',
+          product: '[프로덕트 테스트]'
+        };
+        const guideItems = Array.isArray(project.test_guide)
+          ? project.test_guide
+          : String(project.test_guide || '').split('\n').map(item => item.trim()).filter(Boolean);
+        const questionItems = Array.isArray(project.questions)
+          ? project.questions.map(item => item?.title || item?.question).filter(Boolean)
+          : [];
+        const items = [...guideItems, ...questionItems].slice(0, 4);
+
+        if (thumbBox) thumbBox.textContent = project.category === 'vote' || project.category === 'abtest' ? '🗳️' : '📱';
+        if (badge) badge.textContent = categoryLabels[project.category] || '[서비스 테스트]';
+        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin || 0).toLocaleString()} 동전 수령`;
+        if (title) title.textContent = project.service_name || project.title;
+        if (desc) desc.textContent = project.service_desc || project.title;
+        if (checklist) {
+          checklist.innerHTML = (items.length ? items : ['서비스를 직접 사용하고 솔직한 피드백을 남겨 주세요.'])
+            .map(item => `<div class="flex items-center gap-2 text-neutral-700"><span class="text-primary font-bold">✓</span>${escapeHtml(item)}</div>`)
+            .join('');
+        }
+      }
+
       modal.classList.remove('hidden');
     }
 
@@ -8977,20 +9214,23 @@
     }
 
     async function confirmPledgeAndProceed() {
-      window.userHasPassedGating = true;
-      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
-        try {
-          const { data: { session } } = await window.donDwaeDataService.supabase.auth.getSession();
-          if (session && session.user) {
-            await window.donDwaeDataService.updateUserProfile(session.user.id, { has_passed_gating: true });
-            console.log('[Supabase DB] 3회 게이팅 영구 통과 상태가 DB에 저장되었습니다:', session.user.id);
-          }
-        } catch (err) {
-          console.warn('[Supabase DB] Gating update notice:', err);
+      const ds = window.donDwaeDataService;
+      try {
+        const { data: { session } } = await ds.supabase.auth.getSession();
+        if (!session?.user) throw new Error('로그인이 필요합니다.');
+        const profile = await ds.fetchUserProfile(session.user.id);
+        window.userHasPassedGating = !!profile?.has_passed_gating;
+        if (!window.userHasPassedGating) {
+          const completed = Number(profile?.completed_test_count || 0);
+          showGenericToast(`프로젝트 등록 자격은 리뷰 완료 3회 후 자동 부여됩니다. (현재 ${completed}/3회)`, '🔒');
+          return;
         }
+        closePledgeModal();
+        navigateTo('create');
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to verify project gating:', err);
+        showGenericToast(err?.message || '프로젝트 등록 자격을 확인하지 못했습니다.', '⚠️');
       }
-      closePledgeModal();
-      navigateTo('create');
     }
 
     // [Removed duplicate old goToStep]
@@ -9580,7 +9820,7 @@
       }
     }
 
-    function handleStep3PublishClick() {
+    async function handleStep3PublishClick() {
       const reward = parseInt(document.getElementById('input-reward-coin')?.value, 10) || 0;
       let target = parseInt(document.getElementById('input-target-count')?.value, 10) || 0;
       if (target < 30) target = 30;
@@ -9597,15 +9837,10 @@
             const deficit = diffTotal - userCoinBalance;
             openPaymentModal(deficit, diffTotal);
             return;
-          } else {
-            userCoinBalance -= diffTotal;
-            updateAllCoinDisplays();
           }
         }
 
-        isProjectEditMode = false;
-        publishNewTestAndReturnToDashboard(false, diffTotal);
-        showGenericToast('✏️ 프로젝트 수정 내용이 성공적으로 저장되었습니다!', '🎉');
+        await publishNewTestAndReturnToDashboard(false, diffTotal);
         return;
       }
 
@@ -9613,9 +9848,7 @@
         const deficit = newTotal - userCoinBalance;
         openPaymentModal(deficit, newTotal);
       } else {
-        userCoinBalance -= newTotal;
-        updateAllCoinDisplays();
-        publishNewTestAndReturnToDashboard(false, newTotal);
+        await publishNewTestAndReturnToDashboard(false, newTotal);
       }
     }
 
@@ -9691,7 +9924,7 @@
       }
     }
 
-    function executeVirtualPaymentAndPublish() {
+    async function executeVirtualPaymentAndPublish() {
       const agreeCheck = document.getElementById('pay-modal-agree-check');
       if (agreeCheck && !agreeCheck.checked) {
         alert('가상 결제 승인 및 리워드 자동 차감 규정에 동의해 주세요.');
@@ -9706,25 +9939,30 @@
       if (btnText) btnText.textContent = '가상 결제 승인 처리 중...';
       if (btnIcon) btnIcon.textContent = '⏳';
 
-      setTimeout(() => {
-        const deficit = currentPaymentDeficit;
-        const total = currentPaymentTotal;
-        const won = deficit * 10;
+      await new Promise(resolve => setTimeout(resolve, 650));
 
-        // 부족 동전을 결제하여 충전 후, 소요 동전 전액 차감 -> 잔여 계산
-        userCoinBalance = Math.max(0, userCoinBalance + deficit - total);
-        updateAllCoinDisplays();
+      const deficit = currentPaymentDeficit;
+      const total = currentPaymentTotal;
+      const won = deficit * 10;
+      const savedProject = await publishNewTestAndReturnToDashboard(true, total, deficit, won);
 
-        if (btn) btn.disabled = false;
-        closePaymentModal();
-
-        // 테스트 게시 완료
-        publishNewTestAndReturnToDashboard(true, total, deficit, won);
-      }, 650);
+      if (savedProject) closePaymentModal();
+      if (btn) btn.disabled = false;
     }
 
     // Publish New Test
-    function publishNewTestAndReturnToDashboard(isPaid = false, totalCost = 0, deficit = 0, won = 0) {
+    async function publishNewTestAndReturnToDashboard(isPaid = false, totalCost = 0, deficit = 0, won = 0) {
+      const publishButton = document.getElementById('btn-publish-test-step3');
+      if (publishButton?.dataset.submitting === 'true') return null;
+      if (publishButton) {
+        publishButton.dataset.submitting = 'true';
+        publishButton.disabled = true;
+      }
+
+      const wasEditing = isProjectEditMode;
+      const editingProjectId = wasEditing ? myCreatedTest?.id : null;
+
+      try {
       // 1. STEP 1 수집 (공통)
       const tTitle = (document.getElementById('input-test-title')?.value || '').trim() || 'AI 영수증 인식 스마트 가계부 머니로그';
       const sName = (document.getElementById('input-service-name')?.value || '').trim() || '머니로그 (MoneyLog)';
@@ -9735,20 +9973,27 @@
       let testCategoryName = '프로덕트 테스트';
       let typeSpecificData = {};
 
-      if (currentMainCategory === 'product') {
+      if (currentMainCategory === 'product' || currentMainCategory === 'prototype') {
         const platform = document.querySelector('input[name="productSubPlatform"]:checked')?.value || 'web';
         if (platform === 'web') {
-          testCategoryName = '프로덕트/프로토타입 (웹)';
-          typeSpecificData = { platform: 'web', url: document.getElementById('input-product-web-url')?.value || 'try-money-pig.io' };
+          testCategoryName = currentMainCategory === 'prototype' ? '프로토타입 (웹)' : '프로덕트 (웹)';
+          typeSpecificData = {
+            platform: 'web',
+            url: document.getElementById('input-product-web-url')?.value || '',
+            abUrlA: isProductAbMode ? (document.getElementById('input-product-ab-web-a')?.value || '') : '',
+            abUrlB: isProductAbMode ? (document.getElementById('input-product-ab-web-b')?.value || '') : ''
+          };
         } else {
-          testCategoryName = '프로덕트/프로토타입 (앱)';
+          testCategoryName = '프로덕트 (앱)';
           typeSpecificData = {
             platform: 'app',
             packageName: document.getElementById('input-app-package')?.value || '',
             bundleId: document.getElementById('input-app-bundle')?.value || '',
             track: document.getElementById('select-app-track')?.value || 'closed',
             groupLink: document.getElementById('input-app-group-link')?.value || '',
-            testLink: document.getElementById('input-app-test-link')?.value || ''
+            testLink: document.getElementById('input-app-test-link')?.value || '',
+            playstoreUrl: document.getElementById('input-app-playstore-url')?.value || '',
+            appstoreUrl: document.getElementById('input-app-appstore-url')?.value || ''
           };
         }
       } else if (currentMainCategory === 'vote') {
@@ -9760,9 +10005,8 @@
           if (inputMode === 'image') {
             contentData = ['A안 이미지 업로드 파일', 'B안 이미지 업로드 파일'];
           } else {
-            const urlA = document.getElementById('input-vote-ab-url-a')?.value.trim() || 'https://a-version.example.com';
-            const urlB = document.getElementById('input-vote-ab-url-b')?.value.trim() || 'https://b-version.example.com';
-            contentData = [urlA, urlB];
+            const voteUrlInputs = document.querySelectorAll('#vote-url-list input[type="url"]');
+            contentData = Array.from(voteUrlInputs).map(input => input.value.trim()).filter(Boolean);
           }
         } else if (currentVoteSubOption === 'design') {
           if (inputMode === 'image') {
@@ -9801,20 +10045,21 @@
         const surveyMode = document.querySelector('input[name="surveySubMode"]:checked')?.value || 'link';
         testCategoryName = `설문조사 (${surveyMode === 'link' ? 'URL 링크형' : '직접 입력형'})`;
         if (surveyMode === 'link') {
-          typeSpecificData = { surveyMode: 'link', url: document.getElementById('input-survey-url')?.value || '' };
+          typeSpecificData = { surveyMode: 'link', url: document.getElementById('input-external-survey-url')?.value || '' };
         } else {
           const surveyInputs = document.querySelectorAll('#survey-questions-list input[type="text"]');
           const surveyQs = [];
           surveyInputs.forEach(i => { if (i.value.trim()) surveyQs.push(i.value.trim()); });
-          const pUrl = (document.getElementById('input-survey-product-url')?.value || '').trim();
+          const pUrl = (document.getElementById('input-external-survey-url')?.value || '').trim();
           typeSpecificData = { surveyMode: 'direct', surveyQuestions: surveyQs, url: pUrl };
         }
       }
 
       // 3. STEP 3 세부 설정 수집
       const sNotice = (document.getElementById('input-test-notice')?.value || '').trim();
-      const startDate = document.getElementById('input-start-date')?.value || '2024-11-20';
-      const endDate = document.getElementById('input-end-date')?.value || '2024-12-05';
+      initializeProjectDateDefaults();
+      const startDate = document.getElementById('input-start-date')?.value;
+      const endDate = document.getElementById('input-end-date')?.value;
       const rCoin = parseInt(document.getElementById('input-reward-coin')?.value || '70', 10);
       let tCount = parseInt(document.getElementById('input-target-count')?.value || '30', 10);
       if (tCount < 30) tCount = 30;
@@ -9868,8 +10113,41 @@
         }
       });
 
-      const enteredWebUrl = (document.getElementById('input-product-web-url')?.value || '').trim();
-      const sUrl = enteredWebUrl || typeSpecificData.url || 'try-money-pig.io';
+      const dataService = window.donDwaeDataService;
+      if (!dataService?.supabase || typeof dataService.normalizeHttpUrl !== 'function') {
+        throw new Error('Supabase 데이터 연결이 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.');
+      }
+
+      const missionFormat = document.querySelector('input[name="missionFormatMode"]:checked')?.value || 'direct';
+      const externalSurveyUrl = dataService.normalizeHttpUrl(
+        missionFormat === 'link' ? document.getElementById('input-external-survey-url')?.value : '',
+        { required: missionFormat === 'link' }
+      );
+
+      let serviceUrlRaw = '';
+      let requiresServiceUrl = false;
+      if (currentMainCategory === 'product' || currentMainCategory === 'prototype') {
+        requiresServiceUrl = true;
+        serviceUrlRaw = typeSpecificData.platform === 'app'
+          ? (typeSpecificData.testLink || typeSpecificData.playstoreUrl || typeSpecificData.appstoreUrl)
+          : typeSpecificData.url;
+      } else if (currentMainCategory === 'vote' && currentVoteInputMode === 'url') {
+        requiresServiceUrl = true;
+        serviceUrlRaw = typeSpecificData.content?.[0] || '';
+      } else if (currentMainCategory === 'survey') {
+        requiresServiceUrl = typeSpecificData.surveyMode === 'link';
+        serviceUrlRaw = typeSpecificData.url || '';
+      }
+
+      const sUrl = dataService.normalizeHttpUrl(serviceUrlRaw, { required: requiresServiceUrl });
+      const abUrlA = dataService.normalizeHttpUrl(
+        typeSpecificData.abUrlA || (currentMainCategory === 'vote' ? typeSpecificData.content?.[0] : '')
+      );
+      const abUrlB = dataService.normalizeHttpUrl(
+        typeSpecificData.abUrlB || (currentMainCategory === 'vote' ? typeSpecificData.content?.[1] : '')
+      );
+      const playstoreUrl = dataService.normalizeHttpUrl(typeSpecificData.playstoreUrl || '');
+      const appstoreUrl = dataService.normalizeHttpUrl(typeSpecificData.appstoreUrl || '');
       const tags = ['#v0', '#Cursor', '#Next.js', '#Supabase'];
 
       // Determine internal vs external test method
@@ -9884,70 +10162,110 @@
         isInternalMethod = false; // 웹/앱 프로덕트/프로토타입 및 URL이 있는 검증은 외부 테스트
       }
 
-      // 4. 합쳐서 tests 구조 저장 (데이터베이스 tests 테이블 매핑 통합 데이터)
-      const createdId = 'my-created-test';
+      const loginRequired = document.querySelector('input[name="loginRequirementMode"]:checked')?.value === 'required';
+      const testAccountId = loginRequired ? (document.getElementById('input-test-login-id')?.value || '').trim() : null;
+      const testAccountPassword = loginRequired ? (document.getElementById('input-test-login-pw')?.value || '').trim() : null;
+      const privacyItems = loginRequired ? (document.getElementById('input-privacy-items')?.value || '').trim() : null;
+      const testGuide = (document.getElementById('input-test-guide')?.value || '').trim();
+      const reviewsPublic = !document.getElementById('toggle-feedback-privacy')?.checked;
+
+      if (loginRequired && (!testAccountId || !testAccountPassword || !privacyItems)) {
+        throw new Error('로그인이 필요한 테스트는 테스트 계정과 취급 개인정보 항목을 모두 입력해 주세요.');
+      }
+      if (!testGuide) {
+        throw new Error('테스트 진행 방법을 입력해 주세요.');
+      }
+
+      const { data: { session }, error: sessionError } = await dataService.supabase.auth.getSession();
+      if (sessionError || !session?.user) {
+        throw new Error('로그인 세션이 만료되었습니다. 다시 로그인해 주세요.');
+      }
+
+      const activeCreatorId = session.user.id;
+      const dbPayload = {
+        creator_id: activeCreatorId,
+        title: tTitle,
+        service_name: sName,
+        service_desc: sDesc,
+        test_notice: sNotice,
+        thumbnail_url: thumbImgSrc || null,
+        category: currentMainCategory === 'none' ? 'survey' : (currentMainCategory || 'product'),
+        platform: typeSpecificData.platform || 'web',
+        is_ab_test: isProductAbMode || (currentMainCategory === 'vote' && currentVoteSubOption === 'ab'),
+        service_url: sUrl,
+        ab_url_a: abUrlA,
+        ab_url_b: abUrlB,
+        app_playstore_url: playstoreUrl,
+        app_appstore_url: appstoreUrl,
+        external_survey_url: externalSurveyUrl,
+        login_required: loginRequired,
+        test_account_id: testAccountId || null,
+        test_account_pw: testAccountPassword || null,
+        privacy_items: privacyItems || null,
+        test_guide: testGuide,
+        questions,
+        quizzes,
+        start_date: startDate,
+        end_date: endDate,
+        target_count: tCount,
+        reward_coin: rCoin,
+        total_funded_cost: rCoin * tCount,
+        is_reviews_public: reviewsPublic,
+        tech_tags: tags
+      };
+
+      // 2단계에서 테스트 계정 값은 브라우저 재조회가 차단되어 있다.
+      // 수정 화면에서 빈 필드가 기존 비밀 값을 의도치 않게 지우지 않도록 유지한다.
+      if (wasEditing && loginRequired) {
+        if (!testAccountId) delete dbPayload.test_account_id;
+        if (!testAccountPassword) delete dbPayload.test_account_pw;
+      }
+
+      let persistedProject;
+      if (wasEditing) {
+        if (!editingProjectId || editingProjectId === 'my-created-test') {
+          throw new Error('수정할 프로젝트의 DB 식별자를 찾지 못했습니다. 내 프로젝트에서 다시 시도해 주세요.');
+        }
+        persistedProject = await dataService.updateProjectRecord(editingProjectId, dbPayload);
+      } else {
+        persistedProject = await dataService.createProjectRecord(dbPayload);
+      }
+
+      const verifiedProject = await dataService.fetchProjectById(persistedProject.id);
+      if (!verifiedProject) {
+        throw new Error('프로젝트 저장 후 재조회 검증에 실패했습니다. 잠시 후 내 프로젝트에서 확인해 주세요.');
+      }
+
+      const createdId = verifiedProject.id;
       myCreatedTest = {
         id: createdId,
-        title: tTitle,
-        serviceName: sName,
-        serviceDesc: sDesc,
-        thumbnailUrl: thumbImgSrc,
+        title: verifiedProject.title,
+        serviceName: verifiedProject.service_name,
+        serviceDesc: verifiedProject.service_desc,
+        thumbnailUrl: verifiedProject.thumbnail_url,
         testType: testCategoryName,
         testMethod: isInternalMethod ? 'internal' : 'external',
         mainCategory: currentMainCategory,
         typeSpecificData: typeSpecificData,
-        testNotice: sNotice,
-        regDate: startDate,
-        endDate: endDate,
+        testNotice: verifiedProject.test_notice,
+        regDate: verifiedProject.start_date,
+        endDate: verifiedProject.end_date,
         targetAges: targetAges,
         targetInterests: targetInterests,
-        questions: questions,
-        quizzes: quizzes,
-        rewardCoin: rCoin,
-        targetCount: tCount,
-        currentRecruits: 0,
-        serviceUrl: sUrl,
-        techTags: tags
+        questions: verifiedProject.questions,
+        quizzes: verifiedProject.quizzes,
+        rewardCoin: verifiedProject.reward_coin,
+        targetCount: verifiedProject.target_count,
+        currentRecruits: verifiedProject.current_count,
+        serviceUrl: verifiedProject.service_url,
+        techTags: verifiedProject.tech_tags || tags
       };
-      saveMyCreatedTestToStorage();
-
-      // [Supabase DB Integration] Insert into 'projects' table with active user ID
-      if (window.donDwaeDataService && typeof window.donDwaeDataService.createProjectRecord === 'function') {
-        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session }, error }) => {
-          if (error || !session?.user) {
-            console.warn('[Supabase DB] Project insert skipped: authenticated session required.');
-            showGenericToast('로그인 세션을 확인한 뒤 다시 시도해 주세요.', '⚠️');
-            return;
-          }
-          const activeCreatorId = session.user.id;
-          const dbPayload = {
-            creator_id: activeCreatorId,
-          title: tTitle,
-          service_name: sName,
-          service_desc: sDesc,
-          test_notice: sNotice,
-          thumbnail_url: thumbImgSrc,
-          category: currentMainCategory || 'product',
-          platform: (typeSpecificData && typeSpecificData.platform) || 'web',
-          service_url: sUrl,
-          questions: questions,
-          quizzes: quizzes,
-          start_date: startDate,
-          end_date: endDate,
-          target_count: tCount,
-          reward_coin: rCoin,
-          total_funded_cost: rCoin * tCount,
-          tech_tags: tags
-        };
-          window.donDwaeDataService.createProjectRecord(dbPayload).then(res => {
-            if (res) {
-              console.log('[Supabase DB] Successfully saved project to DB:', res);
-            }
-          }).catch(err => {
-            console.warn('[Supabase DB] Insert project warning:', err);
-          });
-        });
-      }
+      // 화면상의 동전은 DB 저장 성공 이후에만 반영합니다.
+      userCoinBalance = isPaid
+        ? Math.max(0, userCoinBalance + deficit - totalCost)
+        : Math.max(0, userCoinBalance - totalCost);
+      updateAllCoinDisplays();
+      isProjectEditMode = false;
 
       // 3. Create or update top card in Dashboard Feed
       const grid = document.getElementById('dashboard-cards-grid');
@@ -9959,7 +10277,7 @@
         newCard.id = 'newly-published-card';
         newCard.setAttribute('data-category', 'product');
         newCard.setAttribute('data-reward', String(rCoin));
-        newCard.onclick = () => openPostDetail('my-created-test');
+        newCard.onclick = () => openPostDetail(createdId);
         newCard.innerHTML = `
           <div class="h-32 bg-gradient-to-br from-primary/30 to-[#B4E380]/40 flex flex-col items-center justify-center p-4 text-center relative border-b border-primary/20">
             <span class="text-3xl mb-1 filter drop-shadow-xs">🎉</span>
@@ -10040,14 +10358,172 @@
 
       if (isPaid) {
         showGenericToast(`💳 [가상 결제 완료] ₩${won.toLocaleString()} 승인! 부족했던 ${deficit.toLocaleString()} 동전이 충전되어 '${sName}' 테스트가 게시되었습니다.`, '🎉');
+      } else if (wasEditing) {
+        showGenericToast(`✏️ '${sName}' 프로젝트 수정 내용이 DB에 저장되었습니다.`, '🎉');
       } else {
         showGenericToast(`🎉 '${sName}' 테스트가 게시되었습니다! 리워드 예산 ${totalCost.toLocaleString()} 동전이 차감되었습니다. (잔여: ${userCoinBalance.toLocaleString()} C)`, '🚀');
       }
 
-      openPostDetail(createdId);
+      const liveProjects = await dataService.fetchExploreProjects();
+      if (liveProjects) window.renderLiveProjectsToFeed(liveProjects);
+
+      await openPostDetail(createdId);
       navigateTo('post');
       startRealtimeReviewTimer();
-      return;
+      return verifiedProject;
+      } catch (error) {
+        console.error('[Supabase DB] Project persistence failed:', error);
+        const message = error?.code === '42501'
+          ? '프로젝트 등록 권한을 확인해 주세요. 등록 전 확인 서약을 완료해야 합니다.'
+          : (error?.message || '프로젝트 저장에 실패했습니다.');
+        showGenericToast(message, '⚠️');
+        return null;
+      } finally {
+        if (publishButton) {
+          publishButton.dataset.submitting = 'false';
+          publishButton.disabled = false;
+        }
+        calculateTotalCost();
+      }
+    }
+
+    window.setUserCoinBalance = function (amount) {
+      const parsed = Number(amount);
+      userCoinBalance = Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+      updateAllCoinDisplays();
+    };
+
+    window.renderMyCoinData = function (wallet, transactions = [], exchanges = []) {
+      const totalBalance = Number(wallet?.earned_coins || 0) + Number(wallet?.paid_coins || 0);
+      window.setUserCoinBalance(totalBalance);
+
+      const now = new Date();
+      const monthlyEarned = transactions
+        .filter(item => {
+          const createdAt = new Date(item.created_at);
+          return Number(item.amount) > 0
+            && createdAt.getFullYear() === now.getFullYear()
+            && createdAt.getMonth() === now.getMonth();
+        })
+        .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+      const completedExchanges = exchanges.filter(item => item.status === 'completed').length;
+
+      const monthlyEl = document.getElementById('mypage-monthly-earned');
+      const monthlyCaption = document.getElementById('mypage-monthly-earned-caption');
+      const exchangeEl = document.getElementById('mypage-exchange-count');
+      const exchangeCaption = document.getElementById('mypage-exchange-caption');
+      if (monthlyEl) monthlyEl.textContent = `+${monthlyEarned.toLocaleString()}`;
+      if (monthlyCaption) monthlyCaption.textContent = monthlyEarned > 0 ? '이번 달 실제 적립 합계' : '이번 달 적립 내역 없음';
+      if (exchangeEl) exchangeEl.textContent = completedExchanges;
+      if (exchangeCaption) exchangeCaption.textContent = completedExchanges > 0 ? '완료된 실제 교환 내역' : '교환 내역 없음';
+
+      const list = document.getElementById('mypage-coin-transactions-list');
+      if (!list) return;
+      if (!transactions.length) {
+        list.innerHTML = '<p class="py-8 text-center text-xs text-neutral-400">아직 적립 또는 사용한 동전 내역이 없습니다.</p>';
+        return;
+      }
+
+      const typeLabels = {
+        reward_earned: '피드백 리워드',
+        shop_purchase: '상점 교환',
+        project_funding: '프로젝트 리워드 예치',
+        refund: '환불',
+        bonus: '보너스'
+      };
+      list.innerHTML = transactions.slice(0, 20).map(item => {
+        const amount = Number(item.amount || 0);
+        const positive = amount >= 0;
+        const label = typeLabels[item.type] || item.description || '동전 변동';
+        const date = item.created_at ? new Date(item.created_at).toLocaleString('ko-KR') : '-';
+        return `
+          <div class="py-3 flex items-center justify-between gap-4">
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-neutral-700 truncate">${escapeHtml(label)}</p>
+              <p class="text-[10px] text-neutral-400 mt-0.5">${date} · ${item.coin_type === 'paid' ? '충전 동전' : '적립 동전'}</p>
+            </div>
+            <span class="text-sm font-black ${positive ? 'text-[#2F6517]' : 'text-red-600'}">${positive ? '+' : ''}${amount.toLocaleString()} C</span>
+          </div>`;
+      }).join('');
+    };
+
+    function renderSupportTickets(tickets = []) {
+      const list = document.getElementById('support-ticket-list');
+      if (!list) return;
+      if (!tickets.length) {
+        list.innerHTML = '<div class="py-10 text-center text-xs text-neutral-400">등록한 문의가 없습니다.</div>';
+        return;
+      }
+
+      const categoryLabels = { account: '계정/로그인', project: '프로젝트', coin: '동전/교환', bug: '오류 신고', other: '기타' };
+      const statusLabels = { open: '접수', in_progress: '확인 중', answered: '답변 완료', closed: '종료' };
+      list.innerHTML = tickets.map(ticket => `
+        <article class="rounded-xl border border-neutral-200 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-neutral-100 text-[10px] font-bold text-neutral-600">${categoryLabels[ticket.category] || '기타'}</span>
+                <span class="px-2 py-0.5 rounded bg-[#F2F7EC] text-[10px] font-extrabold text-[#2F6517]">${statusLabels[ticket.status] || ticket.status}</span>
+              </div>
+              <h4 class="text-sm font-extrabold text-neutral-dark mt-2">${escapeHtml(ticket.subject)}</h4>
+              <p class="text-xs text-neutral-500 mt-1 whitespace-pre-wrap">${escapeHtml(ticket.message)}</p>
+            </div>
+            <time class="text-[10px] text-neutral-400 whitespace-nowrap">${new Date(ticket.created_at).toLocaleDateString('ko-KR')}</time>
+          </div>
+          ${ticket.admin_reply ? `<div class="mt-3 rounded-lg bg-[#FAFBF7] border border-[#E9EEDC] p-3"><p class="text-[10px] font-extrabold text-[#2F6517] mb-1">고객센터 답변</p><p class="text-xs text-neutral-600 whitespace-pre-wrap">${escapeHtml(ticket.admin_reply)}</p></div>` : ''}
+        </article>`).join('');
+    }
+
+    async function loadSupportTickets() {
+      const ds = window.donDwaeDataService;
+      const list = document.getElementById('support-ticket-list');
+      if (!ds?.supabase || !list) return;
+      list.innerHTML = '<p class="py-10 text-center text-xs text-neutral-400">문의 내역을 불러오는 중입니다.</p>';
+      try {
+        const { data: { session } } = await ds.supabase.auth.getSession();
+        if (!session?.user) {
+          list.innerHTML = '<p class="py-10 text-center text-xs text-neutral-400">로그인 후 문의 내역을 확인할 수 있습니다.</p>';
+          return;
+        }
+        renderSupportTickets(await ds.fetchMySupportTickets(session.user.id));
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to load support tickets:', err);
+        list.innerHTML = '<p class="py-10 text-center text-xs text-red-500">문의 내역을 불러오지 못했습니다.</p>';
+      }
+    }
+
+    async function submitSupportTicket(event) {
+      event?.preventDefault();
+      const ds = window.donDwaeDataService;
+      const submitButton = document.getElementById('support-ticket-submit');
+      try {
+        const { data: { session } } = await ds.supabase.auth.getSession();
+        if (!session?.user) {
+          showGenericToast('로그인 후 문의를 등록할 수 있습니다.', '🔒');
+          navigateTo('login');
+          return;
+        }
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = '등록 중...';
+        }
+        await ds.createSupportTicket(session.user.id, {
+          category: document.getElementById('support-ticket-category')?.value,
+          subject: document.getElementById('support-ticket-subject')?.value,
+          message: document.getElementById('support-ticket-message')?.value
+        });
+        document.getElementById('support-ticket-form')?.reset();
+        await loadSupportTickets();
+        showGenericToast('문의가 등록되었습니다.', '🎧');
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to create support ticket:', err);
+        showGenericToast(err?.message || '문의 등록에 실패했습니다.', '⚠️');
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = '문의 등록하기';
+        }
+      }
     }
 
     function originalPublishOld() {
@@ -10204,7 +10680,7 @@
       startRealtimeReviewTimer();
     }
 
-    // Real-Time Event-based Review Toast (Timer disabled per CHECK_YE.md requirement 5)
+    // Real-Time Event-based Review Toast (Timer disabled per ../docs/CHECK_YE.md requirement 5)
     function startRealtimeReviewTimer() {
       if (reviewToastTimer) clearTimeout(reviewToastTimer);
       // Dummy timer removed: notifications trigger only on real events
@@ -10462,24 +10938,23 @@
         return;
       }
 
-      // Show Loading State
       btn.disabled = true;
       btn.textContent = '검증 중...';
       msg.className = 'text-xs font-semibold text-neutral-500 block';
-      msg.textContent = '⏳ URL 접속 상태를 검증하는 중입니다...';
+      msg.textContent = '⏳ URL 형식을 확인하는 중입니다...';
 
       setTimeout(() => {
         btn.disabled = false;
         btn.textContent = '검증';
 
-        // Basic pattern check or successful verification simulation
-        const isValidFormat = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(:\d{1,5})?(\/.*)?$/i.test(rawVal) || rawVal.includes('.');
-        if (isValidFormat) {
+        try {
+          const normalizedUrl = window.donDwaeDataService.normalizeHttpUrl(rawVal, { required: true });
+          input.value = normalizedUrl;
           msg.className = 'text-xs font-bold text-[#2E5E14] block flex items-center gap-1';
-          msg.innerHTML = '<span>✓</span> <span>접속 가능한 URL입니다.</span>';
-        } else {
+          msg.innerHTML = '<span>✓</span> <span>DB에 저장 가능한 URL 형식입니다.</span>';
+        } catch (error) {
           msg.className = 'text-xs font-bold text-red-500 block';
-          msg.textContent = '❌ 올바르지 않거나 접속할 수 없는 URL 형식입니다.';
+          msg.textContent = `❌ ${error.message}`;
         }
       }, 400);
     }
@@ -10529,9 +11004,60 @@
     // ========================================================
     // Profile Edit Modal Handlers
     // ========================================================
-    function openEditProfileModal() {
-      const modal = document.getElementById('edit-profile-modal');
-      if (modal) modal.classList.remove('hidden');
+    function updateProfileInputCounts() {
+      const nickname = document.getElementById('profile-edit-nickname')?.value || '';
+      const bio = document.getElementById('profile-edit-bio')?.value || '';
+      const nicknameCount = document.getElementById('profile-nick-count');
+      const bioCount = document.getElementById('profile-bio-count');
+      if (nicknameCount) nicknameCount.textContent = `${nickname.length}/20자`;
+      if (bioCount) bioCount.textContent = `${bio.length}/50자`;
+    }
+
+    async function openEditProfileModal() {
+      const ds = window.donDwaeDataService;
+      if (!ds?.supabase) {
+        showGenericToast('프로필 서버 연결을 확인해 주세요.', '⚠️');
+        return;
+      }
+
+      try {
+        const { data: { session }, error: sessionError } = await ds.supabase.auth.getSession();
+        if (sessionError || !session?.user) {
+          showGenericToast('로그인 후 프로필을 수정할 수 있습니다.', '🔒');
+          navigateTo('login');
+          return;
+        }
+
+        const profile = await ds.fetchMyPrivateProfile();
+        if (!profile) throw new Error('내 프로필을 찾을 수 없습니다.');
+
+        const nicknameInput = document.getElementById('profile-edit-nickname');
+        const bioInput = document.getElementById('profile-edit-bio');
+        const phoneInput = document.getElementById('profile-edit-phone');
+        const emailEl = document.getElementById('profile-edit-email');
+        const providerEl = document.getElementById('profile-edit-provider');
+        if (nicknameInput) nicknameInput.value = profile.nickname || '';
+        if (bioInput) bioInput.value = profile.bio || '';
+        if (phoneInput) phoneInput.value = profile.phone || '';
+        if (emailEl) emailEl.textContent = profile.email || session.user.email || '이메일 정보 없음';
+        if (providerEl) {
+          const provider = session.user.app_metadata?.provider || 'email';
+          providerEl.textContent = provider === 'google' ? '🌐 구글 계정' : '✉️ 이메일 계정';
+        }
+
+        const selectedInterests = new Set(Array.isArray(profile.interests) ? profile.interests : []);
+        document.querySelectorAll('#interest-chips-box [data-interest]').forEach(button => {
+          setInterestChipSelected(button, selectedInterests.has(button.dataset.interest));
+        });
+        renderProfileSnsLinks(Array.isArray(profile.sns_links) ? profile.sns_links : []);
+        updateProfileInputCounts();
+
+        const modal = document.getElementById('edit-profile-modal');
+        if (modal) modal.classList.remove('hidden');
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to load private profile:', err);
+        showGenericToast('프로필 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', '⚠️');
+      }
     }
 
     function closeEditProfileModal() {
@@ -10572,31 +11098,63 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    function setInterestChipSelected(btn, isSelected) {
+      if (!btn) return;
+      const label = btn.dataset.interest || btn.textContent.replace(/^✓\s*/, '').trim();
+      btn.dataset.interest = label;
+      btn.setAttribute('aria-pressed', String(isSelected));
+      btn.className = isSelected
+        ? 'px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#B4E380] text-[#1E3E0B] transition-all'
+        : 'px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all';
+      btn.textContent = `${isSelected ? '✓ ' : ''}${label}`;
+    }
+
     function toggleInterestChip(btn) {
       if (!btn) return;
-      const isSelected = btn.classList.contains('bg-[#B4E380]');
-      if (isSelected) {
-        btn.className = 'px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all';
-        btn.textContent = btn.textContent.replace('✓ ', '');
-      } else {
-        btn.className = 'px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#B4E380] text-[#1E3E0B] transition-all';
-        btn.textContent = '✓ ' + btn.textContent.trim();
-      }
+      setInterestChipSelected(btn, btn.getAttribute('aria-pressed') !== 'true');
+    }
+
+    function createSnsLinkRow(value = '') {
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-2 animate-in fade-in duration-150';
+
+      const label = document.createElement('span');
+      label.className = 'px-3 py-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-600 text-xs font-bold shrink-0 flex items-center gap-1';
+      label.textContent = '🔗 링크';
+
+      const input = document.createElement('input');
+      input.type = 'url';
+      input.placeholder = 'https://';
+      input.value = value;
+      input.dataset.profileSnsLink = '';
+      input.className = 'flex-1 p-2.5 rounded-xl border border-neutral-300 text-neutral-800 font-semibold outline-none focus:border-primary text-xs';
+
+      const removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'w-8 h-8 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-500 flex items-center justify-center text-xs';
+      removeButton.textContent = '✕';
+      removeButton.addEventListener('click', () => div.remove());
+
+      div.append(label, input, removeButton);
+      return div;
+    }
+
+    function renderProfileSnsLinks(links = []) {
+      const container = document.getElementById('sns-links-container');
+      if (!container) return;
+      container.innerHTML = '';
+      const safeLinks = links.filter(link => typeof link === 'string').slice(0, 5);
+      (safeLinks.length ? safeLinks : ['']).forEach(link => container.appendChild(createSnsLinkRow(link)));
     }
 
     function addSnsLinkInput() {
       const container = document.getElementById('sns-links-container');
       if (!container) return;
-      const div = document.createElement('div');
-      div.className = 'flex items-center gap-2 animate-in fade-in duration-150';
-      div.innerHTML = `
-        <span class="px-3 py-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-600 text-xs font-bold shrink-0 flex items-center gap-1">
-          <span>🔗</span> 기타 링크
-        </span>
-        <input type="text" placeholder="https://" class="flex-1 p-2.5 rounded-xl border border-neutral-300 text-neutral-800 font-semibold outline-none focus:border-primary text-xs">
-        <button type="button" onclick="this.parentElement.remove()" class="w-8 h-8 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-500 flex items-center justify-center text-xs">✕</button>
-      `;
-      container.appendChild(div);
+      if (container.querySelectorAll('[data-profile-sns-link]').length >= 5) {
+        showGenericToast('SNS 링크는 최대 5개까지 등록할 수 있습니다.', '🔗');
+        return;
+      }
+      container.appendChild(createSnsLinkRow());
     }
 
     window.saveProfileChangesLocal = function (newNick, newBio, showToast = false) {
@@ -10679,45 +11237,66 @@
     async function saveProfileChanges() {
       const nickInput = document.getElementById('profile-edit-nickname');
       const bioInput = document.getElementById('profile-edit-bio');
+      const saveButton = document.getElementById('btn-save-profile');
 
       const newNick = nickInput ? nickInput.value.trim() : '';
       const newBio = bioInput ? bioInput.value.trim() : '';
+      const interests = [...document.querySelectorAll('#interest-chips-box [data-interest][aria-pressed="true"]')]
+        .map(button => button.dataset.interest);
+      const snsLinks = [...document.querySelectorAll('[data-profile-sns-link]')]
+        .map(input => input.value);
 
       if (!newNick) {
         alert('닉네임을 입력해 주세요.');
         return;
       }
 
-      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
-        try {
-          const { data: { session }, error } = await window.donDwaeDataService.supabase.auth.getSession();
-          if (error || !session?.user) {
-            showGenericToast('로그인 세션이 만료되었습니다. 다시 로그인해 주세요.', '⚠️');
-            navigateTo('login');
-            return;
-          }
-          const userId = session.user.id;
-          await window.donDwaeDataService.updateUserProfile(userId, {
-            nickname: newNick,
-            bio: newBio
-          });
-          console.log('[Don Dwae DB] Profile updated in Supabase DB for user:', userId);
-        } catch (err) {
-          console.error('[Don Dwae DB] Failed to save profile to Supabase DB:', err);
+      const ds = window.donDwaeDataService;
+      if (!ds?.supabase) {
+        showGenericToast('프로필 서버 연결을 확인해 주세요.', '⚠️');
+        return;
+      }
+
+      if (saveButton) {
+        saveButton.disabled = true;
+        saveButton.textContent = '저장 중...';
+      }
+
+      try {
+        const { data: { session }, error } = await ds.supabase.auth.getSession();
+        if (error || !session?.user) {
+          showGenericToast('로그인 세션이 만료되었습니다. 다시 로그인해 주세요.', '⚠️');
+          navigateTo('login');
+          return;
+        }
+        await ds.updateMyPrivateProfile({
+          nickname: newNick,
+          bio: newBio,
+          interests,
+          snsLinks
+        });
+        window.saveProfileChangesLocal(newNick, newBio, true);
+        console.log('[Don Dwae DB] Private profile updated for the active session.');
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to save private profile:', err);
+        showGenericToast(err?.message || '프로필 저장에 실패했습니다.', '⚠️');
+        return;
+      } finally {
+        if (saveButton) {
+          saveButton.disabled = false;
+          saveButton.textContent = '저장하기';
         }
       }
 
-      window.saveProfileChangesLocal(newNick, newBio, true);
-
       // Refresh explore feed & detail view so creator nickname updates everywhere
       if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchExploreProjects === 'function') {
-        const liveProjects = await window.donDwaeDataService.fetchExploreProjects();
+        const liveProjects = await ds.fetchExploreProjects();
         if (liveProjects && liveProjects.length > 0) {
           window.renderLiveProjectsToFeed(liveProjects);
         }
       }
       if (typeof currentPostId !== 'undefined' && currentPostId) {
-        const dbProj = await window.donDwaeDataService.fetchProjectById(currentPostId);
+        const dbProj = await ds.fetchProjectById(currentPostId);
         if (dbProj) window.renderDBProjectToDetail(dbProj);
       }
     }
@@ -10957,9 +11536,26 @@
           const activeNick = profile?.nickname || session.user.user_metadata?.nickname || emailPrefix;
           const activeBio = profile?.bio || '프로필 소개를 입력해 주세요.';
           window.userHasPassedGating = profile?.has_passed_gating || false;
+          window.completedTestCountFromDB = Number(profile?.completed_test_count || 0);
           window.saveProfileChangesLocal(activeNick, activeBio);
+          updatePledgeModalUI();
 
-          const stats = await ds.fetchUserAggregateStats(userId);
+          const [stats, registeredProjects, participatedProjects, scrapRows, wallet, coinTransactions, exchanges] = await Promise.all([
+            ds.fetchUserAggregateStats(userId),
+            ds.fetchMyProjects(userId, 'registered'),
+            ds.fetchMyProjects(userId, 'participated'),
+            ds.fetchUserScraps(userId),
+            ds.fetchUserWallet(userId),
+            ds.fetchCoinTransactions(userId),
+            ds.fetchUserExchanges(userId)
+          ]);
+          const scrapedProjects = scrapRows.map(row => row.projects).filter(Boolean);
+          window.myProjectCollections = {
+            registered: registeredProjects,
+            participated: participatedProjects,
+            scraped: scrapedProjects
+          };
+
           const regCountEl = document.getElementById('mypage-reg-count');
           const partCountEl = document.getElementById('mypage-part-count');
           const scrapCountEl = document.getElementById('mypage-scrap-count');
@@ -10976,79 +11572,24 @@
           const filterAllCountEl = document.getElementById('myproj-filter-all-count');
           const filterActiveCountEl = document.getElementById('myproj-filter-active-count');
           const filterCompletedCountEl = document.getElementById('myproj-filter-completed-count');
+          const totalCountEl = document.getElementById('myproj-total-count');
+          const scrapedCountEl = document.getElementById('myproj-scraped-count');
+          const activeProjectCount = registeredProjects.filter(project => normalizeMyProjectStatus(project.status) === 'active').length;
+          const completedProjectCount = registeredProjects.filter(project => normalizeMyProjectStatus(project.status) === 'completed').length;
 
           if (ovPartEl) ovPartEl.textContent = stats.participatedCount;
           if (ovRegEl) ovRegEl.textContent = stats.registeredCount;
-          if (ovActiveSubEl) ovActiveSubEl.textContent = `모집 진행중 ${stats.registeredCount}건`;
-          if (tabRegBadge) tabRegBadge.textContent = stats.registeredCount;
-          if (tabPartBadge) tabPartBadge.textContent = `리뷰 대기 0`;
-          if (filterAllCountEl) filterAllCountEl.textContent = stats.registeredCount;
-          if (filterActiveCountEl) filterActiveCountEl.textContent = stats.registeredCount;
-          if (filterCompletedCountEl) filterCompletedCountEl.textContent = 0;
+          if (ovActiveSubEl) ovActiveSubEl.textContent = `모집 진행중 ${activeProjectCount}건`;
+          if (tabRegBadge) tabRegBadge.textContent = registeredProjects.length;
+          if (tabPartBadge) tabPartBadge.textContent = participatedProjects.length;
+          if (scrapedCountEl) scrapedCountEl.textContent = scrapedProjects.length;
+          if (totalCountEl) totalCountEl.textContent = `총 ${registeredProjects.length}개`;
+          if (filterAllCountEl) filterAllCountEl.textContent = registeredProjects.length;
+          if (filterActiveCountEl) filterActiveCountEl.textContent = activeProjectCount;
+          if (filterCompletedCountEl) filterCompletedCountEl.textContent = completedProjectCount;
 
-          // Populate My Registered Projects List dynamically from DB
-          const myProjects = await ds.fetchMyProjects(userId, 'registered');
-          const myprojCardsList = document.getElementById('myproj-cards-list');
-          if (myprojCardsList && myProjects && myProjects.length > 0) {
-            myprojCardsList.innerHTML = myProjects.map(p => `
-              <div class="myproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle" data-status="${p.status || 'active'}">
-                <div class="flex items-start justify-between gap-4">
-                  <div class="flex items-start gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-[#E8F5E9] border border-[#C8E6C9] flex flex-col items-center justify-center relative p-1 shrink-0">
-                      <div class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">📱</div>
-                      <span class="text-[9px] font-black text-white bg-[#43A047] px-1 rounded mt-1">${(p.platform || 'web').toUpperCase()}</span>
-                    </div>
-
-                    <div class="flex flex-col gap-1.5">
-                      <div class="flex items-center gap-2 flex-wrap text-xs">
-                        <span class="px-2.5 py-0.5 rounded-full bg-[#B4E380] text-[#1E3E0B] font-extrabold text-[11px]">● ${p.status === 'completed' ? '진행완료' : '진행중'}</span>
-                        <span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-bold">[${p.category || '프로젝트'}]</span>
-                        <span class="text-[11px] text-neutral-400 font-medium">📅 등록일: ${p.created_at ? p.created_at.split('T')[0] : '2026.09.01'}</span>
-                      </div>
-
-                      <h3 class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors" onclick="openPostDetail('${p.id}')">
-                        ${p.title}
-                      </h3>
-
-                      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs pt-1">
-                        <div class="flex items-center gap-2 min-w-[200px]">
-                          <span class="font-bold text-neutral-700">모집률 <strong class="text-neutral-dark font-black">${p.current_count || 0}/${p.target_count || 10}명</strong></span>
-                          <div class="w-28 h-2 bg-neutral-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-[#B4E380] rounded-full" style="width: ${Math.min(100, Math.round(((p.current_count || 0)/(p.target_count || 10))*100))}%"></div>
-                          </div>
-                          <span class="font-extrabold text-emerald-700 text-[11px]">${Math.round(((p.current_count || 0)/(p.target_count || 10))*100)}% 달성</span>
-                        </div>
-
-                        <div class="flex items-center gap-1 bg-[#FFFDF0] px-2.5 py-1 rounded-lg border border-[#F5E8B8]">
-                          <span class="text-neutral-500 font-medium text-[11px]">지급 리워드</span>
-                          <span class="font-black text-[#D97706] text-xs">🪙 ${p.reward_coin || 500} C / 명</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center gap-1 text-neutral-400">
-                    <button type="button" onclick="openEditPostModal('${p.id}')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors" title="수정">✏️</button>
-                  </div>
-                </div>
-
-                <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
-                  <button onclick="openPostDetail('${p.id}')" class="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5">
-                    <span>👁️ 상세 화면</span>
-                  </button>
-                  <button onclick="openFeedbackReport('${p.id}')" class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 relative">
-                    <span>📊 결과 및 피드백</span>
-                  </button>
-                </div>
-              </div>
-            `).join('');
-          }
-
-          const wallet = await ds.fetchUserWallet(userId);
-          if (wallet) {
-            window.userCoinBalance = wallet.earned_coins + wallet.paid_coins;
-            if (typeof window.updateAllCoinDisplays === 'function') window.updateAllCoinDisplays();
-          }
+          renderMyProjectCollection(currentMyProjectTab);
+          window.renderMyCoinData(wallet, coinTransactions, exchanges);
 
           const notifications = await ds.fetchUserNotifications(userId);
           if (notifications) {
@@ -11058,7 +11599,7 @@
               type: n.type || 'app_update',
               title: n.title,
               content: n.message || n.content || '',
-              related_id: n.related_id || 'explore',
+              related_id: n.target_url || 'explore',
               is_read: n.is_read,
               created_at: n.created_at
             }));
@@ -11077,7 +11618,7 @@
           if (grid) {
             grid.innerHTML = marketItems.map((item, idx) => `
               <div data-market-item="${item.id}" data-market-category="${item.category || 'gift'}"
-                onclick="selectMarketProduct('${item.id}', '${item.title}', ${item.price_coin}, '${item.category || '상품'}', '${item.icon || '🎁'}')"
+                onclick="selectMarketProduct(decodeURIComponent('${encodeURIComponent(item.id)}'), decodeURIComponent('${encodeURIComponent(item.name)}'), ${Number(item.price_coins)}, decodeURIComponent('${encodeURIComponent(item.category || '상품')}'), decodeURIComponent('${encodeURIComponent(item.icon || '🎁')}'))"
                 class="market-item-card ${idx === 0 ? 'ring-2 ring-[#2F6517] border-primary' : 'border-neutral-200'} bg-white rounded-2xl border p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group relative">
                 ${idx === 0 ? '<span class="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-[10px] font-extrabold shadow-xs flex items-center gap-1">✓ 현재 선택됨</span>' : ''}
                 <div>
@@ -11087,17 +11628,21 @@
                   </div>
                   <span class="text-[11px] text-neutral-400 font-medium">${item.category || '상품'}</span>
                   <h3 class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-1">
-                    ${item.title}
+                    ${escapeHtml(item.name)}
                   </h3>
                 </div>
                 <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
-                  <span class="text-sm font-extrabold text-neutral-dark">${(item.price_coin || 0).toLocaleString()} C</span>
+                  <span class="text-sm font-extrabold text-neutral-dark">${Number(item.price_coins || 0).toLocaleString()} C</span>
                   <span class="text-[11px] font-bold ${idx === 0 ? 'text-[#2F6517] bg-primary/20 px-2 py-0.5 rounded' : 'text-neutral-500 group-hover:text-primary-dark'}">
                     ${idx === 0 ? '교환 가능' : '선택하기 >'}
                   </span>
                 </div>
               </div>
             `).join('');
+            const firstItem = marketItems[0];
+            if (firstItem) {
+              selectMarketProduct(firstItem.id, firstItem.name, Number(firstItem.price_coins), firstItem.category, firstItem.icon || '🎁');
+            }
           }
         }
       } catch (err) {
@@ -11113,11 +11658,11 @@
         if (event.key === 'Escape') closeTopMyInfoNavigation();
       });
       initializeInterviewerController();
+      initializeProjectDateDefaults();
       updateAllCoinDisplays();
       updatePledgeModalUI();
       calculateTotalCost();
       renderNotificationsUI();
-      restoreUserCreatedProjectToFeed();
       navigateTo('landing');
 
       setTimeout(() => {
