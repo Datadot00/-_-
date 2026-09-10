@@ -2191,8 +2191,8 @@
               <h3 class="text-sm font-bold text-neutral-dark">1. 테스트 대분류 선택 <span
                   class="text-neutral-400 font-normal text-xs">(단순 설문조사 시 생략 가능)</span></h3>
               <button type="button" id="btn-skip-main-category" onclick="handleSkipMainCategory()"
-                class="px-3 py-1 rounded-lg border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer">
-                ⏩ 대분류 생략 (단순 설문)
+                class="px-3 py-1.5 rounded-lg border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-100 transition-all cursor-pointer flex items-center gap-1.5">
+                <span>⏩</span> <span>대분류 생략 (단순 설문)</span>
               </button>
             </div>
             <p class="text-xs text-neutral-muted mb-4">프로덕트, 프로토타입, 투표 중 검증할 대상 형태를 선택하세요.</p>
@@ -2245,6 +2245,15 @@
                   <span class="text-xs text-neutral-muted font-medium mt-0.5 block">다중 이미지/URL 시안 비교 투표</span>
                 </div>
               </label>
+            </div>
+
+            <!-- 대분류 생략 안내 배너 (생략 선택 시 노출) -->
+            <div id="skip-category-notice" class="hidden mt-4 p-4 rounded-2xl bg-[#F4F9EE] border-2 border-primary/40 flex items-center gap-3">
+              <span class="text-2xl">⏩</span>
+              <div>
+                <span class="text-xs font-extrabold text-[#2F6517] block">대분류 선택이 생략되었습니다 (단순 설문 모드)</span>
+                <span class="text-[11px] text-neutral-600 font-medium">웹/앱 접속 링크나 이미지 업로드 없이 아래의 <strong>3. 테스트 진행 가이드</strong> 및 <strong>4. 검증 항목(설문 질문)</strong>만으로 테스트가 진행됩니다.</span>
+              </div>
             </div>
           </div>
 
@@ -7047,6 +7056,10 @@
       if (endDateInput && test.endDate) endDateInput.value = test.endDate;
       if (privacyInput) privacyInput.value = test.privacyItems || '';
       if (guideInput) guideInput.value = test.testGuide || '';
+      const testLoginIdInput = document.getElementById('input-test-login-id');
+      const testLoginPwInput = document.getElementById('input-test-login-pw');
+      if (testLoginIdInput) testLoginIdInput.value = test.testAccountId || '';
+      if (testLoginPwInput) testLoginPwInput.value = test.testAccountPassword || '';
       if (feedbackPrivacyInput) feedbackPrivacyInput.checked = !test.reviewsPublic;
 
       // 썸네일 이미지 미리보기 복원
@@ -7078,12 +7091,17 @@
         });
       }
 
-      const editableCategory = ['product', 'prototype', 'vote'].includes(test.mainCategory)
-        ? test.mainCategory
-        : 'product';
-      const categoryRadio = document.querySelector(`input[name="mainCategory"][value="${editableCategory}"]`);
-      if (categoryRadio) categoryRadio.checked = true;
-      handleMainCategoryChange(editableCategory);
+      const isNoneCategory = test.mainCategory === 'none' || (test.mainCategory === 'survey' && !test.serviceUrl && !test.externalSurveyUrl);
+      if (isNoneCategory) {
+        handleMainCategoryChange('none');
+      } else {
+        const editableCategory = ['product', 'prototype', 'vote'].includes(test.mainCategory)
+          ? test.mainCategory
+          : 'product';
+        const categoryRadio = document.querySelector(`input[name="mainCategory"][value="${editableCategory}"]`);
+        if (categoryRadio) categoryRadio.checked = true;
+        handleMainCategoryChange(editableCategory);
+      }
 
       const platformRadio = document.querySelector(`input[name="productSubPlatform"][value="${test.platform || 'web'}"]`);
       if (platformRadio) platformRadio.checked = true;
@@ -9417,6 +9435,10 @@
       }
       if (privacyInput) privacyInput.value = '';
       if (guideInput) guideInput.value = '';
+      const testLoginIdInput = document.getElementById('input-test-login-id');
+      const testLoginPwInput = document.getElementById('input-test-login-pw');
+      if (testLoginIdInput) testLoginIdInput.value = '';
+      if (testLoginPwInput) testLoginPwInput.value = '';
       if (personaContainer) personaContainer.innerHTML = '';
 
       const tCounter = document.getElementById('test-title-counter');
@@ -9437,17 +9459,24 @@
       if (step3PublishBtnText) step3PublishBtnText.textContent = '테스트 게시하기';
       if (step3PublishBtnIcon) step3PublishBtnIcon.textContent = '🚀';
 
-      // 락 해제
+      // 락 해제 및 대분류 기본값(프로덕트) 복원
       const mainCatInputs = document.querySelectorAll('input[name="mainCategory"]');
       mainCatInputs.forEach(input => {
         input.disabled = false;
         input.classList.remove('cursor-not-allowed');
       });
+      const skipBtn = document.getElementById('btn-skip-main-category');
+      if (skipBtn) {
+        skipBtn.disabled = false;
+        skipBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
       const loginReqInputs = document.querySelectorAll('input[name="loginRequirementMode"]');
       loginReqInputs.forEach(input => {
         input.disabled = false;
         input.classList.remove('cursor-not-allowed');
       });
+
+      handleMainCategoryChange('product');
     }
 
     function navigateTo(viewKey) {
@@ -9724,14 +9753,35 @@
     function handleMainCategoryChange(cat) {
       currentMainCategory = cat;
 
-      // Update Card Visuals
+      const skipBtn = document.getElementById('btn-skip-main-category');
+      const skipNotice = document.getElementById('skip-category-notice');
+
+      // Update Card Visuals & Radio Buttons
       document.querySelectorAll('.main-category-card').forEach(card => {
-        card.className = 'main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all';
+        card.className = 'main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all' + (cat === 'none' ? ' opacity-50 hover:opacity-90' : '');
       });
 
-      const activeCard = document.getElementById(`card-main-${cat}`);
-      if (activeCard) {
-        activeCard.className = 'main-category-card cursor-pointer rounded-2xl border-2 border-primary bg-[#F4F9EE] p-5 flex flex-col items-center text-center gap-3 transition-all shadow-xs';
+      document.querySelectorAll('input[name="mainCategory"]').forEach(radio => {
+        radio.checked = (radio.value === cat);
+      });
+
+      if (cat === 'none') {
+        if (skipBtn) {
+          skipBtn.className = 'px-3 py-1.5 rounded-lg bg-primary text-neutral-dark border-2 border-primary text-xs font-extrabold shadow-xs transition-all cursor-pointer flex items-center gap-1.5';
+          skipBtn.innerHTML = '<span>✓</span> <span>대분류 생략됨 (단순 설문)</span>';
+        }
+        if (skipNotice) skipNotice.classList.remove('hidden');
+      } else {
+        if (skipBtn) {
+          skipBtn.className = 'px-3 py-1.5 rounded-lg border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-100 transition-all cursor-pointer flex items-center gap-1.5';
+          skipBtn.innerHTML = '<span>⏩</span> <span>대분류 생략 (단순 설문)</span>';
+        }
+        if (skipNotice) skipNotice.classList.add('hidden');
+
+        const activeCard = document.getElementById(`card-main-${cat}`);
+        if (activeCard) {
+          activeCard.className = 'main-category-card cursor-pointer rounded-2xl border-2 border-primary bg-[#F4F9EE] p-5 flex flex-col items-center text-center gap-3 transition-all shadow-xs';
+        }
       }
 
       // Show/Hide Sub Forms
@@ -9752,19 +9802,29 @@
       }
 
       if (cat === 'none') {
-        if (subContainer) subContainer.style.display = 'none';
+        if (subContainer) {
+          subContainer.style.display = 'none';
+          subContainer.classList.add('hidden');
+        }
       } else {
-        if (subContainer) subContainer.style.display = 'flex';
+        if (subContainer) {
+          subContainer.style.display = 'flex';
+          subContainer.classList.remove('hidden');
+        }
         if (subProduct) subProduct.style.display = (cat === 'product' || cat === 'prototype') ? 'flex' : 'none';
         if (subVote) subVote.style.display = cat === 'vote' ? 'flex' : 'none';
+        toggleProductPlatformFields(document.querySelector('input[name="productSubPlatform"]:checked')?.value || 'web');
       }
-
-      toggleProductPlatformFields(document.querySelector('input[name="productSubPlatform"]:checked')?.value || 'web');
     }
 
     function handleSkipMainCategory() {
-      handleMainCategoryChange('none');
-      showGenericToast('대분류 선택이 생략되었습니다. 아래 3. 검증 항목(단순 설문)을 입력해 주세요.', '⏩');
+      if (currentMainCategory === 'none') {
+        handleMainCategoryChange('product');
+        showGenericToast('대분류 선택이 활성화되었습니다.', '💻');
+      } else {
+        handleMainCategoryChange('none');
+        showGenericToast('대분류가 생략되었습니다. 웹/앱/이미지 첨부 없이 단순 설문조사로 진행됩니다.', '⏩');
+      }
     }
 
     function toggleProductPlatformFields(platform) {
@@ -10541,6 +10601,12 @@
           const pUrl = (document.getElementById('input-external-survey-url')?.value || '').trim();
           typeSpecificData = { surveyMode: 'direct', surveyQuestions: surveyQs, url: pUrl };
         }
+      } else if (currentMainCategory === 'none') {
+        testCategoryName = '단순 설문조사 (대분류 생략)';
+        typeSpecificData = {
+          platform: 'none',
+          surveyMode: 'direct'
+        };
       }
 
       // 3. STEP 3 세부 설정 수집
@@ -10625,6 +10691,9 @@
       } else if (currentMainCategory === 'survey') {
         requiresServiceUrl = typeSpecificData.surveyMode === 'link';
         serviceUrlRaw = typeSpecificData.url || '';
+      } else if (currentMainCategory === 'none') {
+        requiresServiceUrl = false;
+        serviceUrlRaw = '';
       }
 
       const sUrl = dataService.normalizeHttpUrl(serviceUrlRaw, { required: requiresServiceUrl });
@@ -10673,8 +10742,8 @@
       const testGuide = (document.getElementById('input-test-guide')?.value || '').trim();
       const reviewsPublic = !document.getElementById('toggle-feedback-privacy')?.checked;
 
-      if (loginRequired && (!testAccountId || !testAccountPassword || !privacyItems)) {
-        throw new Error('로그인이 필요한 테스트는 테스트 계정과 취급 개인정보 항목을 모두 입력해 주세요.');
+      if (loginRequired && !privacyItems) {
+        throw new Error('로그인이 필요한 테스트는 취급/수집되는 개인정보 항목을 입력해 주세요.');
       }
       if (!testGuide) {
         throw new Error('테스트 진행 방법을 입력해 주세요.');
@@ -10694,7 +10763,7 @@
         test_notice: sNotice,
         thumbnail_url: thumbImgSrc || null,
         category: currentMainCategory === 'none' ? 'survey' : (currentMainCategory || 'product'),
-        platform: typeSpecificData.platform || 'web',
+        platform: currentMainCategory === 'none' ? 'none' : (typeSpecificData.platform || 'web'),
         is_ab_test: isProductAbMode || (currentMainCategory === 'vote' && currentVoteSubOption === 'ab'),
         service_url: sUrl,
         ab_url_a: abUrlA,
@@ -10717,13 +10786,6 @@
         is_reviews_public: reviewsPublic,
         tech_tags: tags
       };
-
-      // 2단계에서 테스트 계정 값은 브라우저 재조회가 차단되어 있다.
-      // 수정 화면에서 빈 필드가 기존 비밀 값을 의도치 않게 지우지 않도록 유지한다.
-      if (wasEditing && loginRequired) {
-        if (!testAccountId) delete dbPayload.test_account_id;
-        if (!testAccountPassword) delete dbPayload.test_account_pw;
-      }
 
       let persistedProject;
       if (wasEditing) {
