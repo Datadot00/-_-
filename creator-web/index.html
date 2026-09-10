@@ -3308,15 +3308,15 @@
                 <div
                   class="w-16 h-16 rounded-2xl bg-[#FAFBF5] border border-[#E2E8D3] flex flex-col items-center justify-center text-[#2F6517] shrink-0 shadow-2xs">
                   <span class="text-[10px] font-bold text-neutral-400">평점</span>
-                  <span class="text-xl font-extrabold">4.8</span>
+                  <span id="detail-reviews-avg-score" class="text-xl font-extrabold">4.8</span>
                 </div>
                 <div class="flex flex-col gap-1">
                   <h3 class="text-sm font-extrabold text-neutral-dark flex items-center gap-2">
                     <span>테스터 만족도 및 리뷰 요약</span>
-                    <span class="text-amber-500 text-xs">⭐⭐⭐⭐⭐</span>
+                    <span id="detail-reviews-stars-display" class="text-amber-500 text-xs">⭐⭐⭐⭐⭐</span>
                   </h3>
                   <p class="text-xs text-neutral-500">
-                    참여 완료한 테스터 <strong class="text-[#2F6517] font-bold">14명</strong>이 작성한 소중한 검증 피드백입니다.
+                    참여 완료한 테스터 <strong id="detail-reviews-count-num" class="text-[#2F6517] font-bold">14명</strong>이 작성한 소중한 검증 피드백입니다.
                   </p>
                 </div>
               </div>
@@ -7462,6 +7462,161 @@
       }
     }
 
+    async function renderDetailReviews(projectId, project) {
+      const tabCountBadge = document.getElementById('tab-count-reviews');
+      const avgScoreEl = document.getElementById('detail-reviews-avg-score');
+      const starsDisplayEl = document.getElementById('detail-reviews-stars-display');
+      const countNumEl = document.getElementById('detail-reviews-count-num');
+      const reviewsContainer = document.getElementById('detail-reviews-container');
+
+      if (!reviewsContainer) return;
+
+      let reviews = [];
+      try {
+        if (window.donDwaeDataService && isDatabaseProjectId(projectId)) {
+          reviews = await window.donDwaeDataService.fetchProjectReviews(projectId);
+        }
+      } catch (err) {
+        console.warn('[renderDetailReviews] fetch error:', err);
+      }
+
+      // Merge with in-memory reviews if any
+      const inMem = (window.inMemoryReviews && window.inMemoryReviews[projectId]) || [];
+      if (inMem.length > 0) {
+        const existingIds = new Set(reviews.map(r => r.id));
+        inMem.forEach(im => {
+          if (!existingIds.has(im.id)) {
+            reviews.unshift(im);
+          }
+        });
+      }
+
+      // Fallback for legacy mock projects (only if not DB project and reviews is empty)
+      if ((!reviews || reviews.length === 0) && !isDatabaseProjectId(projectId)) {
+        if (projectId === 'moneylog') {
+          reviews = [
+            {
+              id: 'mock-1',
+              rating: 5,
+              created_at: '2026-09-09T10:00:00Z',
+              users: { nickname: '스마트알뜰러' },
+              answers: { review_text: '영수증 OCR 인식 속도가 생각보다 훨씬 빠르고 정확하네요! 월별 카테고리 분류도 깔끔합니다.' },
+              creator_reply: '좋은 의견 감사합니다! 더 정확한 인식을 위해 모델 최적화 중입니다.'
+            },
+            {
+              id: 'mock-2',
+              rating: 4,
+              created_at: '2026-09-08T14:30:00Z',
+              users: { nickname: '핀테크매니아' },
+              answers: { review_text: 'UI가 직관적이라 어르신들도 쓰기 좋을 것 같아요. 영수증 여러 장 일괄 업로드 기능도 추가되면 좋겠습니다.' }
+            }
+          ];
+        } else if (projectId === 'prototype') {
+          reviews = [
+            {
+              id: 'mock-p1',
+              rating: 5,
+              created_at: '2026-09-10T11:00:00Z',
+              users: { nickname: 'UX디자이너_린' },
+              answers: { review_text: '3단계 카드 온보딩(A안)이 정보 습득 부담이 적어 훨씬 직관적이었습니다.' }
+            }
+          ];
+        }
+      }
+
+      const count = reviews ? reviews.length : 0;
+      if (tabCountBadge) tabCountBadge.textContent = count;
+      if (countNumEl) countNumEl.textContent = `${count}명`;
+
+      if (count === 0) {
+        if (avgScoreEl) avgScoreEl.textContent = '-';
+        if (starsDisplayEl) starsDisplayEl.textContent = '☆☆☆☆☆';
+        reviewsContainer.innerHTML = `
+          <div class="bg-white rounded-[22px] border border-dashed border-neutral-300 p-12 text-center flex flex-col items-center justify-center gap-3 shadow-2xs">
+            <div class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl">
+              💬
+            </div>
+            <h4 class="text-sm font-extrabold text-neutral-dark mb-0.5">아직 등록된 테스터 리뷰가 없습니다</h4>
+            <p class="text-xs text-neutral-400 font-medium max-w-xs">
+              테스터들이 참여를 완료하면 작성된 솔직한 사용 후기와 피드백이 이곳에 실시간으로 반영됩니다.
+            </p>
+          </div>
+        `;
+      } else {
+        const totalRating = reviews.reduce((sum, r) => sum + (Number(r.rating) || 5), 0);
+        const avgRating = (totalRating / count).toFixed(1);
+        const avgNum = Math.round(Number(avgRating));
+
+        if (avgScoreEl) avgScoreEl.textContent = avgRating;
+        if (starsDisplayEl) starsDisplayEl.textContent = '★'.repeat(avgNum) + '☆'.repeat(Math.max(0, 5 - avgNum));
+
+        reviewsContainer.innerHTML = reviews.map(r => {
+          const userNick = r.users?.nickname || '익명 테스터';
+          const rRating = Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5)));
+          const starStr = '★'.repeat(rRating) + '☆'.repeat(5 - rRating);
+          const reviewDate = r.created_at ? r.created_at.split('T')[0] : '방금 전';
+          
+          let contentStr = '';
+          if (r.answers) {
+            if (typeof r.answers === 'object') {
+              contentStr = r.answers.review_text || r.answers.text || Object.values(r.answers).filter(v => typeof v === 'string').join('\n');
+            } else if (typeof r.answers === 'string') {
+              try {
+                const parsed = JSON.parse(r.answers);
+                contentStr = parsed.review_text || parsed.text || r.answers;
+              } catch (e) {
+                contentStr = r.answers;
+              }
+            }
+          }
+          if (!contentStr) {
+            contentStr = r.content || r.feedback_text || '테스트에 참여하여 소중한 피드백을 전달해 주셨습니다.';
+          }
+
+          return `
+            <article class="bg-white rounded-[22px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col gap-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] flex items-center justify-center font-bold text-sm text-[#2F6517]">
+                    ${escapeHtml(userNick.charAt(0))}
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-extrabold text-sm text-neutral-800">${escapeHtml(userNick)}</span>
+                      <span class="text-xs text-neutral-400 font-medium">${reviewDate}</span>
+                    </div>
+                    <div class="text-amber-500 text-xs flex items-center gap-1 mt-0.5">
+                      <span>${starStr}</span>
+                      <span class="font-bold text-neutral-600 text-[11px]">(${rRating}.0)</span>
+                    </div>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-extrabold border border-[#2F6517]/20">
+                  ✓ 참여 완료
+                </span>
+              </div>
+              
+              <div class="p-4 rounded-xl bg-[#FAFBF7] border border-[#EAEFE0] text-xs text-neutral-700 font-medium leading-relaxed whitespace-pre-line">
+                ${escapeHtml(contentStr)}
+              </div>
+
+              ${r.creator_reply ? `
+                <div class="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 ml-3 sm:ml-6 flex flex-col gap-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-neutral-800 flex items-center gap-1.5">
+                      <span>💬 제작자 답글</span>
+                    </span>
+                    <span class="text-[10px] text-neutral-400">${r.creator_replied_at ? r.creator_replied_at.split('T')[0] : ''}</span>
+                  </div>
+                  <p class="text-xs text-neutral-600 font-medium leading-relaxed whitespace-pre-line">${escapeHtml(r.creator_reply)}</p>
+                </div>
+              ` : ''}
+            </article>
+          `;
+        }).join('');
+      }
+    }
+
     window.renderDBProjectToDetail = function(test) {
       window.currentDetailProject = test;
       const titleEl = document.getElementById('post-main-title');
@@ -7955,6 +8110,9 @@
           sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 동전이 수령됩니다.</span>';
         }
       }
+
+      // Fetch and render project reviews in TAB 3
+      renderDetailReviews(test.id, test);
     };
 
     async function openFeedbackReport(projectId = 'moneylog') {
@@ -8068,43 +8226,6 @@
           const dbProj = await window.donDwaeDataService.fetchProjectById(postId);
           if (dbProj) {
             window.renderDBProjectToDetail(dbProj);
-
-            // Fetch and render actual DB reviews for this project
-            const reviewsContainer = document.getElementById('detail-reviews-container');
-            if (reviewsContainer) {
-              const reviews = await window.donDwaeDataService.fetchProjectReviews(postId);
-              if (!reviews || reviews.length === 0) {
-                reviewsContainer.innerHTML = `
-                  <div class="bg-white rounded-2xl border border-neutral-200 p-8 text-center flex flex-col items-center justify-center gap-2 shadow-2xs">
-                    <span class="text-2xl">💬</span>
-                    <span class="text-xs font-bold text-neutral-600">아직 등록된 리뷰가 없어요</span>
-                    <span class="text-[11px] text-neutral-400">첫 번째 테스터가 되어 피드백을 남겨보세요!</span>
-                  </div>
-                `;
-              } else {
-                reviewsContainer.innerHTML = reviews.map(r => `
-                  <div class="bg-white rounded-2xl border border-neutral-200 p-5 flex flex-col gap-3 shadow-2xs hover:border-primary/50 transition-colors">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-xs">👤</div>
-                        <div>
-                          <span class="text-xs font-extrabold text-neutral-dark block">${r.users?.nickname || '익명 테스터'}</span>
-                          <span class="text-[10px] text-neutral-400">테스터 참여자</span>
-                        </div>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold text-amber-500">⭐ ${Number(r.rating || 5).toFixed(1)}</span>
-                        <span class="text-[11px] text-neutral-400">${r.created_at ? r.created_at.split('T')[0] : '방금 전'}</span>
-                      </div>
-                    </div>
-                    <p class="text-xs text-neutral-700 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-100">
-                      "${r.content || r.feedback_text || ''}"
-                    </p>
-                  </div>
-                `).join('');
-              }
-            }
-
             return;
           }
         } catch (err) {
@@ -8765,6 +8886,8 @@
       } else if (myCreatedTest) {
         renderDetailLoginInfo(myCreatedTest);
       }
+
+      renderDetailReviews(postId, myCreatedTest);
 
       switchPostDetailTab('overview');
       navigateTo('post');
@@ -9474,11 +9597,49 @@
         }
 
         closeFeedbackWriteModal();
-        const countNotice = result.completed_test_count >= 3
-          ? ` 등록 자격을 충족했습니다. (총 ${result.completed_test_count}회)`
-          : ` (등록 조건 ${result.completed_test_count}/3회)`;
-        showGenericToast(`피드백 저장 완료! +${reward.toLocaleString()} 동전이 지급되었습니다.${countNotice}`, '🪙');
-        navigateTo('feedback');
+        if (typeof closeTestParticipateModal === 'function') {
+          closeTestParticipateModal();
+        }
+
+        // Add to inMemoryReviews so detail view reflects it immediately
+        window.inMemoryReviews = window.inMemoryReviews || {};
+        window.inMemoryReviews[projectId] = window.inMemoryReviews[projectId] || [];
+        const authorNick = document.getElementById('mypage-user-nickname')?.textContent || '나';
+        window.inMemoryReviews[projectId].unshift({
+          id: result?.review_id || ('local-' + Date.now()),
+          project_id: projectId,
+          rating: selectedFeedbackStarCount || 5,
+          answers: { review_text: reviewText },
+          content: reviewText,
+          feedback_text: reviewText,
+          created_at: new Date().toISOString(),
+          users: { nickname: authorNick }
+        });
+
+        // Determine if this project belongs to current logged-in user
+        let isMyProject = false;
+        try {
+          const { data: { session } } = await window.donDwaeDataService.supabase.auth.getSession();
+          const activeUserId = session?.user?.id;
+          const currentProj = window.currentDetailProject;
+          isMyProject = (window.myProjectCollections?.registered || []).some(p => String(p.id) === String(projectId))
+            || (currentProj && String(currentProj.creator_id) === String(activeUserId))
+            || projectId === 'my-created-test';
+        } catch (e) {
+          isMyProject = false;
+        }
+
+        if (isMyProject) {
+          // 내 프로젝트에 누군가가 리뷰를 남긴 경우 -> 바로 그 유저에게 '테스트가 성공적으로 종료되었습니다!' 모달창 띄움
+          showGoalAchievedModal(window.currentDetailProject || myCreatedTest);
+        } else {
+          // 다른 사람의 프로젝트에 피드백을 남긴 경우 -> 포인트 받고 홈화면(explore)으로 이동, 모달창 띄우지 않음!
+          const countNotice = result.completed_test_count >= 3
+            ? ` 등록 자격을 충족했습니다. (총 ${result.completed_test_count}회)`
+            : ` (등록 조건 ${result.completed_test_count}/3회)`;
+          showGenericToast(`🎉 피드백 저장 완료! +${reward.toLocaleString()} 동전이 지급되었습니다.${countNotice}`, '🪙');
+          navigateTo('explore');
+        }
       } catch (err) {
         console.error('[Don Dwae DB] Transactional review failed:', err);
         showGenericToast(err?.message || '피드백 저장과 리워드 지급에 실패했습니다.', '⚠️');
@@ -9663,10 +9824,7 @@
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Step 5: If navigating to feedback dashboard, trigger 5000ms goal completion timer
-      if (viewKey === 'feedback' && !isFeedbackGoalCompleted) {
-        startFeedbackGoalCompletionTimer();
-      }
+      // Feedback dashboard goal completion modal only triggers when real reviews arrive on my project
     }
 
     // Modal Controls & Gating Bypass
@@ -11392,51 +11550,11 @@
     // ========================================================
     // Step 5: 7-Second Goal Achievement Timer (7000ms Trigger)
     // ========================================================
-    function startFeedbackGoalCompletionTimer() {
-      if (feedbackCompletionTimer) clearTimeout(feedbackCompletionTimer);
-
-      feedbackCompletionTimer = setTimeout(() => {
-        triggerGoalCompletion();
-      }, 7000);
-    }
-
-    function triggerGoalCompletion() {
+    function showGoalAchievedModal(proj) {
       isFeedbackGoalCompleted = true;
-      const target = myCreatedTest ? myCreatedTest.targetCount : 30;
-      const reward = myCreatedTest ? myCreatedTest.rewardCoin : 50;
-      const totalBudget = target * reward;
+      const target = proj?.target_count || (myCreatedTest ? myCreatedTest.targetCount : 30);
+      window.lastCompletedGoalProjectId = proj?.id || currentPostId;
 
-      // 1. Animate Progress Bar to 100%
-      const bar = document.getElementById('feedback-progress-bar');
-      if (bar) {
-        bar.style.width = '100%';
-      }
-
-      // 2. Update recruits count & label with user-configured target
-      const recruitsNum = document.getElementById('feedback-recruits-num');
-      const recruitsRate = document.getElementById('feedback-recruits-rate');
-      const timeLeft = document.getElementById('feedback-time-left');
-      const totalRewardNum = document.getElementById('feedback-total-reward-num');
-
-      if (recruitsNum) recruitsNum.textContent = String(target);
-      if (totalRewardNum) totalRewardNum.textContent = totalBudget.toLocaleString();
-      if (recruitsRate) {
-        recruitsRate.textContent = '100% 달성 (완료)';
-        recruitsRate.className = 'text-[#25500F] font-extrabold flex items-center gap-1';
-      }
-      if (timeLeft) {
-        timeLeft.textContent = '모집 완료';
-        timeLeft.className = 'text-[11px] font-bold text-primary-dark bg-primary/20 px-2 py-0.5 rounded';
-      }
-
-      // 3. Update Status Badge from [모집 중] to [테스트 종료]
-      const statusBadge = document.getElementById('test-status-badge');
-      if (statusBadge) {
-        statusBadge.textContent = '[테스트 종료]';
-        statusBadge.className = 'px-3 py-1 rounded-full bg-neutral-dark text-white text-xs font-extrabold border border-neutral-700 shadow-xs animate-in zoom-in-95';
-      }
-
-      // 4. Update Modal recruits text with user's target count
       const modalTarget1 = document.getElementById('modal-target-recruits-1');
       const modalTarget2 = document.getElementById('modal-target-recruits-2');
       const toastTarget = document.getElementById('toast-target-recruits');
@@ -11444,17 +11562,24 @@
       if (modalTarget2) modalTarget2.textContent = String(target);
       if (toastTarget) toastTarget.textContent = String(target);
 
-      // 5. Show Goal Achieved Modal
       const modal = document.getElementById('goal-achieved-modal');
       if (modal) {
         modal.classList.remove('hidden');
       }
     }
 
+    function triggerGoalCompletion(proj) {
+      showGoalAchievedModal(proj);
+    }
+
     function closeGoalAchievedModal() {
       const modal = document.getElementById('goal-achieved-modal');
       if (modal) {
         modal.classList.add('hidden');
+      }
+      if (window.lastCompletedGoalProjectId) {
+        openPostDetail(window.lastCompletedGoalProjectId);
+        switchPostDetailTab('reviews');
       }
     }
 
@@ -12286,6 +12411,33 @@
               created_at: n.created_at
             }));
             if (typeof window.renderNotificationsUI === 'function') window.renderNotificationsUI();
+          }
+
+          // Subscribe to Realtime reviews on creator's registered projects
+          if (ds.supabase && registeredProjects.length > 0) {
+            try {
+              ds.supabase
+                .channel('realtime-creator-reviews-' + userId)
+                .on(
+                  'postgres_changes',
+                  { event: 'INSERT', schema: 'public', table: 'reviews' },
+                  async (payload) => {
+                    const newRev = payload.new;
+                    if (!newRev || !newRev.project_id) return;
+                    const matchedProj = registeredProjects.find(p => String(p.id) === String(newRev.project_id));
+                    if (matchedProj) {
+                      showGoalAchievedModal(matchedProj);
+                      showGenericToast(`🔔 '${matchedProj.service_name || matchedProj.title}' 프로젝트에 새로운 테스터 리뷰가 등록되었습니다!`, '⭐');
+                      if (currentPostId === matchedProj.id) {
+                        renderDetailReviews(matchedProj.id, matchedProj);
+                      }
+                    }
+                  }
+                )
+                .subscribe();
+            } catch (rtErr) {
+              console.warn('[Realtime] Review subscription notice:', rtErr);
+            }
           }
         }
 
