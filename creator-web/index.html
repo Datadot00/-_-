@@ -992,10 +992,10 @@
         </div>
 
         <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium text-[#4B5563]" aria-label="서비스 소개 메뉴">
-          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">Features</a>
-          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">Testers</a>
-          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">Stats</a>
-          <a href="#" onclick="event.preventDefault(); navigateTo('explore');" class="hover:text-neutral-dark transition-colors">FAQ</a>
+          <a href="#" onclick="event.preventDefault(); return false;" aria-disabled="true" class="hover:text-neutral-dark transition-colors">Features</a>
+          <a href="#" onclick="event.preventDefault(); return false;" aria-disabled="true" class="hover:text-neutral-dark transition-colors">Testers</a>
+          <a href="#" onclick="event.preventDefault(); return false;" aria-disabled="true" class="hover:text-neutral-dark transition-colors">Stats</a>
+          <a href="#" onclick="event.preventDefault(); return false;" aria-disabled="true" class="hover:text-neutral-dark transition-colors">FAQ</a>
         </nav>
 
         <div class="flex items-center gap-3">
@@ -1178,7 +1178,7 @@
           </div>
 
           <!-- Supabase Email Auth Form -->
-          <form id="auth-form" class="w-full flex flex-col gap-4" novalidate onsubmit="event.preventDefault(); handleEmailAuthSubmit(event); return false;">
+          <form id="auth-form" class="w-full flex flex-col gap-4" novalidate>
             <div>
               <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">이메일</label>
               <input id="auth-email-input" type="email" inputmode="email" autocomplete="email" autocapitalize="none"
@@ -2996,7 +2996,7 @@
           <div class="hidden sm:flex flex-col text-left">
             <span class="text-[10px] text-neutral-muted">환영해요!</span>
             <span class="text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors"
-              id="header-user-nickname">sknye1004 (제작자) ▾</span>
+              id="header-user-nickname">로그인 사용자 ▾</span>
           </div>
         </div>
 
@@ -3007,7 +3007,7 @@
             로그인
           </button>
           <button type="button" onclick="handleUserLogout()" id="btn-header-logout"
-            class="px-3 py-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-100 transition-all cursor-pointer">
+            class="hidden px-3 py-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-100 transition-all cursor-pointer">
             로그아웃
           </button>
         </div>
@@ -3709,7 +3709,7 @@
             <div class="hidden sm:flex flex-col text-left">
               <span class="text-[10px] text-neutral-400">환영해요!</span>
               <span data-auth-email
-                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">sknye1004@gmail.com</span>
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인이 필요합니다</span>
             </div>
           </div>
         </div>
@@ -4340,7 +4340,7 @@
             <div class="hidden sm:flex flex-col text-left">
               <span class="text-[10px] text-neutral-400">환영해요!</span>
               <span data-auth-email
-                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">sknye1004@gmail.com</span>
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인이 필요합니다</span>
             </div>
           </div>
         </div>
@@ -4398,7 +4398,7 @@
               <!-- Profile Info Details -->
               <div class="flex flex-col gap-1.5">
                 <div class="flex flex-wrap items-center gap-2">
-                  <h2 class="text-xl font-extrabold text-neutral-dark" id="mypage-user-nickname">sknye1004 (제작자)</h2>
+                  <h2 class="text-xl font-extrabold text-neutral-dark" id="mypage-user-nickname">로그인 사용자</h2>
                   <span
                     class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold border border-amber-200 flex items-center gap-1">
                     🏆 상위 3% 슈퍼 테스터
@@ -4408,7 +4408,7 @@
                   </span>
                 </div>
                 <p class="text-xs text-neutral-500 font-medium" id="mypage-user-bio">
-                  돈돼 대표 크리에이터 sknye1004입니다.
+                  로그인 후 프로필을 확인할 수 있습니다.
                 </p>
 
                 <!-- Celebration Tag -->
@@ -5049,7 +5049,7 @@
             <div class="hidden sm:flex flex-col text-left">
               <span class="text-[10px] text-neutral-400">환영해요!</span>
               <span data-auth-email
-                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">sknye1004@gmail.com</span>
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인이 필요합니다</span>
             </div>
           </div>
         </div>
@@ -8738,8 +8738,13 @@
 
       // [Supabase DB Integration] Insert review into 'reviews' table with active user and project ID
       if (window.donDwaeDataService && typeof window.donDwaeDataService.submitReviewRecord === 'function') {
-        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
-          const activeUserId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session }, error }) => {
+          if (error || !session?.user) {
+            console.warn('[Supabase DB] Review insert skipped: authenticated session required.');
+            showGenericToast('로그인 세션을 확인한 뒤 다시 시도해 주세요.', '⚠️');
+            return;
+          }
+          const activeUserId = session.user.id;
           const activeProjectId = currentPostId || '11111111-1111-1111-1111-111111111111';
           const reviewPayload = {
             project_id: activeProjectId,
@@ -8872,19 +8877,10 @@
       return Object.keys(userParticipatedTests).length;
     }
 
-    function checkAuthOrPromptLogin() {
-      const session = window.donDwaeDataService?.supabase?.auth?.getSession();
-      // If user is not logged in or in guest session
-      if (window.donDwaeDataService && !window.donDwaeDataService.activeUser) {
-        // We will check session synchronously if available
-      }
-      return true;
-    }
-
     window.openPledgeModalLocal = function () {
       if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
         window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
-          if ((!session || !session.user) && !window.isUserLoggedIn) {
+          if (!session?.user) {
             alert('프로젝트를 등록하시려면 먼저 로그인해 주세요!');
             navigateTo('login');
             return;
@@ -8939,7 +8935,7 @@
     function openTestParticipateModal(postId) {
       if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
         window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
-          if ((!session || !session.user) && !window.isUserLoggedIn) {
+          if (!session?.user) {
             alert('테스트에 참여하시려면 먼저 로그인해 주세요!');
             navigateTo('login');
             return;
@@ -9917,8 +9913,13 @@
 
       // [Supabase DB Integration] Insert into 'projects' table with active user ID
       if (window.donDwaeDataService && typeof window.donDwaeDataService.createProjectRecord === 'function') {
-        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
-          const activeCreatorId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+        window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session }, error }) => {
+          if (error || !session?.user) {
+            console.warn('[Supabase DB] Project insert skipped: authenticated session required.');
+            showGenericToast('로그인 세션을 확인한 뒤 다시 시도해 주세요.', '⚠️');
+            return;
+          }
+          const activeCreatorId = session.user.id;
           const dbPayload = {
             creator_id: activeCreatorId,
           title: tTitle,
@@ -10624,58 +10625,6 @@
       }
     };
 
-    window.handleUserLogout = async function() {
-      if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
-        try {
-          await window.donDwaeDataService.supabase.auth.signOut();
-        } catch (e) {
-          console.warn('[Logout] Supabase signOut warning:', e.message);
-        }
-      }
-      showGenericToast('👋 안전하게 로그아웃 되었습니다.', '🚪');
-      updateHeaderAuthUI(false);
-      setTimeout(() => {
-        navigateTo('landing');
-      }, 300);
-    };
-
-    window.handleEmailAuthSubmit = async function(event) {
-      if (event) event.preventDefault();
-      const emailInput = document.getElementById('auth-email-input');
-      const pwInput = document.getElementById('auth-password-input');
-      const email = emailInput ? emailInput.value.trim() : '';
-      const password = pwInput ? pwInput.value.trim() : '';
-
-      const ds = window.donDwaeDataService;
-      let loginSuccess = false;
-
-      if (ds && ds.supabase && email && password) {
-        try {
-          const { data, error } = await ds.supabase.auth.signInWithPassword({ email, password });
-          if (error) {
-            // Attempt sign up if user does not exist yet
-            const { data: signUpData, error: signUpErr } = await ds.supabase.auth.signUp({ email, password });
-            if (signUpErr) {
-              console.warn('[Auth] Supabase auth error:', signUpErr.message);
-            } else if (signUpData?.user) {
-              loginSuccess = true;
-            }
-          } else if (data?.user) {
-            loginSuccess = true;
-          }
-        } catch (e) {
-          console.warn('[Auth] Connection notice:', e.message);
-        }
-      }
-
-      updateHeaderAuthUI(true);
-      if (typeof window.initSupabaseLiveDB === 'function') {
-        window.initSupabaseLiveDB();
-      }
-      showGenericToast('🎉 환영합니다! 로그인 되었습니다.', '👋');
-      navigateTo('explore');
-    };
-
     window.isUserLoggedIn = false;
 
     window.updateHeaderAuthUI = function(isLoggedIn) {
@@ -10741,8 +10690,13 @@
 
       if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
         try {
-          const { data: { session } } = await window.donDwaeDataService.supabase.auth.getSession();
-          const userId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
+          const { data: { session }, error } = await window.donDwaeDataService.supabase.auth.getSession();
+          if (error || !session?.user) {
+            showGenericToast('로그인 세션이 만료되었습니다. 다시 로그인해 주세요.', '⚠️');
+            navigateTo('login');
+            return;
+          }
+          const userId = session.user.id;
           await window.donDwaeDataService.updateUserProfile(userId, {
             nickname: newNick,
             bio: newBio
@@ -10999,8 +10953,9 @@
 
         if (isLoggedIn && userId) {
           const profile = await ds.fetchUserProfile(userId);
-          const activeNick = profile?.nickname || 'sknye1004 (제작자)';
-          const activeBio = profile?.bio || '돈돼 대표 크리에이터 sknye1004입니다.';
+          const emailPrefix = session.user.email?.split('@')[0] || '로그인 사용자';
+          const activeNick = profile?.nickname || session.user.user_metadata?.nickname || emailPrefix;
+          const activeBio = profile?.bio || '프로필 소개를 입력해 주세요.';
           window.userHasPassedGating = profile?.has_passed_gating || false;
           window.saveProfileChangesLocal(activeNick, activeBio);
 
@@ -11172,6 +11127,7 @@
   </script>
   <script type="module" src="/src/dataService.js"></script>
   <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/auth.js"></script>
 </body>
 
 </html>
