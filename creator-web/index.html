@@ -6372,7 +6372,7 @@
     // Requirement 1 & 3: Dynamic A/B Test (Diary vs SaaS)
     // Reference: desktop-b-voting-test.png 1:1
     // ========================================================
-    function renderFullPageInternalTestScreen(pId) {
+    function renderFullPageInternalTestScreen(pId, proj = null) {
       const titleEl = document.getElementById('abtest-title');
       const subEl = document.getElementById('abtest-subtitle');
       const customContainer = document.getElementById('custom-questions-full-container');
@@ -6380,27 +6380,37 @@
       const submitBtn = document.getElementById('btn-submit-vote');
       const submitBtnText = document.getElementById('btn-submit-vote-text');
 
-      if (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test')) {
-        if (titleEl) titleEl.textContent = `${myCreatedTest.title} 검증 테스트`;
-        if (subEl) subEl.textContent = myCreatedTest.serviceDesc || '아래 검증 문항에 따라 솔직한 피드백을 작성해 주세요.';
+      const targetProj = proj || (window.currentDetailProject && window.currentDetailProject.id === pId ? window.currentDetailProject : null) || (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test') ? myCreatedTest : null);
 
-        // Check if mainCategory is none/survey direct or vote
-        if (myCreatedTest.mainCategory === 'vote') {
+      if (targetProj) {
+        if (titleEl) titleEl.textContent = `${targetProj.service_name || targetProj.title} 검증 테스트`;
+        if (subEl) subEl.textContent = targetProj.service_desc || '아래 검증 문항에 따라 솔직한 피드백을 작성해 주세요.';
+
+        const isVote = targetProj.category === 'vote' || targetProj.mainCategory === 'vote';
+        const questions = typeof targetProj.questions === 'string' ? JSON.parse(targetProj.questions) : (targetProj.questions || []);
+
+        if (isVote) {
           if (customContainer) customContainer.classList.add('hidden');
           if (abGrid) abGrid.classList.remove('hidden');
           resetAbSelection();
+          const optTitleA = document.getElementById('opt-title-A');
+          const optTitleB = document.getElementById('opt-title-B');
+          if (optTitleA && targetProj.ab_url_a) optTitleA.textContent = targetProj.ab_url_a;
+          if (optTitleB && targetProj.ab_url_b) optTitleB.textContent = targetProj.ab_url_b;
         } else {
           // Direct Questions Full Page Form
           if (abGrid) abGrid.classList.add('hidden');
           if (customContainer) {
             customContainer.classList.remove('hidden');
             let html = '';
-            myCreatedTest.questions.forEach((q, idx) => {
-              const titleText = typeof q === 'string' ? q : q.title;
+            if (questions.length === 0) {
+              questions.push({ title: '서비스의 핵심 기능 및 사용성에 대한 피드백을 작성해 주세요.', choices: [] });
+            }
+            questions.forEach((q, idx) => {
+              const titleText = typeof q === 'string' ? q : (q.title || '');
               const choices = (typeof q === 'object' && Array.isArray(q.choices)) ? q.choices : [];
 
               if (choices.length === 0) {
-                // 주관식 서술형
                 html += `
                   <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col gap-3">
                     <div class="flex items-center justify-between border-b border-neutral-100 pb-2">
@@ -6411,7 +6421,6 @@
                   </div>
                 `;
               } else {
-                // 선택형 (1~5개)
                 html += `
                   <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col gap-3">
                     <span class="text-sm font-extrabold text-neutral-dark border-b border-neutral-100 pb-2">Q${idx + 1}. ${titleText}</span>
@@ -6429,14 +6438,14 @@
             });
             customContainer.innerHTML = html;
           }
+        }
 
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.className = 'flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-xs shadow-sm transition-all cursor-pointer border border-primary-dark/30';
-          }
-          if (submitBtnText) {
-            submitBtnText.textContent = `🪙 피드백 제출 완료하고 ${myCreatedTest.rewardCoin || 70} 동전 받기`;
-          }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.className = 'flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-xs shadow-sm transition-all cursor-pointer border border-primary-dark/30';
+        }
+        if (submitBtnText) {
+          submitBtnText.textContent = `🪙 피드백 제출 완료하고 ${targetProj.reward_coin || targetProj.rewardCoin || 70} 동전 받기`;
         }
       } else {
         if (customContainer) customContainer.classList.add('hidden');
@@ -7294,6 +7303,7 @@
     });
 
     window.renderDBProjectToDetail = function(test) {
+      window.currentDetailProject = test;
       const titleEl = document.getElementById('post-main-title');
       const typeTag = document.getElementById('post-type-tag');
       const timeTag = document.getElementById('post-time-tag');
@@ -7324,8 +7334,48 @@
       const catName = categoryNameMap[test.category] || test.category || '테스트';
       const creatorNick = test.users?.nickname || '크리에이터';
 
-      const rawUrl = test.service_url || test.ab_url_a || test.external_survey_url || '';
-      const formattedUrl = rawUrl ? (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') ? rawUrl : `https://${rawUrl}`) : '';
+      // 플랫폼 및 카테고리별 실제 첨부 링크 결정
+      const isApp = test.platform === 'app';
+      const isVote = test.category === 'vote';
+      const isAb = test.category === 'abtest' || !!test.is_ab_test;
+      const isSurvey = test.category === 'survey';
+
+      let rawUrl = '';
+      let urlLabel = '웹사이트 URL';
+      let missionBadgeText = '외부 웹사이트 링크형';
+      let missionLabelText = '외부 접속 링크';
+      let buttonText = '🚀 외부 접속 및 참여하기';
+
+      if (isApp) {
+        rawUrl = test.app_playstore_url || test.app_appstore_url || test.service_url || '';
+        missionLabelText = '앱 다운로드 / 설치 링크';
+        missionBadgeText = '모바일 앱 (앱스토어/플레이스토어)';
+        urlLabel = test.app_playstore_url ? '구글 플레이스토어' : (test.app_appstore_url ? '애플 앱스토어' : '앱 링크');
+        buttonText = '📱 앱 다운로드 및 참여하기';
+      } else if (isAb) {
+        rawUrl = test.ab_url_a || test.service_url || '';
+        missionLabelText = 'A/B 테스트 접속 링크';
+        missionBadgeText = 'A/B 비교 검증 링크형';
+        urlLabel = 'A안 비교 링크';
+        buttonText = '🚀 A/B 테스트 접속 및 참여하기';
+      } else if (isSurvey) {
+        rawUrl = test.external_survey_url || test.service_url || '';
+        missionLabelText = '설문조사 링크';
+        missionBadgeText = '외부 설문조사 링크형';
+        urlLabel = '설문 폼 URL';
+        buttonText = '📋 설문조사 참여하기';
+      } else {
+        rawUrl = test.service_url || '';
+        missionLabelText = '외부 접속 링크';
+        missionBadgeText = '외부 웹사이트 링크형';
+        urlLabel = '웹 URL';
+        buttonText = '🚀 외부 접속 및 참여하기';
+      }
+
+      const hasUrl = Boolean(rawUrl && rawUrl.trim());
+      // 내부 테스트 여부: 투표 유형이거나, 첨부된 URL이 없는 경우
+      const isInternalTest = isVote || !hasUrl;
+      const formattedUrl = hasUrl ? (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') ? rawUrl : `https://${rawUrl}`) : '';
 
       if (titleEl) titleEl.textContent = test.title;
       if (typeTag) {
@@ -7335,12 +7385,14 @@
       if (timeTag) timeTag.innerHTML = `⏱️ 소요시간: 약 ${test.duration || '3분'}`;
       if (rewardTag) rewardTag.innerHTML = `🪙 ${test.reward_coin || 500} 동전`;
       if (creatorName) creatorName.textContent = `제작자: ${creatorNick}`;
-      if (creatorTools) creatorTools.innerHTML = `🛠️ 플랫폼: ${test.platform || 'web'}`;
+      if (creatorTools) creatorTools.innerHTML = isApp ? `📱 플랫폼: 모바일 앱 (iOS/Android)` : `🛠️ 플랫폼: ${test.platform || 'web'}`;
       if (creatorMeta) creatorMeta.innerHTML = `👥 모집 현황: ${test.current_count || 0}/${test.target_count || 10}명`;
       if (descText) descText.textContent = test.service_desc;
       if (extraText) extraText.textContent = '테스터 분들의 생생한 피드백을 바탕으로 서비스 개선과 UI 최적화를 진행할 예정입니다.';
       if (mockupUrl) {
-        if (formattedUrl) {
+        if (isInternalTest) {
+          mockupUrl.textContent = '돈돼 서비스 내부 진행';
+        } else if (formattedUrl) {
           mockupUrl.innerHTML = `<a href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline text-primary-dark">${rawUrl} ↗</a>`;
         } else {
           mockupUrl.textContent = 'URL 정보 없음';
@@ -7378,19 +7430,97 @@
         }
       }
 
-      // TAB 2 (테스트 미션) URL 및 클릭 처리
+      // TAB 2 (테스트 미션) 상단 안내 카드 및 URL/내부진행 바인딩
+      const missionCardLabel = document.getElementById('post-mission-card-label');
+      const missionTypeBadge = document.getElementById('post-mission-type-badge');
+      const missionUrlRow = document.getElementById('post-mission-url-row');
       const extUrlLink = document.getElementById('post-external-url-link');
       const extUrlText = document.getElementById('post-external-url-text');
-      const missionUrlRow = document.getElementById('post-mission-url-row');
-      if (extUrlLink && extUrlText) {
-        if (formattedUrl) {
-          extUrlLink.href = formattedUrl;
-          extUrlText.textContent = rawUrl;
-          if (missionUrlRow) missionUrlRow.style.display = '';
-        } else {
-          extUrlLink.removeAttribute('href');
-          extUrlText.textContent = '등록된 URL 없음';
-          if (missionUrlRow) missionUrlRow.style.display = 'none';
+      const missionCardSubtext = document.getElementById('post-mission-card-subtext');
+      const missionCardBtn = document.getElementById('post-mission-card-btn');
+      const missionCardBtnText = document.getElementById('post-mission-card-btn-text');
+
+      if (isInternalTest) {
+        // [내부 검증 테스트 모드]
+        if (missionCardLabel) missionCardLabel.textContent = '내부 검증 테스트';
+        if (missionTypeBadge) {
+          missionTypeBadge.textContent = isVote ? '돈돼 내부 투표 테스트' : '돈돼 내부 검증 미션';
+          missionTypeBadge.className = 'text-xs font-bold text-[#2F6517]';
+        }
+        if (missionUrlRow) {
+          missionUrlRow.style.display = '';
+          missionUrlRow.innerHTML = `
+            <span class="text-xs font-bold text-neutral-500">진행 방식:</span>
+            <span class="text-xs font-bold text-[#2F6517] bg-[#EDF8E5] px-2.5 py-1 rounded-lg border border-[#2F6517]/20 flex items-center gap-1.5">
+              💡 별도 외부 링크 없이 돈돼 서비스 내에서 투표 및 피드백을 진행합니다.
+            </span>
+          `;
+        }
+        if (missionCardSubtext) {
+          missionCardSubtext.textContent = '* 우측 버튼을 클릭하면 내부 투표/검증 화면으로 이동하여 즉시 참여하실 수 있습니다.';
+        }
+        if (missionCardBtnText) {
+          missionCardBtnText.textContent = isVote ? '🗳️ 서비스 내 투표 참여하기' : '📝 검증 미션 시작하기';
+        }
+      } else {
+        // [외부 링크 모드 - 모바일 앱 / 웹 / A/B / 설문]
+        if (missionCardLabel) missionCardLabel.textContent = missionLabelText;
+        if (missionTypeBadge) {
+          missionTypeBadge.textContent = missionBadgeText;
+          missionTypeBadge.className = 'text-xs font-bold text-[#2F6517]';
+        }
+        if (missionUrlRow) {
+          missionUrlRow.style.display = '';
+          if (isApp) {
+            let appLinksHtml = `<span class="text-xs font-bold text-neutral-500">스토어 링크:</span>`;
+            if (test.app_playstore_url) {
+              const playFmt = test.app_playstore_url.startsWith('http') ? test.app_playstore_url : `https://${test.app_playstore_url}`;
+              appLinksHtml += `
+                <a href="${playFmt}" target="_blank" rel="noopener noreferrer" class="text-xs font-extrabold text-[#2F6517] hover:underline flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-[#DCE4B8]">
+                  <span>🤖 구글 플레이</span> ↗
+                </a>
+              `;
+            }
+            if (test.app_appstore_url) {
+              const appstoreFmt = test.app_appstore_url.startsWith('http') ? test.app_appstore_url : `https://${test.app_appstore_url}`;
+              appLinksHtml += `
+                <a href="${appstoreFmt}" target="_blank" rel="noopener noreferrer" class="text-xs font-extrabold text-[#2F6517] hover:underline flex items-center gap-1 bg-white px-2.5 py-1 rounded-lg border border-[#DCE4B8]">
+                  <span>🍏 애플 앱스토어</span> ↗
+                </a>
+              `;
+            }
+            if (!test.app_playstore_url && !test.app_appstore_url && formattedUrl) {
+              appLinksHtml += `
+                <a href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="text-xs font-extrabold text-[#2F6517] hover:underline flex items-center gap-1">
+                  <span>${rawUrl}</span> ↗
+                </a>
+              `;
+            }
+            missionUrlRow.innerHTML = appLinksHtml;
+          } else if (isAb && test.ab_url_b) {
+            const fmtA = (test.ab_url_a || rawUrl).startsWith('http') ? (test.ab_url_a || rawUrl) : `https://${test.ab_url_a || rawUrl}`;
+            const fmtB = test.ab_url_b.startsWith('http') ? test.ab_url_b : `https://${test.ab_url_b}`;
+            missionUrlRow.innerHTML = `
+              <span class="text-xs font-bold text-neutral-500">비교 링크:</span>
+              <a href="${fmtA}" target="_blank" rel="noopener noreferrer" class="text-xs font-extrabold text-[#2F6517] hover:underline bg-white px-2.5 py-1 rounded-lg border border-[#DCE4B8]">A안 접속 ↗</a>
+              <a href="${fmtB}" target="_blank" rel="noopener noreferrer" class="text-xs font-extrabold text-blue-700 hover:underline bg-white px-2.5 py-1 rounded-lg border border-blue-200">B안 접속 ↗</a>
+            `;
+          } else {
+            missionUrlRow.innerHTML = `
+              <span class="text-xs font-bold text-neutral-500">${urlLabel}:</span>
+              <a id="post-external-url-link" href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="text-sm font-extrabold text-[#2F6517] hover:underline flex items-center gap-1">
+                <span id="post-external-url-text">${rawUrl}</span> ↗
+              </a>
+            `;
+          }
+        }
+        if (missionCardSubtext) {
+          missionCardSubtext.textContent = isApp
+            ? '* 위 스토어 링크를 클릭하면 앱 설치 또는 테스트 다운로드 페이지로 이동합니다.'
+            : '* 위 접속 링크를 클릭하면 새 탭에서 서비스가 열리며 테스트를 수행할 수 있습니다.';
+        }
+        if (missionCardBtnText) {
+          missionCardBtnText.textContent = buttonText;
         }
       }
 
@@ -7437,12 +7567,36 @@
         let missionsHtml = '';
         let mIdx = 1;
 
-        if (formattedUrl) {
+        if (isInternalTest) {
           missionsHtml += `
             <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
               <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${mIdx++}</span>
               <div class="flex flex-col gap-1">
-                <span class="text-xs font-bold text-neutral-800">웹/앱 서비스 직접 체험 및 핵심 기능 검증</span>
+                <span class="text-xs font-bold text-neutral-800">${isVote ? '서비스 내부 시안 비교 및 투표 참여' : '돈돼 내부 검증 문항 작성'}</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                  ${isVote ? '돈돼 내부 투표 화면에서 시안을 확인하고 마음에 드는 항목에 투표를 완료해 주세요.' : '준비된 검증 질문들에 대해 솔직하고 구체적인 피드백을 작성해 주세요.'}
+                </p>
+              </div>
+            </div>
+          `;
+        } else if (isApp) {
+          missionsHtml += `
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${mIdx++}</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">모바일 앱 설치 및 핵심 기능 검증</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                  앱 스토어 링크에 접속하여 앱을 다운로드 및 설치한 후 핵심 기능을 테스트해 주세요.
+                </p>
+              </div>
+            </div>
+          `;
+        } else if (formattedUrl) {
+          missionsHtml += `
+            <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${mIdx++}</span>
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">웹 서비스 직접 체험 및 핵심 기능 검증</span>
                 <p class="text-xs text-neutral-600 leading-relaxed font-medium">
                   서비스 주소(<a href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="text-[#2F6517] font-bold underline">${rawUrl} ↗</a>)에 접속하여 주요 기능을 검증해 주세요.
                 </p>
@@ -7546,11 +7700,17 @@
 
       const sideHow = document.getElementById('post-side-how');
       if (sideHow) {
-        const isExternal = Boolean(rawUrl && rawUrl.trim());
-        sideHow.textContent = isExternal ? '외부형' : '내부형';
-        sideHow.className = isExternal
-          ? 'inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200'
-          : 'inline-block text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200';
+        sideHow.textContent = isInternalTest ? '내부형' : '외부형';
+        sideHow.className = isInternalTest
+          ? 'inline-block text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200'
+          : 'inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200';
+      }
+
+      const btnParticipateText = document.getElementById('btn-participate-test-text');
+      if (btnParticipateText) {
+        btnParticipateText.textContent = isInternalTest
+          ? (isVote ? '🗳️ 투표 참여하기' : '📝 검증 참여하기')
+          : (isApp ? '📱 앱 테스트 참여하기' : '참여하기');
       }
 
       const sideDuration = document.getElementById('post-side-duration');
@@ -8760,15 +8920,23 @@
         }
       } else {
         // 외부형 분기 - 등록된 외부 서비스 URL 가져오기
-        let targetUrl = 'https://try-money-pig.io';
-        if (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test') && myCreatedTest.serviceUrl) {
-          targetUrl = myCreatedTest.serviceUrl;
-        } else if (window.currentPostData && window.currentPostData.service_url) {
-          targetUrl = window.currentPostData.service_url;
-        } else if (pId === '00000000-0000-0000-0000-000000000003' || pId === 'survey') {
-          targetUrl = 'https://forms.google.com';
-        } else if (pId === '00000000-0000-0000-0000-000000000001') {
-          targetUrl = 'https://bangcheck.example.com';
+        let targetUrl = '';
+        const cdp = (window.currentDetailProject && (window.currentDetailProject.id === pId || !pId)) ? window.currentDetailProject : null;
+        if (cdp) {
+          targetUrl = (cdp.platform === 'app' ? (cdp.app_playstore_url || cdp.app_appstore_url || cdp.service_url) : cdp.service_url) || cdp.ab_url_a || cdp.external_survey_url || '';
+        }
+        if (!targetUrl) {
+          if (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test') && myCreatedTest.serviceUrl) {
+            targetUrl = myCreatedTest.serviceUrl;
+          } else if (window.currentPostData && window.currentPostData.service_url) {
+            targetUrl = window.currentPostData.service_url;
+          } else if (pId === '00000000-0000-0000-0000-000000000003' || pId === 'survey') {
+            targetUrl = 'https://forms.google.com';
+          } else if (pId === '00000000-0000-0000-0000-000000000001') {
+            targetUrl = 'https://bangcheck.example.com';
+          } else {
+            targetUrl = 'https://try-money-pig.io';
+          }
         }
 
         if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
@@ -9186,7 +9354,13 @@
 
     async function executeParticipateInCurrentTest() {
       const pId = currentPostId || 'moneylog';
-      const isInternal = ['prototype', 'diary', 'saas'].includes(pId) || (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test') && myCreatedTest.testMethod === 'internal');
+      const proj = window.currentDetailProject;
+      const isVote = proj?.category === 'vote';
+      const hasUrl = Boolean(proj?.service_url || proj?.app_playstore_url || proj?.app_appstore_url || proj?.ab_url_a || proj?.external_survey_url);
+      const isInternal = ['prototype', 'diary', 'saas'].includes(pId) ||
+                         isVote ||
+                         (!hasUrl && Boolean(proj)) ||
+                         (myCreatedTest && (pId === 'my-created-test' || pId === 'my-test') && myCreatedTest.testMethod === 'internal');
 
       if (isInternal) {
         try {
@@ -9196,7 +9370,7 @@
           showGenericToast(err?.message || '참여 등록에 실패했습니다.', '⚠️');
           return;
         }
-        renderFullPageInternalTestScreen(pId);
+        renderFullPageInternalTestScreen(pId, proj);
         navigateTo('abtest');
       } else {
         openTestParticipateModal(pId);
