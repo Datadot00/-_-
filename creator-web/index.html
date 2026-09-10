@@ -7894,6 +7894,10 @@
     // Dynamic Post View (moneylog vs prototype) & Tester Participation
     async function openPostDetail(postId = 'moneylog') {
       currentPostId = postId;
+      try {
+        localStorage.setItem('dondwae_current_view', 'post');
+        localStorage.setItem('dondwae_current_post_id', postId);
+      } catch (e) {}
       navigateTo('post');
 
       if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
@@ -9454,6 +9458,16 @@
         goToStep(1);
       }
       if (!views[viewKey]) return;
+
+      if (viewKey !== 'landing' && viewKey !== 'login') {
+        try {
+          localStorage.setItem('dondwae_current_view', viewKey);
+        } catch (e) {}
+      } else if (viewKey === 'landing') {
+        try {
+          localStorage.setItem('dondwae_current_view', 'landing');
+        } catch (e) {}
+      }
 
       Object.keys(views).forEach(key => {
         const el = document.getElementById(`view-${key}`);
@@ -12153,7 +12167,18 @@
       updatePledgeModalUI();
       calculateTotalCost();
       renderNotificationsUI();
-      navigateTo('landing');
+      // 새로고침 시 이전에 보던 화면 복원, 없으면 랜딩으로 이동
+      const savedView = localStorage.getItem('dondwae_current_view');
+      const savedPostId = localStorage.getItem('dondwae_current_post_id');
+      if (savedView && savedView !== 'landing' && savedView !== 'login') {
+        if (savedView === 'post' && savedPostId && typeof openPostDetail === 'function') {
+          openPostDetail(savedPostId);
+        } else {
+          navigateTo(savedView);
+        }
+      } else {
+        navigateTo('landing');
+      }
 
       setTimeout(() => {
         window.initSupabaseLiveDB();

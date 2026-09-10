@@ -10,6 +10,12 @@ import {
 } from './authService.js';
 
 const PASSWORD_RECOVERY_STORAGE_KEY = 'dondwae-password-recovery';
+const INACTIVITY_TIMEOUT_MS = 60 * 60 * 1000; // 1시간 (3,600,000ms)
+const LAST_ACTIVITY_KEY = 'dondwae_last_activity';
+const CURRENT_VIEW_KEY = 'dondwae_current_view';
+const CURRENT_POST_ID_KEY = 'dondwae_current_post_id';
+
+let lastActivityRecordedAt = 0;
 
 const elements = {
   form: document.getElementById('auth-form'),
@@ -355,6 +361,7 @@ async function handleEmailLogin() {
     await ensureNoStaleSession();
     const { user } = await signInWithEmail(supabase, email, password);
     applyAuthenticatedUser(user);
+    recordUserActivity();
     if (elements.password) elements.password.value = '';
     await refreshAuthenticatedData();
     showToast(`${user.email} 계정으로 로그인했습니다.`, '🔑');
@@ -569,6 +576,9 @@ async function handleSignOut() {
     applyAuthenticatedUser(null);
     passwordRecoveryActive = false;
     sessionStorage.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
+    localStorage.removeItem(LAST_ACTIVITY_KEY);
+    localStorage.removeItem(CURRENT_VIEW_KEY);
+    localStorage.removeItem(CURRENT_POST_ID_KEY);
     showToast('로그아웃되었습니다.', '👋');
     navigateTo('landing');
   } catch (error) {
@@ -583,12 +593,12 @@ async function handleSignOut() {
 function handlePasswordVisibility(button) {
   const input = document.getElementById(button.dataset.passwordTarget);
   if (!input) return;
-  const shouldShow = input.type === 'password';
-  const fieldName = button.getAttribute('aria-label')?.replace(/ (표시|숨기기)$/, '') || '비밀번호';
-  input.type = shouldShow ? 'text' : 'password';
-  button.textContent = shouldShow ? '숨기기' : '보기';
-  button.setAttribute('aria-pressed', String(shouldShow));
-  button.setAttribute('aria-label', `${fieldName} ${shouldShow ? '숨기기' : '표시'}`);
+
+  const willShow = input.type === 'password';
+  input.type = willShow ? 'text' : 'password';
+  button.textContent = willShow ? '숨기기' : '보기';
+  button.setAttribute('aria-pressed', String(willShow));
+  button.setAttribute('aria-label', `${input.placeholder || '비밀번호'} ${willShow ? '숨기기' : '표시'}`);
 }
 
 function bindAuthenticationEvents() {
@@ -630,8 +640,81 @@ function disableAuthenticationUI() {
   });
 }
 
+function recordUserActivity() {
+  const now = Date.now();
+  if (now - lastActivityRecordedAt < 10000) return; // 10초 쓰로틀
+  lastActivityRecordedAt = now;
+  try {
+    localStorage.setItem(LAST_ACTIVITY_KEY, String(now));
+  } catch (e) {
+    // ignore
+  }
+}
+
+async function checkInactivityTimeout(silent = false) {
+  if (!supabase) return false;
+  const lastActivityStr = localStorage.getItem(LAST_ACTIVITY_KEY);
+  if (!lastActivityStr) return false;
+
+  const lastActivity = parseInt(lastActivityStr, 10);
+  if (isNaN(lastActivity)) return false;
+
+  const elapsed = Date.now() - lastActivity;
+  if (elapsed >= INACTIVITY_TIMEOUT_MS) {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.warn('[Auth] Sign out error on inactivity:', e);
+    }
+    applyAuthenticatedUser(null);
+    localStorage.removeItem(LAST_ACTIVITY_KEY);
+    localStorage.removeItem(CURRENT_VIEW_KEY);
+    localStorage.removeItem(CURRENT_POST_ID_KEY);
+    if (!silent) {
+      showToast('1시간 동안 활동이 없어 자동 로그아웃되었습니다.', '⏱️');
+    } else {
+      showToast('1시간 이상 미활동으로 세션이 만료되어 로그아웃되었습니다.', '⏱️');
+    }
+    navigateTo('landing');
+    return true;
+  }
+  return false;
+}
+
+function bindInactivityListeners() {
+  const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+  events.forEach((evt) => {
+    window.addEventListener(evt, () => {
+      if (currentUser) {
+        recordUserActivity();
+      }
+    }, { passive: true });
+  });
+
+  // 1분 간격 주기적 비활성 체크
+  setInterval(() => {
+    if (currentUser) {
+      checkInactivityTimeout();
+    }
+  }, 60 * 1000);
+
+  // 창 활성화 및 탭 복귀 시 즉시 체크
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && currentUser) {
+      checkInactivityTimeout();
+    }
+  });
+
+  window.addEventListener('focus', () => {
+    if (currentUser) {
+      checkInactivityTimeout();
+    }
+  });
+}
+
 async function initializeAuthentication() {
   bindAuthenticationEvents();
+  bindInactivityListeners();
   setAuthMode('login');
 
   window.handleEmailAuthSubmit = handleAuthSubmit;
@@ -648,6 +731,9 @@ async function initializeAuthentication() {
   const callback = readAuthCallback();
   supabase.auth.onAuthStateChange((event, session) => {
     applyAuthenticatedUser(session?.user || null);
+    if (session?.user) {
+      recordUserActivity();
+    }
 
     if (event === 'PASSWORD_RECOVERY') {
       window.setTimeout(showPasswordUpdatePanel, 0);
@@ -655,6 +741,10 @@ async function initializeAuthentication() {
   });
 
   try {
+    // 1. 1시간 비활성 상태 검사 (새로고침 시에도 검사)
+    const wasTimedOut = await checkInactivityTimeout(true);
+    if (wasTimedOut) return;
+
     const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
 
@@ -686,11 +776,29 @@ async function initializeAuthentication() {
       return;
     }
 
-    if (restoredUser && getVisibleViewKey() === 'login') {
-      navigateTo('explore');
-    } else if (!restoredUser && passwordRecoveryActive) {
-      passwordRecoveryActive = false;
-      sessionStorage.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
+    if (restoredUser) {
+      recordUserActivity();
+      // 이전에 보고 있던 화면으로 복원
+      const savedView = localStorage.getItem(CURRENT_VIEW_KEY);
+      const savedPostId = localStorage.getItem(CURRENT_POST_ID_KEY);
+      if (savedView && savedView !== 'landing' && savedView !== 'login') {
+        if (savedView === 'post' && savedPostId && typeof window.openPostDetail === 'function') {
+          window.openPostDetail(savedPostId);
+        } else if (typeof window.navigateTo === 'function') {
+          window.navigateTo(savedView);
+        }
+      } else if (getVisibleViewKey() === 'login' || getVisibleViewKey() === 'landing') {
+        navigateTo('explore');
+      }
+    } else {
+      if (passwordRecoveryActive) {
+        passwordRecoveryActive = false;
+        sessionStorage.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
+      }
+      const currentView = getVisibleViewKey();
+      if (['mypage', 'create', 'feedback'].includes(currentView)) {
+        navigateTo('landing');
+      }
     }
   } catch (error) {
     applyAuthenticatedUser(null);
