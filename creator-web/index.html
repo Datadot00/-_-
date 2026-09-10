@@ -2122,7 +2122,7 @@
               </label>
               <span id="test-title-counter" class="text-xs text-neutral-400 font-mono">0 / 50자</span>
             </div>
-            <input id="input-test-title" type="text" maxlength="50" value="AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집"
+            <input id="input-test-title" type="text" maxlength="50" value=""
               placeholder="예: AI 기반 하루 일기 웹앱 UX/UI 사용성 검증 (최대 50자)"
               class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium"
               oninput="document.getElementById('test-title-counter').textContent = `${this.value.length} / 50자`" />
@@ -2136,7 +2136,7 @@
               </label>
               <span id="service-name-counter" class="text-xs text-neutral-400 font-mono">0 / 20자</span>
             </div>
-            <input id="input-service-name" type="text" maxlength="20" value="머니로그 (MoneyLog)"
+            <input id="input-service-name" type="text" maxlength="20" value=""
               placeholder="예: 돈돼 (최대 20자)"
               class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium"
               oninput="document.getElementById('service-name-counter').textContent = `${this.value.length} / 20자`" />
@@ -2149,7 +2149,7 @@
                 내외)</span>
             </label>
             <textarea id="input-service-desc" rows="3" placeholder="서비스에 대한 소개를 자유롭게 작성해 주세요 (200자 내외 권장)"
-              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">바이브코딩으로 만든 영수증 자동 분류 스마트 가계부 서비스입니다. 복잡한 지출 입력을 영수증 사진 한 장으로 손쉽게 해결하며, 카테고리별 실시간 지출 차트와 예산 알림 기능을 제공합니다.</textarea>
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed"></textarea>
           </div>
 
           <!-- 5. 안내 내용 / 테스트 목적 (텍스트, 여러 줄, 글자수 제한 없음) -->
@@ -2158,7 +2158,7 @@
               안내 내용 / 테스트 목적 <span class="text-red-500">*</span>
             </label>
             <textarea id="input-test-notice" rows="3" placeholder="테스터에게 전할 상세 안내 사항 및 테스트의 주요 목적을 자유롭게 작성해 주세요."
-              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">영수증 사진 한 장만 찍으면 AI가 지출을 자동 분류해 주는 가계부 앱의 사용성과 인식 정확도를 검증하기 위한 목적입니다.</textarea>
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed"></textarea>
           </div>
 
           <!-- Step 1 Navigation Buttons -->
@@ -2808,32 +2808,7 @@
               </div>
 
               <!-- Persona Tags Container -->
-              <div id="persona-tags-container" class="flex flex-wrap gap-2">
-                <span
-                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
-                  <span>🎂</span> 연령대: 20대·30대
-                  <button type="button" onclick="this.parentElement.remove()"
-                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
-                </span>
-                <span
-                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
-                  <span>📊</span> 가계부/자산관리 관심자
-                  <button type="button" onclick="this.parentElement.remove()"
-                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
-                </span>
-                <span
-                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
-                  <span>🧾</span> 영수증 모으기 습관 보유자
-                  <button type="button" onclick="this.parentElement.remove()"
-                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
-                </span>
-                <span
-                  class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs">
-                  <span>📱</span> 모바일 웹/앱 실사용자
-                  <button type="button" onclick="this.parentElement.remove()"
-                    class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>
-                </span>
-              </div>
+              <div id="persona-tags-container" class="flex flex-wrap gap-2"></div>
             </div>
 
             <!-- Soft guidance notice box -->
@@ -3306,7 +3281,7 @@
               </div>
               <div>
                 <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">진행 방식</span>
-                <span id="post-side-[#2F6517]"
+                <span id="post-side-how"
                   class="inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">외부형</span>
               </div>
             </div>
@@ -3338,7 +3313,7 @@
             </div>
 
             <!-- 4행: 사용 도구 (전체 폭) -->
-            <div class="border-b border-neutral-100 pb-4">
+            <div id="post-side-tools-row" class="border-b border-neutral-100 pb-4">
               <span class="text-[11px] font-semibold text-neutral-400 block mb-2">사용 도구</span>
               <div id="post-tools-icons" class="flex flex-wrap items-center gap-2 text-xs font-semibold">
                 <span
@@ -3370,7 +3345,7 @@
                 <span>참여 현황 & 테스터 리뷰 보기</span>
                 <span>→</span>
               </button>
-              <button onclick="openEditPostModal()"
+              <button onclick="openEditPostModal(currentPostId)"
                 class="w-full py-2.5 px-4 rounded-xl bg-[#EFECCB]/80 hover:bg-[#E6E2B9] text-neutral-800 font-bold text-xs border border-[#DDD6A7] transition-all cursor-pointer">
                 ✏️ 게시글 수정
               </button>
@@ -5605,10 +5580,15 @@
         const statusLabel = status === 'completed' ? '진행완료' : '진행중';
         const createdDate = project.created_at ? new Date(project.created_at).toLocaleDateString('ko-KR') : '-';
         const ownerActions = tabKey === 'registered'
-          ? `<button type="button" onclick="openEditPostModal('${id}')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100" title="수정">✏️</button>`
+          ? `<div class="flex items-center gap-1">
+              <button type="button" onclick="openEditPostModal('${id}')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors" title="수정">✏️</button>
+              <button type="button" onclick="deleteRegisteredProject(this, '${id}')" class="p-1.5 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors text-neutral-400" title="삭제">🗑️</button>
+             </div>`
           : '';
         const scrapAction = tabKey === 'scraped'
-          ? `<button type="button" onclick="deleteScrapedItem(this, '${id}')" class="px-3 py-2 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50">스크랩 해제</button>`
+          ? `<button type="button" onclick="deleteScrapedItem(this, '${id}')" class="px-3 py-2 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">스크랩 해제</button>`
+          : tabKey === 'participated'
+          ? `<button type="button" onclick="toggleScrapFromMyProject(this, '${id}')" class="px-3 py-2 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">🔖 스크랩하기</button>`
           : '';
 
         return `
@@ -5647,6 +5627,65 @@
           <h4 class="text-sm font-extrabold text-neutral-dark mb-1">조건에 맞는 프로젝트가 없습니다</h4>
           <p class="text-xs text-neutral-400 font-medium">다른 진행 상태를 선택해 주세요.</p>
         </div>`;
+    }
+
+    async function deleteRegisteredProject(btn, projectId) {
+      if (!confirm('정말로 이 프로젝트를 삭제하시겠습니까?\n삭제된 프로젝트는 복구할 수 없습니다.')) return;
+      const ds = window.donDwaeDataService;
+      try {
+        const success = await ds.deleteProjectRecord(projectId);
+        if (!success) throw new Error('프로젝트 삭제에 실패했습니다.');
+
+        window.myProjectCollections.registered = (window.myProjectCollections.registered || []).filter(p => p.id !== projectId);
+        window.myProjectCollections.scraped = (window.myProjectCollections.scraped || []).filter(p => p.id !== projectId);
+        window.myProjectCollections.participated = (window.myProjectCollections.participated || []).filter(p => p.id !== projectId);
+
+        const tabRegBadge = document.getElementById('myproj-registered-count-badge');
+        const filterAllCountEl = document.getElementById('myproj-filter-all-count');
+        const totalCountEl = document.getElementById('myproj-total-count');
+        const ovRegEl = document.getElementById('mypage-overview-reg-count');
+        const count = window.myProjectCollections.registered.length;
+
+        if (tabRegBadge) tabRegBadge.textContent = count;
+        if (filterAllCountEl) filterAllCountEl.textContent = count;
+        if (totalCountEl) totalCountEl.textContent = `총 ${count}개`;
+        if (ovRegEl) ovRegEl.textContent = count;
+
+        renderMyProjectCollection('registered');
+        showGenericToast('프로젝트가 성공적으로 삭제되었습니다.', '🗑️');
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to delete project:', err);
+        showGenericToast(err?.message || '프로젝트 삭제 실패', '⚠️');
+      }
+    }
+
+    async function toggleScrapFromMyProject(btn, projectId) {
+      const ds = window.donDwaeDataService;
+      try {
+        const { data: { session } } = await ds.supabase.auth.getSession();
+        if (!session?.user) {
+          showGenericToast('로그인이 필요한 기능입니다.', '🔒');
+          return;
+        }
+        const isScrapedCurrently = (window.myProjectCollections.scraped || []).some(p => p.id === projectId);
+        const isScrapedNow = await ds.toggleScrap(session.user.id, projectId, isScrapedCurrently);
+
+        const scrapRows = await ds.fetchUserScraps(session.user.id);
+        const scrapedProjects = scrapRows.map(row => row.projects).filter(Boolean);
+        window.myProjectCollections.scraped = scrapedProjects;
+
+        const scrapedCountEl = document.getElementById('myproj-scraped-count');
+        if (scrapedCountEl) scrapedCountEl.textContent = scrapedProjects.length;
+
+        if (isScrapedNow) {
+          showGenericToast('내 프로젝트 > 스크랩한 프로젝트에 추가되었습니다! 🔖', '✨');
+        } else {
+          showGenericToast('스크랩 항목이 해제되었습니다.', '🔖');
+        }
+      } catch (err) {
+        console.error('[Don Dwae DB] Failed to toggle scrap:', err);
+        showGenericToast(err?.message || '스크랩 처리에 실패했습니다.', '⚠️');
+      }
     }
 
     async function deleteScrapedItem(btn, projectId) {
@@ -6921,6 +6960,7 @@
 
     // Open project edit mode
     async function openEditPostModal(targetProjId) {
+      targetProjId = targetProjId || currentPostId;
       let test = myCreatedTest;
       if (targetProjId && window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
         try {
@@ -6944,6 +6984,8 @@
               appstoreUrl: dbP.app_appstore_url || '',
               externalSurveyUrl: dbP.external_survey_url || '',
               loginRequired: dbP.login_required || false,
+              testAccountId: dbP.test_account_id || '',
+              testAccountPassword: dbP.test_account_pw || '',
               privacyItems: dbP.privacy_items || '',
               testGuide: dbP.test_guide || '',
               reviewsPublic: dbP.is_reviews_public !== false,
@@ -6952,6 +6994,7 @@
               targetCount: dbP.target_count || 10,
               currentRecruits: dbP.current_count || 0,
               rewardCoin: dbP.reward_coin || 500,
+              techTags: (dbP.tech_tags && Array.isArray(dbP.tech_tags)) ? dbP.tech_tags : [],
               questions: typeof dbP.questions === 'string' ? JSON.parse(dbP.questions) : (dbP.questions || []),
               quizzes: typeof dbP.quizzes === 'string' ? JSON.parse(dbP.quizzes) : (dbP.quizzes || [])
             };
@@ -6979,8 +7022,16 @@
       const guideInput = document.getElementById('input-test-guide');
       const feedbackPrivacyInput = document.getElementById('toggle-feedback-privacy');
 
-      if (titleInput) titleInput.value = test.title || '';
-      if (nameInput) nameInput.value = test.serviceName || '';
+      if (titleInput) {
+        titleInput.value = test.title || '';
+        const tCounter = document.getElementById('test-title-counter');
+        if (tCounter) tCounter.textContent = `${(test.title || '').length} / 50자`;
+      }
+      if (nameInput) {
+        nameInput.value = test.serviceName || '';
+        const sCounter = document.getElementById('service-name-counter');
+        if (sCounter) sCounter.textContent = `${(test.serviceName || '').length} / 20자`;
+      }
       if (descInput) descInput.value = test.serviceDesc || '';
       if (noticeInput) noticeInput.value = test.testNotice || '';
       if (startDateInput && test.startDate) startDateInput.value = test.startDate;
@@ -6988,6 +7039,35 @@
       if (privacyInput) privacyInput.value = test.privacyItems || '';
       if (guideInput) guideInput.value = test.testGuide || '';
       if (feedbackPrivacyInput) feedbackPrivacyInput.checked = !test.reviewsPublic;
+
+      // 썸네일 이미지 미리보기 복원
+      const thumbImg = document.getElementById('thumbnail-img-preview');
+      const removeThumbBtn = document.getElementById('btn-remove-thumbnail');
+      if (thumbImg) {
+        if (test.thumbnailUrl) {
+          thumbImg.src = test.thumbnailUrl;
+          thumbImg.classList.remove('hidden');
+          if (removeThumbBtn) removeThumbBtn.classList.remove('hidden');
+        } else {
+          thumbImg.src = '';
+          thumbImg.classList.add('hidden');
+          if (removeThumbBtn) removeThumbBtn.classList.add('hidden');
+        }
+      }
+
+      // 페르소나 / 기술 태그 복원
+      const personaContainer = document.getElementById('persona-tags-container');
+      if (personaContainer) {
+        personaContainer.innerHTML = '';
+        const tags = test.techTags || [];
+        tags.forEach(t => {
+          const cleanTag = t.replace(/^#/, '');
+          const tagSpan = document.createElement('span');
+          tagSpan.className = 'px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 flex items-center gap-1.5 shadow-2xs';
+          tagSpan.innerHTML = `<span>🎯</span> ${cleanTag} <button type="button" onclick="this.parentElement.remove()" class="text-neutral-400 hover:text-red-500 text-xs ml-0.5">✕</button>`;
+          personaContainer.appendChild(tagSpan);
+        });
+      }
 
       const editableCategory = ['product', 'prototype', 'vote'].includes(test.mainCategory)
         ? test.mainCategory
@@ -7244,6 +7324,9 @@
       const catName = categoryNameMap[test.category] || test.category || '테스트';
       const creatorNick = test.users?.nickname || '크리에이터';
 
+      const rawUrl = test.service_url || test.ab_url_a || test.external_survey_url || '';
+      const formattedUrl = rawUrl ? (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') ? rawUrl : `https://${rawUrl}`) : '';
+
       if (titleEl) titleEl.textContent = test.title;
       if (typeTag) {
         typeTag.textContent = `[${catName}]`;
@@ -7256,16 +7339,60 @@
       if (creatorMeta) creatorMeta.innerHTML = `👥 모집 현황: ${test.current_count || 0}/${test.target_count || 10}명`;
       if (descText) descText.textContent = test.service_desc;
       if (extraText) extraText.textContent = '테스터 분들의 생생한 피드백을 바탕으로 서비스 개선과 UI 최적화를 진행할 예정입니다.';
-      if (mockupUrl) mockupUrl.textContent = test.service_url || 'https://don-dwae.com';
+      if (mockupUrl) {
+        if (formattedUrl) {
+          mockupUrl.innerHTML = `<a href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline text-primary-dark">${rawUrl} ↗</a>`;
+        } else {
+          mockupUrl.textContent = 'URL 정보 없음';
+        }
+      }
       if (mockupAuthor) mockupAuthor.textContent = `${creatorNick} ▾`;
 
       const serviceNameEl = document.getElementById('post-service-name-text');
       const serviceShortIntroEl = document.getElementById('post-service-short-intro');
       const noticeTextEl = document.getElementById('post-notice-text');
+      const noticeBoxParent = noticeTextEl?.closest('.flex.flex-col.gap-5');
 
       if (serviceNameEl) serviceNameEl.textContent = `서비스명: ${test.service_name || test.title}`;
       if (serviceShortIntroEl) serviceShortIntroEl.innerHTML = `<strong class="text-neutral-800">서비스 소개:</strong> ${test.service_desc}`;
-      if (noticeTextEl) noticeTextEl.textContent = test.test_notice || '실제 서비스를 직접 사용해보고 유익한 피드백을 남겨주세요.';
+      
+      // 테스트 목적/안내 항목 노출 처리
+      if (noticeTextEl) {
+        if (test.test_notice && test.test_notice.trim()) {
+          noticeTextEl.textContent = test.test_notice;
+          if (noticeTextEl.parentElement) noticeTextEl.parentElement.style.display = '';
+        } else {
+          if (noticeTextEl.parentElement) noticeTextEl.parentElement.style.display = 'none';
+        }
+      }
+
+      // 테스트 진행 가이드 노출 처리
+      const guideBoxEl = document.getElementById('post-test-guide-box');
+      if (guideBoxEl) {
+        const guideParent = guideBoxEl.closest('.bg-white');
+        if (test.test_guide && test.test_guide.trim()) {
+          guideBoxEl.textContent = test.test_guide;
+          if (guideParent) guideParent.style.display = '';
+        } else {
+          if (guideParent) guideParent.style.display = 'none';
+        }
+      }
+
+      // TAB 2 (테스트 미션) URL 및 클릭 처리
+      const extUrlLink = document.getElementById('post-external-url-link');
+      const extUrlText = document.getElementById('post-external-url-text');
+      const missionUrlRow = document.getElementById('post-mission-url-row');
+      if (extUrlLink && extUrlText) {
+        if (formattedUrl) {
+          extUrlLink.href = formattedUrl;
+          extUrlText.textContent = rawUrl;
+          if (missionUrlRow) missionUrlRow.style.display = '';
+        } else {
+          extUrlLink.removeAttribute('href');
+          extUrlText.textContent = '등록된 URL 없음';
+          if (missionUrlRow) missionUrlRow.style.display = 'none';
+        }
+      }
 
       if (mockupBody) {
         if (test.thumbnail_url) {
@@ -7300,53 +7427,75 @@
             <div class="w-full h-36 bg-[#F9FBEC] rounded-xl border border-[#DCE4B8] p-3 flex flex-col items-center justify-center text-center overflow-hidden">
               <span class="text-3xl filter drop-shadow-xs">🎉</span>
               <span class="text-xs font-extrabold text-[#2F6517] block mt-1">${test.service_name || test.title} 서비스 미리보기</span>
-              <span class="text-[11px] text-neutral-600">${test.service_url || ''} 에서 테스터를 맞이할 준비가 완료되었습니다.</span>
+              <span class="text-[11px] text-neutral-600">${formattedUrl ? `<a href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="font-bold underline text-[#2F6517]">${rawUrl}</a>` : '등록된 URL'} 에서 테스터를 맞이할 준비가 완료되었습니다.</span>
             </div>
           `;
         }
       }
 
       if (missionsContainer) {
-        let missionsHtml = `
-          <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
-            <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
-            <div class="flex flex-col gap-1">
-              <span class="text-xs font-bold text-neutral-800">웹/앱 서비스 직접 체험 및 핵심 기능 검증</span>
-              <p class="text-xs text-neutral-600 leading-relaxed font-medium">
-                서비스 주소(${test.service_url || '서비스 URL'})에 접속하여 주요 기능을 검증해 주세요.
-              </p>
-            </div>
-          </div>
-        `;
+        let missionsHtml = '';
+        let mIdx = 1;
 
-        const questions = typeof test.questions === 'string' ? JSON.parse(test.questions) : (test.questions || []);
-        let mIdx = 2;
-        questions.forEach(q => {
-          const qTitle = typeof q === 'string' ? q : q.title;
+        if (formattedUrl) {
           missionsHtml += `
             <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
-              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">${mIdx++}</span>
+              <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${mIdx++}</span>
               <div class="flex flex-col gap-1">
-                <span class="text-xs font-bold text-neutral-800">${qTitle}</span>
+                <span class="text-xs font-bold text-neutral-800">웹/앱 서비스 직접 체험 및 핵심 기능 검증</span>
+                <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                  서비스 주소(<a href="${formattedUrl}" target="_blank" rel="noopener noreferrer" class="text-[#2F6517] font-bold underline">${rawUrl} ↗</a>)에 접속하여 주요 기능을 검증해 주세요.
+                </p>
               </div>
             </div>
           `;
+        }
+
+        const questions = typeof test.questions === 'string' ? JSON.parse(test.questions) : (test.questions || []);
+        questions.forEach(q => {
+          const qTitle = typeof q === 'string' ? q : (q.title || '');
+          if (qTitle && qTitle.trim()) {
+            missionsHtml += `
+              <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                <span class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">${mIdx++}</span>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-bold text-neutral-800">${qTitle}</span>
+                </div>
+              </div>
+            `;
+          }
         });
 
         const quizzes = typeof test.quizzes === 'string' ? JSON.parse(test.quizzes) : (test.quizzes || []);
         quizzes.forEach(qz => {
-          missionsHtml += `
-            <div class="flex items-start gap-4 bg-[#FFFDF0] border border-[#F5EDBA] p-4.5 rounded-2xl">
-              <span class="w-7 h-7 rounded-xl bg-amber-500 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">❓</span>
-              <div class="flex flex-col gap-1">
-                <span class="text-xs font-bold text-amber-900">검증 퀴즈 (성실도 확인)</span>
-                <p class="text-xs text-neutral-700 leading-relaxed font-semibold">Q. ${qz.question}</p>
+          const qzQuestion = qz.question || '';
+          if (qzQuestion && qzQuestion.trim()) {
+            missionsHtml += `
+              <div class="flex items-start gap-4 bg-[#FFFDF0] border border-[#F5EDBA] p-4.5 rounded-2xl">
+                <span class="w-7 h-7 rounded-xl bg-amber-500 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">❓</span>
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-bold text-amber-900">검증 퀴즈 (성실도 확인)</span>
+                  <p class="text-xs text-neutral-700 leading-relaxed font-semibold">Q. ${qzQuestion}</p>
+                </div>
               </div>
-            </div>
-          `;
+            `;
+          }
         });
 
         missionsContainer.innerHTML = missionsHtml;
+
+        // 탭 미션 카운트 갱신 및 검증 항목 부모 컨테이너 숨김/노출
+        const missionCountBadge = document.getElementById('tab-count-mission');
+        if (missionCountBadge) missionCountBadge.textContent = Math.max(0, mIdx - 1);
+
+        const checklistParent = missionsContainer.closest('.bg-white');
+        if (checklistParent) {
+          if (!missionsHtml || missionsHtml.trim() === '') {
+            checklistParent.style.display = 'none';
+          } else {
+            checklistParent.style.display = '';
+          }
+        }
       }
 
       const percent = Math.round(((test.current_count || 0) / (test.target_count || 10)) * 100);
@@ -7355,6 +7504,76 @@
       if (regDate) regDate.textContent = test.created_at ? test.created_at.split('T')[0] : '2026-09-08';
       if (endDate) endDate.textContent = test.end_date || '2026-09-22';
       if (rewardMeta) rewardMeta.innerHTML = `${test.reward_coin || 500} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">`;
+
+      // 1. 태그 추출 (DB tech_tags 또는 클라이언트 techTags)
+      const projectTags = (test.tech_tags && Array.isArray(test.tech_tags) && test.tech_tags.length > 0)
+        ? test.tech_tags
+        : (test.techTags && Array.isArray(test.techTags) && test.techTags.length > 0 ? test.techTags : []);
+
+      // 2. 상단 기술 / 키워드 태그 바인딩
+      const techTagsList = document.getElementById('post-tech-tags-list');
+      if (techTagsList) {
+        if (projectTags.length > 0) {
+          techTagsList.style.display = '';
+          techTagsList.innerHTML = projectTags.map(t => {
+            const cleanTag = t.startsWith('#') ? t : `#${t}`;
+            return `<span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">${cleanTag}</span>`;
+          }).join('');
+        } else {
+          const fallbackTags = [`#${catName}`, `#${test.platform || 'web'}`];
+          techTagsList.innerHTML = fallbackTags.map(t => `<span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">${t}</span>`).join('');
+        }
+      }
+
+      // 3. 개요 탭 '이런 분들의 참여를 원해요' (페르소나 태그) 바인딩 및 조건부 숨김
+      const personaTagsList = document.getElementById('post-persona-tags-list');
+      const personaBoxParent = personaTagsList?.closest('.p-5.rounded-2xl');
+      if (personaTagsList) {
+        if (projectTags.length > 0) {
+          personaTagsList.innerHTML = projectTags.map(t => {
+            const cleanTag = t.replace(/^#/, '');
+            return `<span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🎯 ${cleanTag}</span>`;
+          }).join('');
+          if (personaBoxParent) personaBoxParent.style.display = '';
+        } else {
+          if (personaBoxParent) personaBoxParent.style.display = 'none';
+        }
+      }
+
+      // 4. 사이드바 상세 메타 정보 바인딩
+      const sideType = document.getElementById('post-side-type');
+      if (sideType) sideType.textContent = catName;
+
+      const sideHow = document.getElementById('post-side-how');
+      if (sideHow) {
+        const isExternal = Boolean(rawUrl && rawUrl.trim());
+        sideHow.textContent = isExternal ? '외부형' : '내부형';
+        sideHow.className = isExternal
+          ? 'inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200'
+          : 'inline-block text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200';
+      }
+
+      const sideDuration = document.getElementById('post-side-duration');
+      if (sideDuration) sideDuration.textContent = test.duration ? `약 ${test.duration}` : '약 3~5분';
+
+      const sideRewardCoin = document.getElementById('post-reward-coin-num');
+      if (sideRewardCoin) sideRewardCoin.textContent = `${test.reward_coin || 500} C`;
+
+      // 5. 사이드바 사용 도구 바인딩 (태그가 있으면 표시, 없으면 숨김)
+      const toolsRow = document.getElementById('post-side-tools-row');
+      const toolsIcons = document.getElementById('post-tools-icons');
+      if (toolsIcons) {
+        if (projectTags.length > 0) {
+          toolsIcons.innerHTML = projectTags.map(t => `
+            <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+              <span>🏷️</span> ${t.replace(/^#/, '')}
+            </span>
+          `).join('');
+          if (toolsRow) toolsRow.style.display = '';
+        } else {
+          if (toolsRow) toolsRow.style.display = 'none';
+        }
+      }
 
       // Update Sidebar Creator Card from DB
       const creatorSidebarName = document.getElementById('post-creator-name-sidebar');
@@ -8984,8 +9203,82 @@
       }
     }
 
+    function resetCreateProjectForm() {
+      isProjectEditMode = false;
+      const titleInput = document.getElementById('input-test-title');
+      const nameInput = document.getElementById('input-service-name');
+      const descInput = document.getElementById('input-service-desc');
+      const noticeInput = document.getElementById('input-test-notice');
+      const urlInput = document.getElementById('input-product-web-url');
+      const targetCountInput = document.getElementById('input-target-count');
+      const rewardCoinInput = document.getElementById('input-reward-coin');
+      const privacyInput = document.getElementById('input-privacy-items');
+      const guideInput = document.getElementById('input-test-guide');
+      const personaContainer = document.getElementById('persona-tags-container');
+
+      if (titleInput) titleInput.value = '';
+      if (nameInput) nameInput.value = '';
+      if (descInput) descInput.value = '';
+      if (noticeInput) noticeInput.value = '';
+      if (urlInput) {
+        urlInput.value = '';
+        urlInput.disabled = false;
+        urlInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+      }
+      if (targetCountInput) {
+        targetCountInput.value = 30;
+        targetCountInput.min = 30;
+        targetCountInput.disabled = false;
+        targetCountInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+      }
+      if (rewardCoinInput) {
+        rewardCoinInput.value = 70;
+        rewardCoinInput.min = 50;
+        rewardCoinInput.disabled = false;
+        rewardCoinInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+      }
+      if (privacyInput) privacyInput.value = '';
+      if (guideInput) guideInput.value = '';
+      if (personaContainer) personaContainer.innerHTML = '';
+
+      const tCounter = document.getElementById('test-title-counter');
+      if (tCounter) tCounter.textContent = '0 / 50자';
+      const sCounter = document.getElementById('service-name-counter');
+      if (sCounter) sCounter.textContent = '0 / 20자';
+
+      const thumbImg = document.getElementById('thumbnail-img-preview');
+      const removeThumbBtn = document.getElementById('btn-remove-thumbnail');
+      if (thumbImg) {
+        thumbImg.src = '';
+        thumbImg.classList.add('hidden');
+      }
+      if (removeThumbBtn) removeThumbBtn.classList.add('hidden');
+
+      const step3PublishBtnText = document.getElementById('btn-publish-step3-text');
+      const step3PublishBtnIcon = document.getElementById('btn-publish-step3-icon');
+      if (step3PublishBtnText) step3PublishBtnText.textContent = '테스트 게시하기';
+      if (step3PublishBtnIcon) step3PublishBtnIcon.textContent = '🚀';
+
+      // 락 해제
+      const mainCatInputs = document.querySelectorAll('input[name="mainCategory"]');
+      mainCatInputs.forEach(input => {
+        input.disabled = false;
+        input.classList.remove('cursor-not-allowed');
+      });
+      const loginReqInputs = document.querySelectorAll('input[name="loginRequirementMode"]');
+      loginReqInputs.forEach(input => {
+        input.disabled = false;
+        input.classList.remove('cursor-not-allowed');
+      });
+    }
+
     function navigateTo(viewKey) {
-      if (viewKey === 'create') { goToStep(1); }
+      if (viewKey === 'create') {
+        if (!isProjectEditMode) {
+          resetCreateProjectForm();
+        }
+        goToStep(1);
+      }
       if (!views[viewKey]) return;
 
       Object.keys(views).forEach(key => {
@@ -9960,14 +10253,21 @@
       }
 
       const wasEditing = isProjectEditMode;
-      const editingProjectId = wasEditing ? myCreatedTest?.id : null;
+      const editingProjectId = wasEditing ? (myCreatedTest?.id || currentPostId) : null;
 
       try {
       // 1. STEP 1 수집 (공통)
-      const tTitle = (document.getElementById('input-test-title')?.value || '').trim() || 'AI 영수증 인식 스마트 가계부 머니로그';
-      const sName = (document.getElementById('input-service-name')?.value || '').trim() || '머니로그 (MoneyLog)';
-      const sDesc = (document.getElementById('input-service-desc')?.value || '').trim() || '바이브코딩으로 만든 영수증 자동 분류 스마트 가계부';
+      const tTitle = (document.getElementById('input-test-title')?.value || '').trim();
+      const sName = (document.getElementById('input-service-name')?.value || '').trim();
+      const sDesc = (document.getElementById('input-service-desc')?.value || '').trim();
       const thumbImgSrc = document.getElementById('thumbnail-img-preview')?.src || '';
+
+      if (!tTitle) {
+        throw new Error('테스트 제목을 입력해 주세요.');
+      }
+      if (!sName) {
+        throw new Error('서비스명을 입력해 주세요.');
+      }
 
       // 2. STEP 2 동적 데이터 수집 (유형별)
       let testCategoryName = '프로덕트 테스트';
@@ -10148,7 +10448,23 @@
       );
       const playstoreUrl = dataService.normalizeHttpUrl(typeSpecificData.playstoreUrl || '');
       const appstoreUrl = dataService.normalizeHttpUrl(typeSpecificData.appstoreUrl || '');
-      const tags = ['#v0', '#Cursor', '#Next.js', '#Supabase'];
+      
+      // 사용자 입력 태그 수집 (페르소나 태그 컨테이너 기반)
+      const personaItemEls = document.querySelectorAll('#persona-tags-container span');
+      const tags = [];
+      personaItemEls.forEach(el => {
+        const clone = el.cloneNode(true);
+        const btn = clone.querySelector('button');
+        if (btn) btn.remove();
+        const text = clone.textContent.replace(/^🎯\s*/, '').replace(/^#\s*/, '').trim();
+        if (text) {
+          tags.push(text.startsWith('#') ? text : `#${text}`);
+        }
+      });
+      if (tags.length === 0) {
+        tags.push(`#${currentMainCategory || '프로덕트'}`);
+        if (typeSpecificData.platform) tags.push(`#${typeSpecificData.platform}`);
+      }
 
       // Determine internal vs external test method
       let isInternalMethod = false;
