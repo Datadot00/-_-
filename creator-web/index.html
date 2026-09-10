@@ -3181,7 +3181,65 @@
               </button>
             </div>
 
-            <!-- 2. 테스트 진행 방법 (가이드) -->
+            <!-- 2. 로그인 필요 여부 및 테스트 계정 정보 카드 -->
+            <div id="post-login-info-box" class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+                <h2 class="text-base font-extrabold text-neutral-dark flex items-center gap-2">
+                  <span>🔐 로그인 필요 여부 & 계정 정보</span>
+                </h2>
+                <span id="post-login-status-badge" class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-primary/20 text-[#2F6517] border border-primary/30">
+                  로그인 불필요 (자유 접근)
+                </span>
+              </div>
+
+              <!-- 로그인 불필요 안내 -->
+              <div id="post-login-none-desc" class="p-4 rounded-xl bg-[#FAFBF7] border border-[#EAEFE0] flex items-center gap-3">
+                <span class="text-xl">🔓</span>
+                <div>
+                  <span class="text-xs font-bold text-neutral-800 block">로그인 없이 자유롭게 둘러보실 수 있습니다.</span>
+                  <span class="text-[11px] text-neutral-500 font-medium">별도의 회원가입이나 계정 로그인 절차 없이 서비스 접속 링크로 바로 테스트를 진행해 주세요.</span>
+                </div>
+              </div>
+
+              <!-- 로그인 필수 시 영역 -->
+              <div id="post-login-required-container" class="flex flex-col gap-3.5 hidden">
+                <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center gap-2.5">
+                  <span class="text-base">🔒</span>
+                  <span class="text-xs text-amber-900 font-bold">이 테스트는 서비스 둘러보기 및 검증을 위해 로그인이 필요합니다.</span>
+                </div>
+
+                <!-- 테스트용 계정 ID / PW 표시 영역 (입력된 경우) -->
+                <div id="post-test-account-row" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden">
+                  <div class="p-4 rounded-xl bg-[#FAFBF7] border border-neutral-200 flex flex-col gap-1.5">
+                    <span class="text-[11px] font-bold text-neutral-400">테스트용 계정 ID / 이메일</span>
+                    <div class="flex items-center justify-between gap-2">
+                      <span id="post-test-account-id-text" class="text-xs font-extrabold text-neutral-800 font-mono select-all truncate">-</span>
+                      <button type="button" onclick="copyTextToClipboard(document.getElementById('post-test-account-id-text').textContent, '계정 ID가 복사되었습니다.')" class="px-2.5 py-1 rounded-lg bg-white border border-neutral-200 text-[10px] font-bold text-neutral-700 hover:bg-neutral-50 cursor-pointer shrink-0 shadow-2xs">복사</button>
+                    </div>
+                  </div>
+                  <div class="p-4 rounded-xl bg-[#FAFBF7] border border-neutral-200 flex flex-col gap-1.5">
+                    <span class="text-[11px] font-bold text-neutral-400">테스트용 계정 비밀번호</span>
+                    <div class="flex items-center justify-between gap-2">
+                      <span id="post-test-account-pw-text" class="text-xs font-extrabold text-neutral-800 font-mono select-all truncate">-</span>
+                      <button type="button" onclick="copyTextToClipboard(document.getElementById('post-test-account-pw-text').textContent, '비밀번호가 복사되었습니다.')" class="px-2.5 py-1 rounded-lg bg-white border border-neutral-200 text-[10px] font-bold text-neutral-700 hover:bg-neutral-50 cursor-pointer shrink-0 shadow-2xs">복사</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 테스트 계정이 미제공(공백)인 경우 -->
+                <div id="post-test-account-none-row" class="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 text-xs text-neutral-600 font-medium hidden">
+                  💡 별도의 테스트 계정이 제공되지 않습니다. 서비스 화면에서 직접 간편 가입하시거나 안내에 따라 진행해 주세요.
+                </div>
+
+                <!-- 수집 개인정보 항목 -->
+                <div id="post-privacy-items-box" class="p-4 rounded-xl bg-[#FAFBF7] border border-neutral-200 flex flex-col gap-1 hidden">
+                  <span class="text-[11px] font-bold text-neutral-400">취급 / 수집되는 개인정보 항목</span>
+                  <span id="post-privacy-items-text" class="text-xs font-bold text-neutral-700">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. 테스트 진행 방법 (가이드) -->
             <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
               <h2
                 class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
@@ -7320,6 +7378,90 @@
       updateHomeFeedThumbnails();
     });
 
+    window.copyTextToClipboard = function(text, successMsg = '클립보드에 복사되었습니다.') {
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showGenericToast(successMsg, '📋');
+        }).catch(() => {
+          fallbackCopyText(text, successMsg);
+        });
+      } else {
+        fallbackCopyText(text, successMsg);
+      }
+    };
+
+    function fallbackCopyText(text, successMsg) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showGenericToast(successMsg, '📋');
+      } catch (err) {
+        showGenericToast('복사에 실패했습니다.', '⚠️');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function renderDetailLoginInfo(test) {
+      if (!test) return;
+
+      const loginInfoBox = document.getElementById('post-login-info-box');
+      const loginStatusBadge = document.getElementById('post-login-status-badge');
+      const loginNoneDesc = document.getElementById('post-login-none-desc');
+      const loginReqContainer = document.getElementById('post-login-required-container');
+      const testAccountRow = document.getElementById('post-test-account-row');
+      const testAccountNoneRow = document.getElementById('post-test-account-none-row');
+      const testAccountIdText = document.getElementById('post-test-account-id-text');
+      const testAccountPwText = document.getElementById('post-test-account-pw-text');
+      const privacyBox = document.getElementById('post-privacy-items-box');
+      const privacyText = document.getElementById('post-privacy-items-text');
+
+      if (!loginInfoBox) return;
+
+      const isRequired = test.login_required === true || test.loginRequired === true || test.loginRequired === 'required';
+      const accId = (test.test_account_id || test.testAccountId || test.loginId || '').trim();
+      const accPw = (test.test_account_pw || test.testAccountPassword || test.loginPw || '').trim();
+      const priv = (test.privacy_items || test.privacyItems || '').trim();
+
+      if (isRequired) {
+        if (loginStatusBadge) {
+          loginStatusBadge.textContent = '🔒 로그인 필수';
+          loginStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800 border border-amber-300';
+        }
+        if (loginNoneDesc) loginNoneDesc.classList.add('hidden');
+        if (loginReqContainer) loginReqContainer.classList.remove('hidden');
+
+        if (accId || accPw) {
+          if (testAccountRow) testAccountRow.classList.remove('hidden');
+          if (testAccountNoneRow) testAccountNoneRow.classList.add('hidden');
+          if (testAccountIdText) testAccountIdText.textContent = accId || '(미입력)';
+          if (testAccountPwText) testAccountPwText.textContent = accPw || '(미입력)';
+        } else {
+          if (testAccountRow) testAccountRow.classList.add('hidden');
+          if (testAccountNoneRow) testAccountNoneRow.classList.remove('hidden');
+        }
+
+        if (priv) {
+          if (privacyBox) privacyBox.classList.remove('hidden');
+          if (privacyText) privacyText.textContent = priv;
+        } else {
+          if (privacyBox) privacyBox.classList.add('hidden');
+        }
+      } else {
+        if (loginStatusBadge) {
+          loginStatusBadge.textContent = '🔑 로그인 불필요 (자유 접근)';
+          loginStatusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-extrabold bg-primary/20 text-[#2F6517] border border-primary/30';
+        }
+        if (loginNoneDesc) loginNoneDesc.classList.remove('hidden');
+        if (loginReqContainer) loginReqContainer.classList.add('hidden');
+      }
+    }
+
     window.renderDBProjectToDetail = function(test) {
       window.currentDetailProject = test;
       const titleEl = document.getElementById('post-main-title');
@@ -7435,6 +7577,9 @@
           if (noticeTextEl.parentElement) noticeTextEl.parentElement.style.display = 'none';
         }
       }
+
+      // 로그인 필요 여부 및 테스트 계정 정보 바인딩
+      renderDetailLoginInfo(test);
 
       // 테스트 진행 가이드 노출 처리
       const guideBoxEl = document.getElementById('post-test-guide-box');
@@ -7969,6 +8114,7 @@
 
       if (postId === 'my-created-test' || postId === 'my-test') {
         const test = myCreatedTest;
+        renderDetailLoginInfo(test);
 
         if (titleEl) titleEl.textContent = test.title ? test.title : `${test.serviceName} 베타테스터 모집`;
         if (typeTag) {
@@ -8040,45 +8186,9 @@
           }
         }
 
-        // Generate missions list based on user's questions & quizzes & login requirement
+        // Generate missions list based on user's questions & quizzes
         if (missionsContainer) {
           let missionsHtml = '';
-
-          // STEP 02 Login Requirement info block
-          if (test.loginRequired === 'required') {
-            missionsHtml += `
-              <div class="flex items-start gap-4 bg-[#F0FDF4] border border-[#BBF7D0] p-4.5 rounded-2xl">
-                <span class="w-7 h-7 rounded-xl bg-emerald-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">🔒</span>
-                <div class="flex flex-col gap-1.5 w-full">
-                  <div class="flex items-center justify-between">
-                    <span class="text-xs font-extrabold text-emerald-900">로그인 안내 & 체험 계정 정보</span>
-                    <span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-extrabold text-[10px]">로그인 필수</span>
-                  </div>
-                  ${test.loginId || test.loginPw ? `
-                    <div class="flex items-center gap-3 bg-white p-2.5 rounded-xl border border-emerald-200 text-xs font-mono">
-                      <span>ID: <strong>${test.loginId || '제공 계정 참고'}</strong></span>
-                      <span>PW: <strong>${test.loginPw || '제공 계정 참고'}</strong></span>
-                    </div>
-                  ` : ''}
-                  ${test.privacyItems ? `
-                    <p class="text-[11px] text-emerald-800 font-medium">
-                      📋 수집/취급 개인정보: <strong>${test.privacyItems}</strong>
-                    </p>
-                  ` : ''}
-                </div>
-              </div>
-            `;
-          } else {
-            missionsHtml += `
-              <div class="flex items-start gap-4 bg-[#F8FAFC] border border-[#E2E8F0] p-3.5 rounded-2xl">
-                <span class="w-7 h-7 rounded-xl bg-slate-500 text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">🔑</span>
-                <div class="flex flex-col gap-0.5">
-                  <span class="text-xs font-bold text-slate-800">로그인 불필요 (자유 접근)</span>
-                  <p class="text-[11px] text-slate-500 font-medium">별도 로그인 절차 없이 자유롭게 서비스를 둘러보실 수 있습니다.</p>
-                </div>
-              </div>
-            `;
-          }
 
           missionsHtml += `
             <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
@@ -8648,6 +8758,12 @@
 
         if (missionCardSubtext) missionCardSubtext.textContent = '* 위 접속 링크를 클릭하면 새 탭에서 서비스가 열리며 테스트를 수행할 수 있습니다.';
         if (missionCardBtnText) missionCardBtnText.textContent = '🚀 외부 접속 및 참여하기';
+      }
+
+      if (postId !== 'my-created-test' && postId !== 'my-test') {
+        renderDetailLoginInfo({ login_required: false });
+      } else if (myCreatedTest) {
+        renderDetailLoginInfo(myCreatedTest);
       }
 
       switchPostDetailTab('overview');
