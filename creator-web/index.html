@@ -1178,7 +1178,7 @@
           </div>
 
           <!-- Supabase Email Auth Form -->
-          <form id="auth-form" class="w-full flex flex-col gap-4" novalidate onsubmit="event.preventDefault(); updateHeaderAuthUI(true); navigateTo('explore'); showGenericToast('🎉 환영합니다! 로그인되었습니다.', '👋'); return false;">
+          <form id="auth-form" class="w-full flex flex-col gap-4" novalidate onsubmit="event.preventDefault(); handleEmailAuthSubmit(event); return false;">
             <div>
               <label for="auth-email-input" class="block text-xs font-bold text-neutral-dark mb-1.5">이메일</label>
               <input id="auth-email-input" type="email" inputmode="email" autocomplete="email" autocapitalize="none"
@@ -2992,7 +2992,7 @@
           <div class="hidden sm:flex flex-col text-left">
             <span class="text-[10px] text-neutral-muted">환영해요!</span>
             <span class="text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors"
-              id="header-user-nickname">바이브코더123 ▾</span>
+              id="header-user-nickname">sknye1004 (제작자) ▾</span>
           </div>
         </div>
 
@@ -4394,7 +4394,7 @@
               <!-- Profile Info Details -->
               <div class="flex flex-col gap-1.5">
                 <div class="flex flex-wrap items-center gap-2">
-                  <h2 class="text-xl font-extrabold text-neutral-dark" id="mypage-user-nickname">프로필 로딩 중...</h2>
+                  <h2 class="text-xl font-extrabold text-neutral-dark" id="mypage-user-nickname">sknye1004 (제작자)</h2>
                   <span
                     class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold border border-amber-200 flex items-center gap-1">
                     🏆 상위 3% 슈퍼 테스터
@@ -4404,7 +4404,7 @@
                   </span>
                 </div>
                 <p class="text-xs text-neutral-500 font-medium" id="mypage-user-bio">
-                  풀스택 바이브코더 · Cursor & v0 · 인디 프로젝트 메이커
+                  돈돼 대표 크리에이터 sknye1004입니다.
                 </p>
 
                 <!-- Celebration Tag -->
@@ -6781,10 +6781,38 @@
     let isProjectEditMode = false;
 
     // Open project edit mode
-    function openEditPostModal() {
-      if (!myCreatedTest) return;
+    async function openEditPostModal(targetProjId) {
+      let test = myCreatedTest;
+      if (targetProjId && window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
+        try {
+          const dbP = await window.donDwaeDataService.fetchProjectById(targetProjId);
+          if (dbP) {
+            test = {
+              id: dbP.id,
+              title: dbP.title,
+              serviceName: dbP.service_name || dbP.title,
+              serviceDesc: dbP.service_desc,
+              thumbnailUrl: dbP.thumbnail_url,
+              testType: dbP.category,
+              mainCategory: dbP.category,
+              testNotice: dbP.test_notice || '',
+              serviceUrl: dbP.service_url || '',
+              targetCount: dbP.target_count || 10,
+              currentRecruits: dbP.current_count || 0,
+              rewardCoin: dbP.reward_coin || 500,
+              questions: typeof dbP.questions === 'string' ? JSON.parse(dbP.questions) : (dbP.questions || []),
+              quizzes: typeof dbP.quizzes === 'string' ? JSON.parse(dbP.quizzes) : (dbP.quizzes || [])
+            };
+            myCreatedTest = test;
+          }
+        } catch (e) {
+          console.warn('[openEditPostModal] DB fetch notice:', e);
+        }
+      }
+
+      if (!test) return;
       isProjectEditMode = true;
-      const test = myCreatedTest;
+      const hasApplicants = (test.currentRecruits || 0) > 0;
 
       const titleInput = document.getElementById('input-test-title');
       const nameInput = document.getElementById('input-service-name');
@@ -6799,7 +6827,7 @@
       if (descInput) descInput.value = test.serviceDesc || '';
       if (noticeInput) noticeInput.value = test.testNotice || '';
       
-      // Lock immutable fields (URL, 모집인원, 보상 동전)
+      // URL은 고정 (수정 불가 사전 서약 준수)
       if (urlInput) {
         urlInput.value = test.serviceUrl || '';
         urlInput.disabled = true;
@@ -6807,22 +6835,60 @@
         urlInput.classList.add('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
 
+      // 모집인원: 수정 가능 (단, 기존 모집인원 미만으로는 축소 불가)
       if (targetCountInput) {
         targetCountInput.value = test.targetCount || 30;
-        targetCountInput.disabled = true;
-        targetCountInput.title = '이미 모집 중인 프로젝트의 인원수는 수정할 수 없습니다.';
-        targetCountInput.classList.add('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+        targetCountInput.disabled = false;
+        targetCountInput.min = test.targetCount || 30;
+        targetCountInput.title = `기존 모집인원(${test.targetCount || 30}명) 이상으로 상향 조절이 가능합니다.`;
+        targetCountInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
 
+      // 1인당 보상 동전: 수정 가능 (단, 기존 보상 미만으로는 삭감 불가)
       if (rewardCoinInput) {
         rewardCoinInput.value = test.rewardCoin || 50;
-        rewardCoinInput.disabled = true;
-        rewardCoinInput.title = '이미 결제된 프로젝트의 1인당 보상 동전은 수정할 수 없습니다.';
-        rewardCoinInput.classList.add('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
+        rewardCoinInput.disabled = false;
+        rewardCoinInput.min = test.rewardCoin || 50;
+        rewardCoinInput.title = `기존 1인당 보상(${test.rewardCoin || 50}동전) 이상으로 상향 설정 가능합니다.`;
+        rewardCoinInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
+
+      // STEP 02 제약 조건 적용
+      // 1. 테스트 대분류 선택 락 처리
+      const mainCatInputs = document.querySelectorAll('input[name="mainCategory"]');
+      const skipBtn = document.getElementById('btn-skip-main-category');
+      mainCatInputs.forEach(input => {
+        input.disabled = hasApplicants;
+        if (hasApplicants) input.classList.add('cursor-not-allowed');
+        else input.classList.remove('cursor-not-allowed');
+      });
+      if (skipBtn) {
+        skipBtn.disabled = hasApplicants;
+        if (hasApplicants) skipBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        else skipBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+
+      // 2. 로그인 필요 여부 락 처리
+      const loginReqInputs = document.querySelectorAll('input[name="loginRequirementMode"]');
+      loginReqInputs.forEach(input => {
+        input.disabled = hasApplicants;
+        if (hasApplicants) input.classList.add('cursor-not-allowed');
+        else input.classList.remove('cursor-not-allowed');
+      });
+
+      // 3. 테스트 진행 방법 (가이드): 언제나 자유롭게 수정 가능
+      const guideInput = document.getElementById('input-test-guide');
+      if (guideInput) guideInput.disabled = false;
 
       // Populate existing questions into Step 2 DOM
       const qList = document.getElementById('questions-list');
+      const addQBtn = document.querySelector('button[onclick="addQuestionItem()"]');
+      if (addQBtn) {
+        addQBtn.disabled = hasApplicants;
+        if (hasApplicants) addQBtn.classList.add('opacity-50', 'cursor-not-allowed', 'hidden');
+        else addQBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'hidden');
+      }
+
       if (qList && test.questions && test.questions.length > 0) {
         qList.innerHTML = '';
         test.questions.forEach((qObj, idx) => {
@@ -6839,8 +6905,8 @@
             choicesHtml += `
               <div class="option-item flex items-center gap-2 bg-[#FAFBF7] px-3 py-2 rounded-xl border border-neutral-200">
                 <span class="text-xs text-neutral-400 font-mono option-num">${cIdx + 1}.</span>
-                <input type="text" value="${cText}" placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
-                <button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>
+                <input type="text" value="${cText}" ${hasApplicants ? 'disabled' : ''} placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none ${hasApplicants ? 'opacity-70 cursor-not-allowed' : ''}" />
+                ${!hasApplicants ? '<button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>' : ''}
               </div>
             `;
           });
@@ -6848,35 +6914,34 @@
           itemDiv.innerHTML = `
             <div class="flex items-center gap-3">
               <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 ${idx + 1}</span>
-              <input type="text" value="${qTitle}" placeholder="질문 내용을 입력하세요..."
-                class="question-title-input flex-1 text-xs font-semibold text-neutral-dark focus:outline-none border-b border-neutral-200 pb-1" />
+              <input type="text" value="${qTitle}" ${hasApplicants ? 'disabled' : ''} placeholder="질문 내용을 입력하세요..."
+                class="question-title-input flex-1 text-xs font-semibold text-neutral-dark focus:outline-none border-b border-neutral-200 pb-1 ${hasApplicants ? 'opacity-70 cursor-not-allowed' : ''}" />
               
-              <select class="question-type-select text-xs font-bold bg-[#F4F4F5] px-3 py-1.5 rounded-lg border border-neutral-200 focus:outline-none cursor-pointer" onchange="handleQuestionTypeChange(this)">
+              <select ${hasApplicants ? 'disabled' : ''} class="question-type-select text-xs font-bold bg-[#F4F4F5] px-3 py-1.5 rounded-lg border border-neutral-200 focus:outline-none ${hasApplicants ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}" onchange="handleQuestionTypeChange(this)">
                 <option value="essay" ${qType === 'essay' ? 'selected' : ''}>📝 서술형</option>
                 <option value="single" ${qType === 'single' ? 'selected' : ''}>🔘 객관식 (단일선택)</option>
                 <option value="multiple" ${qType === 'multiple' ? 'selected' : ''}>☑️ 객관식 (복수선택)</option>
               </select>
 
-              <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer shrink-0 bg-neutral-50 px-2.5 py-1.5 rounded-lg border border-neutral-200">
-                <input type="checkbox" class="question-required-toggle accent-primary-dark w-3.5 h-3.5" checked />
+              <label class="flex items-center gap-1.5 text-xs font-bold shrink-0 bg-neutral-50 px-2.5 py-1.5 rounded-lg border border-neutral-200 ${hasApplicants ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}">
+                <input type="checkbox" ${hasApplicants ? 'disabled' : ''} class="question-required-toggle accent-primary-dark w-3.5 h-3.5" checked />
                 <span class="text-neutral-700">필수</span>
               </label>
 
-              <button type="button" onclick="this.closest('.question-item').remove(); reindexQuestionTitles();"
-                class="text-neutral-400 hover:text-red-500 text-xs px-1 font-bold">✕ 삭제</button>
+              ${!hasApplicants ? '<button type="button" onclick="this.closest(\'.question-item\').remove(); reindexQuestionTitles();" class="text-neutral-400 hover:text-red-500 text-xs px-1 font-bold">✕ 삭제</button>' : ''}
             </div>
 
             <div class="question-options-box pl-6 flex flex-col gap-2 border-t border-neutral-100 pt-3" style="${qType === 'essay' ? 'display: none;' : ''}">
               <div class="flex items-center justify-between">
                 <span class="text-[11px] font-bold text-neutral-500">선택지 (최대 5개)</span>
-                <button type="button" onclick="addOptionToQuestion(this)" class="text-[11px] text-[#2F6517] font-extrabold hover:underline cursor-pointer">+ 선택지 추가</button>
+                ${!hasApplicants ? '<button type="button" onclick="addOptionToQuestion(this)" class="text-[11px] text-[#2F6517] font-extrabold hover:underline cursor-pointer">+ 선택지 추가</button>' : ''}
               </div>
               <div class="options-container grid grid-cols-1 sm:grid-cols-2 gap-2">
                 ${choicesHtml || `
                   <div class="option-item flex items-center gap-2 bg-[#FAFBF7] px-3 py-2 rounded-xl border border-neutral-200">
                     <span class="text-xs text-neutral-400 font-mono option-num">1.</span>
-                    <input type="text" value="매우 양호함 / 이상 없음" placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
-                    <button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>
+                    <input type="text" value="매우 양호함 / 이상 없음" ${hasApplicants ? 'disabled' : ''} placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none ${hasApplicants ? 'opacity-70 cursor-not-allowed' : ''}" />
+                    ${!hasApplicants ? '<button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>' : ''}
                   </div>
                 `}
               </div>
@@ -6888,6 +6953,13 @@
 
       // Populate existing quizzes into Step 2 DOM
       const quizList = document.getElementById('quiz-questions-list');
+      const addQuizBtn = document.querySelector('button[onclick="addQuizQuestionItem()"]');
+      if (addQuizBtn) {
+        addQuizBtn.disabled = hasApplicants;
+        if (hasApplicants) addQuizBtn.classList.add('opacity-50', 'cursor-not-allowed', 'hidden');
+        else addQuizBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'hidden');
+      }
+
       if (quizList && test.quizzes && test.quizzes.length > 0) {
         quizList.innerHTML = '';
         test.quizzes.forEach((qz, qzIdx) => {
@@ -6899,14 +6971,14 @@
                 <span class="w-5 h-5 rounded-full bg-primary/30 text-primary-dark flex items-center justify-center text-[11px] font-bold">${qzIdx + 1}</span>
                 <span>퀴즈 질문 ${qzIdx + 1}</span>
               </span>
-              <button type="button" onclick="this.closest('.quiz-item').remove(); reindexQuizTitles();" class="text-neutral-400 hover:text-red-500 text-xs font-bold">✕ 삭제</button>
+              ${!hasApplicants ? '<button type="button" onclick="this.closest(\'.quiz-item\').remove(); reindexQuizTitles();" class="text-neutral-400 hover:text-red-500 text-xs font-bold">✕ 삭제</button>' : ''}
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div class="sm:col-span-2">
-                <input type="text" placeholder="질문 입력" class="quiz-question-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-medium focus:outline-none" value="${qz.question || ''}" />
+                <input type="text" placeholder="질문 입력" ${hasApplicants ? 'disabled' : ''} class="quiz-question-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-medium focus:outline-none ${hasApplicants ? 'opacity-70 cursor-not-allowed' : ''}" value="${qz.question || ''}" />
               </div>
               <div>
-                <input type="text" placeholder="정답 입력" class="quiz-answer-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-bold bg-[#F9FAFB] focus:outline-none text-emerald-800" value="${qz.answer || ''}" />
+                <input type="text" placeholder="정답 입력" ${hasApplicants ? 'disabled' : ''} class="quiz-answer-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-bold bg-[#F9FAFB] focus:outline-none text-emerald-800 ${hasApplicants ? 'opacity-70 cursor-not-allowed' : ''}" value="${qz.answer || ''}" />
               </div>
             </div>
           `;
@@ -6917,10 +6989,14 @@
       // Update STEP 3 Publish button text for Edit Mode
       const step3PublishBtnText = document.getElementById('btn-publish-step3-text');
       const step3PublishBtnIcon = document.getElementById('btn-publish-step3-icon');
-      if (step3PublishBtnText) step3PublishBtnText.textContent = '수정 완료하기 (추가 결제 없음)';
+      if (step3PublishBtnText) step3PublishBtnText.textContent = '수정 완료하기';
       if (step3PublishBtnIcon) step3PublishBtnIcon.textContent = '✏️';
 
-      showGenericToast('✏️ 프로젝트 수정 모드입니다. 검증 문항과 퀴즈를 자유롭게 수정하세요.', '📝');
+      if (hasApplicants) {
+        showGenericToast('ℹ️ 참여 신청한 테스터가 있어 1·2번 항목 및 기존 검증문항/퀴즈 수정이 보호됩니다.', '🛡️');
+      } else {
+        showGenericToast('✏️ 신청 테스터가 없어 모든 항목을 자유롭게 수정하실 수 있습니다.', '📝');
+      }
       navigateTo('create');
       goToStep(1);
     }
@@ -7101,8 +7177,8 @@
       // Check Creator Ownership to show creator-only management actions
       if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
         window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
-          const activeUserId = session?.user?.id || '178aa65a-b674-4ef6-a101-e4e823ca0175';
-          const isCreatorOwner = (activeUserId === test.creator_id);
+          const activeUserId = session?.user?.id;
+          const isCreatorOwner = window.isUserLoggedIn && !!activeUserId && (activeUserId === test.creator_id);
 
           const ctaBtn = document.getElementById('btn-participate-test');
           const creatorActions = document.getElementById('creator-only-actions');
@@ -7128,6 +7204,18 @@
             }
           }
         });
+      } else {
+        const ctaBtn = document.getElementById('btn-participate-test');
+        const creatorActions = document.getElementById('creator-only-actions');
+        const sidebarBadge = document.getElementById('post-sidebar-badge');
+        if (ctaBtn) ctaBtn.classList.remove('hidden');
+        if (creatorActions) {
+          creatorActions.classList.add('hidden');
+          creatorActions.classList.remove('flex');
+        }
+        if (sidebarBadge) {
+          sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 동전이 수령됩니다.</span>';
+        }
       }
     };
 
@@ -7451,16 +7539,29 @@
         const totalBudget = test.rewardCoin * test.targetCount;
         if (rewardMeta) rewardMeta.innerHTML = `${test.rewardCoin} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전"> (총 ${totalBudget.toLocaleString()} 동전)`;
 
-        // SIDEBAR: 내가 등록한 서비스이므로 [관리자 뷰] 노출
-        if (sidebarBadge) {
-          sidebarBadge.innerHTML = '<span>📢</span> <span>내가 등록한 테스트입니다.</span>';
-        }
-        if (ctaBtn) {
-          ctaBtn.classList.add('hidden'); // 내 테스트이므로 내가 테스터로 참여하지 않음
-        }
-        if (creatorOnlyActions) {
-          creatorOnlyActions.classList.remove('hidden');
-          creatorOnlyActions.classList.add('flex');
+        // SIDEBAR: 로그인된 경우만 [관리자 뷰] 노출
+        if (window.isUserLoggedIn) {
+          if (sidebarBadge) {
+            sidebarBadge.innerHTML = '<span>📢</span> <span>내가 등록한 테스트입니다.</span>';
+          }
+          if (ctaBtn) {
+            ctaBtn.classList.add('hidden'); // 내 테스트이므로 내가 테스터로 참여하지 않음
+          }
+          if (creatorOnlyActions) {
+            creatorOnlyActions.classList.remove('hidden');
+            creatorOnlyActions.classList.add('flex');
+          }
+        } else {
+          if (sidebarBadge) {
+            sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 동전이 수령됩니다.</span>';
+          }
+          if (ctaBtn) {
+            ctaBtn.classList.remove('hidden');
+          }
+          if (creatorOnlyActions) {
+            creatorOnlyActions.classList.add('hidden');
+            creatorOnlyActions.classList.remove('flex');
+          }
         }
 
       } else if (postId === 'prototype') {
@@ -8779,7 +8880,7 @@
     window.openPledgeModalLocal = function () {
       if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
         window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
-          if (!session || !session.user) {
+          if ((!session || !session.user) && !window.isUserLoggedIn) {
             alert('프로젝트를 등록하시려면 먼저 로그인해 주세요!');
             navigateTo('login');
             return;
@@ -8787,6 +8888,11 @@
           proceedPledgeModal();
         });
       } else {
+        if (!window.isUserLoggedIn) {
+          alert('프로젝트를 등록하시려면 먼저 로그인해 주세요!');
+          navigateTo('login');
+          return;
+        }
         proceedPledgeModal();
       }
     };
@@ -8829,7 +8935,7 @@
     function openTestParticipateModal(postId) {
       if (window.donDwaeDataService && window.donDwaeDataService.supabase) {
         window.donDwaeDataService.supabase.auth.getSession().then(({ data: { session } }) => {
-          if (!session || !session.user) {
+          if ((!session || !session.user) && !window.isUserLoggedIn) {
             alert('테스트에 참여하시려면 먼저 로그인해 주세요!');
             navigateTo('login');
             return;
@@ -8837,6 +8943,11 @@
           proceedTestParticipateModal(postId);
         });
       } else {
+        if (!window.isUserLoggedIn) {
+          alert('테스트에 참여하시려면 먼저 로그인해 주세요!');
+          navigateTo('login');
+          return;
+        }
         proceedTestParticipateModal(postId);
       }
     }
@@ -9277,7 +9388,7 @@
 
       const reward = parseInt(rewardInput.value, 10) || 0;
       let target = parseInt(targetInput.value, 10) || 0;
-      const total = reward * target;
+      const newTotal = reward * target;
       const balance = userCoinBalance;
 
       const summary = document.getElementById('total-cost-summary');
@@ -9286,11 +9397,114 @@
       const btnIcon = document.getElementById('btn-publish-step3-icon');
       const btnPublish = document.getElementById('btn-publish-test-step3');
 
-      if (total <= balance) {
-        // 보유 동전이 충분한 경우
-        const remain = balance - total;
+      if (isProjectEditMode && myCreatedTest) {
+        const origReward = myCreatedTest.rewardCoin || 50;
+        const origTarget = myCreatedTest.targetCount || 30;
+        const origTotal = origReward * origTarget;
+        const diffTotal = Math.max(0, newTotal - origTotal);
+
+        if (diffTotal === 0) {
+          if (summary) {
+            summary.innerHTML = `수정 예산 변경 없음 (기존 결제 금액: <strong>${origTotal.toLocaleString()} 동전</strong>)`;
+            summary.className = 'text-[11px] text-[#2E5E14] font-medium';
+          }
+          if (banner) {
+            banner.className = 'rounded-2xl p-4 sm:p-5 border border-primary/40 bg-[#F4F9EE] flex items-center justify-between gap-4 animate-in fade-in duration-200';
+            banner.innerHTML = `
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary/30 text-[#1F450B] flex items-center justify-center text-lg font-bold shrink-0">
+                  ✏️
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-extrabold text-[#1F450B]">프로젝트 수정 모드</span>
+                    <span class="text-[11px] text-[#574B1A]">기존 결제 예산 유지</span>
+                  </div>
+                  <p class="text-xs text-[#354326] mt-0.5 leading-relaxed">
+                    추가된 보상이나 인원이 없으므로 <strong>추가 동전 결제 없이</strong> 프로젝트 내용이 수정됩니다.
+                  </p>
+                </div>
+              </div>
+            `;
+          }
+          if (btnText) btnText.textContent = '수정 완료하기';
+          if (btnIcon) btnIcon.textContent = '✏️';
+          if (btnPublish) {
+            btnPublish.className = 'px-10 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer';
+          }
+        } else {
+          // 추가 동전 차감/결제 필요
+          const deficit = Math.max(0, diffTotal - balance);
+          if (diffTotal <= balance) {
+            if (summary) {
+              summary.innerHTML = `상향 수정 차액: <strong>+${diffTotal.toLocaleString()} 동전</strong> (보유 잔여: <span class="text-primary-dark font-bold">${(balance - diffTotal).toLocaleString()} 동전</span>)`;
+              summary.className = 'text-[11px] text-[#2E5E14] font-medium';
+            }
+            if (banner) {
+              banner.className = 'rounded-2xl p-4 sm:p-5 border border-primary/40 bg-[#F4F9EE] flex items-center justify-between gap-4 animate-in fade-in duration-200';
+              banner.innerHTML = `
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-primary/30 text-[#1F450B] flex items-center justify-center text-lg font-bold shrink-0">
+                    💰
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-extrabold text-[#1F450B]">상향 수정 차액 보유 동전 차감</span>
+                      <span class="text-[11px] text-[#574B1A]">추가 필요: <strong>+${diffTotal.toLocaleString()} C</strong></span>
+                    </div>
+                    <p class="text-xs text-[#354326] mt-0.5 leading-relaxed">
+                      보상/인원 상향에 따라 보유 동전에서 차액 <strong>${diffTotal.toLocaleString()} C</strong>가 즉시 차감됩니다.
+                    </p>
+                  </div>
+                </div>
+              `;
+            }
+            if (btnText) btnText.textContent = `차액 (${diffTotal.toLocaleString()} C) 차감 후 수정완료`;
+            if (btnIcon) btnIcon.textContent = '✓';
+            if (btnPublish) {
+              btnPublish.className = 'px-10 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer';
+            }
+          } else {
+            const deficitWon = deficit * 10;
+            if (summary) {
+              summary.innerHTML = `상향 수정 차액: <strong>+${diffTotal.toLocaleString()} 동전</strong> (<span class="text-[#DC2626] font-extrabold">보유 부족: ${deficit.toLocaleString()} C</span>)`;
+              summary.className = 'text-[11px] text-[#DC2626] font-semibold';
+            }
+            if (banner) {
+              banner.className = 'rounded-2xl p-4 sm:p-5 border-2 border-[#FDA2BC] bg-[#FFF5F7] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in duration-200';
+              banner.innerHTML = `
+                <div class="flex items-start sm:items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-secondary/30 text-[#8A2B43] flex items-center justify-center text-lg font-bold shrink-0 mt-0.5 sm:mt-0">
+                    ⚠️
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-extrabold text-[#8A2B43] px-2 py-0.5 rounded bg-secondary/30">상향 수정 추가 동전 결제 필요</span>
+                      <span class="text-[11px] text-[#8A2B43] font-bold">부족분: ${deficit.toLocaleString()} C (₩${deficitWon.toLocaleString()})</span>
+                    </div>
+                    <p class="text-xs text-[#622332] mt-1 leading-relaxed">
+                      상향 조절로 필요한 차액 중 <strong class="text-[#DC2626] underline font-extrabold">${deficit.toLocaleString()} C</strong>가 부족합니다.<br class="hidden sm:inline"/>
+                      수정 버튼을 누르시면 부족한 동전 결제창으로 바로 연결됩니다.
+                    </p>
+                  </div>
+                </div>
+              `;
+            }
+            if (btnText) btnText.textContent = `부족한 동전 결제하고 수정하기 (${deficit.toLocaleString()} C)`;
+            if (btnIcon) btnIcon.textContent = '💳';
+            if (btnPublish) {
+              btnPublish.className = 'px-8 py-3.5 rounded-full bg-secondary hover:bg-secondary-hover active:scale-95 text-[#631427] font-extrabold text-sm shadow-md transition-all flex items-center gap-2 border border-secondary-wine/20 cursor-pointer';
+            }
+          }
+        }
+        return;
+      }
+
+      if (newTotal <= balance) {
+        // 신규 등록 보유 동전 충분
+        const remain = balance - newTotal;
         if (summary) {
-          summary.innerHTML = `총 소요 예산: <strong>${total.toLocaleString()} 동전</strong> (보유 잔여: <span class="text-primary-dark font-bold">${remain.toLocaleString()} 동전</span>)`;
+          summary.innerHTML = `총 소요 예산: <strong>${newTotal.toLocaleString()} 동전</strong> (보유 잔여: <span class="text-primary-dark font-bold">${remain.toLocaleString()} 동전</span>)`;
           summary.className = 'text-[11px] text-[#2E5E14] font-medium';
         }
         if (banner) {
@@ -9306,14 +9520,14 @@
                   <span class="text-[11px] text-[#574B1A]">현재 보유: <strong>${balance.toLocaleString()} C</strong></span>
                 </div>
                 <p class="text-xs text-[#354326] mt-0.5 leading-relaxed">
-                  테스트 게시 시 보유 동전에서 <strong>${total.toLocaleString()} C</strong>가 즉시 차감되며, 
+                  테스트 게시 시 보유 동전에서 <strong>${newTotal.toLocaleString()} C</strong>가 즉시 차감되며, 
                   차감 후 잔여 동전은 <strong>${remain.toLocaleString()} C</strong>가 됩니다.
                 </p>
               </div>
             </div>
             <div class="text-right shrink-0 hidden sm:block">
               <span class="text-[11px] text-neutral-400 font-medium">차감 예정</span>
-              <div class="text-sm font-black text-primary-dark">-${total.toLocaleString()} C</div>
+              <div class="text-sm font-black text-primary-dark">-${newTotal.toLocaleString()} C</div>
             </div>
           `;
         }
@@ -9323,11 +9537,11 @@
           btnPublish.className = 'px-10 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer';
         }
       } else {
-        // 보유 동전이 부족한 경우 (미리 고지 및 결제창 연결 준비)
-        const deficit = total - balance;
+        // 신규 등록 보유 동전 부족
+        const deficit = newTotal - balance;
         const deficitAmountWon = deficit * 10;
         if (summary) {
-          summary.innerHTML = `총 소요 예산: <strong>${total.toLocaleString()} 동전</strong> (<span class="text-[#DC2626] font-extrabold">보유 동전 부족: ${deficit.toLocaleString()} C</span>)`;
+          summary.innerHTML = `총 소요 예산: <strong>${newTotal.toLocaleString()} 동전</strong> (<span class="text-[#DC2626] font-extrabold">보유 동전 부족: ${deficit.toLocaleString()} C</span>)`;
           summary.className = 'text-[11px] text-[#DC2626] font-semibold';
         }
         if (banner) {
@@ -9343,7 +9557,7 @@
                   <span class="text-[11px] text-[#8A2B43] font-bold">부족분: ${deficit.toLocaleString()} C (₩${deficitAmountWon.toLocaleString()})</span>
                 </div>
                 <p class="text-xs text-[#622332] mt-1 leading-relaxed">
-                  총 필요 동전 <strong>${total.toLocaleString()} C</strong> 중 현재 보유 동전(<strong>${balance.toLocaleString()} C</strong>)에서 
+                  총 필요 동전 <strong>${newTotal.toLocaleString()} C</strong> 중 현재 보유 동전(<strong>${balance.toLocaleString()} C</strong>)에서 
                   <strong class="text-[#DC2626] underline font-extrabold">${deficit.toLocaleString()} C</strong>가 부족합니다.<br class="hidden sm:inline"/>
                   게시 버튼을 누르시면 부족한 동전을 바로 충전할 수 있는 <strong>가상 결제창</strong>으로 바로 연결됩니다.
                 </p>
@@ -9351,7 +9565,7 @@
             </div>
             <button 
               type="button" 
-              onclick="openPaymentModal(${deficit}, ${total})" 
+              onclick="openPaymentModal(${deficit}, ${newTotal})" 
               class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#FDA2BC] hover:bg-secondary-hover active:scale-95 text-[#6B182E] font-extrabold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
             >
               <span>💳 결제창 바로열기</span>
@@ -9370,25 +9584,38 @@
       const reward = parseInt(document.getElementById('input-reward-coin')?.value, 10) || 0;
       let target = parseInt(document.getElementById('input-target-count')?.value, 10) || 0;
       if (target < 30) target = 30;
-      const totalCost = reward * target;
+      const newTotal = reward * target;
 
       if (isProjectEditMode) {
-        // 이미 생성된 프로젝트 수정 모드: 코인 결제나 차감 없이 저장 후 대시보드 반영
+        const origReward = myCreatedTest?.rewardCoin || 50;
+        const origTarget = myCreatedTest?.targetCount || 30;
+        const origTotal = origReward * origTarget;
+        const diffTotal = Math.max(0, newTotal - origTotal);
+
+        if (diffTotal > 0) {
+          if (diffTotal > userCoinBalance) {
+            const deficit = diffTotal - userCoinBalance;
+            openPaymentModal(deficit, diffTotal);
+            return;
+          } else {
+            userCoinBalance -= diffTotal;
+            updateAllCoinDisplays();
+          }
+        }
+
         isProjectEditMode = false;
-        publishNewTestAndReturnToDashboard(false, 0);
+        publishNewTestAndReturnToDashboard(false, diffTotal);
         showGenericToast('✏️ 프로젝트 수정 내용이 성공적으로 저장되었습니다!', '🎉');
         return;
       }
 
-      if (totalCost > userCoinBalance) {
-        // 코인 부족 -> 결제창 모달 오픈
-        const deficit = totalCost - userCoinBalance;
-        openPaymentModal(deficit, totalCost);
+      if (newTotal > userCoinBalance) {
+        const deficit = newTotal - userCoinBalance;
+        openPaymentModal(deficit, newTotal);
       } else {
-        // 코인 충분 -> 보유 동전에서 즉시 차감 후 게시 완료
-        userCoinBalance -= totalCost;
+        userCoinBalance -= newTotal;
         updateAllCoinDisplays();
-        publishNewTestAndReturnToDashboard(false, totalCost);
+        publishNewTestAndReturnToDashboard(false, newTotal);
       }
     }
 
@@ -9728,19 +9955,16 @@
         newCard.setAttribute('data-category', 'product');
         newCard.setAttribute('data-reward', String(rCoin));
         newCard.onclick = () => openPostDetail('my-created-test');
-        newCard.className = 'dashboard-card bg-white rounded-2xl border-2 border-primary shadow-card hover:shadow-float hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group animate-in fade-in zoom-in-95 relative';
-
         newCard.innerHTML = `
-          <div class="relative bg-[#F4F9EE] border-b border-[#EAF2DE] p-3">
-            <div class="w-full h-44 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-center items-center text-center relative">
-              <span class="text-3xl mb-1 filter drop-shadow-xs">🎉</span>
-              <span class="text-sm font-extrabold text-neutral-dark">${sName}</span>
-              <span class="text-[11px] text-neutral-muted mt-1 font-mono">${sUrl}</span>
-              <div class="mt-3 flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
-                <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-primary/30 text-primary-dark font-extrabold">
-                  내가 등록한 테스트 (실시간 모집 중)
-                </span>
+          <div class="h-32 bg-gradient-to-br from-primary/30 to-[#B4E380]/40 flex flex-col items-center justify-center p-4 text-center relative border-b border-primary/20">
+            <span class="text-3xl mb-1 filter drop-shadow-xs">🎉</span>
+            <span class="text-sm font-extrabold text-neutral-dark">${sName}</span>
+            <span class="text-[11px] text-neutral-muted mt-1 font-mono">${sUrl}</span>
+            <div class="mt-3 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+              <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-primary/30 text-primary-dark font-extrabold">
+                내가 등록한 테스트 (실시간 모집 중)
+              </span>
               </div>
             </div>
 
@@ -10411,7 +10635,47 @@
       }, 300);
     };
 
+    window.handleEmailAuthSubmit = async function(event) {
+      if (event) event.preventDefault();
+      const emailInput = document.getElementById('auth-email-input');
+      const pwInput = document.getElementById('auth-password-input');
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = pwInput ? pwInput.value.trim() : '';
+
+      const ds = window.donDwaeDataService;
+      let loginSuccess = false;
+
+      if (ds && ds.supabase && email && password) {
+        try {
+          const { data, error } = await ds.supabase.auth.signInWithPassword({ email, password });
+          if (error) {
+            // Attempt sign up if user does not exist yet
+            const { data: signUpData, error: signUpErr } = await ds.supabase.auth.signUp({ email, password });
+            if (signUpErr) {
+              console.warn('[Auth] Supabase auth error:', signUpErr.message);
+            } else if (signUpData?.user) {
+              loginSuccess = true;
+            }
+          } else if (data?.user) {
+            loginSuccess = true;
+          }
+        } catch (e) {
+          console.warn('[Auth] Connection notice:', e.message);
+        }
+      }
+
+      updateHeaderAuthUI(true);
+      if (typeof window.initSupabaseLiveDB === 'function') {
+        window.initSupabaseLiveDB();
+      }
+      showGenericToast('🎉 환영합니다! 로그인 되었습니다.', '👋');
+      navigateTo('explore');
+    };
+
+    window.isUserLoggedIn = false;
+
     window.updateHeaderAuthUI = function(isLoggedIn) {
+      window.isUserLoggedIn = !!isLoggedIn;
       const loginBtn = document.getElementById('btn-header-login');
       const logoutBtn = document.getElementById('btn-header-logout');
       if (loginBtn && logoutBtn) {
@@ -10421,6 +10685,16 @@
         } else {
           loginBtn.classList.remove('hidden');
           logoutBtn.classList.add('hidden');
+        }
+      }
+
+      const homeGreeting = document.getElementById('home-greeting-title');
+      if (homeGreeting) {
+        if (!isLoggedIn) {
+          homeGreeting.textContent = '안녕하세요! 👋';
+        } else {
+          const currentNick = document.getElementById('mypage-user-nickname')?.textContent || '옹에';
+          homeGreeting.textContent = `안녕하세요, ${currentNick}님! 👋`;
         }
       }
 
@@ -10709,8 +10983,8 @@
 
         if (isLoggedIn && userId) {
           const profile = await ds.fetchUserProfile(userId);
-          const activeNick = profile?.nickname || '옹에';
-          const activeBio = profile?.bio || '돈돼 대표 크리에이터 옹에입니다.';
+          const activeNick = profile?.nickname || 'sknye1004 (제작자)';
+          const activeBio = profile?.bio || '돈돼 대표 크리에이터 sknye1004입니다.';
           window.userHasPassedGating = profile?.has_passed_gating || false;
           window.saveProfileChangesLocal(activeNick, activeBio);
 
@@ -10783,7 +11057,7 @@
                   </div>
 
                   <div class="flex items-center gap-1 text-neutral-400">
-                    <button type="button" onclick="openPostDetail('${p.id}')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors" title="수정">✏️</button>
+                    <button type="button" onclick="openEditPostModal('${p.id}')" class="p-1.5 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors" title="수정">✏️</button>
                   </div>
                 </div>
 
