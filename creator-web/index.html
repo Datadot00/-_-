@@ -1374,8 +1374,12 @@
 
           <div class="hidden xl:flex items-center gap-2 border-l border-neutral-200 pl-3">
             <span data-auth-email class="max-w-40 truncate text-[11px] font-semibold text-neutral-500"></span>
-            <button type="button" data-auth-signout
-              class="px-3 py-2 rounded-full border border-neutral-200 bg-white text-[11px] font-bold text-neutral-600 hover:bg-neutral-50 transition-colors">
+            <button type="button" onclick="navigateTo('login')" id="btn-explore-login"
+              class="px-3.5 py-1.5 rounded-full bg-[#2F6517] hover:bg-[#25500F] text-white text-[11px] font-bold transition-all cursor-pointer shadow-2xs">
+              로그인
+            </button>
+            <button type="button" data-auth-signout onclick="handleUserLogout()" id="btn-explore-logout"
+              class="px-3 py-1.5 rounded-full border border-neutral-200 bg-white text-[11px] font-bold text-neutral-600 hover:bg-neutral-50 transition-colors hidden">
               로그아웃
             </button>
           </div>
@@ -10707,6 +10711,18 @@
         } else {
           landingLoginBtn.classList.remove('hidden');
           landingLogoutBtn.classList.add('hidden');
+        }
+      }
+
+      const exploreLoginBtn = document.getElementById('btn-explore-login');
+      const exploreLogoutBtn = document.getElementById('btn-explore-logout');
+      if (exploreLoginBtn && exploreLogoutBtn) {
+        if (isLoggedIn) {
+          exploreLoginBtn.classList.add('hidden');
+          exploreLogoutBtn.classList.remove('hidden');
+        } else {
+          exploreLoginBtn.classList.remove('hidden');
+          exploreLogoutBtn.classList.add('hidden');
         }
       }
     };
