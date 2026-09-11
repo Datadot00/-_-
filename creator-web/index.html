@@ -2502,17 +2502,17 @@
             <div id="login-detail-fields" class="flex flex-col gap-4 pt-2 border-t border-neutral-100 hidden">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#FAFAFA] p-4 rounded-xl border border-neutral-200">
                 <div>
-                  <label id="label-test-login-id" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 ID / 이메일 <span class="text-red-500">*</span></label>
-                  <input id="input-test-login-id" type="text" maxlength="200" autocomplete="off" placeholder="예: tester01@dondwae.io (체험 계정)"
+                  <label id="label-test-login-id" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 ID / 이메일 <span class="text-neutral-400 font-medium">(선택)</span></label>
+                  <input id="input-test-login-id" type="text" maxlength="200" autocomplete="off" placeholder="예: tester01@dondwae.io (체험 계정, 선택사항)"
                     class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-white font-mono" />
                 </div>
                 <div>
-                  <label id="label-test-login-pw" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 비밀번호 <span class="text-red-500">*</span></label>
-                  <input id="input-test-login-pw" type="text" maxlength="200" autocomplete="new-password" placeholder="예: test1234!"
+                  <label id="label-test-login-pw" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 비밀번호 <span class="text-neutral-400 font-medium">(선택)</span></label>
+                  <input id="input-test-login-pw" type="text" maxlength="200" autocomplete="new-password" placeholder="예: test1234! (선택사항)"
                     class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-white font-mono" />
                 </div>
                 <p id="test-login-credentials-help" class="sm:col-span-2 text-[11px] text-neutral-500">
-                  로그인 필수 테스트를 등록하려면 테스터가 사용할 계정 ID와 비밀번호를 모두 입력해 주세요.
+                  테스트용 공용 계정이 있는 경우 입력해 주세요. (미입력 시 테스터 본인 계정 사용 또는 직접 가입)
                 </p>
               </div>
 
@@ -10443,30 +10443,30 @@
 
       if (accountIdLabel) {
         accountIdLabel.innerHTML = preservesExistingCredentials
-          ? '테스트용 계정 ID / 이메일 <span class="text-neutral-400 font-medium">(변경 시에만 입력)</span>'
-          : '테스트용 계정 ID / 이메일 <span class="text-red-500">*</span>';
+          ? '테스트용 계정 ID / 이메일 <span class="text-neutral-400 font-medium">(선택, 변경 시에만 입력)</span>'
+          : '테스트용 계정 ID / 이메일 <span class="text-neutral-400 font-medium">(선택)</span>';
       }
       if (accountPasswordLabel) {
         accountPasswordLabel.innerHTML = preservesExistingCredentials
-          ? '테스트용 계정 비밀번호 <span class="text-neutral-400 font-medium">(변경 시에만 입력)</span>'
-          : '테스트용 계정 비밀번호 <span class="text-red-500">*</span>';
+          ? '테스트용 계정 비밀번호 <span class="text-neutral-400 font-medium">(선택, 변경 시에만 입력)</span>'
+          : '테스트용 계정 비밀번호 <span class="text-neutral-400 font-medium">(선택)</span>';
       }
       if (accountIdInput) {
-        accountIdInput.required = mode === 'required' && !preservesExistingCredentials;
+        accountIdInput.required = false;
         accountIdInput.placeholder = preservesExistingCredentials
           ? '비워두면 기존 테스트 계정을 유지합니다.'
-          : '예: tester01@dondwae.io (체험 계정)';
+          : '예: tester01@dondwae.io (체험 계정, 선택사항)';
       }
       if (accountPasswordInput) {
-        accountPasswordInput.required = mode === 'required' && !preservesExistingCredentials;
+        accountPasswordInput.required = false;
         accountPasswordInput.placeholder = preservesExistingCredentials
           ? '비워두면 기존 비밀번호를 유지합니다.'
-          : '예: test1234!';
+          : '예: test1234! (선택사항)';
       }
       if (helpText) {
         helpText.textContent = preservesExistingCredentials
           ? '보안을 위해 기존 계정 정보는 다시 표시하지 않습니다. 두 칸을 비워두면 저장된 계정 정보가 유지됩니다.'
-          : '로그인 필수 테스트를 등록하려면 테스터가 사용할 계정 ID와 비밀번호를 모두 입력해 주세요.';
+          : '테스트용 공용 계정이 있는 경우 입력해 주세요. (미입력 시 테스터 본인 계정 사용 또는 직접 가입)';
       }
     }
 
@@ -11168,11 +11168,12 @@
       }
 
       const sUrl = dataService.normalizeHttpUrl(serviceUrlRaw, { required: requiresServiceUrl });
+      const isVoteUrlMode = currentMainCategory === 'vote' && currentVoteInputMode === 'url';
       const abUrlA = dataService.normalizeHttpUrl(
-        typeSpecificData.abUrlA || (currentMainCategory === 'vote' ? typeSpecificData.content?.[0] : '')
+        typeSpecificData.abUrlA || (isVoteUrlMode ? typeSpecificData.content?.[0] : '')
       );
       const abUrlB = dataService.normalizeHttpUrl(
-        typeSpecificData.abUrlB || (currentMainCategory === 'vote' ? typeSpecificData.content?.[1] : '')
+        typeSpecificData.abUrlB || (isVoteUrlMode ? typeSpecificData.content?.[1] : '')
       );
       const playstoreUrl = dataService.normalizeHttpUrl(typeSpecificData.playstoreUrl || '');
       const appstoreUrl = dataService.normalizeHttpUrl(typeSpecificData.appstoreUrl || '');

@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
   ),
   CONSTRAINT projects_category_valid
     CHECK (category IN ('product', 'prototype', 'vote', 'survey', 'abtest')),
-  CONSTRAINT projects_platform_valid CHECK (platform IN ('web', 'app')),
+  CONSTRAINT projects_platform_valid CHECK (platform IN ('web', 'app', 'none')),
   CONSTRAINT projects_status_valid
     CHECK (status IN ('reviewing', 'recruiting', 'completed', 'paused')),
   CONSTRAINT projects_content_lengths_valid CHECK (
@@ -149,8 +149,13 @@ CREATE TABLE IF NOT EXISTS public.projects (
     )
     OR (
       login_required
-      AND NULLIF(BTRIM(test_account_id), '') IS NOT NULL AND CHAR_LENGTH(test_account_id) <= 200
-      AND NULLIF(BTRIM(test_account_pw), '') IS NOT NULL AND CHAR_LENGTH(test_account_pw) <= 200
+      AND (
+        (test_account_id IS NULL AND test_account_pw IS NULL)
+        OR (
+          NULLIF(BTRIM(test_account_id), '') IS NOT NULL AND CHAR_LENGTH(test_account_id) <= 200
+          AND NULLIF(BTRIM(test_account_pw), '') IS NOT NULL AND CHAR_LENGTH(test_account_pw) <= 200
+        )
+      )
       AND NULLIF(BTRIM(privacy_items), '') IS NOT NULL AND CHAR_LENGTH(privacy_items) <= 1000
     )
   )

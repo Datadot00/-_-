@@ -200,10 +200,7 @@ export function prepareProjectLoginConfiguration({
     throw new Error('개인정보 항목은 1,000자 이하로 입력해 주세요.');
   }
   if ((accountId && !accountPassword) || (!accountId && accountPassword)) {
-    throw new Error('테스트용 계정 ID와 비밀번호를 모두 입력해 주세요.');
-  }
-  if ((!accountId || !accountPassword) && !preserveExistingCredentials) {
-    throw new Error('로그인이 필요한 테스트는 테스트용 계정 ID와 비밀번호를 모두 입력해 주세요.');
+    throw new Error('테스트용 계정 ID와 비밀번호를 모두 입력하거나 둘 다 비워두세요.');
   }
   if (accountId.length > 200 || accountPassword.length > 200) {
     throw new Error('테스트용 계정 ID와 비밀번호는 각각 200자 이하로 입력해 주세요.');
@@ -217,6 +214,9 @@ export function prepareProjectLoginConfiguration({
   if (accountId && accountPassword) {
     configuration.test_account_id = accountId;
     configuration.test_account_pw = accountPassword;
+  } else if (!preserveExistingCredentials) {
+    configuration.test_account_id = null;
+    configuration.test_account_pw = null;
   }
 
   return configuration;

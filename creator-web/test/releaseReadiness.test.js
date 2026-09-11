@@ -21,7 +21,8 @@ const expectedMigrations = [
   '20260910125104_stage_6_schema_constraints_backup.sql',
   '20260910125134_stage_6_schema_constraints_and_model.sql',
   '20260910130451_stage_7_query_and_index_optimization.sql',
-  '20260911160000_remove_legacy_seed_projects.sql'
+  '20260911160000_remove_legacy_seed_projects.sql',
+  '20260911170000_allow_platform_none_and_optional_test_credentials.sql'
 ];
 
 test('로컬 마이그레이션 파일명은 운영 DB 버전 순서와 일치한다', () => {

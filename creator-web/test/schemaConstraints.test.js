@@ -57,3 +57,15 @@ test('기준 스키마와 등록 화면도 6단계 모델을 따른다', () => {
   assert.match(page, /dataService\.prepareProjectLoginConfiguration\(\{/);
   assert.match(page, /preserveExistingCredentials: wasEditing && editingOriginalLoginRequired === true/);
 });
+
+test('플랫폼 none 허용 및 로그인 필수 시 계정 정보 선택사항 제약조건을 검증한다', () => {
+  const latestMigration = readFileSync(
+    new URL('../supabase/migrations/20260911170000_allow_platform_none_and_optional_test_credentials.sql', import.meta.url),
+    'utf8'
+  );
+  assert.match(latestMigration, /platform in \('web', 'app', 'none'\)/i);
+  assert.match(latestMigration, /\(test_account_id is null and test_account_pw is null\)/i);
+  assert.match(schema, /platform IN \('web', 'app', 'none'\)/i);
+  assert.match(schema, /\(test_account_id IS NULL AND test_account_pw IS NULL\)/i);
+});
+

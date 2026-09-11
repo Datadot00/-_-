@@ -73,11 +73,38 @@ test('로그인 불필요 설정은 관련 필드를 항상 null로 정규화한
   });
 });
 
-test('신규 로그인 필수 프로젝트는 계정 ID, 비밀번호, 개인정보 항목을 모두 요구한다', () => {
-  assert.throws(() => prepareProjectLoginConfiguration({
+test('신규 로그인 필수 프로젝트에서 테스트 계정 ID, 비밀번호는 선택사항이며 공백일 때 null로 정규화한다', () => {
+  assert.deepEqual(prepareProjectLoginConfiguration({
     loginRequired: true,
     privacyItems: '이메일'
-  }), /계정 ID와 비밀번호를 모두 입력/);
+  }), {
+    login_required: true,
+    privacy_items: '이메일',
+    test_account_id: null,
+    test_account_pw: null
+  });
+});
+
+test('신규 로그인 필수 프로젝트에서 테스트 계정 ID와 비밀번호가 제공되면 정상 포함된다', () => {
+  assert.deepEqual(prepareProjectLoginConfiguration({
+    loginRequired: true,
+    testAccountId: 'test-user',
+    testAccountPassword: 'test-password',
+    privacyItems: '이메일'
+  }), {
+    login_required: true,
+    privacy_items: '이메일',
+    test_account_id: 'test-user',
+    test_account_pw: 'test-password'
+  });
+});
+
+test('신규 등록 시에도 ID와 비밀번호 중 하나만 입력할 수 없다', () => {
+  assert.throws(() => prepareProjectLoginConfiguration({
+    loginRequired: true,
+    testAccountId: 'new-user',
+    privacyItems: '이메일'
+  }), /ID와 비밀번호를 모두 입력/);
 });
 
 test('기존 로그인 필수 프로젝트 수정은 빈 계정 필드를 생략해 저장값을 보존한다', () => {
