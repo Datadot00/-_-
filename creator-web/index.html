@@ -2502,22 +2502,25 @@
             <div id="login-detail-fields" class="flex flex-col gap-4 pt-2 border-t border-neutral-100 hidden">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#FAFAFA] p-4 rounded-xl border border-neutral-200">
                 <div>
-                  <label class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 ID / 이메일 (선택)</label>
-                  <input id="input-test-login-id" type="text" placeholder="예: tester01@dondwae.io (체험 계정)"
+                  <label id="label-test-login-id" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 ID / 이메일 <span class="text-red-500">*</span></label>
+                  <input id="input-test-login-id" type="text" maxlength="200" autocomplete="off" placeholder="예: tester01@dondwae.io (체험 계정)"
                     class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-white font-mono" />
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 비밀번호 (선택)</label>
-                  <input id="input-test-login-pw" type="text" placeholder="예: test1234!"
+                  <label id="label-test-login-pw" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 비밀번호 <span class="text-red-500">*</span></label>
+                  <input id="input-test-login-pw" type="text" maxlength="200" autocomplete="new-password" placeholder="예: test1234!"
                     class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-white font-mono" />
                 </div>
+                <p id="test-login-credentials-help" class="sm:col-span-2 text-[11px] text-neutral-500">
+                  로그인 필수 테스트를 등록하려면 테스터가 사용할 계정 ID와 비밀번호를 모두 입력해 주세요.
+                </p>
               </div>
 
               <div>
                 <label class="block text-xs font-bold text-neutral-dark mb-1">
                   취급/수집되는 개인정보 항목 <span class="text-red-500">*</span>
                 </label>
-                <input id="input-privacy-items" type="text" placeholder="예: 이메일, 닉네임, 프로필 사진 (테스트 진행 시 필요한 정보 명시)"
+                <input id="input-privacy-items" type="text" maxlength="1000" placeholder="예: 이메일, 닉네임, 프로필 사진 (테스트 진행 시 필요한 정보 명시)"
                   class="w-full p-3 rounded-xl border border-neutral-200 text-xs bg-white font-medium" />
                 <p class="text-[11px] text-neutral-400 mt-1">테스트 과정에서 사용자 가입 또는 정보 입력으로 수집되는 항목을 명확히 알려 테스터 권리를 보호합니다.</p>
               </div>
@@ -3407,7 +3410,7 @@
 
             <!-- Creator view alternative actions (hidden for other's post) -->
             <div id="creator-only-actions" class="hidden flex-col gap-2">
-              <button onclick="navigateTo('feedback')"
+              <button onclick="openFeedbackReport(currentPostId)"
                 class="w-full py-3.5 px-4 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white font-extrabold text-sm shadow-card active:scale-[0.98] transition-all flex items-center justify-center gap-2">
                 <span>참여 현황 & 테스터 리뷰 보기</span>
                 <span>→</span>
@@ -3763,7 +3766,7 @@
                 <h3 id="feedback-project-title" class="text-base font-extrabold text-neutral-dark tracking-tight">
                   머니로그
                 </h3>
-                <span class="px-2 py-0.5 rounded bg-neutral-100 text-neutral-500 text-[10px] font-bold">v1.2.0-rc</span>
+                <span id="feedback-project-version" class="hidden px-2 py-0.5 rounded bg-neutral-100 text-neutral-500 text-[10px] font-bold"></span>
               </div>
               <p id="feedback-project-subtext" class="text-xs text-neutral-500 font-medium truncate">
                 AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
@@ -3858,12 +3861,10 @@
             </div>
             <div>
               <div class="flex items-baseline gap-2 mb-3">
-                <span class="text-4xl font-extrabold text-neutral-dark">4.8</span>
+                <span id="feedback-average-rating" class="text-4xl font-extrabold text-neutral-dark">-</span>
                 <span class="text-sm font-semibold text-neutral-muted">/ 5.0</span>
               </div>
-              <div class="flex items-center gap-1 text-[#8D2B44] text-lg">
-                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-              </div>
+              <div id="feedback-average-stars" class="flex items-center gap-1 text-[#8D2B44] text-lg">☆☆☆☆☆</div>
             </div>
           </div>
 
@@ -7032,17 +7033,72 @@
       }
     }
 
-    let isProjectEditMode = false;
+    const PROJECT_EDIT_SESSION_KEY = 'dondwae_editing_project_id';
+
+    function readStoredProjectEditId() {
+      try {
+        return sessionStorage.getItem(PROJECT_EDIT_SESSION_KEY) || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    let activeEditingProjectId = readStoredProjectEditId();
+    let isProjectEditMode = Boolean(activeEditingProjectId);
+    let editingOriginalLoginRequired = null;
+
+    function getActiveProjectEditId() {
+      return activeEditingProjectId
+        || document.getElementById('view-create')?.dataset.editingProjectId
+        || readStoredProjectEditId();
+    }
+
+    function setProjectEditContext(projectId, originalLoginRequired = null) {
+      const normalizedId = projectId && projectId !== 'my-created-test' ? String(projectId) : null;
+      activeEditingProjectId = normalizedId;
+      isProjectEditMode = Boolean(normalizedId);
+      editingOriginalLoginRequired = typeof originalLoginRequired === 'boolean'
+        ? originalLoginRequired
+        : null;
+
+      const createView = document.getElementById('view-create');
+      if (createView) {
+        if (normalizedId) createView.dataset.editingProjectId = normalizedId;
+        else delete createView.dataset.editingProjectId;
+      }
+
+      try {
+        if (normalizedId) sessionStorage.setItem(PROJECT_EDIT_SESSION_KEY, normalizedId);
+        else sessionStorage.removeItem(PROJECT_EDIT_SESSION_KEY);
+      } catch (e) {}
+    }
+
+    function clearProjectEditContext() {
+      setProjectEditContext(null);
+    }
+
+    if (activeEditingProjectId) {
+      const createView = document.getElementById('view-create');
+      if (createView) createView.dataset.editingProjectId = activeEditingProjectId;
+    }
 
     // Open project edit mode
     async function openEditPostModal(targetProjId) {
       targetProjId = targetProjId || currentPostId;
-      let test = myCreatedTest;
+      let test = targetProjId === 'my-created-test' ? myCreatedTest : null;
       if (targetProjId && window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
         try {
           const dbP = await window.donDwaeDataService.fetchProjectById(targetProjId);
-          if (dbP) {
-            test = {
+          if (!dbP) {
+            throw new Error('수정할 프로젝트를 불러오지 못했습니다.');
+          }
+
+          const { data: { session } } = await window.donDwaeDataService.supabase.auth.getSession();
+          if (!session?.user || dbP.creator_id !== session.user.id) {
+            throw new Error('본인이 등록한 프로젝트만 수정할 수 있습니다.');
+          }
+
+          test = {
               id: dbP.id,
               title: dbP.title,
               serviceName: dbP.service_name || dbP.title,
@@ -7073,16 +7129,22 @@
               techTags: (dbP.tech_tags && Array.isArray(dbP.tech_tags)) ? dbP.tech_tags : [],
               questions: typeof dbP.questions === 'string' ? JSON.parse(dbP.questions) : (dbP.questions || []),
               quizzes: typeof dbP.quizzes === 'string' ? JSON.parse(dbP.quizzes) : (dbP.quizzes || [])
-            };
-            myCreatedTest = test;
-          }
+          };
+          myCreatedTest = test;
         } catch (e) {
+          clearProjectEditContext();
           console.warn('[openEditPostModal] DB fetch notice:', e);
+          showGenericToast(e?.message || '수정할 프로젝트를 불러오지 못했습니다.', '⚠️');
+          return false;
         }
       }
 
-      if (!test) return;
-      isProjectEditMode = true;
+      if (!test || !test.id || test.id === 'my-created-test') {
+        clearProjectEditContext();
+        showGenericToast('수정할 프로젝트의 DB 식별자를 찾지 못했습니다.', '⚠️');
+        return false;
+      }
+      setProjectEditContext(test.id, !!test.loginRequired);
       const hasApplicants = (test.currentRecruits || 0) > 0;
 
       const titleInput = document.getElementById('input-test-title');
@@ -7358,8 +7420,9 @@
       } else {
         showGenericToast('✏️ 신청 테스터가 없어 모든 항목을 자유롭게 수정하실 수 있습니다.', '📝');
       }
-      navigateTo('create');
+      navigateTo('create', { preserveProjectEdit: true });
       goToStep(1);
+      return true;
     }
 
     function updateHomeFeedThumbnails() {
@@ -8150,13 +8213,27 @@
       renderDetailReviews(test.id, test);
     };
 
-    async function openFeedbackReport(projectId = 'moneylog') {
+    async function openFeedbackReport(projectId = currentPostId) {
       currentPostId = projectId;
       navigateTo('feedback');
+
+      const loadingTitleEl = document.getElementById('feedback-project-title');
+      const loadingSubtextEl = document.getElementById('feedback-project-subtext');
+      const loadingContainer = document.getElementById('feedback-cards-container');
+      if (loadingTitleEl) loadingTitleEl.textContent = '프로젝트 불러오는 중...';
+      if (loadingSubtextEl) loadingSubtextEl.textContent = '';
+      if (loadingContainer) {
+        loadingContainer.innerHTML = `
+          <div class="bg-white rounded-2xl border border-neutral-200 p-12 text-center text-xs font-bold text-neutral-500 shadow-xs">
+            참여 현황과 테스터 리뷰를 불러오고 있습니다...
+          </div>
+        `;
+      }
 
       if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
         try {
           const project = await window.donDwaeDataService.fetchProjectById(projectId);
+          if (!project) throw new Error('프로젝트를 찾을 수 없습니다.');
           if (project) {
             // Update Header & Project Info
             const titleEl = document.getElementById('feedback-project-title');
@@ -8164,12 +8241,20 @@
             const catTagEl = document.getElementById('feedback-project-category-tag');
             const statusTagEl = document.getElementById('feedback-project-status-tag');
             const statusBadgeEl = document.getElementById('test-status-badge');
+            const visibilityBadgeEl = document.getElementById('feedback-review-visibility-badge');
+            const timeLeftEl = document.getElementById('feedback-time-left');
 
             if (titleEl) titleEl.textContent = project.service_name || project.title;
             if (subtextEl) subtextEl.textContent = project.service_desc || project.title;
             if (catTagEl) catTagEl.textContent = project.category === 'abtest' ? 'A/B 테스트' : (project.category === 'vote' ? '투표 테스트' : (project.category === 'prototype' ? '프로토타입' : '프로덕트 테스트'));
             if (statusTagEl) statusTagEl.textContent = project.status === 'completed' ? '모집 완료' : '모집 중';
             if (statusBadgeEl) statusBadgeEl.textContent = project.status === 'completed' ? '[테스트 종료]' : '[모집 중]';
+            if (visibilityBadgeEl) {
+              visibilityBadgeEl.innerHTML = project.is_reviews_public
+                ? '<span>🌐</span> 리뷰 공개'
+                : '<span>🔒</span> 리뷰 비공개';
+            }
+            if (timeLeftEl) timeLeftEl.textContent = project.status === 'completed' ? '모집 종료' : '모집 중';
 
             // Update Metrics Cards
             const recruitsNumEl = document.getElementById('feedback-recruits-num');
@@ -8178,6 +8263,8 @@
             const recruitsRateEl = document.getElementById('feedback-recruits-rate');
             const totalRewardEl = document.getElementById('feedback-total-reward-num');
             const perPersonRewardEl = document.getElementById('feedback-per-person-reward-text');
+            const averageRatingEl = document.getElementById('feedback-average-rating');
+            const averageStarsEl = document.getElementById('feedback-average-stars');
 
             const current = project.current_count || 0;
             const target = project.target_count || 10;
@@ -8185,16 +8272,42 @@
 
             if (recruitsNumEl) recruitsNumEl.textContent = current;
             if (targetCountEl) targetCountEl.textContent = `/ ${target}명`;
-            if (progressBarEl) progressBarEl.style.width = `${Math.max(pct, 4)}%`;
+            if (progressBarEl) progressBarEl.style.width = `${pct}%`;
             if (recruitsRateEl) recruitsRateEl.textContent = `${pct}% 달성`;
-            if (totalRewardEl) totalRewardEl.textContent = (current * (project.reward_coin || 500)).toLocaleString();
-            if (perPersonRewardEl) perPersonRewardEl.textContent = `1인당 ${project.reward_coin || 500} 동전 정상 지급 완료`;
+            if (averageRatingEl) averageRatingEl.textContent = '-';
+            if (averageStarsEl) averageStarsEl.textContent = '☆☆☆☆☆';
+            if (totalRewardEl) totalRewardEl.textContent = '0';
+            if (perPersonRewardEl) perPersonRewardEl.textContent = '아직 지급된 리뷰 리워드가 없습니다';
           }
 
           // Fetch & Render Real DB Reviews
           const fbContainer = document.getElementById('feedback-cards-container');
           if (fbContainer) {
             const reviews = await window.donDwaeDataService.fetchProjectReviews(projectId);
+            const reviewCount = Array.isArray(reviews) ? reviews.length : 0;
+            const averageRating = reviewCount > 0
+              ? reviews.reduce((sum, review) => sum + (Number(review.rating) || 0), 0) / reviewCount
+              : null;
+            const roundedAverage = averageRating === null ? 0 : Math.round(averageRating);
+            const rewardPerReview = Math.max(0, Number(project?.reward_coin) || 0);
+            const averageRatingEl = document.getElementById('feedback-average-rating');
+            const averageStarsEl = document.getElementById('feedback-average-stars');
+            const totalRewardEl = document.getElementById('feedback-total-reward-num');
+            const perPersonRewardEl = document.getElementById('feedback-per-person-reward-text');
+
+            if (averageRatingEl) averageRatingEl.textContent = averageRating === null ? '-' : averageRating.toFixed(1);
+            if (averageStarsEl) {
+              averageStarsEl.textContent = averageRating === null
+                ? '☆☆☆☆☆'
+                : '★'.repeat(roundedAverage) + '☆'.repeat(Math.max(0, 5 - roundedAverage));
+            }
+            if (totalRewardEl) totalRewardEl.textContent = (reviewCount * rewardPerReview).toLocaleString();
+            if (perPersonRewardEl) {
+              perPersonRewardEl.textContent = reviewCount > 0
+                ? `리뷰 완료 ${reviewCount}명 · 1인당 ${rewardPerReview.toLocaleString()} 동전 지급`
+                : '아직 지급된 리뷰 리워드가 없습니다';
+            }
+
             if (!reviews || reviews.length === 0) {
               fbContainer.innerHTML = `
                 <div class="bg-white rounded-2xl border border-dashed border-neutral-300 p-12 text-center flex flex-col items-center justify-center gap-3 shadow-xs">
@@ -8211,16 +8324,21 @@
               fbContainer.innerHTML = reviews.map((r, idx) => {
                 const userNick = r.users?.nickname || '익명 테스터';
                 const ratingStars = '★ '.repeat(Math.round(r.rating || 5));
+                const answers = r.answers && typeof r.answers === 'object' ? r.answers : {};
+                const reviewText = String(
+                  answers.review_text || answers.text || Object.values(answers).find(value => typeof value === 'string') || ''
+                ).trim();
                 return `
-                  <article class="feedback-card bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5">
+                  <article class="feedback-card bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5"
+                    data-has-reply="${r.creator_reply ? 'true' : 'false'}" data-rating="${Number(r.rating) || 0}" data-created-at="${escapeHtml(r.created_at || '')}">
                     <div class="flex items-center justify-between">
                       <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-[#F3F4F6] flex items-center justify-center font-bold text-xs text-neutral-700">
-                          ${userNick.charAt(0)}
+                          ${escapeHtml(userNick.charAt(0))}
                         </div>
                         <div>
                           <div class="flex items-center gap-2">
-                            <span class="font-bold text-sm text-neutral-dark">${userNick}</span>
+                            <span class="font-bold text-sm text-neutral-dark">${escapeHtml(userNick)}</span>
                             <span class="text-xs text-neutral-muted">${r.created_at ? r.created_at.split('T')[0] : '방금 전'}</span>
                           </div>
                           <div class="text-[#8D2B44] text-xs flex gap-0.5 mt-0.5">
@@ -8231,19 +8349,31 @@
                       <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold">[참여자 #${idx + 1}]</span>
                     </div>
 
-                    <div class="bg-canvas-cream/60 border border-[#E9E4C2] rounded-xl p-5 relative">
-                      <p class="text-sm font-medium text-neutral-dark leading-relaxed">
-                        "${r.content || r.feedback_text || '유용한 경험이었습니다.'}"
-                      </p>
-                    </div>
+                    ${reviewText ? `
+                      <div class="bg-canvas-cream/60 border border-[#E9E4C2] rounded-xl p-5 relative">
+                        <p class="text-sm font-medium text-neutral-dark leading-relaxed whitespace-pre-line">${escapeHtml(reviewText)}</p>
+                      </div>
+                    ` : ''}
                   </article>
                 `;
               }).join('');
             }
+            applyFeedbackFilter();
           }
         } catch (err) {
           console.warn('[openFeedbackReport] Warning:', err.message);
+          if (loadingTitleEl) loadingTitleEl.textContent = '리포트를 불러오지 못했습니다';
+          if (loadingContainer) {
+            loadingContainer.innerHTML = `
+              <div class="bg-red-50 rounded-2xl border border-red-200 p-10 text-center text-xs font-bold text-red-700">
+                ${escapeHtml(err.message || '잠시 후 다시 시도해 주세요.')}
+              </div>
+            `;
+          }
         }
+      } else {
+        if (loadingTitleEl) loadingTitleEl.textContent = '리포트를 불러오지 못했습니다';
+        if (loadingContainer) loadingContainer.textContent = '데이터 연결을 확인해 주세요.';
       }
     }
 
@@ -9710,7 +9840,7 @@
     }
 
     function resetCreateProjectForm() {
-      isProjectEditMode = false;
+      clearProjectEditContext();
       const titleInput = document.getElementById('input-test-title');
       const nameInput = document.getElementById('input-service-name');
       const descInput = document.getElementById('input-service-desc');
@@ -9785,16 +9915,24 @@
         input.disabled = false;
         input.classList.remove('cursor-not-allowed');
       });
+      const noLoginRequiredInput = document.querySelector('input[name="loginRequirementMode"][value="none"]');
+      if (noLoginRequiredInput) noLoginRequiredInput.checked = true;
+      handleLoginRequirementChange('none');
 
       handleMainCategoryChange('product');
     }
 
-    function navigateTo(viewKey) {
+    function navigateTo(viewKey, { preserveProjectEdit = false } = {}) {
       if (viewKey === 'create') {
+        if (!preserveProjectEdit && isProjectEditMode) {
+          clearProjectEditContext();
+        }
         if (!isProjectEditMode) {
           resetCreateProjectForm();
         }
         goToStep(1);
+      } else if (isProjectEditMode) {
+        clearProjectEditContext();
       }
       if (!views[viewKey]) return;
 
@@ -10293,6 +10431,45 @@
       list.appendChild(div);
     }
 
+    function updateTestCredentialFieldGuidance(mode) {
+      const accountIdLabel = document.getElementById('label-test-login-id');
+      const accountPasswordLabel = document.getElementById('label-test-login-pw');
+      const accountIdInput = document.getElementById('input-test-login-id');
+      const accountPasswordInput = document.getElementById('input-test-login-pw');
+      const helpText = document.getElementById('test-login-credentials-help');
+      const preservesExistingCredentials = mode === 'required'
+        && Boolean(getActiveProjectEditId())
+        && editingOriginalLoginRequired === true;
+
+      if (accountIdLabel) {
+        accountIdLabel.innerHTML = preservesExistingCredentials
+          ? '테스트용 계정 ID / 이메일 <span class="text-neutral-400 font-medium">(변경 시에만 입력)</span>'
+          : '테스트용 계정 ID / 이메일 <span class="text-red-500">*</span>';
+      }
+      if (accountPasswordLabel) {
+        accountPasswordLabel.innerHTML = preservesExistingCredentials
+          ? '테스트용 계정 비밀번호 <span class="text-neutral-400 font-medium">(변경 시에만 입력)</span>'
+          : '테스트용 계정 비밀번호 <span class="text-red-500">*</span>';
+      }
+      if (accountIdInput) {
+        accountIdInput.required = mode === 'required' && !preservesExistingCredentials;
+        accountIdInput.placeholder = preservesExistingCredentials
+          ? '비워두면 기존 테스트 계정을 유지합니다.'
+          : '예: tester01@dondwae.io (체험 계정)';
+      }
+      if (accountPasswordInput) {
+        accountPasswordInput.required = mode === 'required' && !preservesExistingCredentials;
+        accountPasswordInput.placeholder = preservesExistingCredentials
+          ? '비워두면 기존 비밀번호를 유지합니다.'
+          : '예: test1234!';
+      }
+      if (helpText) {
+        helpText.textContent = preservesExistingCredentials
+          ? '보안을 위해 기존 계정 정보는 다시 표시하지 않습니다. 두 칸을 비워두면 저장된 계정 정보가 유지됩니다.'
+          : '로그인 필수 테스트를 등록하려면 테스터가 사용할 계정 ID와 비밀번호를 모두 입력해 주세요.';
+      }
+    }
+
     function handleLoginRequirementChange(mode) {
       const cardNo = document.getElementById('card-login-req-no');
       const cardYes = document.getElementById('card-login-req-yes');
@@ -10307,6 +10484,7 @@
         if (cardYes) cardYes.className = 'flex items-center justify-between p-3.5 rounded-xl border-2 border-neutral-200 hover:border-neutral-300 cursor-pointer transition-all';
         if (detailFields) detailFields.classList.add('hidden');
       }
+      updateTestCredentialFieldGuidance(mode);
     }
 
     function handleQuestionTypeChange(selectEl) {
@@ -10807,8 +10985,8 @@
         publishButton.disabled = true;
       }
 
-      const wasEditing = isProjectEditMode;
-      const editingProjectId = wasEditing ? (myCreatedTest?.id || currentPostId) : null;
+      const editingProjectId = getActiveProjectEditId();
+      const wasEditing = Boolean(editingProjectId);
 
       try {
       // 1. STEP 1 수집 (공통)
@@ -10855,32 +11033,16 @@
           };
         }
       } else if (currentMainCategory === 'vote') {
-        testCategoryName = `투표 (${currentVoteSubOption.toUpperCase()})`;
         const inputMode = currentVoteInputMode; // 'image' | 'url'
+        testCategoryName = inputMode === 'image' ? '투표 (이미지형)' : '투표 (URL형)';
         let contentData = [];
 
-        if (currentVoteSubOption === 'ab') {
-          if (inputMode === 'image') {
-            contentData = ['A안 이미지 업로드 파일', 'B안 이미지 업로드 파일'];
-          } else {
-            const voteUrlInputs = document.querySelectorAll('#vote-url-list input[type="url"]');
-            contentData = Array.from(voteUrlInputs).map(input => input.value.trim()).filter(Boolean);
-          }
-        } else if (currentVoteSubOption === 'design') {
-          if (inputMode === 'image') {
-            contentData = ['다중 디자인 시안 이미지 업로드 파일들'];
-          } else {
-            const designUrlInputs = document.querySelectorAll('#vote-design-url-list input[type="url"]');
-            designUrlInputs.forEach(inp => { if (inp.value.trim()) contentData.push(inp.value.trim()); });
-            if (contentData.length === 0) contentData.push('https://figma.com/file/example-design');
-          }
-        } else if (currentVoteSubOption === 'landing') {
-          if (inputMode === 'image') {
-            contentData = ['랜딩페이지 1장 스크린샷 파일'];
-          } else {
-            const landingUrl = document.getElementById('input-vote-landing-url')?.value.trim() || 'https://my-landing.example.com';
-            contentData = [landingUrl];
-          }
+        if (inputMode === 'image') {
+          const voteImageInput = document.getElementById('input-vote-multi-images');
+          contentData = Array.from(voteImageInput?.files || []).slice(0, 4).map(file => file.name);
+        } else {
+          const voteUrlInputs = document.querySelectorAll('#vote-url-list input[type="url"]');
+          contentData = Array.from(voteUrlInputs).map(input => input.value.trim()).filter(Boolean).slice(0, 4);
         }
 
         // Extract questions from reusable vote questions list
@@ -10894,7 +11056,6 @@
         }
 
         typeSpecificData = {
-          subType: currentVoteSubOption,
           inputMode: inputMode,
           content: contentData,
           questions: voteQuestions
@@ -11052,9 +11213,16 @@
       const testGuide = (document.getElementById('input-test-guide')?.value || '').trim();
       const reviewsPublic = !document.getElementById('toggle-feedback-privacy')?.checked;
 
-      if (loginRequired && !privacyItems) {
-        throw new Error('로그인이 필요한 테스트는 취급/수집되는 개인정보 항목을 입력해 주세요.');
+      if (typeof dataService.prepareProjectLoginConfiguration !== 'function') {
+        throw new Error('프로젝트 로그인 설정 검증기를 불러오지 못했습니다. 페이지를 새로고침해 주세요.');
       }
+      const loginConfiguration = dataService.prepareProjectLoginConfiguration({
+        loginRequired,
+        testAccountId,
+        testAccountPassword,
+        privacyItems,
+        preserveExistingCredentials: wasEditing && editingOriginalLoginRequired === true
+      });
       if (!testGuide) {
         throw new Error('테스트 진행 방법을 입력해 주세요.');
       }
@@ -11074,17 +11242,14 @@
         thumbnail_url: thumbImgSrc || null,
         category: currentMainCategory === 'none' ? 'survey' : (currentMainCategory || 'product'),
         platform: currentMainCategory === 'none' ? 'none' : (typeSpecificData.platform || 'web'),
-        is_ab_test: isProductAbMode || (currentMainCategory === 'vote' && currentVoteSubOption === 'ab'),
+        is_ab_test: ['product', 'prototype'].includes(currentMainCategory) && isProductAbMode,
         service_url: sUrl,
         ab_url_a: abUrlA,
         ab_url_b: abUrlB,
         app_playstore_url: playstoreUrl,
         app_appstore_url: appstoreUrl,
         external_survey_url: externalSurveyUrl,
-        login_required: loginRequired,
-        test_account_id: testAccountId || null,
-        test_account_pw: testAccountPassword || null,
-        privacy_items: privacyItems || null,
+        ...loginConfiguration,
         test_guide: testGuide,
         questions,
         quizzes,
@@ -11141,7 +11306,7 @@
         ? Math.max(0, userCoinBalance + deficit - totalCost)
         : Math.max(0, userCoinBalance - totalCost);
       updateAllCoinDisplays();
-      isProjectEditMode = false;
+      clearProjectEditContext();
 
       // 3. Create or update top card in Dashboard Feed
       const grid = document.getElementById('dashboard-cards-grid');
@@ -12539,14 +12704,24 @@
       // 새로고침 시 이전에 보던 화면 복원, 없으면 랜딩으로 이동
       const savedView = localStorage.getItem('dondwae_current_view');
       const savedPostId = localStorage.getItem('dondwae_current_post_id');
+      const pendingEditingProjectId = getActiveProjectEditId();
       if (savedView && savedView !== 'landing' && savedView !== 'login') {
         if (savedView === 'post' && savedPostId && typeof openPostDetail === 'function') {
           openPostDetail(savedPostId);
         } else {
-          navigateTo(savedView);
+          navigateTo(savedView, {
+            preserveProjectEdit: savedView === 'create' && Boolean(pendingEditingProjectId)
+          });
         }
       } else {
         navigateTo('landing');
+      }
+
+      if (savedView === 'create' && pendingEditingProjectId) {
+        setTimeout(async () => {
+          const restored = await openEditPostModal(pendingEditingProjectId);
+          if (!restored) navigateTo('create');
+        }, 0);
       }
 
       setTimeout(() => {

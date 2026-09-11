@@ -169,6 +169,60 @@ const PROJECT_URL_COLUMNS = [
 ];
 
 /**
+ * Keep the browser payload aligned with projects_login_configuration_valid.
+ * Existing credentials are never returned by public project reads. During an
+ * edit they may therefore be omitted so PostgreSQL preserves the stored pair.
+ */
+export function prepareProjectLoginConfiguration({
+  loginRequired = false,
+  testAccountId = '',
+  testAccountPassword = '',
+  privacyItems = '',
+  preserveExistingCredentials = false
+} = {}) {
+  if (loginRequired !== true) {
+    return {
+      login_required: false,
+      test_account_id: null,
+      test_account_pw: null,
+      privacy_items: null
+    };
+  }
+
+  const accountId = typeof testAccountId === 'string' ? testAccountId.trim() : '';
+  const accountPassword = typeof testAccountPassword === 'string' ? testAccountPassword.trim() : '';
+  const normalizedPrivacyItems = typeof privacyItems === 'string' ? privacyItems.trim() : '';
+
+  if (!normalizedPrivacyItems) {
+    throw new Error('로그인이 필요한 테스트는 취급/수집되는 개인정보 항목을 입력해 주세요.');
+  }
+  if (normalizedPrivacyItems.length > 1000) {
+    throw new Error('개인정보 항목은 1,000자 이하로 입력해 주세요.');
+  }
+  if ((accountId && !accountPassword) || (!accountId && accountPassword)) {
+    throw new Error('테스트용 계정 ID와 비밀번호를 모두 입력해 주세요.');
+  }
+  if ((!accountId || !accountPassword) && !preserveExistingCredentials) {
+    throw new Error('로그인이 필요한 테스트는 테스트용 계정 ID와 비밀번호를 모두 입력해 주세요.');
+  }
+  if (accountId.length > 200 || accountPassword.length > 200) {
+    throw new Error('테스트용 계정 ID와 비밀번호는 각각 200자 이하로 입력해 주세요.');
+  }
+
+  const configuration = {
+    login_required: true,
+    privacy_items: normalizedPrivacyItems
+  };
+
+  if (accountId && accountPassword) {
+    configuration.test_account_id = accountId;
+    configuration.test_account_pw = accountPassword;
+  }
+
+  return configuration;
+}
+
+/**
  * Canonicalize user-entered URLs before they cross the Data API boundary.
  * Empty optional fields become null and schemeless hostnames receive https://.
  */
@@ -224,6 +278,19 @@ export function prepareProjectPayload(projectPayload = {}, { forUpdate = false }
 
   if (!forUpdate && !payload.creator_id) {
     throw new Error('로그인 사용자 정보가 없어 프로젝트를 등록할 수 없습니다.');
+  }
+
+  if (!forUpdate) {
+    Object.assign(payload, prepareProjectLoginConfiguration({
+      loginRequired: payload.login_required === true,
+      testAccountId: payload.test_account_id,
+      testAccountPassword: payload.test_account_pw,
+      privacyItems: payload.privacy_items
+    }));
+  } else if (payload.login_required === false) {
+    payload.test_account_id = null;
+    payload.test_account_pw = null;
+    payload.privacy_items = null;
   }
 
   return payload;

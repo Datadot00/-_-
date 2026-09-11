@@ -53,5 +53,7 @@ test('기준 스키마와 등록 화면도 6단계 모델을 따른다', () => {
   assert.match(schema, /CONSTRAINT reviews_participation_identity_fkey/i);
   assert.match(schema, /CONSTRAINT notifications_type_valid/i);
   assert.match(page, /currentMainCategory === 'none' \? 'survey'/);
-  assert.match(page, /!testAccountId \|\| !testAccountPassword \|\| !privacyItems/);
+  assert.match(schema, /CONSTRAINT projects_login_configuration_valid/i);
+  assert.match(page, /dataService\.prepareProjectLoginConfiguration\(\{/);
+  assert.match(page, /preserveExistingCredentials: wasEditing && editingOriginalLoginRequired === true/);
 });
