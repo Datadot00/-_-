@@ -1004,7 +1004,7 @@
             백을 모으고 리워드를 받아가세요.
           </p>
 
-          <button id="btn-landing-validate-service" onclick="navigateTo('login')"
+          <button id="btn-landing-validate-service" type="button"
             class="group w-full sm:w-[320px] h-[58px] bg-[#191A1C] hover:bg-[#27272A] border-2 border-[#191A1C] rounded-2xl flex items-center justify-center gap-3 px-6 shadow-sm hover:shadow-md transition-all duration-200 transform active:scale-98 focus:outline-none cursor-pointer">
             <span class="text-xl">🚀</span>
             <span
@@ -7129,7 +7129,7 @@
           thumbImg.classList.remove('hidden');
           if (removeThumbBtn) removeThumbBtn.classList.remove('hidden');
         } else {
-          thumbImg.src = '';
+          thumbImg.removeAttribute('src');
           thumbImg.classList.add('hidden');
           if (removeThumbBtn) removeThumbBtn.classList.add('hidden');
         }
@@ -7367,7 +7367,7 @@
       const cardThumb = document.getElementById('home-card-moneylog-thumbnail');
       if (cardThumb) {
         cardThumb.innerHTML = `
-          <img src="${myCreatedTest.thumbnailUrl}" class="w-full h-full object-cover rounded-lg" alt="썸네일 이미지" />
+          <img src="${myCreatedTest.thumbnailUrl}" onerror="handleBrokenProjectThumbnail(this)" data-thumbnail-variant="card" class="w-full h-full object-cover rounded-lg" alt="썸네일 이미지" />
         `;
         cardThumb.classList.remove('p-3', 'flex-col', 'justify-between');
         cardThumb.classList.add('p-0');
@@ -7570,8 +7570,9 @@
             }
           }
           if (!contentStr) {
-            contentStr = r.content || r.feedback_text || '테스트에 참여하여 소중한 피드백을 전달해 주셨습니다.';
+            contentStr = r.content || r.feedback_text || '';
           }
+          contentStr = String(contentStr).trim();
 
           return `
             <article class="bg-white rounded-[22px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col gap-4">
@@ -7596,9 +7597,11 @@
                 </span>
               </div>
               
-              <div class="p-4 rounded-xl bg-[#FAFBF7] border border-[#EAEFE0] text-xs text-neutral-700 font-medium leading-relaxed whitespace-pre-line">
-                ${escapeHtml(contentStr)}
-              </div>
+              ${contentStr ? `
+                <div class="p-4 rounded-xl bg-[#FAFBF7] border border-[#EAEFE0] text-xs text-neutral-700 font-medium leading-relaxed whitespace-pre-line">
+                  ${escapeHtml(contentStr)}
+                </div>
+              ` : ''}
 
               ${r.creator_reply ? `
                 <div class="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 ml-3 sm:ml-6 flex flex-col gap-1.5">
@@ -7615,6 +7618,38 @@
           `;
         }).join('');
       }
+    }
+
+    function handleBrokenProjectThumbnail(image) {
+      if (!image) return;
+
+      if (image.id === 'thumbnail-img-preview') {
+        image.removeAttribute('src');
+        image.classList.add('hidden');
+        document.getElementById('btn-remove-thumbnail')?.classList.add('hidden');
+        return;
+      }
+
+      const isCard = image.dataset.thumbnailVariant === 'card';
+      const fallback = document.createElement('div');
+      fallback.className = isCard
+        ? 'w-full h-full bg-blue-50/70 flex flex-col items-center justify-center gap-1 text-center'
+        : 'w-full min-h-[220px] rounded-xl bg-[#F9FBEC] border border-[#DCE4B8] flex flex-col items-center justify-center gap-2 px-6 text-center';
+      fallback.setAttribute('role', 'img');
+      fallback.setAttribute('aria-label', '등록된 서비스 이미지가 없어 기본 미리보기를 표시합니다.');
+
+      const icon = document.createElement('span');
+      icon.className = isCard ? 'text-xl' : 'text-3xl';
+      icon.textContent = '🖼️';
+
+      const message = document.createElement('span');
+      message.className = isCard
+        ? 'text-[11px] font-bold text-blue-900'
+        : 'text-xs font-extrabold text-[#2F6517]';
+      message.textContent = isCard ? '서비스 미리보기' : '등록된 서비스 이미지를 불러올 수 없습니다.';
+
+      fallback.append(icon, message);
+      image.replaceWith(fallback);
     }
 
     window.renderDBProjectToDetail = function(test) {
@@ -7846,7 +7881,7 @@
         if (test.thumbnail_url) {
           mockupBody.innerHTML = `
             <div class="w-full rounded-2xl overflow-hidden shadow-subtle border border-neutral-200 bg-white p-2">
-              <img src="${test.thumbnail_url}" class="w-full h-auto max-h-[480px] object-contain rounded-xl" alt="서비스 첨부 이미지 미리보기" />
+              <img src="${test.thumbnail_url}" onerror="handleBrokenProjectThumbnail(this)" data-thumbnail-variant="detail" class="w-full h-auto max-h-[480px] object-contain rounded-xl" alt="서비스 첨부 이미지 미리보기" />
             </div>
           `;
         } else {
@@ -8272,7 +8307,7 @@
           if (test.thumbnailUrl) {
             mockupBody.innerHTML = `
               <div class="w-full rounded-2xl overflow-hidden shadow-subtle border border-neutral-200 bg-white p-2">
-                <img src="${test.thumbnailUrl}" class="w-full h-auto max-h-[480px] object-contain rounded-xl" alt="서비스 첨부 이미지 미리보기" />
+                <img src="${test.thumbnailUrl}" onerror="handleBrokenProjectThumbnail(this)" data-thumbnail-variant="detail" class="w-full h-auto max-h-[480px] object-contain rounded-xl" alt="서비스 첨부 이미지 미리보기" />
               </div>
             `;
           } else {
@@ -9488,8 +9523,8 @@
 
           <!-- 상세 리뷰 작성 -->
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-neutral-800">3. 사용 후기 및 버그/개선점 서술 <span class="text-red-500">*</span></label>
-            <textarea rows="4" placeholder="실제 서비스를 체험하시면서 느낀 좋았던 점, 버그, 아쉬운 UX 등을 구체적으로 남겨주세요 (최소 20자 이상)" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary leading-relaxed"></textarea>
+            <label class="text-xs font-bold text-neutral-800">3. 사용 후기 및 버그/개선점 서술 <span class="font-medium text-neutral-400">(선택)</span></label>
+            <textarea rows="4" placeholder="선택 사항입니다. 실제 서비스를 체험하며 느낀 점이나 버그, 개선 아이디어가 있다면 자유롭게 남겨주세요." class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary leading-relaxed"></textarea>
           </div>
 
           <!-- 캡처 이미지 첨부 (선택) -->
@@ -9532,10 +9567,6 @@
       const modalBody = document.getElementById('fb-modal-dynamic-body');
       const textareas = [...(modalBody?.querySelectorAll('textarea') || [])];
       const reviewText = textareas.map(input => input.value.trim()).filter(Boolean).join('\n\n');
-      if (!reviewText) {
-        showGenericToast('피드백 내용을 입력해 주세요.', '✍️');
-        return;
-      }
 
       const quizAnswers = {};
       modalBody?.querySelectorAll('.fb-quiz-answer-input').forEach((input, index) => {
@@ -9586,9 +9617,11 @@
               </div>
               <span class="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] text-xs font-semibold">피드백 저장 완료</span>
             </div>
-            <div class="bg-canvas-cream/80 border border-[#E9E4C2] rounded-xl p-5">
-              <p class="text-sm font-medium text-neutral-dark leading-relaxed whitespace-pre-line">${escapeHtml(reviewText)}</p>
-            </div>
+            ${reviewText ? `
+              <div class="bg-canvas-cream/80 border border-[#E9E4C2] rounded-xl p-5">
+                <p class="text-sm font-medium text-neutral-dark leading-relaxed whitespace-pre-line">${escapeHtml(reviewText)}</p>
+              </div>
+            ` : ''}
             <div class="text-[11px] text-neutral-muted flex items-center justify-between">
               <span>리뷰·참여 상태·리워드가 하나의 트랜잭션으로 저장되었습니다.</span>
               <span class="font-bold text-primary-dark">+${reward.toLocaleString()} 동전</span>
@@ -9726,7 +9759,7 @@
       const thumbImg = document.getElementById('thumbnail-img-preview');
       const removeThumbBtn = document.getElementById('btn-remove-thumbnail');
       if (thumbImg) {
-        thumbImg.src = '';
+        thumbImg.removeAttribute('src');
         thumbImg.classList.add('hidden');
       }
       if (removeThumbBtn) removeThumbBtn.classList.add('hidden');
@@ -10240,7 +10273,7 @@
       const removeBtn = document.getElementById('btn-remove-thumbnail');
       if (fileInput) fileInput.value = '';
       if (previewImg) {
-        previewImg.src = '';
+        previewImg.removeAttribute('src');
         previewImg.classList.add('hidden');
       }
       if (removeBtn) removeBtn.classList.add('hidden');
@@ -10782,7 +10815,10 @@
       const tTitle = (document.getElementById('input-test-title')?.value || '').trim();
       const sName = (document.getElementById('input-service-name')?.value || '').trim();
       const sDesc = (document.getElementById('input-service-desc')?.value || '').trim();
-      const thumbImgSrc = document.getElementById('thumbnail-img-preview')?.src || '';
+      const thumbnailPreview = document.getElementById('thumbnail-img-preview');
+      const thumbImgSrc = thumbnailPreview && !thumbnailPreview.classList.contains('hidden')
+        ? (thumbnailPreview.getAttribute('src') || '')
+        : '';
 
       if (!tTitle) {
         throw new Error('테스트 제목을 입력해 주세요.');
@@ -12275,15 +12311,18 @@
 
         card.innerHTML = `
           <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
-            <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden p-3 flex flex-col justify-between">
-              <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
-                <span class="font-bold text-neutral-700">${p.service_name || p.title}</span>
-                <span class="text-blue-600 font-bold">${isAb ? 'A/B 안' : '베타테스트'}</span>
-              </div>
-              ${p.thumbnail_url ? `<img src="${p.thumbnail_url}" class="w-full h-24 object-cover rounded my-1" alt="미리보기" />` : `
-              <div class="flex items-center justify-center flex-1 bg-blue-50/50 rounded my-1 text-center">
-                <span class="text-xs font-bold text-blue-900">${p.service_name || '서비스 테스트'}</span>
-              </div>`}
+            <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden ${p.thumbnail_url ? '' : 'p-3 flex flex-col justify-between'}">
+              ${p.thumbnail_url ? `
+                <img src="${p.thumbnail_url}" onerror="handleBrokenProjectThumbnail(this)" data-thumbnail-variant="card" loading="lazy" decoding="async" class="w-full h-full object-cover" alt="${p.service_name || p.title} 미리보기" />
+              ` : `
+                <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
+                  <span class="font-bold text-neutral-700">${p.service_name || p.title}</span>
+                  <span class="text-blue-600 font-bold">${isAb ? 'A/B 안' : '베타테스트'}</span>
+                </div>
+                <div class="flex items-center justify-center flex-1 bg-blue-50/50 rounded my-1 text-center">
+                  <span class="text-xs font-bold text-blue-900">${p.service_name || '서비스 테스트'}</span>
+                </div>
+              `}
             </div>
             <div class="absolute top-5 left-5 flex items-center gap-2">
               <span class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-xs border border-neutral-200 text-neutral-700 text-[11px] font-bold">

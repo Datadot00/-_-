@@ -67,3 +67,11 @@ test('does not restore an unscoped project cache across login accounts', () => {
   assert.equal(html.includes("localStorage.getItem('don_dwae_my_created_test')"), false);
   assert.equal(html.includes("localStorage.setItem('don_dwae_my_created_test'"), false);
 });
+
+test('does not persist the current page URL when no thumbnail was selected', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.equal(html.includes("thumbImg.src = '';"), false);
+  assert.equal(html.includes("previewImg.src = '';"), false);
+  assert.match(html, /thumbnailPreview\.getAttribute\('src'\)/);
+  assert.match(html, /onerror="handleBrokenProjectThumbnail\(this\)"/);
+});

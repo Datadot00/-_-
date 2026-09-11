@@ -4,10 +4,32 @@ import assert from 'node:assert/strict';
 import {
   clearExistingLocalSession,
   clearLocalSession,
+  getActiveSessionUser,
   getAuthErrorMessage,
   signInWithEmail,
   signUpWithEmail
 } from '../src/authService.js';
+
+test('returns the signed-in user from the active browser session', async () => {
+  const user = { id: 'active-user', email: 'active@example.com' };
+  const client = {
+    auth: {
+      getSession: async () => ({ data: { session: { user } }, error: null })
+    }
+  };
+
+  assert.equal(await getActiveSessionUser(client), user);
+});
+
+test('returns null when the browser has no active session', async () => {
+  const client = {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: null })
+    }
+  };
+
+  assert.equal(await getActiveSessionUser(client), null);
+});
 
 test('로그인 오류를 회원가입으로 우회하지 않는다', async () => {
   const invalidCredentials = Object.assign(new Error('Invalid login credentials'), {

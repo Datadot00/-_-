@@ -30,6 +30,7 @@ export const PROJECT_CARD_COLUMNS = [
   'creator_id',
   'title',
   'service_name',
+  'thumbnail_url',
   'category',
   'platform',
   'is_ab_test',

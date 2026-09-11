@@ -35,11 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    const liveProjects = await dataService.fetchExploreProjects();
-    if (liveProjects && liveProjects.length > 0) {
-      console.log(`[Don Dwae] Loaded ${liveProjects.length} live projects from Supabase DB.`);
-    }
-
     const marketItems = await dataService.fetchMarketplaceItems();
     if (marketItems && marketItems.length > 0) {
       console.log(`[Don Dwae] Loaded ${marketItems.length} active items from Supabase Marketplace.`);

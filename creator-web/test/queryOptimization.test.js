@@ -16,6 +16,7 @@ const migration = readFileSync(
   'utf8'
 );
 const schema = readFileSync(new URL('../supabase_schema.sql', import.meta.url), 'utf8');
+const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
 test('프로젝트 검색어는 와일드카드를 제거하고 길이를 제한한다', () => {
   assert.equal(sanitizeProjectSearchQuery('  머니%__  로그  '), '머니 로그');
@@ -23,14 +24,15 @@ test('프로젝트 검색어는 와일드카드를 제거하고 길이를 제한
   assert.equal(sanitizeProjectSearchQuery(null), '');
 });
 
-test('피드 카드 조회는 상세 JSON과 민감 필드를 가져오지 않는다', () => {
+test('피드 카드 조회는 카드 썸네일만 포함하고 상세 JSON과 민감 필드를 가져오지 않는다', () => {
   const cardColumns = PROJECT_CARD_COLUMNS.split(',');
   assert.equal(cardColumns.includes('questions'), false);
   assert.equal(cardColumns.includes('quizzes'), false);
   assert.equal(cardColumns.includes('service_desc'), false);
-  assert.equal(cardColumns.includes('thumbnail_url'), false);
+  assert.equal(cardColumns.includes('thumbnail_url'), true);
   assert.equal(cardColumns.includes('test_account_pw'), false);
   assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('questions'), true);
+  assert.match(html, /data-thumbnail-variant="card"[^>]*loading="lazy"[^>]*class="w-full h-full object-cover"/);
 });
 
 test('검색·정렬 쿼리는 생성 검색 컬럼과 선택적 페이지 범위를 사용한다', () => {

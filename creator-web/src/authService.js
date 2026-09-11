@@ -90,6 +90,15 @@ export async function clearLocalSession(client) {
   if (error) throw error;
 }
 
+export async function getActiveSessionUser(client) {
+  requireAuthClient(client);
+
+  const { data, error } = await client.auth.getSession();
+  if (error) throw error;
+
+  return data?.session?.user || null;
+}
+
 export async function clearExistingLocalSession(client) {
   requireAuthClient(client);
 

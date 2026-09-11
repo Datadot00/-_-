@@ -41,6 +41,21 @@ test('리뷰 payload는 잘못된 프로젝트와 별점을 거부한다', () =>
   );
 });
 
+test('서술형 사용 후기는 선택 사항이며 빈 내용으로도 리뷰를 제출할 수 있다', () => {
+  const payload = prepareReviewRpcPayload({
+    projectId: '11111111-1111-1111-1111-111111111111',
+    rating: 5,
+    answers: { review_text: '' }
+  });
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+
+  assert.deepEqual(payload.p_answers, { review_text: '' });
+  assert.match(html, /사용 후기 및 버그\/개선점 서술 <span[^>]*>\(선택\)<\/span>/);
+  assert.doesNotMatch(html, /if\s*\(!reviewText\)/);
+  assert.doesNotMatch(html, /사용 후기 및 버그\/개선점 서술 <span class="text-red-500">\*<\/span>/);
+  assert.doesNotMatch(html, /별도의 서술형 후기는 작성하지 않았습니다/);
+});
+
 test('클라이언트 프로필 수정으로 등록 자격을 조작할 수 없다', () => {
   assert.deepEqual(sanitizeUserProfileUpdates({ nickname: '테스터', has_passed_gating: true }), { nickname: '테스터' });
 });

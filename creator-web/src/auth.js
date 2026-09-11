@@ -1,6 +1,7 @@
 import { supabase } from './dataService.js';
 import {
   clearExistingLocalSession,
+  getActiveSessionUser,
   getAuthErrorMessage,
   requestPasswordReset,
   resendSignupConfirmation,
@@ -47,7 +48,8 @@ const elements = {
   newPasswordConfirmation: document.getElementById('auth-new-password-confirm-input'),
   passwordUpdateButton: document.getElementById('btn-auth-password-update'),
   errorMessage: document.getElementById('auth-error-msg'),
-  successMessage: document.getElementById('auth-success-msg')
+  successMessage: document.getElementById('auth-success-msg'),
+  landingValidateButton: document.getElementById('btn-landing-validate-service')
 };
 
 let authMode = 'login';
@@ -563,6 +565,35 @@ async function handleAuthSubmit(event) {
   }
 }
 
+async function handleLandingValidateService(event) {
+  event?.preventDefault();
+
+  if (currentUser) {
+    navigateTo('explore');
+    return;
+  }
+
+  if (!supabase) {
+    navigateTo('login');
+    return;
+  }
+
+  try {
+    const sessionUser = await getActiveSessionUser(supabase);
+    applyAuthenticatedUser(sessionUser);
+
+    if (sessionUser) {
+      recordUserActivity();
+      navigateTo('explore');
+      return;
+    }
+  } catch (error) {
+    console.warn('[Auth] Could not verify the session before navigation:', error);
+  }
+
+  navigateTo('login');
+}
+
 async function handleSignOut() {
   if (!supabase || authRequestInFlight) return;
 
@@ -603,6 +634,7 @@ function handlePasswordVisibility(button) {
 
 function bindAuthenticationEvents() {
   elements.form?.addEventListener('submit', handleAuthSubmit);
+  elements.landingValidateButton?.addEventListener('click', handleLandingValidateService);
   elements.passwordUpdateForm?.addEventListener('submit', handlePasswordUpdate);
   elements.loginModeButton?.addEventListener('click', () => setAuthMode('login'));
   elements.signupModeButton?.addEventListener('click', () => setAuthMode('signup'));
