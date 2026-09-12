@@ -52,7 +52,8 @@ test('기준 스키마와 등록 화면도 6단계 모델을 따른다', () => {
   assert.match(schema, /CONSTRAINT users_gating_consistent/i);
   assert.match(schema, /CONSTRAINT reviews_participation_identity_fkey/i);
   assert.match(schema, /CONSTRAINT notifications_type_valid/i);
-  assert.match(page, /currentMainCategory === 'none' \? 'survey'/);
+  assert.match(page, /category: currentMainCategory \|\| 'product'/);
+  assert.match(page, /platform: currentMainCategory === 'survey' \? 'none'/);
   assert.match(schema, /CONSTRAINT projects_login_configuration_valid/i);
   assert.match(page, /dataService\.prepareProjectLoginConfiguration\(\{/);
   assert.match(page, /preserveExistingCredentials: wasEditing && editingOriginalLoginRequired === true/);
@@ -67,5 +68,30 @@ test('플랫폼 none 허용 및 로그인 필수 시 계정 정보 선택사항 
   assert.match(latestMigration, /\(test_account_id is null and test_account_pw is null\)/i);
   assert.match(schema, /platform IN \('web', 'app', 'none'\)/i);
   assert.match(schema, /\(test_account_id IS NULL AND test_account_pw IS NULL\)/i);
+});
+
+test('프로젝트 참여 검증은 미선택 또는 퀴즈·스크린샷 중 하나만 허용한다', () => {
+  const optionalVerificationMigration = readFileSync(
+    new URL('../supabase/migrations/20260912100000_make_project_verification_optional.sql', import.meta.url),
+    'utf8'
+  );
+
+  assert.match(optionalVerificationMigration, /SET DEFAULT 'none'/i);
+  assert.match(optionalVerificationMigration, /verification_method IN \('none', 'quiz', 'screenshot'\)/i);
+  assert.match(optionalVerificationMigration, /sanitize_optional_review_verification/i);
+  assert.match(schema, /verification_method TEXT NOT NULL DEFAULT 'none'/i);
+  assert.match(schema, /verification_method IN \('none', 'quiz', 'screenshot'\)/i);
+});
+
+test('개발 환경 태그와 권장 참여 대상 태그는 DB에서도 분리한다', () => {
+  const tagMigration = readFileSync(
+    new URL('../supabase/migrations/20260912110000_separate_project_tech_and_persona_tags.sql', import.meta.url),
+    'utf8'
+  );
+
+  assert.match(tagMigration, /ADD COLUMN IF NOT EXISTS target_persona_tags TEXT\[\]/i);
+  assert.match(tagMigration, /GRANT SELECT \(target_persona_tags\)/i);
+  assert.match(schema, /tech_tags TEXT\[\][\s\S]{0,80}target_persona_tags TEXT\[\]/i);
+  assert.match(schema, /CARDINALITY\(target_persona_tags\) <= 20/i);
 });
 

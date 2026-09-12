@@ -74,6 +74,8 @@ CREATE TABLE IF NOT EXISTS public.projects (
   test_guide TEXT NOT NULL DEFAULT '',
   questions JSONB NOT NULL DEFAULT '[]'::jsonb,
   quizzes JSONB NOT NULL DEFAULT '[]'::jsonb,
+  -- 검증 수단은 선택 사항이며, 선택 시 퀴즈와 스크린샷 중 하나만 사용한다.
+  verification_method TEXT NOT NULL DEFAULT 'none',
   duration TEXT NOT NULL DEFAULT '3분 내외',
   start_date DATE NOT NULL DEFAULT CURRENT_DATE,
   end_date DATE NOT NULL DEFAULT (CURRENT_DATE + INTERVAL '14 days'),
@@ -84,6 +86,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
   is_reviews_public BOOLEAN NOT NULL DEFAULT TRUE,
   status TEXT NOT NULL DEFAULT 'recruiting', -- 'reviewing', 'recruiting', 'completed', 'paused'
   tech_tags TEXT[] DEFAULT '{}',
+  target_persona_tags TEXT[] DEFAULT '{}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   search_text TEXT GENERATED ALWAYS AS (
     title || ' ' || service_name || ' ' || service_desc
@@ -129,10 +132,19 @@ CREATE TABLE IF NOT EXISTS public.projects (
     AND CHAR_LENGTH(test_guide) <= 5000
     AND CHAR_LENGTH(duration) BETWEEN 1 AND 50
     AND (tech_tags IS NULL OR CARDINALITY(tech_tags) <= 20)
+    AND (target_persona_tags IS NULL OR CARDINALITY(target_persona_tags) <= 20)
   ),
   CONSTRAINT projects_json_shapes_valid CHECK (
     JSONB_TYPEOF(questions) = 'array' AND JSONB_ARRAY_LENGTH(questions) <= 50
     AND JSONB_TYPEOF(quizzes) = 'array' AND JSONB_ARRAY_LENGTH(quizzes) <= 50
+  ),
+  CONSTRAINT projects_verification_method_valid
+    CHECK (verification_method IN ('none', 'quiz', 'screenshot')),
+  CONSTRAINT projects_verification_method_payload_valid
+    CHECK (
+      verification_method = 'quiz'
+      OR JSONB_TYPEOF(quizzes) <> 'array'
+      OR JSONB_ARRAY_LENGTH(quizzes) = 0
   ),
   CONSTRAINT projects_destination_valid CHECK (
     category NOT IN ('product', 'prototype')
@@ -243,9 +255,13 @@ CREATE TABLE IF NOT EXISTS public.reviews (
     JSONB_TYPEOF(answers) IN ('object', 'array')
     AND (quiz_answers IS NULL OR JSONB_TYPEOF(quiz_answers) IN ('object', 'array'))
   ),
+  -- 스크린샷 증빙은 외부 링크와 첨부 이미지(data URL)를 모두 허용한다.
   CONSTRAINT reviews_screenshot_url_http_check CHECK (
     screenshot_url IS NULL
-    OR (CHAR_LENGTH(screenshot_url) <= 2048 AND screenshot_url ~* '^https?://[^[:space:]]+$')
+    OR (CHAR_LENGTH(screenshot_url) <= 3000000 AND (
+      screenshot_url ~* '^https?://[^[:space:]]+$'
+      OR screenshot_url ~* '^data:image/(png|jpe?g|gif|webp);base64,[a-z0-9+/=]+$'
+    ))
   ),
   CONSTRAINT reviews_reply_consistent CHECK (
     (creator_reply IS NULL AND creator_replied_at IS NULL)
@@ -256,6 +272,56 @@ CREATE TABLE IF NOT EXISTS public.reviews (
     )
   )
 );
+
+CREATE OR REPLACE FUNCTION private.sanitize_optional_review_verification()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_verification_method TEXT;
+  v_project_quizzes JSONB;
+BEGIN
+  SELECT COALESCE(project.verification_method, 'none'), COALESCE(project.quizzes, '[]'::JSONB)
+  INTO v_verification_method, v_project_quizzes
+  FROM public.projects AS project
+  WHERE project.id = NEW.project_id;
+
+  IF v_verification_method = 'none' THEN
+    NEW.quiz_answers := '{}'::JSONB;
+    NEW.is_quiz_passed := TRUE;
+    NEW.screenshot_url := NULL;
+  ELSIF v_verification_method = 'screenshot' THEN
+    IF NEW.screenshot_url IS NULL OR BTRIM(NEW.screenshot_url) = '' THEN
+      RAISE EXCEPTION 'screenshot is required for this project' USING ERRCODE = '22023';
+    END IF;
+    NEW.quiz_answers := '{}'::JSONB;
+    NEW.is_quiz_passed := TRUE;
+  ELSE
+    IF JSONB_TYPEOF(v_project_quizzes) = 'array'
+      AND JSONB_ARRAY_LENGTH(v_project_quizzes) > 0
+      AND (
+        NEW.quiz_answers IS NULL
+        OR JSONB_TYPEOF(NEW.quiz_answers) <> 'object'
+        OR NEW.quiz_answers = '{}'::JSONB
+      )
+    THEN
+      RAISE EXCEPTION 'quiz answers are required for this project' USING ERRCODE = '22023';
+    END IF;
+    NEW.screenshot_url := NULL;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS reviews_sanitize_optional_verification ON public.reviews;
+CREATE TRIGGER reviews_sanitize_optional_verification
+BEFORE INSERT OR UPDATE OF project_id, quiz_answers, is_quiz_passed, screenshot_url
+ON public.reviews
+FOR EACH ROW
+EXECUTE FUNCTION private.sanitize_optional_review_verification();
 
 -- 5. Create Coin Wallets Table (이원화 화폐 지갑)
 CREATE TABLE IF NOT EXISTS public.coin_wallets (
@@ -588,25 +654,25 @@ GRANT SELECT (
   id, creator_id, title, service_name, service_desc, test_notice,
   thumbnail_url, category, platform, is_ab_test, service_url, ab_url_a,
   ab_url_b, app_playstore_url, app_appstore_url, external_survey_url, login_required,
-  privacy_items, test_guide, questions, quizzes, duration, start_date,
+  privacy_items, test_guide, questions, quizzes, verification_method, duration, start_date,
   end_date, target_count, current_count, reward_coin, total_funded_cost,
-  is_reviews_public, status, tech_tags, created_at, search_text
+  is_reviews_public, status, tech_tags, target_persona_tags, created_at, search_text
 ) ON TABLE public.projects TO anon, authenticated;
 GRANT INSERT (
   creator_id, title, service_name, service_desc, test_notice, thumbnail_url,
   category, platform, is_ab_test, service_url, ab_url_a, ab_url_b,
   app_playstore_url, app_appstore_url, external_survey_url, login_required, test_account_id,
-  test_account_pw, privacy_items, test_guide, questions, quizzes, duration,
+  test_account_pw, privacy_items, test_guide, questions, quizzes, verification_method, duration,
   start_date, end_date, target_count, reward_coin, total_funded_cost,
-  is_reviews_public, status, tech_tags
+  is_reviews_public, status, tech_tags, target_persona_tags
 ) ON TABLE public.projects TO authenticated;
 GRANT UPDATE (
   title, service_name, service_desc, test_notice, thumbnail_url, category,
   platform, is_ab_test, ab_url_a, ab_url_b, app_playstore_url,
   app_appstore_url, external_survey_url, login_required, test_account_id, test_account_pw,
-  privacy_items, test_guide, questions, quizzes, duration, start_date,
+  privacy_items, test_guide, questions, quizzes, verification_method, duration, start_date,
   end_date, target_count, reward_coin, total_funded_cost, is_reviews_public,
-  status, tech_tags
+  status, tech_tags, target_persona_tags
 ) ON TABLE public.projects TO authenticated;
 GRANT DELETE ON TABLE public.projects TO authenticated;
 
@@ -861,8 +927,11 @@ BEGIN
     RAISE EXCEPTION 'quiz answers must be a JSON object or array' USING ERRCODE = '22023';
   END IF;
   IF p_screenshot_url IS NOT NULL AND (
-    CHAR_LENGTH(p_screenshot_url) > 2048
-    OR p_screenshot_url !~* '^https?://[^[:space:]]+$'
+    CHAR_LENGTH(p_screenshot_url) > 3000000
+    OR (
+      p_screenshot_url !~* '^https?://[^[:space:]]+$'
+      AND p_screenshot_url !~* '^data:image/(png|jpe?g|gif|webp);base64,[a-z0-9+/=]+$'
+    )
   ) THEN
     RAISE EXCEPTION 'screenshot URL is invalid' USING ERRCODE = '22023';
   END IF;

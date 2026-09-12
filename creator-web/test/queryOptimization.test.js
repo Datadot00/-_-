@@ -6,6 +6,7 @@ import {
   NOTIFICATION_COLUMNS,
   PARTICIPATION_COLUMNS,
   PROJECT_CARD_COLUMNS,
+  PROJECT_PUBLIC_LEGACY_COLUMNS,
   PROJECT_PUBLIC_COLUMNS,
   sanitizeProjectSearchQuery
 } from '../src/dataService.js';
@@ -47,6 +48,32 @@ test('참여와 알림 조회는 SELECT 별표 대신 명시 컬럼을 사용한
   assert.equal(NOTIFICATION_COLUMNS.split(',').includes('target_url'), true);
   assert.doesNotMatch(service, /from\('notifications'\)[\s\S]{0,80}\.select\('\*'\)/);
   assert.doesNotMatch(service, /from\('participations'\)[\s\S]{0,80}\.select\(`\s*\*/);
+});
+
+test('점진적 프로젝트 컬럼 마이그레이션 전에도 기존 프로젝트 목록 조회를 유지한다', () => {
+  assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('verification_method'), true);
+  assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('target_persona_tags'), true);
+  assert.equal(PROJECT_PUBLIC_LEGACY_COLUMNS.split(',').includes('verification_method'), false);
+  assert.equal(PROJECT_PUBLIC_LEGACY_COLUMNS.split(',').includes('target_persona_tags'), false);
+  assert.match(service, /runProjectQueryWithColumnFallback\(fetchParticipated\)/);
+  assert.match(service, /runProjectQueryWithColumnFallback\(fetchScraps\)/);
+});
+
+test('탐색 썸네일은 내 프로젝트와 참여완료 상태를 개인별로 구분한다', () => {
+  assert.match(service, /participation_status:\s*participation\.status/);
+  assert.match(service, /participation_completed_at:\s*participation\.completed_at/);
+  assert.match(html, /data-feed-personal-status/);
+  assert.match(html, /내 프로젝트/);
+  assert.match(html, /참여완료/);
+  assert.match(html, /refreshFeedPersonalState\(projectId\)/);
+});
+
+test('전체 프로젝트 홈 피드는 A/B 테스트 칩과 카드를 노출하지 않는다', () => {
+  assert.doesNotMatch(html, /onclick="filterFeed\('abtest'/);
+  assert.doesNotMatch(html, /data-category="abtest"/);
+  assert.match(service, /\.eq\('is_ab_test', false\)/);
+  assert.match(service, /\.neq\('category', 'abtest'\)/);
+  assert.doesNotMatch(html, /\$\{isAb \? 'A\/B테스트'/);
 });
 
 test('7단계 마이그레이션은 검색 및 FK·최신순 경로를 인덱싱한다', () => {

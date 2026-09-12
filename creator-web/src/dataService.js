@@ -64,6 +64,7 @@ export const PROJECT_PUBLIC_COLUMNS = [
   'test_guide',
   'questions',
   'quizzes',
+  'verification_method',
   'duration',
   'start_date',
   'end_date',
@@ -74,8 +75,47 @@ export const PROJECT_PUBLIC_COLUMNS = [
   'is_reviews_public',
   'status',
   'tech_tags',
+  'target_persona_tags',
   'created_at'
 ].join(',');
+
+const PROJECT_INCREMENTAL_COLUMNS = ['verification_method', 'target_persona_tags'];
+
+// Keep project reads usable while incremental optional columns are waiting to
+// be migrated in a connected development database.
+export const PROJECT_PUBLIC_LEGACY_COLUMNS = PROJECT_PUBLIC_COLUMNS
+  .split(',')
+  .filter(column => !PROJECT_INCREMENTAL_COLUMNS.includes(column))
+  .join(',');
+
+function getMissingIncrementalProjectColumn(error) {
+  const message = String(error?.message || '');
+  const missingColumn = PROJECT_INCREMENTAL_COLUMNS.find(column => message.includes(column));
+  if (!missingColumn) return '';
+  const looksLikeMissingColumn = error?.code === '42703'
+    || error?.code === 'PGRST204'
+    || /does not exist|could not find|schema cache/i.test(message);
+  return looksLikeMissingColumn ? missingColumn : '';
+}
+
+function getProjectColumns(excludedColumns = new Set()) {
+  return PROJECT_PUBLIC_COLUMNS
+    .split(',')
+    .filter(column => !excludedColumns.has(column))
+    .join(',');
+}
+
+async function runProjectQueryWithColumnFallback(queryFactory) {
+  const excludedColumns = new Set();
+  let result = { data: null, error: null };
+  for (let attempt = 0; attempt <= PROJECT_INCREMENTAL_COLUMNS.length; attempt += 1) {
+    result = await queryFactory(getProjectColumns(excludedColumns), excludedColumns);
+    const missingColumn = getMissingIncrementalProjectColumn(result.error);
+    if (!missingColumn || excludedColumns.has(missingColumn)) return result;
+    excludedColumns.add(missingColumn);
+  }
+  return result;
+}
 
 export const REVIEW_VISIBLE_COLUMNS = [
   'id',
@@ -149,6 +189,7 @@ const PROJECT_MUTABLE_COLUMNS = new Set([
   'test_guide',
   'questions',
   'quizzes',
+  'verification_method',
   'duration',
   'start_date',
   'end_date',
@@ -156,7 +197,8 @@ const PROJECT_MUTABLE_COLUMNS = new Set([
   'reward_coin',
   'total_funded_cost',
   'is_reviews_public',
-  'tech_tags'
+  'tech_tags',
+  'target_persona_tags'
 ]);
 
 const PROJECT_URL_COLUMNS = [
@@ -253,6 +295,49 @@ export function normalizeHttpUrl(rawValue, { required = false } = {}) {
   return parsed.toString();
 }
 
+/**
+ * 검증 수단은 선택 사항이다. 선택한다면 퀴즈와 스크린샷 중 하나만 쓴다.
+ */
+export function prepareProjectVerification(verificationMethod, quizzes = []) {
+  const method = ['quiz', 'screenshot'].includes(verificationMethod)
+    ? verificationMethod
+    : 'none';
+  const quizList = Array.isArray(quizzes) ? quizzes : [];
+  if (method !== 'quiz') {
+    return { verification_method: method, quizzes: [] };
+  }
+  const cleanedQuizzes = quizList
+    .map(quiz => ({
+      question: String(quiz?.question || '').trim(),
+      answer: String(quiz?.answer || '').trim()
+    }))
+    .filter(quiz => quiz.question)
+    .slice(0, 3);
+  if (cleanedQuizzes.length === 0) {
+    throw new Error('검증 퀴즈 방식은 퀴즈를 최소 1개 등록해야 합니다.');
+  }
+  return { verification_method: 'quiz', quizzes: cleanedQuizzes };
+}
+
+export function prepareProjectTagList(values = []) {
+  const normalizedTags = [];
+  const seenTags = new Set();
+  for (const value of Array.isArray(values) ? values : []) {
+    const tag = String(value || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/^#+/, '')
+      .trim()
+      .slice(0, 40);
+    const tagKey = tag.toLocaleLowerCase();
+    if (!tag || seenTags.has(tagKey)) continue;
+    seenTags.add(tagKey);
+    normalizedTags.push(tag);
+    if (normalizedTags.length >= 10) break;
+  }
+  return normalizedTags;
+}
+
 export function prepareProjectPayload(projectPayload = {}, { forUpdate = false } = {}) {
   const allowedColumns = forUpdate
     ? PROJECT_MUTABLE_COLUMNS
@@ -278,6 +363,17 @@ export function prepareProjectPayload(projectPayload = {}, { forUpdate = false }
 
   if (!forUpdate && !payload.creator_id) {
     throw new Error('로그인 사용자 정보가 없어 프로젝트를 등록할 수 없습니다.');
+  }
+
+  if ('verification_method' in payload || 'quizzes' in payload) {
+    Object.assign(payload, prepareProjectVerification(
+      payload.verification_method,
+      payload.quizzes
+    ));
+  }
+
+  for (const tagColumn of ['tech_tags', 'target_persona_tags']) {
+    if (tagColumn in payload) payload[tagColumn] = prepareProjectTagList(payload[tagColumn]);
   }
 
   if (!forUpdate) {
@@ -334,6 +430,22 @@ export function prepareSupportTicketPayload(ticket = {}) {
   return { category, subject, message };
 }
 
+/**
+ * 스크린샷 증빙은 외부 링크와 첨부 이미지(data URL)를 모두 받는다.
+ */
+export function normalizeScreenshotEvidence(rawValue) {
+  const value = typeof rawValue === 'string' ? rawValue.trim() : '';
+  if (!value) return null;
+
+  if (/^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+/=]+$/i.test(value)) {
+    if (value.length > 3000000) {
+      throw new Error('스크린샷 이미지 용량이 너무 큽니다. 2MB 이하로 첨부해 주세요.');
+    }
+    return value;
+  }
+  return normalizeHttpUrl(value);
+}
+
 export function prepareReviewRpcPayload(review = {}) {
   const projectId = typeof review.projectId === 'string' ? review.projectId.trim() : '';
   const rating = Number(review.rating);
@@ -346,7 +458,7 @@ export function prepareReviewRpcPayload(review = {}) {
 
   const answers = review.answers && typeof review.answers === 'object' ? review.answers : {};
   const quizAnswers = review.quizAnswers && typeof review.quizAnswers === 'object' ? review.quizAnswers : {};
-  const screenshotUrl = normalizeHttpUrl(review.screenshotUrl);
+  const screenshotUrl = normalizeScreenshotEvidence(review.screenshotUrl);
   return {
     p_project_id: projectId,
     p_rating: rating,
@@ -453,7 +565,9 @@ export async function fetchExploreProjects(options = {}) {
       .select(`
         ${PROJECT_CARD_COLUMNS},
         users (${USER_CARD_COLUMNS})
-      `);
+      `)
+      .eq('is_ab_test', false)
+      .neq('category', 'abtest');
 
     if (category && category !== 'all') {
       query = query.eq('category', category);
@@ -496,14 +610,15 @@ export async function fetchExploreProjects(options = {}) {
 export async function fetchProjectById(projectId) {
   if (!supabase || !projectId) return null;
   try {
-    const { data, error } = await supabase
+    const fetchProject = columns => supabase
       .from('projects')
       .select(`
-        ${PROJECT_PUBLIC_COLUMNS},
+        ${columns},
         users (${USER_DETAIL_COLUMNS})
       `)
       .eq('id', projectId)
       .single();
+    const { data, error } = await runProjectQueryWithColumnFallback(fetchProject);
     if (error) throw error;
 
     // Fallback: If joined users is null or missing nickname, fetch directly from users table
@@ -527,24 +642,33 @@ export async function fetchMyProjects(userId, type = 'registered') {
   if (!supabase || !userId) return [];
   try {
     if (type === 'registered') {
-      const { data, error } = await supabase
+      const fetchRegistered = columns => supabase
         .from('projects')
-        .select(PROJECT_PUBLIC_COLUMNS)
+        .select(columns)
         .eq('creator_id', userId)
         .order('created_at', { ascending: false });
+      const { data, error } = await runProjectQueryWithColumnFallback(fetchRegistered);
       if (error) throw error;
       return data || [];
     } else if (type === 'participated') {
-      const { data, error } = await supabase
+      const fetchParticipated = columns => supabase
         .from('participations')
         .select(`
           ${PARTICIPATION_COLUMNS},
-          projects (${PROJECT_PUBLIC_COLUMNS}, users(${USER_CARD_COLUMNS}))
+          projects (${columns}, users(${USER_CARD_COLUMNS}))
         `)
         .eq('user_id', userId)
         .order('applied_at', { ascending: false });
+      const { data, error } = await runProjectQueryWithColumnFallback(fetchParticipated);
       if (error) throw error;
-      return (data || []).map(p => p.projects).filter(Boolean);
+      return (data || []).map(participation => {
+        if (!participation.projects) return null;
+        return {
+          ...participation.projects,
+          participation_status: participation.status,
+          participation_completed_at: participation.completed_at
+        };
+      }).filter(Boolean);
     }
     return [];
   } catch (err) {
@@ -559,11 +683,15 @@ export async function fetchMyProjects(userId, type = 'registered') {
 export async function createProjectRecord(projectPayload) {
   if (!supabase) throw new Error('Supabase 연결이 설정되지 않았습니다.');
   const safePayload = prepareProjectPayload(projectPayload);
-  const { data, error } = await supabase
-    .from('projects')
-    .insert([safePayload])
-    .select(PROJECT_PUBLIC_COLUMNS)
-    .single();
+  const { data, error } = await runProjectQueryWithColumnFallback((columns, excludedColumns) => {
+    const compatiblePayload = { ...safePayload };
+    excludedColumns.forEach(column => delete compatiblePayload[column]);
+    return supabase
+      .from('projects')
+      .insert([compatiblePayload])
+      .select(columns)
+      .single();
+  });
   if (error) throw error;
   return data;
 }
@@ -606,12 +734,16 @@ export async function updateProjectRecord(projectId, updateFields) {
   if (Object.keys(safeUpdateFields).length === 0) {
     throw new Error('수정할 프로젝트 항목이 없습니다.');
   }
-  const { data, error } = await supabase
-    .from('projects')
-    .update(safeUpdateFields)
-    .eq('id', projectId)
-    .select(PROJECT_PUBLIC_COLUMNS)
-    .single();
+  const { data, error } = await runProjectQueryWithColumnFallback((columns, excludedColumns) => {
+    const compatibleUpdateFields = { ...safeUpdateFields };
+    excludedColumns.forEach(column => delete compatibleUpdateFields[column]);
+    return supabase
+      .from('projects')
+      .update(compatibleUpdateFields)
+      .eq('id', projectId)
+      .select(columns)
+      .single();
+  });
   if (error) throw error;
   return data;
 }
@@ -822,17 +954,18 @@ export async function fetchMarketplaceItems() {
 export async function fetchUserScraps(userId) {
   if (!supabase || !userId) return [];
   try {
-    const { data, error } = await supabase
+    const fetchScraps = columns => supabase
       .from('scraps')
       .select(`
         id,
         user_id,
         project_id,
         created_at,
-        projects (${PROJECT_PUBLIC_COLUMNS}, users(${USER_CARD_COLUMNS}))
+        projects (${columns}, users(${USER_CARD_COLUMNS}))
       `)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
+    const { data, error } = await runProjectQueryWithColumnFallback(fetchScraps);
     if (error) throw error;
     return data || [];
   } catch (err) {
