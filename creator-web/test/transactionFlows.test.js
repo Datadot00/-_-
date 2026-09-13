@@ -363,3 +363,24 @@ test('5단계 마이그레이션은 직접 쓰기를 차단하고 원자적 함�
   assert.match(sql, /revoke update \(has_passed_gating\)/i);
   assert.match(sql, /for update/i);
 });
+
+test('리뷰 작성 시 필수 검증 퀴즈를 입력하지 않거나 오답일 경우 제출 및 코인 지급이 차단된다', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+
+  // 1. 퀴즈 검증 상태 변수와 렌더링에 필수 표기(*) 및 데이터 속성이 포함되어 있어야 함
+  assert.match(html, /let currentFeedbackProjectQuizzes = \[\];/);
+  assert.match(html, /data-quiz-expected=/);
+  assert.match(html, /정답 확인 \(필수\)/);
+
+  // 2. submitDetailedFeedback에서 퀴즈 답변 미입력 시 PART-004 에러와 함께 조기 반환(return)되어야 함
+  assert.match(html, /const isQuizVerificationActive = currentFeedbackVerificationMethod === 'quiz'/);
+  assert.match(html, /if \(!val\) \{[\s\S]*?showGenericToast\(`\[PART-004\][\s\S]*?return;/);
+
+  // 3. 정답이 지정된 경우 정답 불일치 시 PART-004 에러와 함께 조기 반환되어 코인 지급 함수 호출이 차단되어야 함
+  assert.match(html, /if \(normalizeQuizText\(val\) !== normalizeQuizText\(expected\)\) \{[\s\S]*?showGenericToast\('\[PART-004\][\s\S]*?return;/);
+  assert.match(html, /input\.classList\.add\('border-red-500', 'ring-2', 'ring-red-200'\)/);
+
+  // 4. 모든 검증을 통과한 경우에만 submitProjectReview를 호출
+  assert.match(html, /const result = await window\.donDwaeDataService\.submitProjectReview/);
+});
+

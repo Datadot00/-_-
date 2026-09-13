@@ -4,10 +4,13 @@
 // ========================================================
 
 import * as dataService from './dataService.js';
+import { ERROR_CODES, toUserFriendlyError } from './errorCodes.js';
 
-// Expose DataService to Window for Inline Event Handlers in index.html
+// Expose DataService & ErrorCodes to Window for Inline Event Handlers in index.html
 if (typeof window !== 'undefined') {
   window.donDwaeDataService = dataService;
+  window.DonDwaeErrorCodes = ERROR_CODES;
+  window.toUserFriendlyError = toUserFriendlyError;
 }
 
 /**
