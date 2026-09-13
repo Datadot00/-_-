@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>돈 돼? (Don Dwae) - 프로토타입</title>
+  <link rel="icon" type="image/png" href="./penny-logo-circle.png">
+  <link rel="shortcut icon" href="./penny-logo-circle.png">
 
   <!-- Pretendard Webfont -->
   <link rel="stylesheet" as="style" crossorigin
@@ -154,7 +156,7 @@
        GENERIC TOAST NOTIFICATION (스크랩, 투표, 교환 알림)
   ======================================================== -->
   <aside id="generic-toast"
-    class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transform -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-[460px] w-[calc(100%-48px)]">
+    class="fixed top-6 left-1/2 -translate-x-1/2 z-[99999] transform -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-[460px] w-[calc(100%-48px)]">
     <div class="bg-[#191A1C] text-white rounded-2xl p-4 shadow-toast border border-[#2F3136] flex items-center gap-3">
       <span class="text-xl" id="generic-toast-icon">✨</span>
       <p class="text-xs font-bold leading-relaxed flex-1" id="generic-toast-text">
@@ -164,7 +166,7 @@
   </aside>
 
   <aside id="review-toast"
-    class="fixed top-6 right-6 z-50 transform translate-x-32 opacity-0 pointer-events-none transition-all duration-300 max-w-[420px] w-[calc(100%-48px)]">
+    class="fixed top-6 right-6 z-[99999] transform translate-x-32 opacity-0 pointer-events-none transition-all duration-300 max-w-[420px] w-[calc(100%-48px)]">
     <div onclick="handleToastClick()"
       class="bg-[#191A1C] text-white rounded-2xl p-4 shadow-toast border border-[#2F3136] flex items-start gap-3.5 cursor-pointer hover:scale-[1.02] active:scale-[0.99] transition-all duration-200 group relative"
       title="클릭하여 결과 피드백 대시보드로 이동">
@@ -172,7 +174,7 @@
         class="relative shrink-0 w-11 h-11 rounded-xl bg-[#282A2E] border border-[#3A3D42] flex items-center justify-center p-2 group-hover:border-primary/60 transition-colors">
         <span class="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-ping"></span>
         <span class="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full border-2 border-[#191A1C]"></span>
-        <img src="../logo-coin.png" alt="동전" class="w-full h-full object-contain"
+        <img src="../logo-coin.png" alt="돼지코인" class="w-full h-full object-contain"
           onerror="this.onerror=null; this.src='./logo-coin.png';" />
       </div>
 
@@ -247,7 +249,7 @@
   </div>
 
   <!-- ========================================================
-       STEP 3: TEST COIN PAYMENT MODAL (부족 동전 가상 결제창)
+       STEP 3: TEST COIN PAYMENT MODAL (부족 돼지코인 가상 결제창)
   ======================================================== -->
   <div id="test-coin-payment-modal"
     class="fixed inset-0 z-50 flex items-center justify-center bg-neutral-dark/60 backdrop-blur-xs hidden transition-all duration-200">
@@ -269,7 +271,7 @@
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="text-[11px] font-extrabold px-2 py-0.5 rounded bg-[#FDA2BC]/20 text-[#8A2B43]">부족 동전 추가
+            <span class="text-[11px] font-extrabold px-2 py-0.5 rounded bg-[#FDA2BC]/20 text-[#8A2B43]">부족 돼지코인 추가
               충전</span>
             <span class="text-[11px] font-bold text-neutral-400">가상 결제창</span>
           </div>
@@ -285,20 +287,20 @@
         </div>
         <div class="flex items-center justify-between text-neutral-muted">
           <span>모집 설정</span>
-          <span id="pay-modal-breakdown" class="font-medium text-neutral-700">30명 × 70 동전</span>
+          <span id="pay-modal-breakdown" class="font-medium text-neutral-700">30명 × 70 돼지코인</span>
         </div>
         <div class="flex items-center justify-between text-neutral-muted">
           <span>총 소요 예산</span>
           <span id="pay-modal-total-coin" class="font-bold text-neutral-dark">2,100 C</span>
         </div>
         <div class="flex items-center justify-between text-neutral-muted">
-          <span>현재 보유 동전 차감</span>
+          <span>현재 보유 돼지코인 차감</span>
           <span id="pay-modal-user-coin" class="font-bold text-[#2E5E14]">-1,250 C</span>
         </div>
         <div class="pt-2.5 border-t border-neutral-200 flex items-center justify-between">
           <div class="flex flex-col">
-            <span class="text-xs font-bold text-neutral-dark">최종 부족 동전</span>
-            <span class="text-[10px] text-neutral-400">기준: 1 동전 = 10원</span>
+            <span class="text-xs font-bold text-neutral-dark">최종 부족 돼지코인</span>
+            <span class="text-[10px] text-neutral-400">기준: 1 돼지코인 = 10원</span>
           </div>
           <div class="text-right">
             <span id="pay-modal-deficit-coin"
@@ -445,7 +447,7 @@
               <span id="part-modal-badge"
                 class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-primary/30 text-primary-dark">[프로덕트 테스트]</span>
               <span id="part-modal-reward"
-                class="text-[11px] font-extrabold text-[#7E22CE] bg-purple-50 px-2 py-0.5 rounded">🪙 600 동전 수령</span>
+                class="text-[11px] font-extrabold text-[#7E22CE] bg-purple-50 px-2 py-0.5 rounded">🪙 600 돼지코인 수령</span>
             </div>
             <h3 id="part-modal-title" class="text-base font-extrabold text-neutral-dark truncate">가계부 앱 베타테스트</h3>
             <p id="part-modal-desc" class="text-xs text-neutral-500 truncate mt-0.5">영수증 사진 한 장으로 지출을 자동 분류하는 스마트 가계부
@@ -466,7 +468,7 @@
         <!-- 3. 대상 조건 확인용 추가 질문 (있을 시 노출) -->
         <div id="part-modal-target-box"
           class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex flex-col gap-1">
-          <span class="font-bold flex items-center gap-1">🎯 권장 대상 조건 확인</span>
+          <span class="font-bold flex items-center gap-1">🎯 이런 분이면 딱이에요!</span>
           <p id="part-modal-target-text" class="text-[11px] text-amber-800 leading-relaxed font-medium">연령대: 20대, 30대 |
             관심사: 핀테크, 자산관리</p>
         </div>
@@ -502,7 +504,7 @@
         <div
           class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 text-xs text-[#2A5E12] font-semibold leading-relaxed">
           💡 지금 작성하지 않아도 <strong class="underline decoration-2">내 프로젝트 &gt; 참여 프로젝트 관리</strong>에서<br />
-          <strong>리뷰 작성하러 가기</strong>로 이어서 마무리하면 <strong id="part-external-reward-text" class="text-[#7E22CE]">동전</strong>이 최종 지급됩니다.
+          <strong>리뷰 작성하러 가기</strong>로 이어서 마무리하면 <strong id="part-external-reward-text" class="text-[#7E22CE]">돼지코인</strong>이 최종 지급됩니다.
         </div>
 
         <div class="flex items-center gap-3">
@@ -525,7 +527,7 @@
             <span class="text-xs font-bold text-primary-dark bg-primary/20 px-2 py-0.5 rounded">내부 검증 진행</span>
             <h3 id="part-internal-title" class="text-base font-extrabold text-neutral-dark">투표 및 검증 작성</h3>
           </div>
-          <span class="text-xs font-bold text-[#7E22CE]" id="part-internal-reward">+600 동전</span>
+          <span class="text-xs font-bold text-[#7E22CE]" id="part-internal-reward">+600 돼지코인</span>
         </div>
 
         <!-- Dynamic Content (투표 선택 카드 또는 설문 문항) -->
@@ -565,7 +567,7 @@
             📱 프로덕트 테스트 피드백
           </span>
           <span id="fb-modal-reward" class="text-xs font-bold text-[#7E22CE] bg-purple-50 px-2.5 py-0.5 rounded-full">
-            🪙 +600 동전 지급
+            🪙 +600 돼지코인 지급
           </span>
         </div>
         <h3 id="fb-modal-title" class="text-xl font-extrabold text-neutral-dark">가계부 앱 베타테스트 피드백 작성</h3>
@@ -596,7 +598,7 @@
        STEP 5: UPDATE SENT SUCCESS TOAST (최종 클로징 피드백 토스트)
   ======================================================== -->
   <aside id="update-toast"
-    class="fixed top-6 right-6 z-50 transform translate-x-32 opacity-0 pointer-events-none transition-all duration-300 max-w-[460px] w-[calc(100%-48px)]">
+    class="fixed top-6 right-6 z-[99999] transform translate-x-32 opacity-0 pointer-events-none transition-all duration-300 max-w-[460px] w-[calc(100%-48px)]">
     <div
       class="bg-[#191A1C] text-white rounded-2xl p-4 shadow-toast border border-[#2F3136] flex items-start gap-3.5 relative">
       <div
@@ -892,7 +894,7 @@
               style="width: 0%;"></div>
           </div>
           <p class="text-[11px] text-[#7B7656] leading-normal">
-            💡 탐색 탭에서 다른 창업자들의 웹/앱 테스트에 참여하고 리뷰를 남겨주세요. 완료 시 동전 리워드도 함께 지급됩니다!
+            💡 탐색 탭에서 다른 창업자들의 웹/앱 테스트에 참여하고 리뷰를 남겨주세요. 완료 시 돼지코인 리워드도 함께 지급됩니다!
           </p>
         </div>
 
@@ -1348,8 +1350,8 @@
         <div class="flex items-center gap-3.5 pl-6">
           <div
             class="flex items-center gap-1.5 bg-canvas-cream border border-[#E9E4C2] px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-[#F2EECA] transition-colors"
-            title="보유 동전">
-            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+            title="보유 돼지코인">
+            <img src="../logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain"
               onerror="this.onerror=null; this.src='./logo-coin.png';" />
             <span class="text-xs font-bold text-[#574B1A]" id="user-coin-badge">1,300</span>
           </div>
@@ -1509,11 +1511,11 @@
 
         </section>
 
-        <!-- Section Title: ⚡ 마감 임박! 지금 5분 만에 동전 벌기 -->
+        <!-- Section Title: ⚡ 마감 임박! 지금 5분 만에 돼지코인 벌기 -->
         <div class="flex items-center justify-between pt-2">
           <div class="flex items-center gap-2">
             <span class="text-base">⚡</span>
-            <h3 class="text-base sm:text-lg font-black text-neutral-dark tracking-tight">마감 임박! 지금 5분 만에 동전 벌기</h3>
+            <h3 class="text-base sm:text-lg font-black text-neutral-dark tracking-tight">마감 임박! 지금 5분 만에 돼지코인 벌기</h3>
             <span class="text-xs text-neutral-400 font-medium ml-1">참여 즉시 지갑으로 코인 지급</span>
           </div>
         </div>
@@ -1592,9 +1594,11 @@
               </div>
 
               <button type="button" onclick="toggleBookmark(event, this)"
-                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200 z-10"
                 title="스크랩 저장">
-                <span>🔖</span>
+                <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
               </button>
             </div>
 
@@ -1655,9 +1659,11 @@
               </div>
 
               <button type="button" onclick="toggleBookmark(event, this)"
-                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200 z-10"
                 title="스크랩 저장">
-                <span>🔖</span>
+                <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
               </button>
             </div>
 
@@ -1719,9 +1725,11 @@
               </div>
 
               <button type="button" onclick="toggleBookmark(event, this)"
-                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200 z-10"
                 title="스크랩 저장">
-                <span>🔖</span>
+                <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
               </button>
             </div>
 
@@ -1783,9 +1791,11 @@
               </div>
 
               <button type="button" onclick="toggleBookmark(event, this)"
-                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200 z-10"
                 title="스크랩 저장">
-                <span>🔖</span>
+                <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
               </button>
             </div>
 
@@ -1847,9 +1857,11 @@
               </div>
 
               <button type="button" onclick="toggleBookmark(event, this)"
-                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
+                class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200 z-10"
                 title="스크랩 저장">
-                <span>🔖</span>
+                <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
               </button>
             </div>
 
@@ -2791,22 +2803,22 @@
             </div>
           </div>
 
-          <!-- 4. 권장 참여 대상 조건 (이런 분들의 참여를 원해요) -->
+          <!-- 4. 권장 참여 대상 조건 (어떤 분이 봐주면 좋을까요?) -->
           <div class="p-6 rounded-2xl border border-[#ECEFE2] bg-[#FAFBF7] flex flex-col gap-4">
             <div>
               <h3 class="text-sm font-extrabold text-neutral-dark flex items-center gap-2">
-                <span>🎯</span> <span>이런 분들의 참여를 원해요</span>
+                <span>🎯</span> <span>어떤 분이 봐주면 좋을까요?</span>
               </h3>
               <p class="text-xs text-neutral-500 mt-1">
-                아래의 성향이나 환경에 부합하시는 분들의 목소리가 제품 발전에 특히 큰 도움이 됩니다.
+                우선 타겟이나 이런 분이 참여해 주시면 좋겠다 하는 대상 및 관심사를 자유롭게 적어주세요.
               </p>
             </div>
 
             <!-- 권장 태그 입력 및 태그 박스 -->
             <div>
-              <span class="text-xs font-bold text-neutral-700 block mb-2">권장 테스터 태그 작성 (선택)</span>
+              <span class="text-xs font-bold text-neutral-700 block mb-2">어떤 분이 봐주면 좋을까요? (선택)</span>
               <div class="flex items-center gap-2 mb-3">
-                <input id="input-target-persona-tag" type="text" placeholder="예: 🎂 연령대: 20대·30대, 📊 가계부 관심자, 📱 앱 실사용자"
+                <input id="input-target-persona-tag" type="text" placeholder="예: 🎂 20대·30대, 📊 가계부 관심자, 📱 앱 실사용자"
                   class="flex-1 px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/60"
                   onkeydown="if(event.key==='Enter'){ event.preventDefault(); addPersonaTag(); }" />
                 <button type="button" onclick="addPersonaTag()"
@@ -2860,22 +2872,22 @@
           <!-- 6. 보상 설정 (숫자 또는 코인 단위) -->
           <div class="p-6 rounded-2xl border border-[#EBEBEB] bg-canvas-cream/50 flex flex-col gap-3">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-bold text-neutral-dark">1인당 보상 (동전 리워드)</span>
-              <span class="text-xs text-[#736838] font-medium" id="step3-user-coin-balance">보유: 1,250 동전</span>
+              <span class="text-sm font-bold text-neutral-dark">1인당 보상 (돼지코인 리워드)</span>
+              <span class="text-xs text-[#736838] font-medium" id="step3-user-coin-balance">보유: 1,250 돼지코인</span>
             </div>
             <div class="flex items-center gap-2 bg-white rounded-xl border border-[#E1DBB0] px-4 py-2.5 shadow-2xs">
-              <img src="../logo-coin.png" alt="동전" class="w-5 h-5 object-contain"
+              <img src="../logo-coin.png" alt="돼지코인" class="w-5 h-5 object-contain"
                 onerror="this.onerror=null; this.src='./logo-coin.png';" />
               <input id="input-reward-coin" type="number" value="70" min="10" step="10" required
                 class="flex-1 font-bold text-lg text-neutral-dark focus:outline-none" oninput="calculateTotalCost()" />
-              <span class="text-xs font-semibold text-neutral-muted">동전</span>
+              <span class="text-xs font-semibold text-neutral-muted">돼지코인</span>
             </div>
             <p id="total-cost-summary" class="text-[11px] text-[#DC2626] font-semibold">
-              총 소요 예산: 2,100 동전 (보유 동전 부족: 850 C)
+              총 소요 예산: 2,100 돼지코인 (보유 돼지코인 부족: 850 C)
             </p>
           </div>
 
-          <!-- 동전 결제 배너 -->
+          <!-- 돼지코인 결제 배너 -->
           <div id="step3-coin-status-banner" class="rounded-2xl transition-all duration-200"></div>
 
           <!-- Step 3 Navigation Buttons -->
@@ -2887,7 +2899,7 @@
 
             <button type="button" id="btn-publish-test-step3" onclick="handleStep3PublishClick()"
               class="px-8 py-3.5 rounded-full bg-secondary hover:bg-secondary-hover active:scale-95 text-[#631427] font-extrabold text-sm shadow-md transition-all flex items-center gap-2 border border-secondary-wine/20 cursor-pointer">
-              <span id="btn-publish-step3-text">부족한 동전 결제하고 게시하기</span>
+              <span id="btn-publish-step3-text">부족한 돼지코인 결제하고 게시하기</span>
               <span id="btn-publish-step3-icon">💳</span>
             </button>
           </div>
@@ -2939,9 +2951,9 @@
       <div class="flex items-center gap-3.5">
         <div onclick="navigateTo('market')"
           class="flex items-center gap-1.5 bg-canvas-cream border border-[#E9E4C2] px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-[#F2EECA] transition-colors"
-          title="내 보유 동전">
-          <span class="text-xs text-neutral-muted font-medium mr-1">내 보유 동전</span>
-          <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+          title="내 보유 돼지코인">
+          <span class="text-xs text-neutral-muted font-medium mr-1">내 보유 돼지코인</span>
+          <img src="../logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain"
             onerror="this.onerror=null; this.src='./logo-coin.png';" />
           <span class="text-xs font-bold text-[#574B1A]" id="post-user-coin-badge">2,450 C</span>
         </div>
@@ -3044,10 +3056,19 @@
                 class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#OCR</span>
             </div>
 
-            <h1 id="post-main-title"
-              class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight leading-tight">
-              AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
-            </h1>
+            <div class="flex items-start justify-between gap-4">
+              <h1 id="post-main-title"
+                class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight leading-tight flex-1">
+                AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
+              </h1>
+              <button type="button" id="post-title-bookmark-btn" onclick="toggleCurrentDetailBookmark(event)"
+                class="bookmark-flag-btn w-11 h-11 rounded-full border border-neutral-200 bg-white hover:bg-neutral-50 flex items-center justify-center text-neutral-400 hover:text-neutral-700 transition-all shadow-xs shrink-0 cursor-pointer mt-1"
+                title="스크랩 저장">
+                <svg class="w-5 h-5 pointer-events-none transition-transform duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <!-- Card 2: 3-Tabs Navigation Bar (개요 / 테스트 미션 / 리뷰) -->
@@ -3117,11 +3138,11 @@
                 </p>
               </div>
 
-              <!-- 이런 분들의 참여를 원해요 -->
+              <!-- 이런 분이면 딱이에요! -->
               <div class="p-5 rounded-2xl border border-[#ECEFE2] bg-[#FAFBF7] flex flex-col gap-3">
                 <div>
                   <h4 class="text-xs font-extrabold text-neutral-dark flex items-center gap-1.5">
-                    <span>🎯</span> <span>이런 분들의 참여를 원해요</span>
+                    <span>🎯</span> <span>이런 분이면 딱이에요!</span>
                   </h4>
                   <p class="text-[11px] text-neutral-500 mt-0.5">
                     아래의 성향이나 환경에 부합하시는 분들의 목소리가 제품 발전에 특히 큰 도움이 됩니다.
@@ -3376,9 +3397,9 @@
               </div>
             </div>
 
-            <!-- 4행: 사용 도구 (전체 폭) -->
+            <!-- 4행: 이런 분이면 딱이에요 (전체 폭) -->
             <div id="post-side-tools-row" class="border-b border-neutral-100 pb-4">
-              <span class="text-[11px] font-semibold text-neutral-400 block mb-2">사용 도구</span>
+              <span class="text-[11px] font-semibold text-neutral-400 block mb-2">이런 분이면 딱이에요</span>
               <div id="post-tools-icons" class="flex flex-wrap items-center gap-2 text-xs font-semibold">
                 <span
                   class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
@@ -3395,12 +3416,22 @@
               </div>
             </div>
 
-            <!-- User Test Participation CTA Button (큰 초록색 버튼) -->
-            <button type="button" id="btn-participate-test" onclick="startMissionParticipation()"
-              class="w-full py-4 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-[0.98] text-white font-extrabold text-sm shadow-card transition-all flex items-center justify-center gap-2 cursor-pointer">
-              <span id="btn-participate-test-icon">🚀</span>
-              <span id="btn-participate-test-text">미션 참여하기</span>
-            </button>
+            <!-- User Test Participation CTA Button & Bookmark Button -->
+            <div class="flex items-center gap-2.5">
+              <button type="button" id="btn-participate-test" onclick="startMissionParticipation()"
+                class="flex-1 py-4 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-[0.98] text-white font-extrabold text-sm shadow-card transition-all flex items-center justify-center gap-2 cursor-pointer">
+                <span id="btn-participate-test-icon">🚀</span>
+                <span id="btn-participate-test-text">미션 참여하기</span>
+              </button>
+              <button type="button" id="post-detail-bookmark-btn" onclick="toggleCurrentDetailBookmark(event)"
+                class="bookmark-flag-btn h-[54px] px-3.5 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 flex flex-col items-center justify-center gap-0.5 text-neutral-400 hover:text-neutral-700 transition-all shadow-xs shrink-0 cursor-pointer"
+                title="스크랩 저장">
+                <svg class="w-5 h-5 pointer-events-none transition-transform duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+                <span class="text-[9px] font-extrabold" id="post-detail-bookmark-label">저장</span>
+              </button>
+            </div>
 
             <!-- Creator view alternative actions (hidden for other's post) -->
             <div id="creator-only-actions" class="hidden flex-col gap-2">
@@ -3505,9 +3536,9 @@
 
         <div class="flex items-center gap-3.5">
           <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
-            title="내 보유 동전">
-            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 동전</span>
-            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 돼지코인</span>
+            <img src="../logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain"
               onerror="this.onerror=null; this.src='./logo-coin.png';" />
             <span class="text-xs font-bold text-[#574B1A]">1,250 C</span>
           </div>
@@ -3660,7 +3691,7 @@
             </div>
           </div>
 
-          <!-- 3. 지급된 동전 총액 -->
+          <!-- 3. 지급된 돼지코인 총액 -->
           <div class="bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col justify-between">
             <div class="flex items-center gap-2 text-xs font-semibold text-neutral-muted mb-4">
               <span>💲</span>
@@ -3669,10 +3700,10 @@
             <div>
               <div class="flex items-baseline gap-1.5 mb-3">
                 <span id="feedback-total-reward-num" class="text-4xl font-extrabold text-neutral-dark">1,500</span>
-                <span class="text-base font-bold text-[#574B1A]">동전</span>
+                <span class="text-base font-bold text-[#574B1A]">돼지코인</span>
               </div>
               <div class="text-xs text-[#2F6517] font-semibold flex items-center gap-1">
-                <span>📈</span> <span id="feedback-per-person-reward-text">1인당 50 동전 정상 지급 완료</span>
+                <span>📈</span> <span id="feedback-per-person-reward-text">1인당 50 돼지코인 정상 지급 완료</span>
               </div>
             </div>
           </div>
@@ -3710,7 +3741,7 @@
 
 
   <!-- ========================================================
-       VIEW 7: COIN SHOP / 문방구 (destop-creator-coinmarket-and-exchange.png 1:1)
+       VIEW 7: COIN SHOP / 돼코상점 (destop-creator-coinmarket-and-exchange.png 1:1)
   ======================================================== -->
   <div id="view-market" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
     <aside
@@ -3743,14 +3774,14 @@
         class="h-20 border-b border-[#ECEFE2] bg-white/80 backdrop-blur-sm px-8 flex items-center justify-between sticky top-0 z-20 shrink-0">
         <div>
           <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">Reward &amp; Exchange</p>
-          <h2 class="text-base font-extrabold text-neutral-dark">돼코 상점</h2>
+          <h2 class="text-base font-extrabold text-neutral-dark">돼코상점</h2>
         </div>
 
         <div class="flex items-center gap-3.5">
           <div class="flex items-center gap-1.5 bg-canvas-cream border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
-            title="내 보유 동전">
-            <span class="text-xs text-neutral-muted font-medium mr-1">내 보유 동전</span>
-            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-muted font-medium mr-1">내 보유 돼지코인</span>
+            <img src="../logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain"
               onerror="this.onerror=null; this.src='./logo-coin.png';" />
             <span class="text-xs font-bold text-[#574B1A]" id="market-header-coin">1,300 C</span>
           </div>
@@ -3782,10 +3813,10 @@
               <span>🎁</span> Reward & Exchange Center
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight mb-2">
-              동전 상점<span class="text-lg font-bold text-[#64748B] ml-1.5 font-normal">(Coin Market)</span>
+              돼코상점<span class="text-lg font-bold text-[#64748B] ml-1.5 font-normal">(Coin Market)</span>
             </h1>
             <p class="text-sm text-[#52525B] leading-relaxed mb-6 font-normal">
-              열심히 모은 동전으로 기프티콘과 실전 개발 템플릿, 프롬프트를 교환해보세요!<br>
+              열심히 모은 돼지코인으로 기프티콘과 실전 개발 템플릿, 프롬프트를 교환해보세요!<br>
               교환 즉시 마이페이지로 안전하게 지급됩니다.
             </p>
 
@@ -3794,9 +3825,9 @@
                 class="px-4 py-2 rounded-xl bg-white border border-[#DDD6A7] hover:bg-neutral-50 text-xs font-bold text-neutral-800 shadow-2xs transition-all flex items-center gap-1.5">
                 <span>📋</span> 교환 내역 확인
               </button>
-              <button onclick="alert('테스트에 정성껏 참여하시면 건당 100~600 동전이 즉시 지급됩니다!');"
+              <button onclick="alert('테스트에 정성껏 참여하시면 건당 100~600 돼지코인이 즉시 지급됩니다!');"
                 class="px-4 py-2 rounded-xl bg-[#FDA2BC]/20 hover:bg-[#FDA2BC]/30 text-xs font-bold text-[#8A2B43] border border-[#FDA2BC]/40 transition-all flex items-center gap-1.5">
-                <span>❓</span> 동전 적립 가이드
+                <span>❓</span> 돼지코인 적립 가이드
               </button>
             </div>
           </div>
@@ -3811,7 +3842,7 @@
             <div
               class="bg-white rounded-2xl border border-[#E9E5BC] p-5 shadow-card min-w-[210px] flex flex-col gap-1.5">
               <div class="flex items-center justify-between">
-                <span class="text-xs text-neutral-muted font-medium">내 적립 동전</span>
+                <span class="text-xs text-neutral-muted font-medium">누적 돼지코인</span>
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
               </div>
               <div class="text-2xl font-extrabold text-neutral-dark tracking-tight flex items-baseline gap-1">
@@ -3857,8 +3888,8 @@
           <select
             class="px-3 py-2 bg-white border border-neutral-200 rounded-xl text-xs font-semibold text-neutral-700 shadow-2xs focus:outline-none">
             <option>인기순</option>
-            <option>낮은 동전순</option>
-            <option>높은 동전순</option>
+            <option>낮은 돼지코인순</option>
+            <option>높은 돼지코인순</option>
           </select>
         </div>
 
@@ -4050,11 +4081,11 @@
             <!-- Calculation Sheet -->
             <div class="space-y-3 text-xs">
               <div class="flex items-center justify-between text-neutral-600">
-                <span>보유 동전</span>
+                <span>보유 돼지코인</span>
                 <span class="font-bold text-neutral-dark" id="exchange-user-coin">1,300 C</span>
               </div>
               <div class="flex items-center justify-between text-[#DC2626]">
-                <span>차감 동전</span>
+                <span>차감 돼지코인</span>
                 <span class="font-extrabold" id="exchange-deduct-coin">- 1,200 C</span>
               </div>
               <div class="h-px bg-neutral-200 my-1"></div>
@@ -4092,7 +4123,7 @@
        - 3/3회 완료 원형 스트로크(100% 도넛 링)
        - 상위 몇 프로인지에 따른 배지: 🏆 상위 3% 슈퍼 테스터
        - 스크랩 수치 / 최근 본 수치 노출
-       - 스크롤 시 하단 문방구(동전 상점) 섹션 자동 노출
+       - 스크롤 시 하단 돼코상점 섹션 자동 노출
   ======================================================== -->
   <div id="view-mypage" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
 
@@ -4134,9 +4165,9 @@
 
         <div class="flex items-center gap-3.5">
           <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
-            title="내 보유 동전">
-            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 동전</span>
-            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 돼지코인</span>
+            <img src="../logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain"
               onerror="this.onerror=null; this.src='./logo-coin.png';" />
             <span class="text-xs font-bold text-[#574B1A]">1,250 C</span>
           </div>
@@ -4251,7 +4282,7 @@
             <div
               class="bg-[#FAFBF7] rounded-xl border border-[#E9EFE0] p-4 flex flex-col gap-1 cursor-pointer hover:bg-[#F2F7EB] transition-colors"
               onclick="scrollToMypageMarket()">
-              <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">🪙 보유 동전 ›</span>
+              <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">🪙 보유 돼지코인 ›</span>
               <div class="text-2xl font-extrabold text-neutral-dark flex items-baseline gap-1">
                 <span id="mypage-metric-coin">0</span>
                 <span class="text-sm text-primary-dark font-bold">C</span>
@@ -4333,12 +4364,12 @@
             </div>
           </div>
 
-          <!-- Card 2: 내 동전으로 바로 교환 가능! -->
+          <!-- Card 2: 내 돼지코인으로 바로 교환 가능! -->
           <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between text-xs mb-3">
                 <span class="font-extrabold text-neutral-dark flex items-center gap-1.5">
-                  <span>🎁</span> 내 동전으로 바로 교환 가능!
+                  <span>🎁</span> 내 돼지코인으로 바로 교환 가능!
                 </span>
                 <span class="text-[10px] text-primary-dark font-extrabold">현재 <span data-wallet-balance>0 C</span> 보유</span>
               </div>
@@ -4373,7 +4404,7 @@
             내가 등록한 피드백 모집 프로젝트와 테스터 현황을 한눈에 관리하세요.
           </p>
 
-          <!-- Main Nav Tabs (등록 프로젝트 관리 / 참여 프로젝트 관리 / 동전 내역 & 적립 + 프로젝트 등록 버튼) -->
+          <!-- Main Nav Tabs (등록 프로젝트 관리 / 참여 프로젝트 관리 / 돼지코인 내역 & 적립 + 프로젝트 등록 버튼) -->
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2">
             <div class="inline-flex items-center bg-[#EDEDED] p-1 rounded-2xl gap-1 max-w-full overflow-x-auto">
               <button type="button" onclick="switchMyProjectTab('registered')" id="myproj-tab-registered"
@@ -4616,7 +4647,7 @@
               <div>
                 <div class="flex items-center gap-2">
                   <h4 class="text-sm font-extrabold text-neutral-dark">
-                    테스트를 제공하고 모은 동전, 지금 바로 바꿔보세요!
+                    테스트를 제공하고 모은 돼지코인, 지금 바로 바꿔보세요!
                   </h4>
                   <span
                     class="px-2 py-0.5 rounded-full bg-white border border-[#E9D68A] text-[#8C6D1F] text-[10px] font-black">
@@ -4634,7 +4665,7 @@
             <div class="flex items-center gap-2 shrink-0">
               <button onclick="navigateToMypageSection('mypage-market-section', 'coins')"
                 class="px-4 py-2.5 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-800 text-xs font-bold transition-all shadow-2xs">
-                📋 동전 내역 상세
+                📋 돼지코인 내역 상세
               </button>
               <button onclick="navigateTo('market')"
                 class="px-4 py-2.5 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1">
@@ -4647,7 +4678,7 @@
         </section>
 
         <!-- ========================================================
-           SCROLL TARGET: 동전 관리 & 문방구 (동전 상점)
+           SCROLL TARGET: 돼지코인 관리 & 돼코상점
            프로필 하단 스크롤 시 나타나는 섹션 (dektop-mypage.png 1:1)
       ======================================================== -->
         <section id="mypage-market-section" class="flex flex-col gap-5 pt-4 scroll-mt-6">
@@ -4655,13 +4686,13 @@
             <div class="flex items-center gap-2">
               <span class="text-lg">🪙</span>
               <div>
-                <h3 class="text-base font-extrabold text-neutral-dark">동전 관리 & 문방구 (동전 상점)</h3>
-                <p class="text-xs text-neutral-400 font-normal">피드백으로 모은 동전 내역을 확인하고 원하는 기프티콘과 자료로 교환하세요.</p>
+                <h3 class="text-base font-extrabold text-neutral-dark">돼지코인 관리 & 돼코상점</h3>
+                <p class="text-xs text-neutral-400 font-normal">피드백으로 모은 돼지코인 내역을 확인하고 원하는 기프티콘과 자료로 교환하세요.</p>
               </div>
             </div>
             <button onclick="navigateTo('market')"
               class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5">
-              <span>문방구 전체보기</span>
+              <span>돼코상점 전체보기</span>
               <span>→</span>
             </button>
           </div>
@@ -4670,7 +4701,7 @@
           <div
             class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle">
             <div class="border-r border-neutral-100 pr-4">
-              <span class="text-xs text-neutral-400 font-medium">현재 보유 동전</span>
+              <span class="text-xs text-neutral-400 font-medium">현재 보유 돼지코인</span>
               <div class="text-xl font-extrabold text-neutral-dark mt-1 flex items-baseline gap-1">
                 <span id="mypage-section-coin">0</span>
                 <span class="text-xs font-bold text-primary-dark">C</span>
@@ -4679,7 +4710,7 @@
             </div>
 
             <div class="border-r border-neutral-100 pr-4">
-              <span class="text-xs text-neutral-400 font-medium">이번 달 누적 획득 동전</span>
+              <span class="text-xs text-neutral-400 font-medium">이번 달 누적 획득 돼지코인</span>
               <div class="text-xl font-extrabold text-[#2F6517] mt-1 flex items-baseline gap-1">
                 <span id="mypage-monthly-earned">+0</span> <span class="text-xs font-bold">C</span>
               </div>
@@ -4698,12 +4729,12 @@
           <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle">
             <div class="flex items-center justify-between mb-4">
               <div>
-                <h4 class="text-sm font-extrabold text-neutral-dark">최근 동전 내역</h4>
+                <h4 class="text-sm font-extrabold text-neutral-dark">최근 돼지코인 내역</h4>
                 <p class="text-[11px] text-neutral-400 mt-0.5">실제 적립·사용 기록을 최신순으로 보여줍니다.</p>
               </div>
             </div>
             <div id="mypage-coin-transactions-list" class="flex flex-col divide-y divide-neutral-100">
-              <p class="py-8 text-center text-xs text-neutral-400">동전 내역을 불러오는 중입니다.</p>
+              <p class="py-8 text-center text-xs text-neutral-400">돼지코인 내역을 불러오는 중입니다.</p>
             </div>
           </div>
 
@@ -4793,7 +4824,7 @@
               </div>
 
               <div class="mb-4">
-                <h4 class="text-xs font-bold text-neutral-dark mb-1">오늘도 알뜰하게 패니 저금통에 동전 저축 중!</h4>
+                <h4 class="text-xs font-bold text-neutral-dark mb-1">오늘도 알뜰하게 패니 저금통에 돼지코인 저축 중!</h4>
                 <p class="text-[10px] text-neutral-500 leading-relaxed">피드백 1회 작성 시 100~500 C 즉시 지급</p>
               </div>
 
@@ -4823,7 +4854,7 @@
                   class="w-full p-3 rounded-xl border border-neutral-300 bg-white outline-none focus:border-primary font-semibold">
                   <option value="account">계정/로그인</option>
                   <option value="project">프로젝트</option>
-                  <option value="coin">동전/교환</option>
+                  <option value="coin">돼지코인/교환</option>
                   <option value="bug">오류 신고</option>
                   <option value="other">기타</option>
                 </select>
@@ -4906,9 +4937,9 @@
 
         <div class="flex items-center gap-3.5">
           <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
-            title="내 보유 동전">
-            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 동전</span>
-            <img src="../logo-coin.png" alt="동전" class="w-4 h-4 object-contain"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 돼지코인</span>
+            <img src="../logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain"
               onerror="this.onerror=null; this.src='./logo-coin.png';" />
             <span class="text-xs font-bold text-[#574B1A]">1,250 C</span>
           </div>
@@ -4941,7 +4972,7 @@
             <span class="font-bold text-neutral-700">알림 목록</span>
           </div>
 
-          <div
+          <div id="notification-live-sync-badge"
             class="flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]">
             <span class="w-2 h-2 rounded-full bg-[#2F6517] animate-pulse"></span>
             실시간 수신 활성
@@ -4950,7 +4981,7 @@
 
         <!-- Header Card -->
         <section
-          class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex items-start justify-between">
+          class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div class="flex items-center gap-4">
             <div
               class="w-12 h-12 rounded-full bg-[#EDF7E5] border border-[#D5E8C4] flex items-center justify-center text-primary-dark text-xl shrink-0">
@@ -4968,10 +4999,25 @@
             </div>
           </div>
 
-          <button type="button" onclick="markAllNotificationsAsRead()"
-            class="text-xs font-bold text-neutral-500 hover:text-[#2F6517] transition-colors flex items-center gap-1 cursor-pointer pt-2">
-            <span>✓</span> 모두 읽음으로 표시
-          </button>
+          <div class="flex flex-wrap items-center gap-3 self-end md:self-auto">
+            <!-- 알림 수신 설정 ON/OFF 토글 -->
+            <div class="flex items-center gap-2.5 bg-[#FAFBF5] px-3.5 py-1.5 rounded-xl border border-[#E2E8D3]">
+              <span class="text-xs font-bold text-neutral-700">알림 수신</span>
+              <button type="button" id="btn-notification-toggle" onclick="toggleNotificationSetting()"
+                role="switch" aria-checked="true"
+                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-[#2F6517] transition-colors duration-200 ease-in-out focus:outline-none">
+                <span id="notification-toggle-thumb" aria-hidden="true"
+                  class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+              </button>
+              <span id="notification-toggle-status-text" class="text-xs font-extrabold text-[#2F6517] w-7 text-center">ON</span>
+            </div>
+
+            <!-- 모두 읽음으로 표시 버튼 -->
+            <button type="button" onclick="markAllNotificationsAsRead()"
+              class="text-xs font-bold text-neutral-500 hover:text-[#2F6517] transition-colors flex items-center gap-1 cursor-pointer px-2 py-1.5">
+              <span>✓</span> 모두 읽음으로 표시
+            </button>
+          </div>
         </section>
 
         <!-- Notifications Dynamic List Container -->
@@ -4979,17 +5025,13 @@
           <!-- Rendered via JavaScript renderNotificationsUI() -->
         </section>
 
-        <!-- Bottom Notice & Settings Link -->
+        <!-- Bottom Notice -->
         <section
-          class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
+          class="flex items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
           <div class="flex items-center gap-1.5 font-medium">
             <span>⏱️</span>
             <span>최근 30일간의 알림만 보관되며 이후 자동 정리됩니다.</span>
           </div>
-          <button type="button" onclick="navigateTo('notification-settings')"
-            class="text-xs font-bold text-neutral-500 hover:text-neutral-800 underline underline-offset-2 transition-colors cursor-pointer">
-            일괄 수신 설정 편집
-          </button>
         </section>
 
       </main>
@@ -5091,7 +5133,7 @@
         </button>
         <button onclick="navigateTo('market')" data-view-btn="market"
           class="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between hover:bg-neutral-100 transition-colors font-medium">
-          <span>7. 문방구 (동전 상점)</span>
+          <span>7. 돼코상점</span>
           <kbd
             class="text-[10px] text-neutral-muted bg-white border border-neutral-border px-1.5 py-0.5 rounded font-mono">7</kbd>
         </button>
@@ -5136,6 +5178,45 @@
        ROUTING, TIMERS & INTERACTION SCRIPT
   ======================================================== -->
   <script>
+    // 통합 에러코드 및 한국어 변환 헬퍼 (window.toUserFriendlyError fallback)
+    function resolveFriendlyError(error, defaultKey = 'SYS_UNKNOWN') {
+      if (typeof window.toUserFriendlyError === 'function') {
+        return window.toUserFriendlyError(error, defaultKey);
+      }
+      const rawMsg = typeof error === 'object' ? (error?.message || '') : String(error || '');
+      const code = typeof error === 'object' ? (error?.code || '') : '';
+      const combined = `${code} ${rawMsg}`.toLowerCase();
+
+      if (/network|fetch|load failed/.test(combined)) {
+        return { id: 'SYS-001', message: '네트워크 연결이 원활하지 않습니다. 인터넷 상태를 확인해 주세요.', formatted: '[SYS-001] 네트워크 연결이 원활하지 않습니다. 인터넷 상태를 확인해 주세요.' };
+      }
+      if (/invalid_credentials|login credentials/.test(combined)) {
+        return { id: 'AUTH-001', message: '이메일 또는 비밀번호가 올바르지 않습니다.', formatted: '[AUTH-001] 이메일 또는 비밀번호가 올바르지 않습니다.' };
+      }
+      if (/email_not_confirmed/.test(combined)) {
+        return { id: 'AUTH-002', message: '이메일 인증을 먼저 완료해 주세요.', formatted: '[AUTH-002] 이메일 인증을 먼저 완료해 주세요.' };
+      }
+      if (/user_already_exists|email_exists|already registered/.test(combined)) {
+        return { id: 'AUTH-003', message: '이미 가입된 이메일 계정입니다. 로그인해 주세요.', formatted: '[AUTH-003] 이미 가입된 이메일 계정입니다. 로그인해 주세요.' };
+      }
+      if (/weak_password|at least 6 characters/.test(combined)) {
+        return { id: 'AUTH-004', message: '비밀번호는 6자 이상이어야 합니다.', formatted: '[AUTH-004] 비밀번호는 6자 이상이어야 합니다.' };
+      }
+      if (/row-level security|permission denied/.test(combined)) {
+        return { id: 'SYS-002', message: '데이터베이스 접근 권한이 없습니다. 다시 로그인해 주세요.', formatted: '[SYS-002] 데이터베이스 접근 권한이 없습니다. 다시 로그인해 주세요.' };
+      }
+      if (/insufficient_funds|not enough coin|코인이 부족/.test(combined)) {
+        return { id: 'COIN-001', message: '보유하신 돼지코인이 부족합니다.', formatted: '[COIN-001] 보유하신 돼지코인이 부족합니다.' };
+      }
+      if (/already_applied|이미 참여/.test(combined)) {
+        return { id: 'PART-001', message: '이미 참여를 완료한 테스트입니다.', formatted: '[PART-001] 이미 참여를 완료한 테스트입니다.' };
+      }
+      if (/[가-힣]/.test(rawMsg) && rawMsg.length >= 4) {
+        return { id: 'SYS-999', message: rawMsg, formatted: `[SYS-999] ${rawMsg}` };
+      }
+      return { id: 'SYS-999', message: '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.', formatted: '[SYS-999] 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.' };
+    }
+    window.resolveFriendlyError = resolveFriendlyError;
     const views = {
       'landing': { title: '랜딩 페이지 (SCR-01)' },
       'login': { title: '로그인 페이지' },
@@ -5143,7 +5224,7 @@
       'create': { title: '테스트 등록 폼 (SCR-15)' },
       'post': { title: '테스트 상세 (제작자 뷰)' },
       'feedback': { title: '피드백 결과 분석 (SCR-16/17)' },
-      'market': { title: '문방구 (동전 상점)' },
+      'market': { title: '돼코상점' },
       'mypage': { title: '마이페이지 (dektop-mypage)' },
       'notifications': { title: '알림 목록' },
       'notification-settings': { title: '알림 수신 설정' }
@@ -5186,7 +5267,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 10h18M5 10l1-5h12l1 5m-14 0v9h14v-9M9 14h6v5" />
           </svg>
-          <span>돼코 상점</span>
+          <span>돼코상점</span>
         </button>
 
         <div class="flex flex-col gap-1">
@@ -5218,7 +5299,7 @@
             <button type="button" data-sidebar-subitem="coins"
               onclick="navigateToMypageSection('mypage-market-section', 'coins'); return false;"
               class="${sidebarSubItemBaseClass} ${sidebarSubItemInactiveClass}">
-              <span>동전내역&amp;적립</span>
+              <span>돼지코인내역&amp;적립</span>
               <span data-sidebar-coin class="text-[10px] font-bold text-primary-dark whitespace-nowrap"></span>
             </button>
             <button type="button" data-sidebar-subitem="support"
@@ -5337,7 +5418,7 @@
         if (breadcrumbLabel) breadcrumbLabel.textContent = '내 프로젝트';
       } else if (sectionKey === 'coins') {
         if (marketSec) marketSec.classList.remove('hidden');
-        if (breadcrumbLabel) breadcrumbLabel.textContent = '동전내역 & 적립';
+        if (breadcrumbLabel) breadcrumbLabel.textContent = '돼지코인내역 & 적립';
       } else if (sectionKey === 'support') {
         if (supportSec) {
           supportSec.classList.remove('hidden');
@@ -5532,7 +5613,7 @@
         ctaBtn.onclick = () => resumeProjectReview(projectId);
         ctaBtn.className = `${baseClass} bg-[#18181B] hover:bg-neutral-800 active:scale-[0.98] text-white shadow-card cursor-pointer`;
         if (ctaIcon) ctaIcon.textContent = '✍️';
-        if (ctaText) ctaText.textContent = `리뷰 작성하기${rewardCoin ? ` · 완료 시 +${Number(rewardCoin).toLocaleString()} 동전` : ''}`;
+        if (ctaText) ctaText.textContent = `리뷰 작성하기${rewardCoin ? ` · 완료 시 +${Number(rewardCoin).toLocaleString()} 돼지코인` : ''}`;
         return;
       }
 
@@ -5551,7 +5632,7 @@
         ? '<span>✅</span> <span>리뷰까지 모두 제출한 테스트입니다. 서비스는 언제든 다시 둘러볼 수 있어요.</span>'
         : state === 'review-needed'
           ? '<span>✍️</span> <span>테스트 참여는 저장됐어요. 리뷰를 작성하면 리워드가 지급됩니다.</span>'
-          : '<span>📢</span> <span>테스트 참여 완료 시 리워드 동전이 수령됩니다.</span>';
+          : '<span>📢</span> <span>테스트 참여 완료 시 리워드 돼지코인이 수령됩니다.</span>';
     }
 
     function refreshFeedPersonalState(projectId) {
@@ -5825,7 +5906,7 @@
         <button type="button" data-top-nav-item="market"
           onclick="navigateTo('market'); return false;"
           class="${topNavItemBaseClass} ${topNavItemInactiveClass}">
-          <span>돼코 상점</span>
+          <span>돼코상점</span>
         </button>
 
         <div data-top-myinfo-wrapper class="relative">
@@ -5855,7 +5936,7 @@
             <button type="button" data-top-nav-subitem="coins"
               onclick="navigateToMypageSection('mypage-market-section', 'coins'); return false;"
               class="${topNavSubItemBaseClass} ${topNavSubItemInactiveClass}">
-              <span>동전내역&amp;적립</span>
+              <span>돼지코인내역&amp;적립</span>
             </button>
             <button type="button" data-top-nav-subitem="support"
               onclick="navigateToMypageSection('mypage-support-section', 'support'); return false;"
@@ -6045,7 +6126,7 @@
         case 'reply': return '피드백 테스트 활동(내 서재) 화면으로 이동 ›';
         case 'approval': return item.is_rejected ? '등록한 서비스 글 수정화면으로 이동 ›' : '등록한 서비스 글 상세화면으로 이동 ›';
         case 'recommend': return '서비스 글 상세화면으로 이동 ›';
-        case 'shop_new': return '돼코 상점 구경가기 ›';
+        case 'shop_new': return '돼코상점 구경가기 ›';
         case 'app_update': return '서비스 글 상세화면으로 이동 ›';
         default: return '관련 화면으로 이동 ›';
       }
@@ -6082,6 +6163,48 @@
       }
     }
 
+    let isNotificationEnabled = localStorage.getItem('don_dwae_notification_enabled') !== 'false';
+
+    function updateNotificationToggleUI() {
+      const btn = document.getElementById('btn-notification-toggle');
+      const thumb = document.getElementById('notification-toggle-thumb');
+      const statusText = document.getElementById('notification-toggle-status-text');
+      const liveBadge = document.getElementById('notification-live-sync-badge');
+
+      if (!btn || !thumb || !statusText) return;
+
+      if (isNotificationEnabled) {
+        btn.setAttribute('aria-checked', 'true');
+        btn.className = 'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-[#2F6517] transition-colors duration-200 ease-in-out focus:outline-none';
+        thumb.className = 'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5';
+        statusText.textContent = 'ON';
+        statusText.className = 'text-xs font-extrabold text-[#2F6517] w-7 text-center';
+        if (liveBadge) {
+          liveBadge.className = 'flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]';
+          liveBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#2F6517] animate-pulse"></span> 실시간 수신 활성';
+        }
+      } else {
+        btn.setAttribute('aria-checked', 'false');
+        btn.className = 'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-neutral-300 transition-colors duration-200 ease-in-out focus:outline-none';
+        thumb.className = 'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0';
+        statusText.textContent = 'OFF';
+        statusText.className = 'text-xs font-extrabold text-neutral-400 w-7 text-center';
+        if (liveBadge) {
+          liveBadge.className = 'flex items-center gap-1.5 text-xs text-neutral-500 font-semibold bg-neutral-100 px-3 py-1 rounded-full border border-neutral-200';
+          liveBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-neutral-400"></span> 수신 일시정지';
+        }
+      }
+    }
+
+    function toggleNotificationSetting() {
+      isNotificationEnabled = !isNotificationEnabled;
+      localStorage.setItem('don_dwae_notification_enabled', isNotificationEnabled ? 'true' : 'false');
+      updateNotificationToggleUI();
+      if (typeof showGenericToast === 'function') {
+        showGenericToast(isNotificationEnabled ? '알림 수신이 활성화되었습니다.' : '알림 수신이 일시정지되었습니다.', isNotificationEnabled ? '🔔' : '🔕');
+      }
+    }
+
     function markAllNotificationsAsRead() {
       (window.notificationsData || []).forEach(n => n.is_read = true);
       renderNotificationsUI();
@@ -6089,6 +6212,7 @@
     }
 
     function renderNotificationsUI() {
+      updateNotificationToggleUI();
       const container = document.getElementById('notifications-list-container');
       const badge = document.getElementById('unread-count-badge');
       if (!container) return;
@@ -6228,14 +6352,26 @@
       icon: '📑'
     };
 
-    // Generic Toast Function
+    // Generic Toast Function (영문 에러 자동 필터링 및 에러코드 매핑 내장)
     function showGenericToast(msg, icon = '✨') {
       const toast = document.getElementById('generic-toast');
       const text = document.getElementById('generic-toast-text');
       const iconEl = document.getElementById('generic-toast-icon');
       if (toast && text) {
-        text.textContent = msg;
+        let displayMsg = msg;
+        if (typeof msg === 'object') {
+          displayMsg = resolveFriendlyError(msg).formatted;
+        } else if (typeof msg === 'string') {
+          const trimmed = msg.trim();
+          const hasKorean = /[가-힣]/.test(trimmed);
+          const isPureEnglish = /^[a-zA-Z0-9_\s\.\:\-\'\"\(\)\,\!\?\/]+$/.test(trimmed) && trimmed.length >= 4;
+          if (!hasKorean && isPureEnglish) {
+            displayMsg = resolveFriendlyError(trimmed).formatted;
+          }
+        }
+        text.textContent = displayMsg;
         if (iconEl) iconEl.textContent = icon;
+        toast.style.zIndex = '99999';
         toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
         toast.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
 
@@ -6374,36 +6510,151 @@
     // ========================================================
     // Requirement 7: Flag Bookmark (Scrap) Toggle
     // ========================================================
-    function toggleBookmark(event, btnElement) {
+    async function toggleBookmark(event, btnElement, projectId) {
       event.stopPropagation();
       const isSaved = btnElement.classList.contains('is-saved');
-      const icon = btnElement.querySelector('.flag-icon');
+      const svg = btnElement.querySelector('svg');
 
       if (!isSaved) {
-        btnElement.classList.add('is-saved');
-        btnElement.classList.remove('text-neutral-400');
-        btnElement.classList.add('text-[#2F6517]', 'bg-primary/20', 'border-primary');
-        if (icon) {
-          icon.setAttribute('fill', '#2F6517');
-          icon.setAttribute('stroke', '#2F6517');
+        btnElement.classList.add('is-saved', 'text-[#2F6517]', 'bg-[#EBF7E3]', 'border-[#A9DD82]');
+        btnElement.classList.remove('text-neutral-400', 'hover:text-neutral-700', 'border-neutral-200');
+        btnElement.setAttribute('title', '스크랩 해제');
+        if (svg) {
+          svg.setAttribute('fill', 'currentColor');
+          svg.setAttribute('stroke', 'currentColor');
         }
         userScrapCount++;
         showGenericToast('📌 프로젝트가 스크랩에 저장되었습니다! 마이페이지에서 확인하실 수 있습니다.', '🚩');
+
+        // Supabase DB 및 마이페이지 컬렉션 연동
+        if (projectId) {
+          const ds = window.donDwaeDataService;
+          if (ds) {
+            try {
+              const { data: { session } } = await ds.supabase.auth.getSession();
+              if (session?.user) {
+                await ds.toggleScrap(session.user.id, projectId, false);
+                const targetProj = (window.liveExploreProjects || []).find(p => String(p.id) === String(projectId));
+                if (targetProj && window.myProjectCollections) {
+                  window.myProjectCollections.scraped = window.myProjectCollections.scraped || [];
+                  if (!window.myProjectCollections.scraped.some(p => String(p.id) === String(projectId))) {
+                    window.myProjectCollections.scraped.unshift(targetProj);
+                  }
+                }
+              }
+            } catch (err) {
+              console.warn('[toggleBookmark] DB sync failed:', err);
+            }
+          }
+        }
       } else {
-        btnElement.classList.remove('is-saved', 'text-[#2F6517]', 'bg-primary/20', 'border-primary');
-        btnElement.classList.add('text-neutral-400');
-        if (icon) {
-          icon.setAttribute('fill', 'none');
-          icon.setAttribute('stroke', 'currentColor');
+        btnElement.classList.remove('is-saved', 'text-[#2F6517]', 'bg-[#EBF7E3]', 'border-[#A9DD82]');
+        btnElement.classList.add('text-neutral-400', 'hover:text-neutral-700', 'border-neutral-200');
+        btnElement.setAttribute('title', '스크랩 저장');
+        if (svg) {
+          svg.setAttribute('fill', 'none');
+          svg.setAttribute('stroke', 'currentColor');
         }
         userScrapCount = Math.max(0, userScrapCount - 1);
         showGenericToast('스크랩 저장이 취소되었습니다.', '🗑️');
+
+        if (projectId) {
+          const ds = window.donDwaeDataService;
+          if (ds) {
+            try {
+              const { data: { session } } = await ds.supabase.auth.getSession();
+              if (session?.user) {
+                await ds.toggleScrap(session.user.id, projectId, true);
+                if (window.myProjectCollections?.scraped) {
+                  window.myProjectCollections.scraped = window.myProjectCollections.scraped.filter(p => String(p.id) !== String(projectId));
+                }
+              }
+            } catch (err) {
+              console.warn('[toggleBookmark] DB remove failed:', err);
+            }
+          }
+        }
       }
 
       // Update MyPage counter if visible
       const scrapEl = document.getElementById('mypage-scrap-count');
-      if (scrapEl) scrapEl.textContent = userScrapCount;
+      const myprojScrapedBadge = document.getElementById('myproj-scraped-count');
+      const actualCount = window.myProjectCollections?.scraped ? window.myProjectCollections.scraped.length : userScrapCount;
+      if (scrapEl) scrapEl.textContent = actualCount;
+      if (myprojScrapedBadge) myprojScrapedBadge.textContent = actualCount;
     }
+
+    function updateDetailBookmarkUI(postId) {
+      const targetId = postId || currentPostId;
+      if (!targetId) return;
+      const isScrapped = (window.myProjectCollections?.scraped || []).some(p => String(p.id) === String(targetId));
+      const titleBtn = document.getElementById('post-title-bookmark-btn');
+      const sideBtn = document.getElementById('post-detail-bookmark-btn');
+      const sideLabel = document.getElementById('post-detail-bookmark-label');
+
+      [titleBtn, sideBtn].forEach(btn => {
+        if (!btn) return;
+        const svg = btn.querySelector('svg');
+        if (isScrapped) {
+          btn.classList.add('is-saved', 'text-[#2F6517]', 'bg-[#EBF7E3]', 'border-[#A9DD82]');
+          btn.classList.remove('text-neutral-400', 'hover:text-neutral-700', 'border-neutral-200');
+          btn.setAttribute('title', '스크랩 해제');
+          if (svg) {
+            svg.setAttribute('fill', 'currentColor');
+            svg.setAttribute('stroke', 'currentColor');
+          }
+        } else {
+          btn.classList.remove('is-saved', 'text-[#2F6517]', 'bg-[#EBF7E3]', 'border-[#A9DD82]');
+          btn.classList.add('text-neutral-400', 'hover:text-neutral-700', 'border-neutral-200');
+          btn.setAttribute('title', '스크랩 저장');
+          if (svg) {
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+          }
+        }
+      });
+
+      if (sideLabel) {
+        sideLabel.textContent = isScrapped ? '저장됨' : '저장';
+      }
+    }
+    window.updateDetailBookmarkUI = updateDetailBookmarkUI;
+
+    async function toggleCurrentDetailBookmark(event) {
+      if (event) event.stopPropagation();
+      const targetId = currentPostId;
+      if (!targetId) return;
+
+      const titleBtn = document.getElementById('post-title-bookmark-btn');
+      const sideBtn = document.getElementById('post-detail-bookmark-btn');
+      const activeBtn = sideBtn || titleBtn;
+      if (!activeBtn) return;
+
+      await toggleBookmark(event, activeBtn, targetId);
+      updateDetailBookmarkUI(targetId);
+
+      // 전체 프로젝트 피드 카드에 동일한 항목이 있다면 동기화
+      const feedCard = document.querySelector(`[data-card-id="${targetId}"]`);
+      if (feedCard) {
+        const feedBtn = feedCard.querySelector('.bookmark-flag-btn');
+        if (feedBtn) {
+          const isNowScrapped = (window.myProjectCollections?.scraped || []).some(p => String(p.id) === String(targetId));
+          const svg = feedBtn.querySelector('svg');
+          if (isNowScrapped) {
+            feedBtn.classList.add('is-saved', 'text-[#2F6517]', 'bg-[#EBF7E3]', 'border-[#A9DD82]');
+            feedBtn.classList.remove('text-neutral-400', 'hover:text-neutral-700', 'border-neutral-200');
+            feedBtn.setAttribute('title', '스크랩 해제');
+            if (svg) svg.setAttribute('fill', 'currentColor');
+          } else {
+            feedBtn.classList.remove('is-saved', 'text-[#2F6517]', 'bg-[#EBF7E3]', 'border-[#A9DD82]');
+            feedBtn.classList.add('text-neutral-400', 'hover:text-neutral-700', 'border-neutral-200');
+            feedBtn.setAttribute('title', '스크랩 저장');
+            if (svg) svg.setAttribute('fill', 'none');
+          }
+        }
+      }
+    }
+    window.toggleCurrentDetailBookmark = toggleCurrentDetailBookmark;
 
     function updatePledgeModalUI() {
       const count = getCompletedTestCount();
@@ -6428,7 +6679,7 @@
     }
 
     // ========================================================
-    // Requirement 6: 동전 상점 (문방구) Marketplace Logic
+    // Requirement 6: 돼코상점 Marketplace Logic
     // Reference: destop-creator-coinmarket-and-exchange.png 1:1
     // ========================================================
     function filterMarketCategory(cat, btn) {
@@ -6497,7 +6748,7 @@
         if (remain < 0) {
           actionBtn.disabled = true;
           actionBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-neutral-200 text-neutral-400 font-bold text-sm cursor-not-allowed';
-          actionBtn.textContent = '동전이 부족합니다';
+          actionBtn.textContent = '돼지코인이 부족합니다';
         } else {
           actionBtn.disabled = false;
           actionBtn.className = 'w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-[0.98] text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20';
@@ -6509,7 +6760,7 @@
     async function executeExchange() {
       if (!selectedMarketProduct) return;
       if (userCoinBalance < selectedMarketProduct.price) {
-        showGenericToast('보유 동전이 부족합니다.', '⚠️');
+        showGenericToast(resolveFriendlyError('COIN_INSUFFICIENT', 'COIN_INSUFFICIENT').formatted, '⚠️');
         return;
       }
       const actionButton = document.getElementById('btn-exchange-action');
@@ -6542,7 +6793,7 @@
         }
       } catch (err) {
         console.error('[Don Dwae DB] Transactional marketplace exchange failed:', err);
-        showGenericToast(err?.message || '상품 교환에 실패했습니다.', '⚠️');
+        showGenericToast(resolveFriendlyError(err, 'COIN_TRANSACTION_FAILED').formatted, '⚠️');
       } finally {
         if (actionButton) actionButton.disabled = false;
         selectMarketProduct(
@@ -6575,7 +6826,7 @@
         const el = document.getElementById(id);
         if (el) {
           if (id === 'step3-user-coin-balance') {
-            el.textContent = `보유: ${valStr} 동전`;
+            el.textContent = `보유: ${valStr} 돼지코인`;
           } else if (id === 'user-coin-badge' || id === 'market-user-coin-display' || id === 'mypage-metric-coin' || id === 'mypage-section-coin') {
             el.textContent = valStr;
           } else {
@@ -6996,7 +7247,7 @@
         }
         const minimumReward = Number(rewardInput?.min || 0);
         if (!rewardInput?.value || Number(rewardInput.value) < minimumReward) {
-          return showCreateStepValidationError(3, rewardInput, `1인당 보상은 ${minimumReward}동전 이상 입력해 주세요.`);
+          return showCreateStepValidationError(3, rewardInput, `1인당 보상은 ${minimumReward}돼지코인 이상 입력해 주세요.`);
         }
         return true;
       }
@@ -7261,12 +7512,12 @@
         targetCountInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
 
-      // 1인당 보상 동전: 수정 가능 (단, 기존 보상 미만으로는 삭감 불가)
+      // 1인당 보상 돼지코인: 수정 가능 (단, 기존 보상 미만으로는 삭감 불가)
       if (rewardCoinInput) {
         rewardCoinInput.value = test.rewardCoin || 50;
         rewardCoinInput.disabled = false;
         rewardCoinInput.min = test.rewardCoin || 50;
-        rewardCoinInput.title = `기존 1인당 보상(${test.rewardCoin || 50}동전) 이상으로 상향 설정 가능합니다.`;
+        rewardCoinInput.title = `기존 1인당 보상(${test.rewardCoin || 50}돼지코인) 이상으로 상향 설정 가능합니다.`;
         rewardCoinInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
 
@@ -7863,7 +8114,7 @@
         typeTag.className = 'px-3 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-bold border border-[#2F6517]/20';
       }
       if (timeTag) timeTag.innerHTML = `⏱️ 소요시간: 약 ${test.duration || '3분'}`;
-      if (rewardTag) rewardTag.innerHTML = `🪙 ${test.reward_coin || 500} 동전`;
+      if (rewardTag) rewardTag.innerHTML = `🪙 ${test.reward_coin || 500} 돼지코인`;
       if (creatorName) creatorName.textContent = `제작자: ${creatorNick}`;
       if (creatorTools) creatorTools.innerHTML = isApp ? `📱 플랫폼: 모바일 앱 (iOS/Android)` : `🛠️ 플랫폼: ${test.platform || 'web'}`;
       if (creatorMeta) creatorMeta.innerHTML = `👥 모집 현황: ${test.current_count || 0}/${test.target_count || 10}명`;
@@ -7945,8 +8196,8 @@
                 <span class="text-lg font-extrabold text-primary-dark">${test.current_count || 0} 명</span>
               </div>
               <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 동전</span>
-                <span class="text-lg font-extrabold text-[#7E22CE]">${test.reward_coin || 500} 동전</span>
+                <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 돼지코인</span>
+                <span class="text-lg font-extrabold text-[#7E22CE]">${test.reward_coin || 500} 돼지코인</span>
               </div>
             </div>
             <div class="w-full h-36 bg-[#F9FBEC] rounded-xl border border-[#DCE4B8] p-3 flex flex-col items-center justify-center text-center overflow-hidden">
@@ -8052,22 +8303,21 @@
       if (recruitsBar) recruitsBar.style.width = `${Math.max(percent, 4)}%`;
       if (regDate) regDate.textContent = test.created_at ? test.created_at.split('T')[0] : '2026-09-08';
       if (endDate) endDate.textContent = test.end_date || '2026-09-22';
-      if (rewardMeta) rewardMeta.innerHTML = `${test.reward_coin || 500} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">`;
+      if (rewardMeta) rewardMeta.innerHTML = `${test.reward_coin || 500} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인">`;
 
-      // 1. 개발 환경 태그와 권장 참여 대상 태그를 분리해 표시합니다.
-      const projectTechTags = (test.tech_tags && Array.isArray(test.tech_tags) && test.tech_tags.length > 0)
-        ? test.tech_tags
-        : (test.techTags && Array.isArray(test.techTags) && test.techTags.length > 0 ? test.techTags : []);
-      const projectPersonaTags = (test.target_persona_tags && Array.isArray(test.target_persona_tags) && test.target_persona_tags.length > 0)
+      // 1. 참여 권장 대상 / 키워드 태그 바인딩 (기존 DB 필드 그대로 호환)
+      const projectTargetTags = (test.target_persona_tags && Array.isArray(test.target_persona_tags) && test.target_persona_tags.length > 0)
         ? test.target_persona_tags
-        : (test.personaTags && Array.isArray(test.personaTags) && test.personaTags.length > 0 ? test.personaTags : []);
+        : ((test.tech_tags && Array.isArray(test.tech_tags) && test.tech_tags.length > 0)
+          ? test.tech_tags
+          : (test.techTags && Array.isArray(test.techTags) && test.techTags.length > 0 ? test.techTags : []));
 
       // 2. 상단 기술 / 키워드 태그 바인딩
       const techTagsList = document.getElementById('post-tech-tags-list');
       if (techTagsList) {
-        if (projectTechTags.length > 0) {
+        if (projectTargetTags.length > 0) {
           techTagsList.style.display = '';
-          techTagsList.innerHTML = projectTechTags.map(t => {
+          techTagsList.innerHTML = projectTargetTags.map(t => {
             const normalizedTag = String(t);
             const cleanTag = normalizedTag.startsWith('#') ? normalizedTag : `#${normalizedTag}`;
             return `<span class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">${cleanTag}</span>`;
@@ -8078,12 +8328,12 @@
         }
       }
 
-      // 3. 개요 탭 '이런 분들의 참여를 원해요' (페르소나 태그) 바인딩 및 조건부 숨김
+      // 3. 개요 탭 '이런 분이면 딱이에요!' 바인딩
       const personaTagsList = document.getElementById('post-persona-tags-list');
       const personaBoxParent = personaTagsList?.closest('.p-5.rounded-2xl');
       if (personaTagsList) {
-        if (projectPersonaTags.length > 0) {
-          personaTagsList.innerHTML = projectPersonaTags.map(t => {
+        if (projectTargetTags.length > 0) {
+          personaTagsList.innerHTML = projectTargetTags.map(t => {
             const cleanTag = String(t).replace(/^#/, '');
             return `<span class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🎯 ${cleanTag}</span>`;
           }).join('');
@@ -8113,14 +8363,14 @@
       const sideRewardCoin = document.getElementById('post-reward-coin-num');
       if (sideRewardCoin) sideRewardCoin.textContent = `${test.reward_coin || 500} C`;
 
-      // 5. 사이드바 사용 도구 바인딩 (태그가 있으면 표시, 없으면 숨김)
+      // 5. 사이드바 '이런 분이면 딱이에요' 태그 바인딩 (기존 '사용 도구' 위치)
       const toolsRow = document.getElementById('post-side-tools-row');
       const toolsIcons = document.getElementById('post-tools-icons');
       if (toolsIcons) {
-        if (projectTechTags.length > 0) {
-          toolsIcons.innerHTML = projectTechTags.map(t => `
+        if (projectTargetTags.length > 0) {
+          toolsIcons.innerHTML = projectTargetTags.map(t => `
             <span class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
-              <span>🏷️</span> ${t.replace(/^#/, '')}
+              <span>🏷️</span> ${String(t).replace(/^#/, '')}
             </span>
           `).join('');
           if (toolsRow) toolsRow.style.display = '';
@@ -8194,12 +8444,13 @@
           creatorActions.classList.remove('flex');
         }
         if (sidebarBadge) {
-          sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 동전이 수령됩니다.</span>';
+          sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 돼지코인이 수령됩니다.</span>';
         }
       }
 
       // Fetch and render project reviews in TAB 3
       renderDetailReviews(test.id, test);
+      updateDetailBookmarkUI(test.id);
     };
 
     // 알림·토스트처럼 프로젝트를 특정하지 않고 들어오는 경로는 내가 등록한 프로젝트를 연다.
@@ -8316,7 +8567,7 @@
             if (totalRewardEl) totalRewardEl.textContent = (reviewCount * rewardPerReview).toLocaleString();
             if (perPersonRewardEl) {
               perPersonRewardEl.textContent = reviewCount > 0
-                ? `리뷰 완료 ${reviewCount}명 · 1인당 ${rewardPerReview.toLocaleString()} 동전 지급`
+                ? `리뷰 완료 ${reviewCount}명 · 1인당 ${rewardPerReview.toLocaleString()} 돼지코인 지급`
                 : '아직 지급된 리뷰 리워드가 없습니다';
             }
 
@@ -8408,6 +8659,7 @@
         localStorage.setItem('dondwae_current_post_id', postId);
       } catch (e) {}
       navigateTo('post');
+      updateDetailBookmarkUI(postId);
 
       if (window.donDwaeDataService && typeof window.donDwaeDataService.fetchProjectById === 'function') {
         try {
@@ -8431,7 +8683,7 @@
           typeTag.className = 'px-3 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-bold border border-[#2F6517]/20';
         }
         if (timeTag) timeTag.innerHTML = `⏱️ 소요시간: 약 ${test.duration || 5}분`;
-        if (rewardTag) rewardTag.innerHTML = `🪙 ${test.rewardCoin} 동전`;
+        if (rewardTag) rewardTag.innerHTML = `🪙 ${test.rewardCoin} 돼지코인`;
         if (creatorName) creatorName.textContent = '제작자: 바이브코더123 (나)';
         if (creatorTools) creatorTools.innerHTML = `🛠️ 사용 툴: ${(test.techTags || []).join(' ') || '미입력'}`;
         if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 1인, 3일';
@@ -8498,8 +8750,8 @@
                   <span class="text-lg font-extrabold text-primary-dark">${test.currentRecruits} 명</span>
                 </div>
                 <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
-                  <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 동전</span>
-                  <span class="text-lg font-extrabold text-[#7E22CE]">${test.rewardCoin} 동전</span>
+                  <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 돼지코인</span>
+                  <span class="text-lg font-extrabold text-[#7E22CE]">${test.rewardCoin} 돼지코인</span>
                 </div>
               </div>
               <div class="w-full h-36 bg-[#F9FBEC] rounded-xl border border-[#DCE4B8] p-3 flex flex-col items-center justify-center text-center overflow-hidden">
@@ -8569,7 +8821,7 @@
         if (regDate) regDate.textContent = test.regDate;
         if (endDate) endDate.textContent = test.endDate;
         const totalBudget = test.rewardCoin * test.targetCount;
-        if (rewardMeta) rewardMeta.innerHTML = `${test.rewardCoin} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전"> (총 ${totalBudget.toLocaleString()} 동전)`;
+        if (rewardMeta) rewardMeta.innerHTML = `${test.rewardCoin} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인"> (총 ${totalBudget.toLocaleString()} 돼지코인)`;
 
         // SIDEBAR: 로그인된 경우만 [관리자 뷰] 노출
         if (window.isUserLoggedIn) {
@@ -8585,7 +8837,7 @@
           }
         } else {
           if (sidebarBadge) {
-            sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 동전이 수령됩니다.</span>';
+            sidebarBadge.innerHTML = '<span>📢</span> <span>테스트 참여 완료 시 리워드 돼지코인이 수령됩니다.</span>';
           }
           if (ctaBtn) {
             ctaBtn.classList.remove('hidden');
@@ -8604,7 +8856,7 @@
           typeTag.className = 'px-3 py-1 rounded-md bg-purple-100 text-purple-800 text-xs font-bold';
         }
         if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 3분';
-        if (rewardTag) rewardTag.innerHTML = '🪙 350 동전';
+        if (rewardTag) rewardTag.innerHTML = '🪙 350 돼지코인';
         if (creatorName) creatorName.textContent = '제작자: 프로토타이퍼';
         if (creatorTools) creatorTools.innerHTML = '🛠️ 사용 툴: Figma, Webflow, Relume';
         if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 1인, 5일';
@@ -8700,7 +8952,7 @@
         if (recruitsBar) recruitsBar.style.width = '48%';
         if (regDate) regDate.textContent = '2024. 11. 18.';
         if (endDate) endDate.textContent = '2024. 12. 02.';
-        if (rewardMeta) rewardMeta.innerHTML = '350 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">';
+        if (rewardMeta) rewardMeta.innerHTML = '350 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인">';
 
         if (sidebarBadge) sidebarBadge.innerHTML = '<span>📢</span> <span>다른 제작자가 등록한 테스트입니다</span>';
         if (ctaBtn) ctaBtn.classList.remove('hidden');
@@ -8714,7 +8966,7 @@
             ctaBtn.disabled = true;
             ctaBtn.className = 'w-full py-4 px-4 rounded-xl bg-neutral-200 text-neutral-500 font-extrabold text-sm cursor-not-allowed flex items-center justify-center gap-2';
           }
-          if (ctaBtnText) ctaBtnText.textContent = '✓ 테스터 참여 완료됨 (+350 동전 수령)';
+          if (ctaBtnText) ctaBtnText.textContent = '✓ 테스터 참여 완료됨 (+350 돼지코인 수령)';
         } else {
           if (ctaBtn) {
             ctaBtn.disabled = false;
@@ -8731,7 +8983,7 @@
           typeTag.className = 'px-3 py-1 rounded-md bg-pink-100 text-[#BE185D] text-xs font-bold';
         }
         if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 3분';
-        if (rewardTag) rewardTag.innerHTML = '🪙 200 동전';
+        if (rewardTag) rewardTag.innerHTML = '🪙 200 돼지코인';
         if (creatorName) creatorName.textContent = '제작자: 인디해커_K';
         if (creatorTools) creatorTools.innerHTML = '🛠️ 사용 툴: Cursor, Next.js, v0';
         if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 1인, 7일';
@@ -8780,7 +9032,7 @@
                 <span class="text-lg font-extrabold text-primary-dark">65%</span>
               </div>
               <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">보상 동전</span>
+                <span class="text-[10px] text-neutral-400 block mb-1">보상 돼지코인</span>
                 <span class="text-lg font-extrabold text-[#7E22CE]">200 C</span>
               </div>
             </div>
@@ -8810,7 +9062,7 @@
         if (recruitsBar) recruitsBar.style.width = '60%';
         if (regDate) regDate.textContent = '2024. 11. 17.';
         if (endDate) endDate.textContent = '2024. 11. 24.';
-        if (rewardMeta) rewardMeta.innerHTML = '200 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">';
+        if (rewardMeta) rewardMeta.innerHTML = '200 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인">';
 
         if (sidebarBadge) sidebarBadge.innerHTML = '<span>📢</span> <span>다른 제작자가 등록한 테스트입니다</span>';
         if (ctaBtn) ctaBtn.classList.remove('hidden');
@@ -8823,7 +9075,7 @@
           typeTag.className = 'px-3 py-1 rounded-md bg-amber-100 text-amber-900 text-xs font-bold';
         }
         if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 1분';
-        if (rewardTag) rewardTag.innerHTML = '🪙 100 동전';
+        if (rewardTag) rewardTag.innerHTML = '🪙 100 돼지코인';
         if (creatorName) creatorName.textContent = '제작자: SaaS_Maker';
         if (creatorTools) creatorTools.innerHTML = '🛠️ 사용 툴: Next.js, Tailwind, Vercel';
         if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 1인, 14일';
@@ -8872,7 +9124,7 @@
                 <span class="text-lg font-extrabold text-primary-dark">5 명</span>
               </div>
               <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
-                <span class="text-[10px] text-neutral-400 block mb-1">지급 동전</span>
+                <span class="text-[10px] text-neutral-400 block mb-1">지급 돼지코인</span>
                 <span class="text-lg font-extrabold text-[#7E22CE]">100 C</span>
               </div>
             </div>
@@ -8902,7 +9154,7 @@
         if (recruitsBar) recruitsBar.style.width = '5%';
         if (regDate) regDate.textContent = '2024. 11. 19.';
         if (endDate) endDate.textContent = '2024. 12. 03.';
-        if (rewardMeta) rewardMeta.innerHTML = '100 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">';
+        if (rewardMeta) rewardMeta.innerHTML = '100 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인">';
 
         if (sidebarBadge) sidebarBadge.innerHTML = '<span>📢</span> <span>다른 제작자가 등록한 테스트입니다</span>';
         if (ctaBtn) ctaBtn.classList.remove('hidden');
@@ -8915,7 +9167,7 @@
           typeTag.className = 'px-3 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-bold border border-[#2F6517]/20';
         }
         if (timeTag) timeTag.innerHTML = '⏱️ 소요시간: 약 5분';
-        if (rewardTag) rewardTag.innerHTML = '🪙 600 동전';
+        if (rewardTag) rewardTag.innerHTML = '🪙 600 돼지코인';
         if (creatorName) creatorName.textContent = '제작자: 핀테크러버';
         if (creatorTools) creatorTools.innerHTML = '🛠️ 사용 툴: Next.js, Supabase, v0';
         if (creatorMeta) creatorMeta.innerHTML = '👥 참여 인원 및 기간: 총 3인, 10일';
@@ -9005,7 +9257,7 @@
         if (recruitsBar) recruitsBar.style.width = '56%';
         if (regDate) regDate.textContent = '2024. 11. 15.';
         if (endDate) endDate.textContent = '2024. 11. 30.';
-        if (rewardMeta) rewardMeta.innerHTML = '600 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="동전">';
+        if (rewardMeta) rewardMeta.innerHTML = '600 <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인">';
 
         if (sidebarBadge) sidebarBadge.innerHTML = '<span>📢</span> <span>다른 제작자가 등록한 테스트입니다</span>';
         if (ctaBtn) ctaBtn.classList.remove('hidden');
@@ -9019,7 +9271,7 @@
             ctaBtn.disabled = true;
             ctaBtn.className = 'w-full py-4 px-4 rounded-xl bg-neutral-200 text-neutral-500 font-extrabold text-sm cursor-not-allowed flex items-center justify-center gap-2';
           }
-          if (ctaBtnText) ctaBtnText.textContent = '✓ 테스터 참여 완료됨 (+600 동전 수령)';
+          if (ctaBtnText) ctaBtnText.textContent = '✓ 테스터 참여 완료됨 (+600 돼지코인 수령)';
         } else {
           if (ctaBtn) {
             ctaBtn.disabled = false;
@@ -9126,7 +9378,7 @@
             : project.platform === 'app' ? '📱' : project.category === 'survey' ? '📋' : '🖥️';
         }
         if (badge) badge.textContent = `[${categoryLabel}]`;
-        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin || 0).toLocaleString()} 동전 수령`;
+        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin || 0).toLocaleString()} 돼지코인 수령`;
         if (title) title.textContent = project.service_name || project.title || '서비스 테스트';
         if (desc) desc.textContent = project.service_desc || project.test_notice || '안내 항목을 확인한 뒤 테스트를 시작해 주세요.';
 
@@ -9159,16 +9411,24 @@
             </div>`).join('');
         }
 
-        const targetTags = Array.isArray(project.target_persona_tags) ? project.target_persona_tags.filter(Boolean) : [];
+        const rawPPersona = Array.isArray(project.target_persona_tags) ? project.target_persona_tags.filter(Boolean) : [];
+        const rawPTech = Array.isArray(project.tech_tags) ? project.tech_tags.filter(Boolean) : [];
+        const targetTags = [...rawPPersona];
+        rawPTech.forEach(t => {
+          const clean = String(t || '').replace(/^#/, '').trim();
+          const lower = clean.toLowerCase();
+          const isP = ['분', '직', '자', '관심', '필요', '타겟', '유저', '사용자', '세일즈', '영업', '인맥', '학생', '직장인', '대표', '20대', '30대', '40대', '50대', '남성', '여성', '습관', '초보', '경험', '보유', '인터뷰', '기획', '마케터', '디자이너', '개발자', '자영업', '고객', '매칭'].some(kw => lower.includes(kw)) || (clean.length >= 7 && (clean.includes(' ') || /[가-힣]/.test(clean)));
+          if (isP && !targetTags.includes(clean)) targetTags.push(clean);
+        });
         if (targetBox) targetBox.classList.toggle('hidden', targetTags.length === 0);
         if (targetText && targetTags.length > 0) {
-          targetText.textContent = `권장 관심 분야: ${targetTags.map(tag => String(tag).replace(/^#/, '')).join(', ')}`;
+          targetText.textContent = `이런 분이면 딱이에요: ${targetTags.map(tag => String(tag).replace(/^#/, '')).join(', ')}`;
         }
       } else if (isPrototype) {
         if (targetBox) targetBox.classList.remove('hidden');
         if (thumbBox) thumbBox.innerHTML = '⚡';
         if (badge) badge.textContent = '[투표/A-B 테스트]';
-        if (reward) reward.textContent = '🪙 350 동전 수령';
+        if (reward) reward.textContent = '🪙 350 돼지코인 수령';
         if (title) title.textContent = '노코드 온보딩 프로토타입 비교';
         if (desc) desc.textContent = '신규 가입자 온보딩 A안 vs B안 화면 비교 및 선호도 평가';
         if (checklist) {
@@ -9185,7 +9445,7 @@
         if (targetBox) targetBox.classList.remove('hidden');
         if (thumbBox) thumbBox.innerHTML = '📱';
         if (badge) badge.textContent = '[프로덕트 테스트]';
-        if (reward) reward.textContent = '🪙 600 동전 수령';
+        if (reward) reward.textContent = '🪙 600 돼지코인 수령';
         if (title) title.textContent = '스마트 가계부 머니로그';
         if (desc) desc.textContent = '영수증 사진 한 장으로 지출을 자동 분류하는 스마트 가계부';
         if (checklist) {
@@ -9265,7 +9525,7 @@
         }
       }
 
-      // 1. 참여 Record 생성 및 동전 처리 준비
+      // 1. 참여 Record 생성 및 돼지코인 처리 준비
       userParticipatedTests[pId] = true;
       const rewardVal = Number(
         project?.reward_coin
@@ -9326,7 +9586,7 @@
 
         // 모달을 외부 완료 안내 뷰로 전환
         const externalRewardText = document.getElementById('part-external-reward-text');
-        if (externalRewardText) externalRewardText.textContent = `${rewardVal} 동전`;
+        if (externalRewardText) externalRewardText.textContent = `${rewardVal} 돼지코인`;
         viewExternal.classList.remove('hidden');
       }
     }
@@ -9459,7 +9719,7 @@
           ? `${serviceName} ${isVoteMission ? '선호도 투표' : '검증 문항 작성'}`
           : '투표 및 검증 작성';
       }
-      if (rewardEl) rewardEl.textContent = `+${rewardValue.toLocaleString()} 동전`;
+      if (rewardEl) rewardEl.textContent = `+${rewardValue.toLocaleString()} 돼지코인`;
 
       if (!project) {
         dynamicContent.innerHTML = `
@@ -9476,7 +9736,7 @@
             <span>✓</span> ${isVoteMission ? '시안 선택 후 제출' : `검증 문항 ${questions.length || 1}개`}
           </span>
           <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] font-bold">
-            🪙 리뷰 저장 시 +${rewardValue.toLocaleString()} 동전
+            🪙 리뷰 저장 시 +${rewardValue.toLocaleString()} 돼지코인
           </span>
         </div>`;
 
@@ -9563,11 +9823,13 @@
     // ========================================================
     let currentFeedbackVerificationMethod = 'none';
     let feedbackScreenshotDataUrl = null;
+    let currentFeedbackProjectQuizzes = [];
 
     async function openFeedbackWriteModal(postId) {
       closeTestParticipateModal();
       currentFeedbackVerificationMethod = 'none';
       feedbackScreenshotDataUrl = null;
+      currentFeedbackProjectQuizzes = [];
 
       const pId = postId || currentParticipatingPostId || currentPostId || '11111111-1111-1111-1111-111111111111';
       currentParticipatingPostId = pId;
@@ -9601,7 +9863,7 @@
       const categoryText = dbProj?.category === 'vote' ? '🗳️ 투표 테스트' : (dbProj?.category === 'survey' ? '📋 설문조사' : '📱 프로덕트 테스트');
 
       if (badge) badge.textContent = `${categoryText} 피드백`;
-      if (reward) reward.textContent = `🪙 +${rewardCoin} 동전 지급`;
+      if (reward) reward.textContent = `🪙 +${rewardCoin} 돼지코인 지급`;
       if (title) title.textContent = `${titleText} 피드백 작성`;
 
       // Render content based on test type & DB questions/quizzes
@@ -9655,6 +9917,7 @@
       const quizzesList = isQuizVerification
         ? parseFeedbackItems(dbProj?.quizzes, myCreatedTest?.quizzes || [])
         : [];
+      currentFeedbackProjectQuizzes = quizzesList;
       const verificationItems = [
         ...questionsList.map((q, idx) => ({ q, idx, isQuiz: false })),
         ...quizzesList.map((q, idx) => ({ q, idx: questionsList.length + idx, isQuiz: true }))
@@ -9769,26 +10032,33 @@
               if (isQuiz) {
                 const quizQuestionText = q.question || '퀴즈 질문';
                 const options = (q.options && q.options.length > 0) ? q.options : null;
+                const expectedAnswer = q.answer || '';
                 return `
-                      <div class="p-3.5 bg-amber-50/70 rounded-lg border border-amber-200/80 flex flex-col gap-2">
+                      <div class="p-3.5 bg-amber-50/70 rounded-lg border border-amber-200/80 flex flex-col gap-2 fb-quiz-block">
                         <div class="flex items-center justify-between">
                           <span class="font-extrabold text-neutral-800 flex items-center gap-1">
-                            <span class="text-amber-600">❓</span> Q${idx + 1}. [검증 퀴즈] ${quizQuestionText}
+                            <span class="text-amber-600">❓</span> Q${idx + 1}. [검증 퀴즈] ${escapeHtml(quizQuestionText)} <span class="text-red-500">*</span>
                           </span>
-                          <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">정답 확인</span>
+                          <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">정답 확인 (필수)</span>
                         </div>
                         ${options ? `
                           <div class="flex flex-col gap-1.5 text-[11px]">
                             ${options.map((optText, oIdx) => `
                               <label class="p-2.5 border border-amber-200/80 hover:border-amber-400 bg-white rounded-md flex items-center gap-2 cursor-pointer font-medium text-neutral-800 transition-colors">
-                                <input type="radio" name="fb-product-quiz-q${idx}" value="opt${oIdx + 1}" ${oIdx === 0 ? 'checked' : ''} class="accent-[#2F6517]">
-                                <span>${oIdx + 1}. ${optText}</span>
+                                <input type="radio" name="fb-product-quiz-q${idx}" value="${escapeHtml(optText)}" data-quiz-expected="${escapeHtml(expectedAnswer)}" data-quiz-question="${escapeHtml(quizQuestionText)}" ${oIdx === 0 ? 'checked' : ''} class="accent-[#2F6517]">
+                                <span>${oIdx + 1}. ${escapeHtml(optText)}</span>
                               </label>
                             `).join('')}
                           </div>
                         ` : `
                           <div class="flex flex-col gap-1 text-[11px]">
-                            <input type="text" placeholder="서비스를 사용하고 확인한 퀴즈 정답을 입력하세요 (예: 8개, 파란색 등)" class="fb-quiz-answer-input w-full p-2.5 rounded-md border border-amber-300 bg-white text-xs font-semibold focus:outline-none focus:border-amber-500 text-neutral-800" />
+                            <input type="text"
+                              placeholder="서비스를 사용하고 확인한 퀴즈 정답을 입력하세요 (예: 8개, 파란색 등)"
+                              data-quiz-index="${idx}"
+                              data-quiz-question="${escapeHtml(quizQuestionText)}"
+                              data-quiz-expected="${escapeHtml(expectedAnswer)}"
+                              oninput="this.classList.remove('border-red-500', 'ring-2', 'ring-red-200')"
+                              class="fb-quiz-answer-input w-full p-2.5 rounded-md border border-amber-300 bg-white text-xs font-semibold focus:outline-none focus:border-amber-500 text-neutral-800" />
                           </div>
                         `}
                       </div>
@@ -9884,13 +10154,17 @@
 
       if (isQuizVerification && quizzesList.length > 0 && !container.querySelector('.fb-quiz-answer-input')) {
         container.insertAdjacentHTML('beforeend', `
-          <div class="flex flex-col gap-3 p-4 bg-amber-50/70 rounded-xl border border-amber-200/80">
-            <span class="text-xs font-extrabold text-neutral-800">❓ 참여 확인 퀴즈</span>
+          <div class="flex flex-col gap-3 p-4 bg-amber-50/70 rounded-xl border border-amber-200/80 fb-quiz-block">
+            <span class="text-xs font-extrabold text-neutral-800">❓ 참여 확인 퀴즈 <span class="text-red-500">*</span></span>
             ${quizzesList.map((quiz, index) => `
               <label class="flex flex-col gap-1.5 text-xs font-bold text-neutral-700">
-                <span>Q${index + 1}. ${escapeHtml(quiz.question || '퀴즈 질문')}</span>
+                <span>Q${index + 1}. ${escapeHtml(quiz.question || '퀴즈 질문')} <span class="text-red-500">*</span></span>
                 <input type="text" class="fb-quiz-answer-input w-full p-2.5 rounded-lg border border-amber-300 bg-white text-xs font-semibold focus:outline-none focus:border-amber-500"
-                  placeholder="서비스를 이용하고 확인한 정답을 입력하세요" />
+                  placeholder="서비스를 이용하고 확인한 정답을 입력하세요"
+                  data-quiz-index="${index}"
+                  data-quiz-question="${escapeHtml(quiz.question || `퀴즈 ${index + 1}번`)}"
+                  data-quiz-expected="${escapeHtml(quiz.answer || '')}"
+                  oninput="this.classList.remove('border-red-500', 'ring-2', 'ring-red-200')" />
               </label>
             `).join('')}
           </div>`);
@@ -10014,13 +10288,79 @@
         .filter(field => !field.hasAttribute('data-feedback-question'));
       const reviewText = textareas.map(input => input.value.trim()).filter(Boolean).join('\n\n');
 
+      // ----------------------------------------------------
+      // 참여 검증 수단 유효성 검사 (퀴즈 / 스크린샷)
+      // ----------------------------------------------------
+      const quizInputs = [...(modalBody?.querySelectorAll('.fb-quiz-answer-input') || [])];
+      const isQuizVerificationActive = currentFeedbackVerificationMethod === 'quiz'
+        || (Array.isArray(currentFeedbackProjectQuizzes) && currentFeedbackProjectQuizzes.length > 0)
+        || quizInputs.length > 0;
+
       const quizAnswers = {};
-      modalBody?.querySelectorAll('.fb-quiz-answer-input').forEach((input, index) => {
-        if (input.value.trim()) quizAnswers[`quiz_${index + 1}`] = input.value.trim();
-      });
+
+      if (isQuizVerificationActive) {
+        if (quizInputs.length === 0 && Array.isArray(currentFeedbackProjectQuizzes) && currentFeedbackProjectQuizzes.length > 0) {
+          showGenericToast('[PART-004] 참여 검증 퀴즈를 불러오지 못했습니다. 페이지 새로고침 후 다시 시도해 주세요.', '⚠️');
+          return;
+        }
+
+        const normalizeQuizText = (text) => String(text || '').trim().toLowerCase().replace(/\s+/g, '');
+
+        for (let i = 0; i < quizInputs.length; i++) {
+          const input = quizInputs[i];
+          const val = input.value.trim();
+          const qName = input.dataset.quizQuestion || `검증 퀴즈 ${i + 1}번`;
+          const expected = input.dataset.quizExpected || currentFeedbackProjectQuizzes[i]?.answer || '';
+
+          // 1. 필수 답변 미입력 시 제출 및 코인 지급 차단
+          if (!val) {
+            showGenericToast(`[PART-004] ${qName} 답변을 입력해 주세요. (필수)`, '⚠️');
+            input.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+            input.focus();
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+          }
+
+          // 2. 제작자가 정답을 등록한 경우 정답 일치 여부 검증
+          if (expected && expected.trim()) {
+            if (normalizeQuizText(val) !== normalizeQuizText(expected)) {
+              showGenericToast('[PART-004] 퀴즈 정답이 올바르지 않습니다. 서비스에서 확인한 내용을 다시 입력해 주세요.', '⚠️');
+              input.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+              input.focus();
+              input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              return;
+            }
+          }
+
+          input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+          quizAnswers[`quiz_${i + 1}`] = val;
+        }
+
+        // 객관식 퀴즈 문항이 포함된 경우 선택 및 정답 검증
+        const quizRadioNames = [...new Set([...(modalBody?.querySelectorAll('input[type="radio"][name^="fb-product-quiz-"]') || [])].map(r => r.name))];
+        for (const radioName of quizRadioNames) {
+          const checkedRadio = modalBody?.querySelector(`input[name="${radioName}"]:checked`);
+          if (!checkedRadio) {
+            showGenericToast('[PART-004] 객관식 검증 퀴즈 항목을 선택해 주세요.', '⚠️');
+            return;
+          }
+          const expected = checkedRadio.dataset.quizExpected || '';
+          if (expected && expected.trim()) {
+            if (normalizeQuizText(checkedRadio.value) !== normalizeQuizText(expected)) {
+              showGenericToast('[PART-004] 퀴즈 정답이 올바르지 않습니다. 서비스에서 확인한 내용을 다시 입력해 주세요.', '⚠️');
+              return;
+            }
+          }
+          quizAnswers[radioName] = checkedRadio.value;
+        }
+      } else {
+        quizInputs.forEach((input, index) => {
+          if (input.value.trim()) quizAnswers[`quiz_${index + 1}`] = input.value.trim();
+        });
+      }
 
       if (currentFeedbackVerificationMethod === 'screenshot' && !feedbackScreenshotDataUrl) {
-        showGenericToast('참여 확인용 스크린샷을 첨부해 주세요.', '⚠️');
+        showGenericToast('[PART-006] 참여 확인용 스크린샷을 첨부해 주세요.', '⚠️');
         document.querySelector('label[for="fb-screenshot-input"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
@@ -10109,7 +10449,7 @@
             ` : ''}
             <div class="text-[11px] text-neutral-muted flex items-center justify-between">
               <span>리뷰·참여 상태·리워드가 하나의 트랜잭션으로 저장되었습니다.</span>
-              <span class="font-bold text-primary-dark">+${reward.toLocaleString()} 동전</span>
+              <span class="font-bold text-primary-dark">+${reward.toLocaleString()} 돼지코인</span>
             </div>`;
           fbContainer.prepend(cardArticle);
         }
@@ -10155,12 +10495,12 @@
           const countNotice = result.completed_test_count >= 3
             ? ` 등록 자격을 충족했습니다. (총 ${result.completed_test_count}회)`
             : ` (등록 조건 ${result.completed_test_count}/3회)`;
-          showGenericToast(`🎉 피드백 저장 완료! +${reward.toLocaleString()} 동전이 지급되었습니다.${countNotice}`, '🪙');
+          showGenericToast(`🎉 피드백 저장 완료! +${reward.toLocaleString()} 돼지코인이 지급되었습니다.${countNotice}`, '🪙');
           navigateTo('explore');
         }
       } catch (err) {
         console.error('[Don Dwae DB] Transactional review failed:', err);
-        showGenericToast(err?.message || '피드백 저장과 리워드 지급에 실패했습니다.', '⚠️');
+        showGenericToast(resolveFriendlyError(err, 'PART_SUBMISSION_FAILED').formatted, '⚠️');
       } finally {
         if (submitButton) {
           submitButton.disabled = false;
@@ -10748,7 +11088,7 @@
 
         if (thumbBox) thumbBox.textContent = project.category === 'vote' || project.category === 'abtest' ? '🗳️' : '📱';
         if (badge) badge.textContent = categoryLabels[project.category] || '[서비스 테스트]';
-        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin || 0).toLocaleString()} 동전 수령`;
+        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin || 0).toLocaleString()} 돼지코인 수령`;
         if (title) title.textContent = project.service_name || project.title;
         if (desc) desc.textContent = project.service_desc || project.title;
         if (checklist) {
@@ -10782,7 +11122,7 @@
         navigateTo('create');
       } catch (err) {
         console.error('[Don Dwae DB] Failed to verify project gating:', err);
-        showGenericToast(err?.message || '프로젝트 등록 자격을 확인하지 못했습니다.', '⚠️');
+        showGenericToast(resolveFriendlyError(err, 'PRJ_PERMISSION_DENIED').formatted, '⚠️');
       }
     }
 
@@ -11272,7 +11612,7 @@
 
         if (diffTotal === 0) {
           if (summary) {
-            summary.innerHTML = `수정 예산 변경 없음 (기존 결제 금액: <strong>${origTotal.toLocaleString()} 동전</strong>)`;
+            summary.innerHTML = `수정 예산 변경 없음 (기존 결제 금액: <strong>${origTotal.toLocaleString()} 돼지코인</strong>)`;
             summary.className = 'text-[11px] text-[#2E5E14] font-medium';
           }
           if (banner) {
@@ -11288,7 +11628,7 @@
                     <span class="text-[11px] text-[#574B1A]">기존 결제 예산 유지</span>
                   </div>
                   <p class="text-xs text-[#354326] mt-0.5 leading-relaxed">
-                    추가된 보상이나 인원이 없으므로 <strong>추가 동전 결제 없이</strong> 프로젝트 내용이 수정됩니다.
+                    추가된 보상이나 인원이 없으므로 <strong>추가 돼지코인 결제 없이</strong> 프로젝트 내용이 수정됩니다.
                   </p>
                 </div>
               </div>
@@ -11300,11 +11640,11 @@
             btnPublish.className = 'px-10 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer';
           }
         } else {
-          // 추가 동전 차감/결제 필요
+          // 추가 돼지코인 차감/결제 필요
           const deficit = Math.max(0, diffTotal - balance);
           if (diffTotal <= balance) {
             if (summary) {
-              summary.innerHTML = `상향 수정 차액: <strong>+${diffTotal.toLocaleString()} 동전</strong> (보유 잔여: <span class="text-primary-dark font-bold">${(balance - diffTotal).toLocaleString()} 동전</span>)`;
+              summary.innerHTML = `상향 수정 차액: <strong>+${diffTotal.toLocaleString()} 돼지코인</strong> (보유 잔여: <span class="text-primary-dark font-bold">${(balance - diffTotal).toLocaleString()} 돼지코인</span>)`;
               summary.className = 'text-[11px] text-[#2E5E14] font-medium';
             }
             if (banner) {
@@ -11316,11 +11656,11 @@
                   </div>
                   <div>
                     <div class="flex items-center gap-2">
-                      <span class="text-xs font-extrabold text-[#1F450B]">상향 수정 차액 보유 동전 차감</span>
+                      <span class="text-xs font-extrabold text-[#1F450B]">상향 수정 차액 보유 돼지코인 차감</span>
                       <span class="text-[11px] text-[#574B1A]">추가 필요: <strong>+${diffTotal.toLocaleString()} C</strong></span>
                     </div>
                     <p class="text-xs text-[#354326] mt-0.5 leading-relaxed">
-                      보상/인원 상향에 따라 보유 동전에서 차액 <strong>${diffTotal.toLocaleString()} C</strong>가 즉시 차감됩니다.
+                      보상/인원 상향에 따라 보유 돼지코인에서 차액 <strong>${diffTotal.toLocaleString()} C</strong>가 즉시 차감됩니다.
                     </p>
                   </div>
                 </div>
@@ -11334,7 +11674,7 @@
           } else {
             const deficitWon = deficit * 10;
             if (summary) {
-              summary.innerHTML = `상향 수정 차액: <strong>+${diffTotal.toLocaleString()} 동전</strong> (<span class="text-[#DC2626] font-extrabold">보유 부족: ${deficit.toLocaleString()} C</span>)`;
+              summary.innerHTML = `상향 수정 차액: <strong>+${diffTotal.toLocaleString()} 돼지코인</strong> (<span class="text-[#DC2626] font-extrabold">보유 부족: ${deficit.toLocaleString()} C</span>)`;
               summary.className = 'text-[11px] text-[#DC2626] font-semibold';
             }
             if (banner) {
@@ -11346,18 +11686,18 @@
                   </div>
                   <div>
                     <div class="flex items-center gap-2">
-                      <span class="text-xs font-extrabold text-[#8A2B43] px-2 py-0.5 rounded bg-secondary/30">상향 수정 추가 동전 결제 필요</span>
+                      <span class="text-xs font-extrabold text-[#8A2B43] px-2 py-0.5 rounded bg-secondary/30">상향 수정 추가 돼지코인 결제 필요</span>
                       <span class="text-[11px] text-[#8A2B43] font-bold">부족분: ${deficit.toLocaleString()} C (₩${deficitWon.toLocaleString()})</span>
                     </div>
                     <p class="text-xs text-[#622332] mt-1 leading-relaxed">
                       상향 조절로 필요한 차액 중 <strong class="text-[#DC2626] underline font-extrabold">${deficit.toLocaleString()} C</strong>가 부족합니다.<br class="hidden sm:inline"/>
-                      수정 버튼을 누르시면 부족한 동전 결제창으로 바로 연결됩니다.
+                      수정 버튼을 누르시면 부족한 돼지코인 결제창으로 바로 연결됩니다.
                     </p>
                   </div>
                 </div>
               `;
             }
-            if (btnText) btnText.textContent = `부족한 동전 결제하고 수정하기 (${deficit.toLocaleString()} C)`;
+            if (btnText) btnText.textContent = `부족한 돼지코인 결제하고 수정하기 (${deficit.toLocaleString()} C)`;
             if (btnIcon) btnIcon.textContent = '💳';
             if (btnPublish) {
               btnPublish.className = 'px-8 py-3.5 rounded-full bg-secondary hover:bg-secondary-hover active:scale-95 text-[#631427] font-extrabold text-sm shadow-md transition-all flex items-center gap-2 border border-secondary-wine/20 cursor-pointer';
@@ -11368,10 +11708,10 @@
       }
 
       if (newTotal <= balance) {
-        // 신규 등록 보유 동전 충분
+        // 신규 등록 보유 돼지코인 충분
         const remain = balance - newTotal;
         if (summary) {
-          summary.innerHTML = `총 소요 예산: <strong>${newTotal.toLocaleString()} 동전</strong> (보유 잔여: <span class="text-primary-dark font-bold">${remain.toLocaleString()} 동전</span>)`;
+          summary.innerHTML = `총 소요 예산: <strong>${newTotal.toLocaleString()} 돼지코인</strong> (보유 잔여: <span class="text-primary-dark font-bold">${remain.toLocaleString()} 돼지코인</span>)`;
           summary.className = 'text-[11px] text-[#2E5E14] font-medium';
         }
         if (banner) {
@@ -11383,12 +11723,12 @@
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-extrabold text-[#1F450B]">보유 동전 충분</span>
+                  <span class="text-xs font-extrabold text-[#1F450B]">보유 돼지코인 충분</span>
                   <span class="text-[11px] text-[#574B1A]">현재 보유: <strong>${balance.toLocaleString()} C</strong></span>
                 </div>
                 <p class="text-xs text-[#354326] mt-0.5 leading-relaxed">
-                  테스트 게시 시 보유 동전에서 <strong>${newTotal.toLocaleString()} C</strong>가 즉시 차감되며, 
-                  차감 후 잔여 동전은 <strong>${remain.toLocaleString()} C</strong>가 됩니다.
+                  테스트 게시 시 보유 돼지코인에서 <strong>${newTotal.toLocaleString()} C</strong>가 즉시 차감되며, 
+                  차감 후 잔여 돼지코인은 <strong>${remain.toLocaleString()} C</strong>가 됩니다.
                 </p>
               </div>
             </div>
@@ -11404,11 +11744,11 @@
           btnPublish.className = 'px-10 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer';
         }
       } else {
-        // 신규 등록 보유 동전 부족
+        // 신규 등록 보유 돼지코인 부족
         const deficit = newTotal - balance;
         const deficitAmountWon = deficit * 10;
         if (summary) {
-          summary.innerHTML = `총 소요 예산: <strong>${newTotal.toLocaleString()} 동전</strong> (<span class="text-[#DC2626] font-extrabold">보유 동전 부족: ${deficit.toLocaleString()} C</span>)`;
+          summary.innerHTML = `총 소요 예산: <strong>${newTotal.toLocaleString()} 돼지코인</strong> (<span class="text-[#DC2626] font-extrabold">보유 돼지코인 부족: ${deficit.toLocaleString()} C</span>)`;
           summary.className = 'text-[11px] text-[#DC2626] font-semibold';
         }
         if (banner) {
@@ -11420,13 +11760,13 @@
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-extrabold text-[#8A2B43] px-2 py-0.5 rounded bg-secondary/30">보유 동전 부족 사전 안내</span>
+                  <span class="text-xs font-extrabold text-[#8A2B43] px-2 py-0.5 rounded bg-secondary/30">보유 돼지코인 부족 사전 안내</span>
                   <span class="text-[11px] text-[#8A2B43] font-bold">부족분: ${deficit.toLocaleString()} C (₩${deficitAmountWon.toLocaleString()})</span>
                 </div>
                 <p class="text-xs text-[#622332] mt-1 leading-relaxed">
-                  총 필요 동전 <strong>${newTotal.toLocaleString()} C</strong> 중 현재 보유 동전(<strong>${balance.toLocaleString()} C</strong>)에서 
+                  총 필요 돼지코인 <strong>${newTotal.toLocaleString()} C</strong> 중 현재 보유 돼지코인(<strong>${balance.toLocaleString()} C</strong>)에서 
                   <strong class="text-[#DC2626] underline font-extrabold">${deficit.toLocaleString()} C</strong>가 부족합니다.<br class="hidden sm:inline"/>
-                  게시 버튼을 누르시면 부족한 동전을 바로 충전할 수 있는 <strong>가상 결제창</strong>으로 바로 연결됩니다.
+                  게시 버튼을 누르시면 부족한 돼지코인을 바로 충전할 수 있는 <strong>가상 결제창</strong>으로 바로 연결됩니다.
                 </p>
               </div>
             </div>
@@ -11439,7 +11779,7 @@
             </button>
           `;
         }
-        if (btnText) btnText.textContent = `부족한 동전 결제하고 게시하기 (${deficit.toLocaleString()} C)`;
+        if (btnText) btnText.textContent = `부족한 돼지코인 결제하고 게시하기 (${deficit.toLocaleString()} C)`;
         if (btnIcon) btnIcon.textContent = '💳';
         if (btnPublish) {
           btnPublish.className = 'px-8 py-3.5 rounded-full bg-secondary hover:bg-secondary-hover active:scale-95 text-[#631427] font-extrabold text-sm shadow-md transition-all flex items-center gap-2 border border-secondary-wine/20 cursor-pointer';
@@ -11503,7 +11843,7 @@
       const btnAmountEl = document.getElementById('btn-pay-text');
 
       if (sNameEl) sNameEl.textContent = sName;
-      if (breakdownEl) breakdownEl.textContent = `${target}명 × ${reward} 동전`;
+      if (breakdownEl) breakdownEl.textContent = `${target}명 × ${reward} 돼지코인`;
       if (totalCoinEl) totalCoinEl.textContent = `${totalCost.toLocaleString()} C`;
       if (userCoinEl) userCoinEl.textContent = `-${userCoinBalance.toLocaleString()} C`;
       if (deficitCoinEl) deficitCoinEl.textContent = `${deficit.toLocaleString()} C 부족`;
@@ -11886,7 +12226,7 @@
         techTags: verifiedProject.tech_tags || techTags,
         personaTags: verifiedProject.target_persona_tags || personaTags
       };
-      // 화면상의 동전은 DB 저장 성공 이후에만 반영합니다.
+      // 화면상의 돼지코인은 DB 저장 성공 이후에만 반영합니다.
       userCoinBalance = isPaid
         ? Math.max(0, userCoinBalance + deficit - totalCost)
         : Math.max(0, userCoinBalance - totalCost);
@@ -11921,10 +12261,10 @@
             <button 
               type="button" 
               onclick="toggleBookmark(event, this)" 
-              class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 hover:bg-white shadow-xs flex items-center justify-center text-neutral-400 hover:text-[#2F6517] transition-all z-10"
+              class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 hover:bg-white shadow-xs flex items-center justify-center text-neutral-400 hover:text-neutral-700 transition-all border border-neutral-200 z-10"
               title="스크랩 저장"
             >
-              <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+              <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
             </button>
 
             <div class="absolute top-5 left-5 flex items-center gap-1.5">
@@ -11944,7 +12284,7 @@
                   ${sName} - ${sDesc}
                 </h3>
                 <span class="px-2.5 py-1 rounded-full bg-[#191A1C] text-white text-[11px] font-extrabold shrink-0 shadow-2xs">
-                  🪙 ${rCoin} 동전
+                  🪙 ${rCoin} 돼지코인
                 </span>
               </div>
               <div class="flex flex-wrap items-center gap-1.5 text-xs text-neutral-muted mb-4 font-normal">
@@ -11983,11 +12323,11 @@
       }
 
       if (isPaid) {
-        showGenericToast(`💳 [가상 결제 완료] ₩${won.toLocaleString()} 승인! 부족했던 ${deficit.toLocaleString()} 동전이 충전되어 '${sName}' 테스트가 게시되었습니다.`, '🎉');
+        showGenericToast(`💳 [가상 결제 완료] ₩${won.toLocaleString()} 승인! 부족했던 ${deficit.toLocaleString()} 돼지코인이 충전되어 '${sName}' 테스트가 게시되었습니다.`, '🎉');
       } else if (wasEditing) {
         showGenericToast(`✏️ '${sName}' 프로젝트 수정 내용이 DB에 저장되었습니다.`, '🎉');
       } else {
-        showGenericToast(`🎉 '${sName}' 테스트가 게시되었습니다! 리워드 예산 ${totalCost.toLocaleString()} 동전이 차감되었습니다. (잔여: ${userCoinBalance.toLocaleString()} C)`, '🚀');
+        showGenericToast(`🎉 '${sName}' 테스트가 게시되었습니다! 리워드 예산 ${totalCost.toLocaleString()} 돼지코인이 차감되었습니다. (잔여: ${userCoinBalance.toLocaleString()} C)`, '🚀');
       }
 
       const liveProjects = await dataService.fetchExploreProjects();
@@ -11999,9 +12339,10 @@
       return verifiedProject;
       } catch (error) {
         console.error('[Supabase DB] Project persistence failed:', error);
+        const friendly = resolveFriendlyError(error, 'PRJ_SAVE_FAILED');
         const message = error?.code === '42501'
-          ? '프로젝트 등록 권한을 확인해 주세요. 등록 전 확인 서약을 완료해야 합니다.'
-          : (error?.message || '프로젝트 저장에 실패했습니다.');
+          ? '[PRJ-004] 프로젝트 등록 권한을 확인해 주세요. 등록 전 확인 서약을 완료해야 합니다.'
+          : friendly.formatted;
         showGenericToast(message, '⚠️');
         return null;
       } finally {
@@ -12046,7 +12387,7 @@
       const list = document.getElementById('mypage-coin-transactions-list');
       if (!list) return;
       if (!transactions.length) {
-        list.innerHTML = '<p class="py-8 text-center text-xs text-neutral-400">아직 적립 또는 사용한 동전 내역이 없습니다.</p>';
+        list.innerHTML = '<p class="py-8 text-center text-xs text-neutral-400">아직 적립 또는 사용한 돼지코인 내역이 없습니다.</p>';
         return;
       }
 
@@ -12060,13 +12401,13 @@
       list.innerHTML = transactions.slice(0, 20).map(item => {
         const amount = Number(item.amount || 0);
         const positive = amount >= 0;
-        const label = typeLabels[item.type] || item.description || '동전 변동';
+        const label = typeLabels[item.type] || item.description || '돼지코인 변동';
         const date = item.created_at ? new Date(item.created_at).toLocaleString('ko-KR') : '-';
         return `
           <div class="py-3 flex items-center justify-between gap-4">
             <div class="min-w-0">
               <p class="text-xs font-bold text-neutral-700 truncate">${escapeHtml(label)}</p>
-              <p class="text-[10px] text-neutral-400 mt-0.5">${date} · ${item.coin_type === 'paid' ? '충전 동전' : '적립 동전'}</p>
+              <p class="text-[10px] text-neutral-400 mt-0.5">${date} · ${item.coin_type === 'paid' ? '충전 돼지코인' : '적립 돼지코인'}</p>
             </div>
             <span class="text-sm font-black ${positive ? 'text-[#2F6517]' : 'text-red-600'}">${positive ? '+' : ''}${amount.toLocaleString()} C</span>
           </div>`;
@@ -12081,7 +12422,7 @@
         return;
       }
 
-      const categoryLabels = { account: '계정/로그인', project: '프로젝트', coin: '동전/교환', bug: '오류 신고', other: '기타' };
+      const categoryLabels = { account: '계정/로그인', project: '프로젝트', coin: '돼지코인/교환', bug: '오류 신고', other: '기타' };
       const statusLabels = { open: '접수', in_progress: '확인 중', answered: '답변 완료', closed: '종료' };
       list.innerHTML = tickets.map(ticket => `
         <article class="rounded-xl border border-neutral-200 p-4">
@@ -12143,7 +12484,7 @@
         showGenericToast('문의가 등록되었습니다.', '🎧');
       } catch (err) {
         console.error('[Don Dwae DB] Failed to create support ticket:', err);
-        showGenericToast(err?.message || '문의 등록에 실패했습니다.', '⚠️');
+        showGenericToast(resolveFriendlyError(err, 'USER_TICKET_SAVE_FAILED').formatted, '⚠️');
       } finally {
         if (submitButton) {
           submitButton.disabled = false;
@@ -12315,6 +12656,7 @@
     function showReviewToast() {
       const toast = document.getElementById('review-toast');
       if (toast) {
+        toast.style.zIndex = '99999';
         toast.classList.remove('translate-x-32', 'opacity-0', 'pointer-events-none');
         toast.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
       }
@@ -12396,7 +12738,7 @@
       if (recruitsRate) recruitsRate.textContent = `${rate}% 달성`;
       if (progressBar) progressBar.style.width = `${rate}%`;
       if (totalRewardNum) totalRewardNum.textContent = totalBudget.toLocaleString();
-      if (perPersonRewardText) perPersonRewardText.textContent = `1인당 ${reward} 동전 정상 지급 완료`;
+      if (perPersonRewardText) perPersonRewardText.textContent = `1인당 ${reward} 돼지코인 정상 지급 완료`;
       if (card3Badge) card3Badge.textContent = `[${target}번째 참여자]`;
 
       // Update Modal recruits text
@@ -12547,7 +12889,7 @@
           msg.innerHTML = '<span>✓</span> <span>DB에 저장 가능한 URL 형식입니다.</span>';
         } catch (error) {
           msg.className = 'text-xs font-bold text-red-500 block';
-          msg.textContent = `❌ ${error.message}`;
+          msg.textContent = `❌ ${resolveFriendlyError(error, 'PRJ_INVALID_URL').formatted}`;
         }
       }, 400);
     }
@@ -12577,6 +12919,7 @@
       // Show Success Toast
       const toast = document.getElementById('update-toast');
       if (toast) {
+        toast.style.zIndex = '99999';
         toast.classList.remove('translate-x-32', 'opacity-0', 'pointer-events-none');
         toast.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
 
@@ -12872,7 +13215,7 @@
         console.log('[Don Dwae DB] Private profile updated for the active session.');
       } catch (err) {
         console.error('[Don Dwae DB] Failed to save private profile:', err);
-        showGenericToast(err?.message || '프로필 저장에 실패했습니다.', '⚠️');
+        showGenericToast(resolveFriendlyError(err, 'USER_PROFILE_SAVE_FAILED').formatted, '⚠️');
         return;
       } finally {
         if (saveButton) {
@@ -12985,10 +13328,10 @@
           <button 
             type="button" 
             onclick="toggleBookmark(event, this)" 
-            class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 hover:bg-white shadow-xs flex items-center justify-center text-neutral-400 hover:text-[#2F6517] transition-all z-10"
+            class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 hover:bg-white shadow-xs flex items-center justify-center text-neutral-400 hover:text-neutral-700 transition-all border border-neutral-200 z-10"
             title="스크랩 저장"
           >
-            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
           </button>
 
           <div class="absolute top-5 left-5 flex items-center gap-1.5">
@@ -13008,7 +13351,7 @@
                 ${sName} - ${sDesc}
               </h3>
               <span class="px-2.5 py-1 rounded-full bg-[#191A1C] text-white text-[11px] font-extrabold shrink-0 shadow-2xs">
-                🪙 ${rCoin} 동전
+                🪙 ${rCoin} 돼지코인
               </span>
             </div>
             <div class="flex flex-wrap items-center gap-1.5 text-xs text-neutral-muted mb-4 font-normal">
@@ -13068,6 +13411,14 @@
         const personalState = getProjectPersonalState(p);
         card.setAttribute('data-personal-state', personalState);
 
+        const isAlreadyScraped = (window.myProjectCollections?.scraped || []).some(sp => String(sp.id) === String(p.id));
+        const bookmarkClass = isAlreadyScraped
+          ? 'is-saved text-[#2F6517] bg-[#EBF7E3] border-[#A9DD82]'
+          : 'text-neutral-400 hover:text-neutral-700 border-neutral-200';
+        const bookmarkFill = isAlreadyScraped ? 'currentColor' : 'none';
+        const bookmarkStroke = isAlreadyScraped ? 'currentColor' : 'currentColor';
+        const bookmarkTitle = isAlreadyScraped ? '스크랩 해제' : '스크랩 저장';
+
         card.innerHTML = `
           <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
             <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden ${p.thumbnail_url ? '' : 'p-3 flex flex-col justify-between'}">
@@ -13095,9 +13446,11 @@
               </span>
             </div>
             <button type="button" onclick="toggleBookmark(event, this, '${p.id}')"
-              class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-neutral-400 hover:text-neutral-700 flex items-center justify-center shadow-2xs transition-all border border-neutral-200"
-              title="스크랩 저장">
-              <span>🔖</span>
+              class="bookmark-flag-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white flex items-center justify-center shadow-2xs transition-all border z-10 ${bookmarkClass}"
+              title="${bookmarkTitle}">
+              <svg class="w-4 h-4 pointer-events-none transition-all duration-150 active:scale-90" fill="${bookmarkFill}" stroke="${bookmarkStroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+              </svg>
             </button>
           </div>
           <div class="p-5 flex flex-col flex-1 justify-between gap-4">

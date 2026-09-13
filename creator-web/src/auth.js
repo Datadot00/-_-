@@ -3,6 +3,7 @@ import {
   clearExistingLocalSession,
   getActiveSessionUser,
   getAuthErrorMessage,
+  getAuthErrorWithId,
   requestPasswordReset,
   resendSignupConfirmation,
   signInWithEmail,
@@ -354,7 +355,7 @@ async function handleEmailLogin() {
   const { email, password } = getCredentials();
   if (!validateCredentials(email, password)) return;
   if (!supabase) {
-    showAuthMessage('error', getAuthErrorMessage({ code: 'auth_not_configured' }));
+    showAuthMessage('error', getAuthErrorWithId({ code: 'auth_not_configured' }));
     return;
   }
 
@@ -370,7 +371,7 @@ async function handleEmailLogin() {
     navigateTo('explore');
   } catch (error) {
     applyAuthenticatedUser(null);
-    showAuthMessage('error', getAuthErrorMessage(error));
+    showAuthMessage('error', getAuthErrorWithId(error));
   } finally {
     setAuthBusy(false);
   }
@@ -424,7 +425,7 @@ async function handleEmailSignup() {
     return;
   }
   if (!supabase) {
-    showAuthMessage('error', getAuthErrorMessage({ code: 'auth_not_configured' }));
+    showAuthMessage('error', getAuthErrorWithId({ code: 'auth_not_configured' }));
     return;
   }
 
@@ -448,7 +449,7 @@ async function handleEmailSignup() {
     showEmailSentPanel(email, 'signup');
   } catch (error) {
     applyAuthenticatedUser(null);
-    showAuthMessage('error', getAuthErrorMessage(error));
+    showAuthMessage('error', getAuthErrorWithId(error));
   } finally {
     setAuthBusy(false);
   }
@@ -461,7 +462,7 @@ async function handlePasswordResetRequest() {
   const { email } = getCredentials();
   if (!validateEmail(email, '비밀번호를 재설정할 이메일 주소를 입력해 주세요.')) return;
   if (!supabase) {
-    showAuthMessage('error', getAuthErrorMessage({ code: 'auth_not_configured' }));
+    showAuthMessage('error', getAuthErrorWithId({ code: 'auth_not_configured' }));
     return;
   }
 
@@ -471,7 +472,7 @@ async function handlePasswordResetRequest() {
     await requestPasswordReset(supabase, email, redirectTo);
     showEmailSentPanel(email, 'recovery');
   } catch (error) {
-    showAuthMessage('error', getAuthErrorMessage(error));
+    showAuthMessage('error', getAuthErrorWithId(error));
   } finally {
     setAuthBusy(false);
   }
@@ -497,7 +498,7 @@ async function handleConfirmationResend() {
         : '인증 메일을 다시 보냈습니다. 받은 편지함을 확인해 주세요.'
     );
   } catch (error) {
-    showAuthMessage('error', getAuthErrorMessage(error));
+    showAuthMessage('error', getAuthErrorWithId(error));
   } finally {
     setAuthBusy(false);
   }
@@ -548,7 +549,7 @@ async function handlePasswordUpdate(event) {
     showToast('새 비밀번호가 저장되었습니다.', '🔐');
     navigateTo('explore');
   } catch (error) {
-    showAuthMessage('error', getAuthErrorMessage(error));
+    showAuthMessage('error', getAuthErrorWithId(error));
   } finally {
     setAuthBusy(false);
   }
@@ -756,7 +757,7 @@ async function initializeAuthentication() {
   if (!supabase) {
     applyAuthenticatedUser(null);
     disableAuthenticationUI();
-    showAuthMessage('error', getAuthErrorMessage({ code: 'auth_not_configured' }));
+    showAuthMessage('error', getAuthErrorWithId({ code: 'auth_not_configured' }));
     return;
   }
 
@@ -789,7 +790,7 @@ async function initializeAuthentication() {
       cleanAuthCallbackUrl();
       setAuthMode('login');
       navigateTo('login');
-      showAuthMessage('error', getAuthErrorMessage({
+      showAuthMessage('error', getAuthErrorWithId({
         code: callback.errorCode,
         message: callback.errorDescription
       }));
@@ -834,7 +835,7 @@ async function initializeAuthentication() {
     }
   } catch (error) {
     applyAuthenticatedUser(null);
-    showAuthMessage('error', getAuthErrorMessage(error));
+    showAuthMessage('error', getAuthErrorWithId(error));
   }
 }
 
