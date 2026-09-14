@@ -8,8 +8,18 @@ import {
   resendSignupConfirmation,
   signInWithEmail,
   signUpWithEmail,
-  updateAuthenticatedPassword
+  updateAuthenticatedPassword,
+  verifySignupEmailOtp
 } from './authService.js';
+import {
+  closeTermsConsentGate,
+  showTermsConsentGateIfRequired
+} from './termsGate.js';
+import { routeAuthenticatedAccount } from './accountRouting.js';
+import {
+  closeOnboardingGate,
+  showOnboardingGateIfRequired
+} from './onboardingGate.js';
 
 const PASSWORD_RECOVERY_STORAGE_KEY = 'dondwae-password-recovery';
 const INACTIVITY_TIMEOUT_MS = 60 * 60 * 1000; // 1시간 (3,600,000ms)
@@ -25,8 +35,11 @@ const elements = {
   description: document.getElementById('auth-description'),
   formPanel: document.getElementById('auth-form-panel'),
   modeTabs: document.getElementById('auth-mode-tabs'),
-  socialSection: document.getElementById('auth-social-section'),
+
   confirmationPanel: document.getElementById('auth-confirmation-panel'),
+  otpGroup: document.getElementById('auth-otp-group'),
+  otpInput: document.getElementById('auth-otp-input'),
+  otpSubmitButton: document.getElementById('btn-auth-otp-submit'),
   confirmationEmail: document.getElementById('auth-confirmation-email'),
   emailSentTitle: document.getElementById('auth-email-sent-title'),
   emailSentMessage: document.getElementById('auth-email-sent-message'),
@@ -58,6 +71,7 @@ let authRequestInFlight = false;
 let currentUser = null;
 let pendingConfirmationEmail = '';
 let pendingEmailAction = 'signup';
+let pendingOnboardingAccountState = null;
 let passwordRecoveryActive = sessionStorage.getItem(PASSWORD_RECOVERY_STORAGE_KEY) === 'true';
 
 function getVisibleViewKey() {
@@ -150,8 +164,8 @@ function resetPasswordVisibility() {
   });
 }
 
-function setAuthMode(mode) {
-  if (authRequestInFlight || !['login', 'signup', 'recovery'].includes(mode)) return;
+function setAuthMode(mode, { force = false } = {}) {
+  if ((!force && authRequestInFlight) || !['login', 'signup', 'recovery'].includes(mode)) return;
 
   authMode = mode;
   const isSignup = mode === 'signup';
@@ -178,7 +192,6 @@ function setAuthMode(mode) {
   if (elements.description) elements.description.textContent = descriptions[mode];
 
   elements.modeTabs?.classList.toggle('hidden', isRecovery);
-  elements.socialSection?.classList.toggle('hidden', isRecovery);
   elements.passwordGroup?.classList.toggle('hidden', isRecovery);
   elements.passwordHint?.classList.toggle('hidden', !isSignup);
   elements.passwordConfirmationGroup?.classList.toggle('hidden', !isSignup);
@@ -224,6 +237,8 @@ function setAuthBusy(isBusy, action = authMode) {
     elements.recoveryBackButton,
     elements.resendButton,
     elements.backToLoginButton,
+    elements.otpInput,
+    elements.otpSubmitButton,
     elements.newPassword,
     elements.newPasswordConfirmation,
     elements.passwordUpdateButton,
@@ -260,7 +275,13 @@ function setAuthBusy(isBusy, action = authMode) {
       ? '메일 보내는 중...'
       : pendingEmailAction === 'recovery'
         ? '재설정 메일 다시 보내기'
-        : '인증 메일 다시 보내기';
+        : '인증번호 다시 보내기';
+  }
+
+  if (elements.otpSubmitButton) {
+    elements.otpSubmitButton.textContent = isBusy && action === 'otp-verification'
+      ? '인증번호 확인 중...'
+      : '인증하고 계속하기';
   }
 
   if (elements.passwordUpdateButton) {
@@ -348,6 +369,77 @@ async function refreshAuthenticatedData() {
   }
 }
 
+async function continueThroughTermsGate(onReady, { recheckAfterAcceptance = false } = {}) {
+  const blockedByTerms = await showTermsConsentGateIfRequired(supabase, {
+    onAccepted: recheckAfterAcceptance
+      ? () => routeAfterAuthentication(onReady)
+      : onReady
+  });
+  if (!blockedByTerms) {
+    await onReady?.();
+  }
+  return !blockedByTerms;
+}
+
+async function routeAfterAuthentication(onReady) {
+  return routeAuthenticatedAccount(supabase, {
+    verify_email: async (state) => {
+      closeTermsConsentGate();
+      closeOnboardingGate();
+      pendingOnboardingAccountState = null;
+
+      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      if (error) throw error;
+
+      applyAuthenticatedUser(null);
+      navigateTo('login');
+      showEmailSentPanel(state.email, 'signup');
+    },
+    onboarding: async (state) => {
+      closeTermsConsentGate();
+      pendingOnboardingAccountState = state;
+      window.dispatchEvent(new CustomEvent('dondwae:onboarding-required', {
+        detail: state
+      }));
+
+      const opened = await showOnboardingGateIfRequired(supabase, state, {
+        onCompleted: () => routeAfterAuthentication(onReady)
+      });
+      if (opened) return;
+
+      // 게이트를 열 수 없는 환경이면 최소한 안내는 남긴다.
+      navigateTo('login');
+      setAuthMode('login', { force: true });
+      showAuthMessage(
+        'success',
+        '이메일 인증이 완료되었습니다. 온보딩 정보를 입력하면 서비스를 시작할 수 있습니다.'
+      );
+    },
+    terms_review: () => continueThroughTermsGate(onReady, {
+      recheckAfterAcceptance: true
+    }),
+    ready: async (state) => {
+      pendingOnboardingAccountState = null;
+      await onReady?.(state);
+    },
+    legacy: () => continueThroughTermsGate(onReady)
+  });
+}
+
+function restoreAuthenticatedDestination() {
+  const savedView = localStorage.getItem(CURRENT_VIEW_KEY);
+  const savedPostId = localStorage.getItem(CURRENT_POST_ID_KEY);
+  if (savedView && savedView !== 'landing' && savedView !== 'login') {
+    if (savedView === 'post' && savedPostId && typeof window.openPostDetail === 'function') {
+      window.openPostDetail(savedPostId);
+    } else if (typeof window.navigateTo === 'function') {
+      window.navigateTo(savedView);
+    }
+  } else if (getVisibleViewKey() === 'login' || getVisibleViewKey() === 'landing') {
+    navigateTo('explore');
+  }
+}
+
 async function handleEmailLogin() {
   if (authRequestInFlight) return;
   clearAuthMessages();
@@ -367,10 +459,15 @@ async function handleEmailLogin() {
     recordUserActivity();
     if (elements.password) elements.password.value = '';
     await refreshAuthenticatedData();
-    showToast(`${user.email} 계정으로 로그인했습니다.`, '🔑');
-    navigateTo('explore');
+    await routeAfterAuthentication(() => {
+      showToast(`${user.email} 계정으로 로그인했습니다.`, '🔑');
+      navigateTo('explore');
+    });
   } catch (error) {
     applyAuthenticatedUser(null);
+    if (error?.code === 'email_not_confirmed') {
+      showEmailSentPanel(email, 'signup');
+    }
     showAuthMessage('error', getAuthErrorWithId(error));
   } finally {
     setAuthBusy(false);
@@ -388,7 +485,7 @@ function showEmailSentPanel(email, action) {
 
   const isRecovery = action === 'recovery';
   if (elements.title) {
-    elements.title.textContent = isRecovery ? '재설정 메일을 확인해 주세요' : '이메일을 확인해 주세요';
+    elements.title.textContent = isRecovery ? '재설정 메일을 확인해 주세요' : '인증번호를 입력해 주세요';
   }
   if (elements.description) {
     elements.description.textContent = isRecovery
@@ -398,18 +495,62 @@ function showEmailSentPanel(email, action) {
   if (elements.emailSentTitle) {
     elements.emailSentTitle.textContent = isRecovery
       ? '비밀번호 재설정 메일을 요청했어요'
-      : '인증 메일을 확인해 주세요';
+      : '6자리 인증번호를 보냈어요';
   }
   if (elements.emailSentMessage) {
     elements.emailSentMessage.innerHTML = isRecovery
       ? '위 주소로 재설정 링크를 요청했습니다.<br />메일이 없다면 스팸함도 확인해 주세요.'
-      : '위 주소로 가입 확인을 요청했습니다.<br />메일의 인증 링크를 누르면 가입이 완료됩니다.';
+      : '위 주소로 가입 인증번호를 보냈습니다.<br />메일이 없다면 스팸함도 확인해 주세요.';
+  }
+  elements.otpGroup?.classList.toggle('hidden', isRecovery);
+  elements.otpSubmitButton?.classList.toggle('hidden', isRecovery);
+  if (elements.otpInput) {
+    elements.otpInput.value = '';
+    elements.otpInput.disabled = isRecovery;
+    window.setTimeout(() => {
+      if (!isRecovery) elements.otpInput?.focus();
+    }, 0);
   }
   if (elements.confirmationEmail) elements.confirmationEmail.textContent = email;
   if (elements.resendButton) {
     elements.resendButton.textContent = isRecovery
       ? '재설정 메일 다시 보내기'
-      : '인증 메일 다시 보내기';
+      : '인증번호 다시 보내기';
+  }
+}
+
+async function handleSignupOtpVerification(event) {
+  event?.preventDefault();
+  if (!supabase || authRequestInFlight || pendingEmailAction !== 'signup') return;
+
+  clearAuthMessages();
+  const token = elements.otpInput?.value.replace(/\D/g, '').slice(0, 6) || '';
+  if (elements.otpInput) elements.otpInput.value = token;
+  if (token.length !== 6) {
+    showAuthMessage('error', '메일로 받은 6자리 인증번호를 입력해 주세요.');
+    elements.otpInput?.focus();
+    return;
+  }
+
+  setAuthBusy(true, 'otp-verification');
+  try {
+    const { user } = await verifySignupEmailOtp(
+      supabase,
+      pendingConfirmationEmail,
+      token
+    );
+    applyAuthenticatedUser(user);
+    recordUserActivity();
+    await refreshAuthenticatedData();
+    await routeAfterAuthentication(() => {
+      showToast('이메일 인증이 완료되었습니다.', '✅');
+      navigateTo('explore');
+    });
+  } catch (error) {
+    showAuthMessage('error', getAuthErrorWithId(error));
+    elements.otpInput?.select();
+  } finally {
+    setAuthBusy(false);
   }
 }
 
@@ -440,8 +581,10 @@ async function handleEmailSignup() {
     if (session) {
       applyAuthenticatedUser(user);
       await refreshAuthenticatedData();
-      showToast('회원가입과 로그인이 완료되었습니다.', '🎉');
-      navigateTo('explore');
+      await routeAfterAuthentication(() => {
+        showToast('회원가입과 로그인이 완료되었습니다.', '🎉');
+        navigateTo('explore');
+      });
       return;
     }
 
@@ -490,12 +633,13 @@ async function handleConfirmationResend() {
       await requestPasswordReset(supabase, pendingConfirmationEmail, redirectTo);
     } else {
       await resendSignupConfirmation(supabase, pendingConfirmationEmail, redirectTo);
+      if (elements.otpInput) elements.otpInput.value = '';
     }
     showAuthMessage(
       'success',
       isRecovery
         ? '비밀번호 재설정 메일을 다시 요청했습니다.'
-        : '인증 메일을 다시 보냈습니다. 받은 편지함을 확인해 주세요.'
+        : '새 인증번호를 보냈습니다. 받은 편지함을 확인해 주세요.'
     );
   } catch (error) {
     showAuthMessage('error', getAuthErrorWithId(error));
@@ -546,8 +690,10 @@ async function handlePasswordUpdate(event) {
     cleanAuthCallbackUrl();
     if (elements.newPassword) elements.newPassword.value = '';
     if (elements.newPasswordConfirmation) elements.newPasswordConfirmation.value = '';
-    showToast('새 비밀번호가 저장되었습니다.', '🔐');
-    navigateTo('explore');
+    await routeAfterAuthentication(() => {
+      showToast('새 비밀번호가 저장되었습니다.', '🔐');
+      navigateTo('explore');
+    });
   } catch (error) {
     showAuthMessage('error', getAuthErrorWithId(error));
   } finally {
@@ -570,7 +716,7 @@ async function handleLandingValidateService(event) {
   event?.preventDefault();
 
   if (currentUser) {
-    navigateTo('explore');
+    await routeAfterAuthentication(() => navigateTo('explore'));
     return;
   }
 
@@ -585,7 +731,7 @@ async function handleLandingValidateService(event) {
 
     if (sessionUser) {
       recordUserActivity();
-      navigateTo('explore');
+      await routeAfterAuthentication(() => navigateTo('explore'));
       return;
     }
   } catch (error) {
@@ -605,6 +751,9 @@ async function handleSignOut() {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+    closeTermsConsentGate();
+    closeOnboardingGate();
+    pendingOnboardingAccountState = null;
     applyAuthenticatedUser(null);
     passwordRecoveryActive = false;
     sessionStorage.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
@@ -635,6 +784,7 @@ function handlePasswordVisibility(button) {
 
 function bindAuthenticationEvents() {
   elements.form?.addEventListener('submit', handleAuthSubmit);
+  elements.confirmationPanel?.addEventListener('submit', handleSignupOtpVerification);
   elements.landingValidateButton?.addEventListener('click', handleLandingValidateService);
   elements.passwordUpdateForm?.addEventListener('submit', handlePasswordUpdate);
   elements.loginModeButton?.addEventListener('click', () => setAuthMode('login'));
@@ -648,6 +798,10 @@ function bindAuthenticationEvents() {
     if (elements.email) elements.email.value = email;
     elements.password?.focus();
   });
+  elements.otpInput?.addEventListener('input', () => {
+    elements.otpInput.value = elements.otpInput.value.replace(/\D/g, '').slice(0, 6);
+  });
+  window.addEventListener('dondwae:terms-declined', handleSignOut);
   document.querySelectorAll('[data-password-toggle]').forEach((button) => {
     button.addEventListener('click', () => handlePasswordVisibility(button));
   });
@@ -664,6 +818,8 @@ function disableAuthenticationUI() {
     elements.forgotPasswordButton,
     elements.recoveryBackButton,
     elements.resendButton,
+    elements.otpInput,
+    elements.otpSubmitButton,
     elements.newPassword,
     elements.newPasswordConfirmation,
     elements.passwordUpdateButton,
@@ -753,6 +909,7 @@ async function initializeAuthentication() {
   window.handleEmailAuthSubmit = handleAuthSubmit;
   window.handleUserLogout = handleSignOut;
   window.getCurrentAuthUser = () => currentUser;
+  window.getPendingOnboardingAccountState = () => pendingOnboardingAccountState;
 
   if (!supabase) {
     applyAuthenticatedUser(null);
@@ -766,6 +923,8 @@ async function initializeAuthentication() {
     applyAuthenticatedUser(session?.user || null);
     if (session?.user) {
       recordUserActivity();
+    } else {
+      closeTermsConsentGate();
     }
 
     if (event === 'PASSWORD_RECOVERY') {
@@ -804,25 +963,16 @@ async function initializeAuthentication() {
 
     if (restoredUser && callback.hasCallback) {
       cleanAuthCallbackUrl();
-      showToast('이메일 인증이 완료되었습니다.', '✅');
-      navigateTo('explore');
+      await routeAfterAuthentication(() => {
+        showToast('이메일 인증이 완료되었습니다.', '✅');
+        navigateTo('explore');
+      });
       return;
     }
 
     if (restoredUser) {
       recordUserActivity();
-      // 이전에 보고 있던 화면으로 복원
-      const savedView = localStorage.getItem(CURRENT_VIEW_KEY);
-      const savedPostId = localStorage.getItem(CURRENT_POST_ID_KEY);
-      if (savedView && savedView !== 'landing' && savedView !== 'login') {
-        if (savedView === 'post' && savedPostId && typeof window.openPostDetail === 'function') {
-          window.openPostDetail(savedPostId);
-        } else if (typeof window.navigateTo === 'function') {
-          window.navigateTo(savedView);
-        }
-      } else if (getVisibleViewKey() === 'login' || getVisibleViewKey() === 'landing') {
-        navigateTo('explore');
-      }
+      await routeAfterAuthentication(restoreAuthenticatedDestination);
     } else {
       if (passwordRecoveryActive) {
         passwordRecoveryActive = false;

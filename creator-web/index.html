@@ -633,13 +633,23 @@
       <!-- Header -->
       <div class="flex items-start justify-between border-b border-neutral-100 pb-4">
         <div>
-          <h2 class="text-xl font-black text-neutral-dark tracking-tight">프로필 정보 수정</h2>
-          <p class="text-xs text-neutral-400 mt-1 font-medium">테스트 및 피드백 참여 시 다른 사용자에게 표시되는 정보를 설정합니다.</p>
+          <h2 id="profile-modal-title" class="text-xl font-black text-neutral-dark tracking-tight">프로필 정보 수정</h2>
+          <p id="profile-modal-subtitle" class="text-xs text-neutral-400 mt-1 font-medium">테스트 및 피드백 참여 시 다른 사용자에게 표시되는 정보를 설정합니다.</p>
         </div>
-        <button type="button" onclick="closeEditProfileModal()"
+        <button type="button" id="btn-profile-modal-dismiss" onclick="closeEditProfileModal()"
           class="px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 text-xs font-bold transition-colors">
           계정 설정
         </button>
+      </div>
+
+      <!-- Onboarding Notice (첫 프로필 설정 시에만 노출) -->
+      <div id="onboarding-notice"
+        class="hidden rounded-2xl border border-[#D5EA9F] bg-[#F4F9EE] px-4 py-3 flex items-start gap-3">
+        <span class="text-lg shrink-0">🎉</span>
+        <p class="text-xs font-medium text-[#2F6517] leading-relaxed">
+          <strong class="font-extrabold">환영합니다!</strong> 서비스를 시작하기 전에 프로필을 설정해 주세요.<br />
+          <span class="text-[11px] text-[#568A32]">닉네임과 관심분야는 필수이며, 입력한 정보는 언제든 내 정보에서 수정할 수 있습니다.</span>
+        </p>
       </div>
 
       <!-- Character Banner Card -->
@@ -776,11 +786,18 @@
 
       <!-- Footer Action Buttons -->
       <div class="flex flex-col items-center gap-3 pt-4 border-t border-neutral-100">
+        <p id="onboarding-error"
+          class="hidden w-full rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs font-bold text-red-700"
+          role="alert"></p>
         <button type="button" id="btn-save-profile" onclick="saveProfileChanges()"
           class="w-full py-3.5 rounded-2xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-sm transition-all shadow-xs">
           저장하기
         </button>
-        <button type="button" onclick="closeEditProfileModal()"
+        <button type="button" id="btn-complete-onboarding"
+          class="hidden w-full py-3.5 rounded-2xl bg-[#2F6517] hover:bg-[#25500F] text-white font-black text-sm transition-all shadow-xs disabled:cursor-not-allowed disabled:opacity-60">
+          돈돼 시작하기
+        </button>
+        <button type="button" id="btn-profile-modal-cancel" onclick="closeEditProfileModal()"
           class="text-xs font-semibold text-neutral-500 hover:text-neutral-800 transition-colors">
           취소
         </button>
@@ -1217,48 +1234,41 @@
             </button>
           </form>
 
-          <div id="auth-social-section">
-            <div class="w-full flex items-center my-6">
-              <div class="flex-1 border-t border-neutral-200"></div>
-              <span class="px-3 text-[11px] text-neutral-400 font-medium">또는</span>
-              <div class="flex-1 border-t border-neutral-200"></div>
-            </div>
-
-            <!-- Google OAuth is intentionally disabled until its provider is configured. -->
-            <button type="button" disabled
-              class="w-full h-[52px] bg-neutral-50 border border-neutral-200 rounded-xl flex items-center justify-center gap-3 px-4 cursor-not-allowed opacity-60">
-              <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
-                <path fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                <path fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-              </svg>
-              <span class="text-xs font-bold text-neutral-500">Google 로그인 (준비 중)</span>
-            </button>
-          </div>
         </div>
 
-        <div id="auth-confirmation-panel" class="hidden w-full text-center">
+        <form id="auth-confirmation-panel" class="hidden w-full text-center" novalidate>
           <div class="mx-auto w-16 h-16 rounded-full bg-[#EEF7DE] flex items-center justify-center text-3xl mb-5"
             aria-hidden="true">✉️</div>
-          <p id="auth-email-sent-title" class="text-sm font-extrabold text-neutral-dark mb-2">인증 메일을 확인해 주세요</p>
-          <p id="auth-email-sent-description" class="text-xs leading-5 text-neutral-muted mb-6">
+          <p id="auth-email-sent-title" class="text-sm font-extrabold text-neutral-dark mb-2">6자리 인증번호를 확인해 주세요</p>
+          <p id="auth-email-sent-description" class="text-xs leading-5 text-neutral-muted mb-5">
             <strong id="auth-confirmation-email" class="text-neutral-dark"></strong><br />
-            <span id="auth-email-sent-message">위 주소로 가입 확인을 요청했습니다.<br />메일의 인증 링크를 누르면 가입이 완료됩니다.</span>
+            <span id="auth-email-sent-message">위 주소로 가입 인증번호를 보냈습니다.<br />메일이 없다면 스팸함도 확인해 주세요.</span>
           </p>
-          <button type="button" id="btn-auth-resend"
+
+          <div id="auth-otp-group" class="mb-4 text-left">
+            <label for="auth-otp-input" class="block text-xs font-bold text-neutral-dark mb-1.5">이메일 인증번호</label>
+            <input id="auth-otp-input" type="text" inputmode="numeric" autocomplete="one-time-code"
+              pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="000000" aria-describedby="auth-otp-hint"
+              class="w-full px-4 py-3 rounded-xl border border-neutral-200 text-center text-xl font-extrabold tracking-[0.45em] tabular-nums focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all"
+              required />
+            <p id="auth-otp-hint" class="mt-1.5 text-[11px] font-medium text-neutral-400 text-center">
+              메일로 받은 숫자 6자리를 입력해 주세요.
+            </p>
+          </div>
+
+          <button type="submit" id="btn-auth-otp-submit"
             class="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm transition-all border border-primary-dark/20 cursor-pointer">
-            인증 메일 다시 보내기
+            인증하고 계속하기
+          </button>
+          <button type="button" id="btn-auth-resend"
+            class="w-full mt-3 py-3 px-4 rounded-xl bg-white hover:bg-neutral-50 active:scale-98 text-neutral-600 font-bold text-sm transition-all border border-neutral-300 cursor-pointer">
+            인증번호 다시 보내기
           </button>
           <button type="button" id="btn-auth-back-to-login"
             class="w-full mt-3 py-3 px-4 rounded-xl bg-white hover:bg-neutral-50 active:scale-98 text-neutral-600 font-bold text-sm transition-all border border-neutral-300 cursor-pointer">
             로그인으로 돌아가기
           </button>
-        </div>
+        </form>
 
         <form id="auth-password-update-panel" class="hidden w-full flex-col gap-4" novalidate>
           <div>
@@ -13669,6 +13679,69 @@
       }, 300);
     });
   </script>
+  <div id="terms-consent-modal"
+    class="hidden fixed inset-0 z-[10000] items-center justify-center bg-neutral-950/55 p-4 backdrop-blur-[2px]"
+    role="dialog" aria-modal="true" aria-labelledby="terms-consent-title"
+    aria-describedby="terms-consent-description">
+    <div class="flex max-h-[92vh] w-full max-w-[560px] flex-col overflow-hidden rounded-[24px] border border-white/70 bg-[#FBFBF7] shadow-2xl">
+      <div class="border-b border-neutral-200 bg-white px-6 py-5 sm:px-7">
+        <div class="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EEF7DE] text-2xl"
+          aria-hidden="true">📋</div>
+        <h2 id="terms-consent-title" class="text-xl font-extrabold tracking-tight text-neutral-dark">
+          서비스 이용을 위해 약관을 확인해 주세요
+        </h2>
+        <p id="terms-consent-description" class="mt-1.5 text-xs font-medium leading-5 text-neutral-500">
+          필수 약관에 동의해야 서비스를 계속 이용할 수 있어요. 선택 동의는 언제든 변경할 수 있습니다.
+        </p>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-6 py-5 sm:px-7">
+        <label id="terms-consent-all-wrapper"
+          class="mb-3 flex cursor-pointer items-center gap-3 rounded-xl border border-[#CFE5A8] bg-[#F5FBEA] px-4 py-3.5">
+          <input id="terms-consent-all" type="checkbox"
+            class="h-4 w-4 shrink-0 cursor-pointer accent-[#2F6517]" />
+          <span>
+            <span class="block text-sm font-extrabold text-neutral-800">전체 동의</span>
+            <span class="mt-0.5 block text-[11px] font-medium text-neutral-500">필수 및 선택 약관을 모두 선택합니다.</span>
+          </span>
+        </label>
+
+        <div id="terms-consent-document-list" class="space-y-2"></div>
+
+        <div id="terms-document-detail"
+          class="hidden mt-4 rounded-2xl border border-neutral-200 bg-white p-4">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h3 id="terms-document-detail-title" class="text-sm font-extrabold text-neutral-800"></h3>
+            <button id="btn-terms-document-detail-close" type="button"
+              class="shrink-0 rounded-lg px-2 py-1 text-[11px] font-bold text-neutral-500 hover:bg-neutral-100">
+              닫기
+            </button>
+          </div>
+          <pre id="terms-document-detail-content"
+            class="max-h-64 overflow-y-auto whitespace-pre-wrap break-words font-sans text-[11px] leading-5 text-neutral-600"></pre>
+        </div>
+
+        <p id="terms-consent-error" role="alert" aria-live="assertive"
+          class="hidden mt-4 rounded-xl bg-red-50 px-4 py-3 text-xs font-bold text-red-600"></p>
+        <button id="btn-terms-consent-retry" type="button"
+          class="hidden mt-3 w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-xs font-extrabold text-neutral-700 hover:bg-neutral-50">
+          약관 다시 불러오기
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 gap-2 border-t border-neutral-200 bg-white px-6 py-4 sm:grid-cols-[1fr_2fr] sm:px-7">
+        <button id="btn-terms-consent-decline" type="button"
+          class="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-xs font-bold text-neutral-500 hover:bg-neutral-50">
+          동의하지 않고 로그아웃
+        </button>
+        <button id="btn-terms-consent-confirm" type="button" disabled
+          class="rounded-xl border border-[#2F6517]/20 bg-primary px-4 py-3 text-sm font-extrabold text-neutral-dark shadow-sm transition-all hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40">
+          동의하고 계속하기
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="/src/dataService.js"></script>
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/auth.js"></script>

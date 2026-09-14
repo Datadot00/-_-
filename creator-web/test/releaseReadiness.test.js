@@ -26,7 +26,11 @@ const expectedMigrations = [
   '20260912090000_verification_method_quiz_or_screenshot.sql',
   '20260912100000_make_project_verification_optional.sql',
   '20260912110000_separate_project_tech_and_persona_tags.sql',
-  '20260914090000_enforce_server_quiz_validation.sql'
+  '20260914090000_enforce_server_quiz_validation.sql',
+  '20260914192000_add_user_onboarding_state.sql',
+  '20260914193000_add_terms_and_user_consent_history.sql',
+  '20260914200000_prepare_terms_gate.sql',
+  '20260914203000_add_account_state_and_onboarding_rpcs.sql'
 ];
 
 test('로컬 마이그레이션 파일명은 운영 DB 버전 순서와 일치한다', () => {

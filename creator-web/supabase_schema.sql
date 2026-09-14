@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS public.users (
   rank_badge TEXT NOT NULL DEFAULT '새싹 테스터',
   has_passed_gating BOOLEAN NOT NULL DEFAULT FALSE,
   completed_test_count INT NOT NULL DEFAULT 0,
+  onboarding_completed_version SMALLINT NOT NULL DEFAULT 0,
+  onboarding_completed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT users_sns_links_array
@@ -40,6 +42,10 @@ CREATE TABLE IF NOT EXISTS public.users (
   ),
   CONSTRAINT users_gating_consistent
     CHECK (has_passed_gating = (completed_test_count >= 3)),
+  CONSTRAINT users_onboarding_state_consistent CHECK (
+    (onboarding_completed_version = 0 AND onboarding_completed_at IS NULL)
+    OR (onboarding_completed_version > 0 AND onboarding_completed_at IS NOT NULL)
+  ),
   CONSTRAINT users_avatar_url_http_check CHECK (
     avatar_url IS NULL
     OR (CHAR_LENGTH(avatar_url) <= 2048 AND avatar_url ~* '^https?://[^[:space:]]+$')
@@ -48,6 +54,627 @@ CREATE TABLE IF NOT EXISTS public.users (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_normalized_unique
   ON public.users (LOWER(BTRIM(email)));
+
+CREATE TABLE IF NOT EXISTS public.terms_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_type TEXT NOT NULL,
+  version TEXT NOT NULL,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  is_required BOOLEAN NOT NULL,
+  published_at TIMESTAMPTZ,
+  effective_at TIMESTAMPTZ,
+  retired_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT terms_documents_type_valid CHECK (
+    document_type IN ('terms_of_service', 'privacy_policy', 'marketing_consent')
+  ),
+  CONSTRAINT terms_documents_version_valid CHECK (
+    BTRIM(version) <> '' AND CHAR_LENGTH(version) <= 50
+  ),
+  CONSTRAINT terms_documents_title_valid CHECK (
+    BTRIM(title) <> '' AND CHAR_LENGTH(title) <= 200
+  ),
+  CONSTRAINT terms_documents_content_valid CHECK (BTRIM(content) <> ''),
+  CONSTRAINT terms_documents_required_consistent CHECK (
+    (
+      document_type IN ('terms_of_service', 'privacy_policy')
+      AND is_required
+    )
+    OR (
+      document_type = 'marketing_consent'
+      AND NOT is_required
+    )
+  ),
+  CONSTRAINT terms_documents_lifecycle_valid CHECK (
+    (
+      published_at IS NULL
+      AND effective_at IS NULL
+      AND retired_at IS NULL
+    )
+    OR (
+      published_at IS NOT NULL
+      AND effective_at IS NOT NULL
+      AND (retired_at IS NULL OR retired_at > effective_at)
+    )
+  ),
+  CONSTRAINT terms_documents_type_version_unique UNIQUE (document_type, version)
+);
+
+CREATE TABLE IF NOT EXISTS public.user_term_consents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  terms_document_id UUID NOT NULL
+    REFERENCES public.terms_documents(id) ON DELETE RESTRICT,
+  event_type TEXT NOT NULL,
+  collection_point TEXT NOT NULL,
+  recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT user_term_consents_event_type_valid CHECK (
+    event_type IN ('accepted', 'withdrawn')
+  ),
+  CONSTRAINT user_term_consents_collection_point_valid CHECK (
+    BTRIM(collection_point) <> ''
+    AND CHAR_LENGTH(collection_point) <= 50
+  )
+);
+
+CREATE INDEX IF NOT EXISTS idx_terms_documents_type_effective
+  ON public.terms_documents (document_type, effective_at DESC)
+  WHERE published_at IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_user_term_consents_user_recorded
+  ON public.user_term_consents (user_id, recorded_at DESC, id DESC);
+CREATE INDEX IF NOT EXISTS idx_user_term_consents_user_document_recorded
+  ON public.user_term_consents (
+    user_id, terms_document_id, recorded_at DESC, id DESC
+  );
+
+CREATE OR REPLACE FUNCTION private.protect_consented_terms_document()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM public.user_term_consents AS consent
+    WHERE consent.terms_document_id = OLD.id
+  ) THEN
+    RAISE EXCEPTION 'terms documents with consent history are immutable'
+      USING ERRCODE = '55000';
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS protect_consented_terms_document
+  ON public.terms_documents;
+CREATE TRIGGER protect_consented_terms_document
+  BEFORE UPDATE OF
+    document_type, version, title, content, is_required, published_at, effective_at
+  ON public.terms_documents
+  FOR EACH ROW
+  EXECUTE FUNCTION private.protect_consented_terms_document();
+
+REVOKE ALL ON FUNCTION private.protect_consented_terms_document()
+  FROM PUBLIC, anon, authenticated;
+
+COMMENT ON TABLE public.terms_documents IS
+  'Immutable versioned terms shown at signup, onboarding, and settings.';
+COMMENT ON TABLE public.user_term_consents IS
+  'Append-only accepted or withdrawn events for each user and terms version.';
+COMMENT ON COLUMN public.user_term_consents.collection_point IS
+  'Trusted application flow that collected the event, such as onboarding.';
+
+CREATE OR REPLACE FUNCTION public.get_my_terms_requirement_status()
+RETURNS JSONB
+LANGUAGE PLPGSQL
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_documents JSONB;
+  v_requires_consent BOOLEAN;
+BEGIN
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'authentication required' USING ERRCODE = '42501';
+  END IF;
+
+  WITH current_documents AS (
+    SELECT DISTINCT ON (document.document_type)
+      document.id,
+      document.document_type,
+      document.version,
+      document.title,
+      document.content,
+      document.is_required,
+      document.effective_at,
+      document.created_at
+    FROM public.terms_documents AS document
+    WHERE document.published_at IS NOT NULL
+      AND document.effective_at IS NOT NULL
+      AND document.effective_at <= NOW()
+      AND (document.retired_at IS NULL OR document.retired_at > NOW())
+    ORDER BY
+      document.document_type,
+      document.effective_at DESC,
+      document.created_at DESC,
+      document.id DESC
+  )
+  SELECT
+    COALESCE(
+      JSONB_AGG(
+        JSONB_BUILD_OBJECT(
+          'id', document.id,
+          'document_type', document.document_type,
+          'version', document.version,
+          'title', document.title,
+          'content', document.content,
+          'is_required', document.is_required,
+          'is_accepted', COALESCE(latest.event_type = 'accepted', FALSE)
+        )
+        ORDER BY document.is_required DESC, document.document_type
+      ),
+      '[]'::JSONB
+    ),
+    COALESCE(
+      BOOL_OR(
+        document.is_required
+        AND COALESCE(latest.event_type, '') <> 'accepted'
+      ),
+      FALSE
+    )
+  INTO v_documents, v_requires_consent
+  FROM current_documents AS document
+  LEFT JOIN LATERAL (
+    SELECT consent.event_type
+    FROM public.user_term_consents AS consent
+    WHERE consent.user_id = v_user_id
+      AND consent.terms_document_id = document.id
+    ORDER BY consent.recorded_at DESC, consent.id DESC
+    LIMIT 1
+  ) AS latest ON TRUE;
+
+  RETURN JSONB_BUILD_OBJECT(
+    'requires_consent', v_requires_consent,
+    'documents', v_documents
+  );
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.record_my_current_term_consents(
+  p_accepted_document_ids UUID[] DEFAULT '{}'::UUID[]
+)
+RETURNS JSONB
+LANGUAGE PLPGSQL
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_accepted_document_ids UUID[] :=
+    COALESCE(p_accepted_document_ids, '{}'::UUID[]);
+BEGIN
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'authentication required' USING ERRCODE = '42501';
+  END IF;
+
+  IF CARDINALITY(v_accepted_document_ids) > 20 THEN
+    RAISE EXCEPTION 'too many terms documents' USING ERRCODE = '22023';
+  END IF;
+
+  PERFORM 1
+  FROM public.users AS profile
+  WHERE profile.id = v_user_id
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'profile not found' USING ERRCODE = 'P0002';
+  END IF;
+
+  IF EXISTS (
+    WITH current_documents AS (
+      SELECT DISTINCT ON (document.document_type)
+        document.id,
+        document.document_type,
+        document.effective_at,
+        document.created_at
+      FROM public.terms_documents AS document
+      WHERE document.published_at IS NOT NULL
+        AND document.effective_at IS NOT NULL
+        AND document.effective_at <= NOW()
+        AND (document.retired_at IS NULL OR document.retired_at > NOW())
+      ORDER BY
+        document.document_type,
+        document.effective_at DESC,
+        document.created_at DESC,
+        document.id DESC
+    )
+    SELECT 1
+    FROM UNNEST(v_accepted_document_ids) AS requested(document_id)
+    WHERE requested.document_id IS NULL
+      OR NOT EXISTS (
+        SELECT 1
+        FROM current_documents AS document
+        WHERE document.id = requested.document_id
+      )
+  ) THEN
+    RAISE EXCEPTION 'terms document is not currently available'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF EXISTS (
+    WITH current_documents AS (
+      SELECT DISTINCT ON (document.document_type)
+        document.id,
+        document.document_type,
+        document.is_required,
+        document.effective_at,
+        document.created_at
+      FROM public.terms_documents AS document
+      WHERE document.published_at IS NOT NULL
+        AND document.effective_at IS NOT NULL
+        AND document.effective_at <= NOW()
+        AND (document.retired_at IS NULL OR document.retired_at > NOW())
+      ORDER BY
+        document.document_type,
+        document.effective_at DESC,
+        document.created_at DESC,
+        document.id DESC
+    )
+    SELECT 1
+    FROM current_documents AS document
+    WHERE document.is_required
+      AND NOT (document.id = ANY(v_accepted_document_ids))
+  ) THEN
+    RAISE EXCEPTION 'all required terms must be accepted'
+      USING ERRCODE = '22023';
+  END IF;
+
+  WITH current_documents AS (
+    SELECT DISTINCT ON (document.document_type)
+      document.id,
+      document.document_type,
+      document.effective_at,
+      document.created_at
+    FROM public.terms_documents AS document
+    WHERE document.published_at IS NOT NULL
+      AND document.effective_at IS NOT NULL
+      AND document.effective_at <= NOW()
+      AND (document.retired_at IS NULL OR document.retired_at > NOW())
+    ORDER BY
+      document.document_type,
+      document.effective_at DESC,
+      document.created_at DESC,
+      document.id DESC
+  ),
+  desired_events AS (
+    SELECT
+      document.id AS terms_document_id,
+      CASE
+        WHEN document.id = ANY(v_accepted_document_ids) THEN 'accepted'
+        ELSE 'withdrawn'
+      END AS event_type
+    FROM current_documents AS document
+  )
+  INSERT INTO public.user_term_consents (
+    user_id,
+    terms_document_id,
+    event_type,
+    collection_point
+  )
+  SELECT
+    v_user_id,
+    desired.terms_document_id,
+    desired.event_type,
+    'terms_gate'
+  FROM desired_events AS desired
+  LEFT JOIN LATERAL (
+    SELECT consent.event_type
+    FROM public.user_term_consents AS consent
+    WHERE consent.user_id = v_user_id
+      AND consent.terms_document_id = desired.terms_document_id
+    ORDER BY consent.recorded_at DESC, consent.id DESC
+    LIMIT 1
+  ) AS latest ON TRUE
+  WHERE latest.event_type IS DISTINCT FROM desired.event_type;
+
+  RETURN public.get_my_terms_requirement_status();
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_my_terms_requirement_status()
+  FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.record_my_current_term_consents(UUID[])
+  FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_my_terms_requirement_status()
+  TO authenticated;
+GRANT EXECUTE ON FUNCTION public.record_my_current_term_consents(UUID[])
+  TO authenticated;
+
+COMMENT ON FUNCTION public.get_my_terms_requirement_status() IS
+  'Returns current published terms and whether the active user is missing required acceptance.';
+COMMENT ON FUNCTION public.record_my_current_term_consents(UUID[]) IS
+  'Atomically validates current terms and appends changed acceptance events for the active user.';
+
+CREATE OR REPLACE FUNCTION public.get_my_account_state()
+RETURNS JSONB
+LANGUAGE PLPGSQL
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_email TEXT;
+  v_email_confirmed BOOLEAN;
+  v_nickname TEXT;
+  v_bio TEXT;
+  v_interests TEXT[];
+  v_sns_links JSONB;
+  v_onboarding_completed_version SMALLINT;
+  v_onboarding_completed_at TIMESTAMPTZ;
+  v_active_required_terms_count BIGINT := 0;
+  v_missing_required_terms_count BIGINT := 0;
+  v_next_step TEXT;
+BEGIN
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'authentication required' USING ERRCODE = '42501';
+  END IF;
+
+  SELECT
+    COALESCE(auth_account.email, profile.email),
+    auth_account.email_confirmed_at IS NOT NULL,
+    profile.nickname,
+    profile.bio,
+    profile.interests,
+    profile.sns_links,
+    profile.onboarding_completed_version,
+    profile.onboarding_completed_at
+  INTO
+    v_email,
+    v_email_confirmed,
+    v_nickname,
+    v_bio,
+    v_interests,
+    v_sns_links,
+    v_onboarding_completed_version,
+    v_onboarding_completed_at
+  FROM public.users AS profile
+  JOIN auth.users AS auth_account ON auth_account.id = profile.id
+  WHERE profile.id = v_user_id;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'account profile not found' USING ERRCODE = 'P0002';
+  END IF;
+
+  WITH current_required_documents AS (
+    SELECT DISTINCT ON (document.document_type)
+      document.id,
+      document.document_type,
+      document.effective_at,
+      document.created_at
+    FROM public.terms_documents AS document
+    WHERE document.is_required
+      AND document.published_at IS NOT NULL
+      AND document.effective_at IS NOT NULL
+      AND document.effective_at <= NOW()
+      AND (document.retired_at IS NULL OR document.retired_at > NOW())
+    ORDER BY
+      document.document_type,
+      document.effective_at DESC,
+      document.created_at DESC,
+      document.id DESC
+  )
+  SELECT
+    COUNT(*),
+    COUNT(*) FILTER (
+      WHERE COALESCE(latest.event_type, '') <> 'accepted'
+    )
+  INTO
+    v_active_required_terms_count,
+    v_missing_required_terms_count
+  FROM current_required_documents AS document
+  LEFT JOIN LATERAL (
+    SELECT consent.event_type
+    FROM public.user_term_consents AS consent
+    WHERE consent.user_id = v_user_id
+      AND consent.terms_document_id = document.id
+    ORDER BY consent.recorded_at DESC, consent.id DESC
+    LIMIT 1
+  ) AS latest ON TRUE;
+
+  v_next_step := CASE
+    WHEN NOT v_email_confirmed THEN 'verify_email'
+    WHEN v_onboarding_completed_version < 1 THEN 'onboarding'
+    WHEN v_missing_required_terms_count > 0 THEN 'terms_review'
+    ELSE 'ready'
+  END;
+
+  RETURN JSONB_BUILD_OBJECT(
+    'user_id', v_user_id,
+    'email', v_email,
+    'email_confirmed', v_email_confirmed,
+    'next_step', v_next_step,
+    'onboarding', JSONB_BUILD_OBJECT(
+      'required', v_onboarding_completed_version < 1,
+      'completed_version', v_onboarding_completed_version,
+      'completed_at', v_onboarding_completed_at
+    ),
+    'terms', JSONB_BUILD_OBJECT(
+      'requires_consent', v_missing_required_terms_count > 0,
+      'active_required_count', v_active_required_terms_count,
+      'missing_required_count', v_missing_required_terms_count
+    ),
+    'profile', JSONB_BUILD_OBJECT(
+      'nickname', v_nickname,
+      'bio', v_bio,
+      'interests', COALESCE(v_interests, '{}'::TEXT[]),
+      'sns_links', COALESCE(v_sns_links, '[]'::JSONB)
+    )
+  );
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.complete_my_onboarding(
+  p_nickname TEXT,
+  p_interests TEXT[],
+  p_bio TEXT DEFAULT '',
+  p_sns_links JSONB DEFAULT '[]'::JSONB,
+  p_accepted_document_ids UUID[] DEFAULT '{}'::UUID[]
+)
+RETURNS JSONB
+LANGUAGE PLPGSQL
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_email_confirmed BOOLEAN;
+  v_current_onboarding_version SMALLINT;
+  v_nickname TEXT := BTRIM(COALESCE(p_nickname, ''));
+  v_bio TEXT := BTRIM(COALESCE(p_bio, ''));
+  v_interests TEXT[];
+  v_sns_links JSONB;
+  v_accepted_document_ids UUID[] :=
+    COALESCE(p_accepted_document_ids, '{}'::UUID[]);
+BEGIN
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'authentication required' USING ERRCODE = '42501';
+  END IF;
+
+  SELECT auth_account.email_confirmed_at IS NOT NULL
+  INTO v_email_confirmed
+  FROM auth.users AS auth_account
+  WHERE auth_account.id = v_user_id;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'auth account not found' USING ERRCODE = 'P0002';
+  END IF;
+  IF NOT v_email_confirmed THEN
+    RAISE EXCEPTION 'email confirmation required' USING ERRCODE = '42501';
+  END IF;
+
+  SELECT profile.onboarding_completed_version
+  INTO v_current_onboarding_version
+  FROM public.users AS profile
+  WHERE profile.id = v_user_id
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'account profile not found' USING ERRCODE = 'P0002';
+  END IF;
+
+  IF CHAR_LENGTH(v_nickname) < 1 OR CHAR_LENGTH(v_nickname) > 20 THEN
+    RAISE EXCEPTION 'nickname must contain 1 to 20 characters'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF CHAR_LENGTH(v_bio) > 50 THEN
+    RAISE EXCEPTION 'bio must contain at most 50 characters'
+      USING ERRCODE = '22023';
+  END IF;
+
+  SELECT COALESCE(
+    ARRAY_AGG(BTRIM(interest.value) ORDER BY interest.ordinality),
+    '{}'::TEXT[]
+  )
+  INTO v_interests
+  FROM UNNEST(COALESCE(p_interests, '{}'::TEXT[]))
+    WITH ORDINALITY AS interest(value, ordinality);
+
+  IF CARDINALITY(v_interests) < 1 OR CARDINALITY(v_interests) > 5 THEN
+    RAISE EXCEPTION 'interests must contain 1 to 5 values'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM UNNEST(v_interests) AS interest(value)
+    WHERE interest.value = '' OR CHAR_LENGTH(interest.value) > 50
+  )
+  OR (
+    SELECT COUNT(*) FROM UNNEST(v_interests) AS interest(value)
+  ) <> (
+    SELECT COUNT(DISTINCT LOWER(interest.value))
+    FROM UNNEST(v_interests) AS interest(value)
+  ) THEN
+    RAISE EXCEPTION 'interests contain blank, duplicate, or oversized values'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF p_sns_links IS NULL OR JSONB_TYPEOF(p_sns_links) <> 'array'
+     OR JSONB_ARRAY_LENGTH(p_sns_links) > 5 THEN
+    RAISE EXCEPTION 'SNS links must be an array with at most 5 values'
+      USING ERRCODE = '22023';
+  END IF;
+
+  SELECT COALESCE(
+    JSONB_AGG(BTRIM(link.value) ORDER BY link.ordinality),
+    '[]'::JSONB
+  )
+  INTO v_sns_links
+  FROM JSONB_ARRAY_ELEMENTS_TEXT(p_sns_links)
+    WITH ORDINALITY AS link(value, ordinality);
+
+  IF EXISTS (
+    SELECT 1
+    FROM JSONB_ARRAY_ELEMENTS_TEXT(v_sns_links) AS link(value)
+    WHERE link.value !~* '^https?://[^[:space:]]+$'
+       OR CHAR_LENGTH(link.value) > 2048
+  )
+  OR (
+    SELECT COUNT(*)
+    FROM JSONB_ARRAY_ELEMENTS_TEXT(v_sns_links) AS link(value)
+  ) <> (
+    SELECT COUNT(DISTINCT LOWER(link.value))
+    FROM JSONB_ARRAY_ELEMENTS_TEXT(v_sns_links) AS link(value)
+  ) THEN
+    RAISE EXCEPTION 'SNS links contain invalid or duplicate URLs'
+      USING ERRCODE = '22023';
+  END IF;
+
+  PERFORM public.record_my_current_term_consents(v_accepted_document_ids);
+
+  UPDATE public.users AS profile
+  SET
+    nickname = v_nickname,
+    bio = v_bio,
+    interests = v_interests,
+    sns_links = v_sns_links,
+    onboarding_completed_version =
+      GREATEST(v_current_onboarding_version, 1),
+    onboarding_completed_at = CASE
+      WHEN v_current_onboarding_version < 1 THEN NOW()
+      ELSE profile.onboarding_completed_at
+    END,
+    updated_at = NOW()
+  WHERE profile.id = v_user_id;
+
+  RETURN public.get_my_account_state();
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_my_account_state()
+  FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.complete_my_onboarding(
+  TEXT, TEXT[], TEXT, JSONB, UUID[]
+) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_my_account_state()
+  TO authenticated;
+GRANT EXECUTE ON FUNCTION public.complete_my_onboarding(
+  TEXT, TEXT[], TEXT, JSONB, UUID[]
+) TO authenticated;
+
+COMMENT ON FUNCTION public.get_my_account_state() IS
+  'Returns the authenticated account routing state without exposing it through public profile grants.';
+COMMENT ON FUNCTION public.complete_my_onboarding(
+  TEXT, TEXT[], TEXT, JSONB, UUID[]
+) IS
+  'Validates profile input, records current terms choices, and completes onboarding atomically.';
 
 -- 2. Create Projects Table
 CREATE TABLE IF NOT EXISTS public.projects (
@@ -272,6 +899,11 @@ CREATE TABLE IF NOT EXISTS public.reviews (
     )
   )
 );
+
+COMMENT ON COLUMN public.users.onboarding_completed_version IS
+  'Completed onboarding contract version. Zero means first onboarding is pending.';
+COMMENT ON COLUMN public.users.onboarding_completed_at IS
+  'Server-recorded completion time for the current onboarding contract.';
 
 CREATE OR REPLACE FUNCTION private.validate_project_quiz_configuration()
 RETURNS TRIGGER
@@ -539,6 +1171,8 @@ CREATE INDEX IF NOT EXISTS idx_reviews_participation_identity
 -- ========================================================
 
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.terms_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_term_consents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.participations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
@@ -561,6 +1195,42 @@ CREATE POLICY "Users update own editable profile" ON public.users FOR UPDATE
   TO authenticated
   USING ((SELECT auth.uid()) = id)
   WITH CHECK ((SELECT auth.uid()) = id);
+
+DROP POLICY IF EXISTS "Available terms documents are viewable"
+  ON public.terms_documents;
+CREATE POLICY "Available terms documents are viewable"
+  ON public.terms_documents
+  FOR SELECT
+  TO anon, authenticated
+  USING (
+    published_at IS NOT NULL
+    AND effective_at IS NOT NULL
+    AND effective_at <= NOW()
+    AND (retired_at IS NULL OR retired_at > NOW())
+  );
+
+DROP POLICY IF EXISTS "Users view consented terms documents"
+  ON public.terms_documents;
+CREATE POLICY "Users view consented terms documents"
+  ON public.terms_documents
+  FOR SELECT
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.user_term_consents AS consent
+      WHERE consent.terms_document_id = terms_documents.id
+        AND consent.user_id = (SELECT auth.uid())
+    )
+  );
+
+DROP POLICY IF EXISTS "Users view own term consent history"
+  ON public.user_term_consents;
+CREATE POLICY "Users view own term consent history"
+  ON public.user_term_consents
+  FOR SELECT
+  TO authenticated
+  USING ((SELECT auth.uid()) = user_id);
 
 -- Public project rows exclude drafts. Creators retain access to their own rows.
 DROP POLICY IF EXISTS "Projects viewable by everyone" ON public.projects;
@@ -686,6 +1356,10 @@ CREATE POLICY "Active market items are viewable" ON public.marketplace_items FOR
 -- Explicit browser grants. Contact data and test credentials are intentionally
 -- omitted from SELECT grants.
 REVOKE ALL PRIVILEGES ON TABLE public.users FROM anon, authenticated;
+REVOKE ALL PRIVILEGES ON TABLE public.terms_documents
+  FROM PUBLIC, anon, authenticated;
+REVOKE ALL PRIVILEGES ON TABLE public.user_term_consents
+  FROM PUBLIC, anon, authenticated;
 REVOKE ALL PRIVILEGES ON TABLE public.projects FROM anon, authenticated;
 REVOKE ALL PRIVILEGES ON TABLE public.participations FROM anon, authenticated;
 REVOKE ALL PRIVILEGES ON TABLE public.reviews FROM anon, authenticated;
@@ -703,6 +1377,14 @@ GRANT SELECT (
 ) ON TABLE public.users TO anon, authenticated;
 GRANT UPDATE (nickname, bio, avatar_url, interests)
   ON TABLE public.users TO authenticated;
+
+GRANT SELECT (
+  id, document_type, version, title, content, is_required,
+  published_at, effective_at, retired_at, created_at
+) ON TABLE public.terms_documents TO anon, authenticated;
+GRANT SELECT (
+  id, user_id, terms_document_id, event_type, collection_point, recorded_at
+) ON TABLE public.user_term_consents TO authenticated;
 
 GRANT SELECT (
   id, creator_id, title, service_name, service_desc, test_notice,
@@ -1371,7 +2053,9 @@ REVOKE ALL ON FUNCTION private.sync_user_email() FROM PUBLIC, anon, authenticate
 -- Backfill accounts that existed before the trigger was installed. Existing
 -- user-edited profile fields are preserved.
 INSERT INTO public.users AS existing (
-  id, email, nickname, avatar_url, created_at, updated_at
+  id, email, nickname, avatar_url,
+  onboarding_completed_version, onboarding_completed_at,
+  created_at, updated_at
 )
 SELECT
   auth_user.id,
@@ -1386,6 +2070,8 @@ SELECT
     NULLIF(BTRIM(auth_user.raw_user_meta_data ->> 'avatar_url'), ''),
     NULLIF(BTRIM(auth_user.raw_user_meta_data ->> 'picture'), '')
   ),
+  1,
+  COALESCE(auth_user.created_at, NOW()),
   COALESCE(auth_user.created_at, NOW()),
   NOW()
 FROM auth.users AS auth_user
@@ -1436,7 +2122,11 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- Ensure sknye1004@gmail.com User Record
-INSERT INTO public.users (id, email, nickname, bio, level, rank_badge, has_passed_gating, completed_test_count)
+INSERT INTO public.users (
+  id, email, nickname, bio, level, rank_badge,
+  has_passed_gating, completed_test_count,
+  onboarding_completed_version, onboarding_completed_at
+)
 VALUES (
   'a1004100-4100-4100-4100-100410041004',
   'sknye1004@gmail.com',
@@ -1445,7 +2135,9 @@ VALUES (
   5,
   '마스터 크리에이터',
   TRUE,
-  12
+  12,
+  1,
+  NOW()
 )
 ON CONFLICT (id) DO UPDATE SET nickname = 'sknye1004 (제작자)';
 
