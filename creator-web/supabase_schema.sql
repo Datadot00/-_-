@@ -273,6 +273,38 @@ CREATE TABLE IF NOT EXISTS public.reviews (
   )
 );
 
+CREATE OR REPLACE FUNCTION private.validate_project_quiz_configuration()
+RETURNS TRIGGER
+LANGUAGE PLPGSQL
+SET search_path = ''
+AS $$
+BEGIN
+  IF NEW.verification_method = 'quiz' THEN
+    IF JSONB_TYPEOF(NEW.quizzes) <> 'array' OR JSONB_ARRAY_LENGTH(NEW.quizzes) = 0 THEN
+      RAISE EXCEPTION 'quiz configuration is invalid' USING ERRCODE = '22023';
+    END IF;
+    IF EXISTS (
+      SELECT 1
+      FROM JSONB_ARRAY_ELEMENTS(NEW.quizzes) AS quiz(item)
+      WHERE JSONB_TYPEOF(quiz.item) <> 'object'
+        OR BTRIM(COALESCE(quiz.item ->> 'question', '')) = ''
+        OR BTRIM(COALESCE(quiz.item ->> 'answer', '')) = ''
+    ) THEN
+      RAISE EXCEPTION 'quiz configuration is invalid' USING ERRCODE = '22023';
+    END IF;
+  ELSE
+    NEW.quizzes := '[]'::JSONB;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS projects_validate_quiz_configuration ON public.projects;
+CREATE TRIGGER projects_validate_quiz_configuration
+BEFORE INSERT OR UPDATE OF verification_method, quizzes ON public.projects
+FOR EACH ROW
+EXECUTE FUNCTION private.validate_project_quiz_configuration();
+
 CREATE OR REPLACE FUNCTION private.sanitize_optional_review_verification()
 RETURNS TRIGGER
 LANGUAGE PLPGSQL
@@ -282,6 +314,10 @@ AS $$
 DECLARE
   v_verification_method TEXT;
   v_project_quizzes JSONB;
+  v_quiz JSONB;
+  v_quiz_index BIGINT;
+  v_expected_answer TEXT;
+  v_submitted_answer TEXT;
 BEGIN
   SELECT COALESCE(project.verification_method, 'none'), COALESCE(project.quizzes, '[]'::JSONB)
   INTO v_verification_method, v_project_quizzes
@@ -299,16 +335,34 @@ BEGIN
     NEW.quiz_answers := '{}'::JSONB;
     NEW.is_quiz_passed := TRUE;
   ELSE
-    IF JSONB_TYPEOF(v_project_quizzes) = 'array'
-      AND JSONB_ARRAY_LENGTH(v_project_quizzes) > 0
-      AND (
-        NEW.quiz_answers IS NULL
-        OR JSONB_TYPEOF(NEW.quiz_answers) <> 'object'
-        OR NEW.quiz_answers = '{}'::JSONB
-      )
+    IF JSONB_TYPEOF(v_project_quizzes) <> 'array'
+      OR JSONB_ARRAY_LENGTH(v_project_quizzes) = 0
+      OR JSONB_TYPEOF(NEW.quiz_answers) <> 'object'
     THEN
-      RAISE EXCEPTION 'quiz answers are required for this project' USING ERRCODE = '22023';
+      RAISE EXCEPTION 'quiz configuration is invalid' USING ERRCODE = '22023';
     END IF;
+
+    FOR v_quiz, v_quiz_index IN
+      SELECT quiz.item, quiz.ordinality
+      FROM JSONB_ARRAY_ELEMENTS(v_project_quizzes)
+        WITH ORDINALITY AS quiz(item, ordinality)
+    LOOP
+      v_expected_answer := BTRIM(COALESCE(v_quiz ->> 'answer', ''));
+      v_submitted_answer := BTRIM(COALESCE(NEW.quiz_answers ->> ('quiz_' || v_quiz_index), ''));
+      IF v_expected_answer = '' THEN
+        RAISE EXCEPTION 'quiz configuration is invalid' USING ERRCODE = '22023';
+      END IF;
+      IF v_submitted_answer = '' THEN
+        RAISE EXCEPTION 'quiz answers are required for this project' USING ERRCODE = '22023';
+      END IF;
+      IF REGEXP_REPLACE(LOWER(v_submitted_answer), '[[:space:]]+', '', 'g')
+        <> REGEXP_REPLACE(LOWER(v_expected_answer), '[[:space:]]+', '', 'g')
+      THEN
+        RAISE EXCEPTION 'quiz answer is incorrect' USING ERRCODE = '22023';
+      END IF;
+    END LOOP;
+
+    NEW.is_quiz_passed := TRUE;
     NEW.screenshot_url := NULL;
   END IF;
 
@@ -654,7 +708,7 @@ GRANT SELECT (
   id, creator_id, title, service_name, service_desc, test_notice,
   thumbnail_url, category, platform, is_ab_test, service_url, ab_url_a,
   ab_url_b, app_playstore_url, app_appstore_url, external_survey_url, login_required,
-  privacy_items, test_guide, questions, quizzes, verification_method, duration, start_date,
+  privacy_items, test_guide, questions, verification_method, duration, start_date,
   end_date, target_count, current_count, reward_coin, total_funded_cost,
   is_reviews_public, status, tech_tags, target_persona_tags, created_at, search_text
 ) ON TABLE public.projects TO anon, authenticated;
@@ -675,6 +729,60 @@ GRANT UPDATE (
   status, tech_tags, target_persona_tags
 ) ON TABLE public.projects TO authenticated;
 GRANT DELETE ON TABLE public.projects TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.get_project_quizzes(p_project_id UUID)
+RETURNS JSONB
+LANGUAGE PLPGSQL
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_creator_id UUID;
+  v_verification_method TEXT;
+  v_quizzes JSONB;
+  v_visible_quizzes JSONB;
+BEGIN
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'authentication required' USING ERRCODE = '42501';
+  END IF;
+
+  SELECT project.creator_id, project.verification_method, project.quizzes
+  INTO v_creator_id, v_verification_method, v_quizzes
+  FROM public.projects AS project
+  WHERE project.id = p_project_id;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'project not found' USING ERRCODE = 'P0002';
+  END IF;
+  IF v_verification_method <> 'quiz' THEN
+    RETURN '[]'::JSONB;
+  END IF;
+  IF v_creator_id = v_user_id THEN
+    RETURN COALESCE(v_quizzes, '[]'::JSONB);
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1
+    FROM public.participations AS participation
+    WHERE participation.project_id = p_project_id
+      AND participation.user_id = v_user_id
+      AND participation.status IN ('applied', 'in_progress')
+  ) THEN
+    RETURN '[]'::JSONB;
+  END IF;
+
+  SELECT COALESCE(JSONB_AGG(quiz.item - 'answer' ORDER BY quiz.ordinality), '[]'::JSONB)
+  INTO v_visible_quizzes
+  FROM JSONB_ARRAY_ELEMENTS(COALESCE(v_quizzes, '[]'::JSONB))
+    WITH ORDINALITY AS quiz(item, ordinality);
+
+  RETURN v_visible_quizzes;
+END;
+$$;
+
+REVOKE SELECT (quizzes) ON TABLE public.projects FROM anon, authenticated;
+REVOKE ALL ON FUNCTION public.get_project_quizzes(UUID) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_project_quizzes(UUID) TO authenticated;
 
 GRANT SELECT ON TABLE public.participations TO authenticated;
 GRANT SELECT (
@@ -908,6 +1016,14 @@ DECLARE
   v_participation_status TEXT;
   v_reward INTEGER;
   v_project_title TEXT;
+  v_verification_method TEXT;
+  v_project_quizzes JSONB;
+  v_quiz JSONB;
+  v_quiz_index BIGINT;
+  v_expected_answer TEXT;
+  v_submitted_answer TEXT;
+  v_stored_quiz_answers JSONB := '{}'::JSONB;
+  v_stored_screenshot_url TEXT;
   v_review_id UUID;
   v_completed_count INTEGER;
   v_has_passed_gating BOOLEAN;
@@ -936,8 +1052,20 @@ BEGIN
     RAISE EXCEPTION 'screenshot URL is invalid' USING ERRCODE = '22023';
   END IF;
 
-  SELECT participation.id, participation.status, project.reward_coin, project.title
-  INTO v_participation_id, v_participation_status, v_reward, v_project_title
+  SELECT
+    participation.id,
+    participation.status,
+    project.reward_coin,
+    project.title,
+    COALESCE(project.verification_method, 'none'),
+    COALESCE(project.quizzes, '[]'::JSONB)
+  INTO
+    v_participation_id,
+    v_participation_status,
+    v_reward,
+    v_project_title,
+    v_verification_method,
+    v_project_quizzes
   FROM public.participations AS participation
   JOIN public.projects AS project ON project.id = participation.project_id
   WHERE participation.project_id = p_project_id
@@ -951,13 +1079,48 @@ BEGIN
     RAISE EXCEPTION 'review was already submitted for this participation' USING ERRCODE = '23505';
   END IF;
 
+  IF v_verification_method = 'screenshot' THEN
+    IF p_screenshot_url IS NULL OR BTRIM(p_screenshot_url) = '' THEN
+      RAISE EXCEPTION 'screenshot is required for this project' USING ERRCODE = '22023';
+    END IF;
+    v_stored_screenshot_url := p_screenshot_url;
+  ELSIF v_verification_method = 'quiz' THEN
+    IF JSONB_TYPEOF(v_project_quizzes) <> 'array'
+      OR JSONB_ARRAY_LENGTH(v_project_quizzes) = 0
+      OR JSONB_TYPEOF(p_quiz_answers) <> 'object'
+    THEN
+      RAISE EXCEPTION 'quiz configuration is invalid' USING ERRCODE = '22023';
+    END IF;
+
+    FOR v_quiz, v_quiz_index IN
+      SELECT quiz.item, quiz.ordinality
+      FROM JSONB_ARRAY_ELEMENTS(v_project_quizzes)
+        WITH ORDINALITY AS quiz(item, ordinality)
+    LOOP
+      v_expected_answer := BTRIM(COALESCE(v_quiz ->> 'answer', ''));
+      v_submitted_answer := BTRIM(COALESCE(p_quiz_answers ->> ('quiz_' || v_quiz_index), ''));
+      IF v_expected_answer = '' THEN
+        RAISE EXCEPTION 'quiz configuration is invalid' USING ERRCODE = '22023';
+      END IF;
+      IF v_submitted_answer = '' THEN
+        RAISE EXCEPTION 'quiz answers are required for this project' USING ERRCODE = '22023';
+      END IF;
+      IF REGEXP_REPLACE(LOWER(v_submitted_answer), '[[:space:]]+', '', 'g')
+        <> REGEXP_REPLACE(LOWER(v_expected_answer), '[[:space:]]+', '', 'g')
+      THEN
+        RAISE EXCEPTION 'quiz answer is incorrect' USING ERRCODE = '22023';
+      END IF;
+    END LOOP;
+    v_stored_quiz_answers := p_quiz_answers;
+  END IF;
+
   INSERT INTO public.reviews (
     project_id, participation_id, user_id, rating, reuse_intention,
     answers, quiz_answers, is_quiz_passed, screenshot_url, status
   ) VALUES (
     p_project_id, v_participation_id, v_user_id, p_rating,
-    COALESCE(p_reuse_intention, TRUE), p_answers, p_quiz_answers,
-    COALESCE(p_is_quiz_passed, TRUE), p_screenshot_url, 'submitted'
+    COALESCE(p_reuse_intention, TRUE), p_answers, v_stored_quiz_answers,
+    TRUE, v_stored_screenshot_url, 'submitted'
   )
   RETURNING id INTO v_review_id;
 
@@ -1007,7 +1170,8 @@ BEGIN
     'wallet_paid_coins', v_paid_coins,
     'wallet_total', v_earned_coins + v_paid_coins,
     'completed_test_count', v_completed_count,
-    'has_passed_gating', v_has_passed_gating
+    'has_passed_gating', v_has_passed_gating,
+    'verification_method', v_verification_method
   );
 END;
 $$;

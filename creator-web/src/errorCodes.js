@@ -1,6 +1,6 @@
 /**
  * Don Dwae (돈 돼?) 서비스 통합 에러코드 및 한국어 에러 메시지 사전
- * 
+ *
  * 에러코드 체계:
  * - AUTH-xxx: 인증, 로그인, 회원가입, 세션
  * - PRJ-xxx:  프로젝트 등록, 수정, 삭제, 조회
@@ -41,6 +41,7 @@ export const ERROR_CODES = {
   PART_REVIEW_VALIDATION_FAILED: { id: 'PART-005', message: '리뷰 별점 및 필수 질문의 답변을 작성해 주세요.' },
   PART_SCREENSHOT_TOO_LARGE: { id: 'PART-006', message: '스크린샷 이미지는 2MB 이하 파일만 업로드할 수 있습니다.' },
   PART_SUBMISSION_FAILED: { id: 'PART-007', message: '참여 또는 리뷰 제출 처리에 실패했습니다.' },
+  PART_SCREENSHOT_REQUIRED: { id: 'PART-008', message: '참여 확인용 스크린샷을 첨부해 주세요.' },
 
   // --- COIN (돼지코인/상점) ---
   COIN_INSUFFICIENT: { id: 'COIN-001', message: '보유하신 돼지코인이 부족합니다.' },
@@ -90,7 +91,10 @@ const ERROR_RULES = [
   // Participation
   { pattern: /already_applied|이미 참여/i, code: 'PART_ALREADY_APPLIED' },
   { pattern: /creator_cannot_apply/i, code: 'PART_CREATOR_CANNOT_APPLY' },
-  { pattern: /closed_project|모집이 마감/i, code: 'PART_RECRUITMENT_CLOSED' }
+  { pattern: /closed_project|모집이 마감/i, code: 'PART_RECRUITMENT_CLOSED' },
+  { pattern: /quiz answers? (?:are|is) required|quiz answer is incorrect|quiz configuration is invalid|검증 퀴즈/i, code: 'PART_QUIZ_FAILED' },
+  { pattern: /screenshot is required/i, code: 'PART_SCREENSHOT_REQUIRED' },
+  { pattern: /screenshot URL is invalid|스크린샷.*(?:2MB|용량)/i, code: 'PART_SCREENSHOT_TOO_LARGE' }
 ];
 
 /**

@@ -33,6 +33,9 @@ test('피드 카드 조회는 카드 썸네일만 포함하고 상세 JSON과 �
   assert.equal(cardColumns.includes('thumbnail_url'), true);
   assert.equal(cardColumns.includes('test_account_pw'), false);
   assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('questions'), true);
+  assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('quizzes'), false);
+  assert.match(service, /rpc\('get_project_quizzes'/);
+  assert.doesNotMatch(service, /\.select\('quizzes'\)/);
   assert.match(html, /data-thumbnail-variant="card"[^>]*loading="lazy"[^>]*class="w-full h-full object-cover"/);
 });
 

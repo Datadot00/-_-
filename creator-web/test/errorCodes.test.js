@@ -42,6 +42,17 @@ test('데이터베이스 RLS 권한 오류를 SYS-002로 변환한다', () => {
   assert.equal(err.message, '데이터베이스 접근 권한이 없습니다. 다시 로그인해 주세요.');
 });
 
+test('서버 퀴즈 채점 오류를 PART-004로 변환한다', () => {
+  for (const message of [
+    'quiz answers are required for this project',
+    'quiz answer is incorrect',
+    'quiz configuration is invalid'
+  ]) {
+    const error = toUserFriendlyError({ code: '22023', message });
+    assert.equal(error.id, 'PART-004');
+  }
+});
+
 test('이미 한국어로 작성된 커스텀 메시지는 메시지를 보존하면서 fallback ID를 부여한다', () => {
   const err = toUserFriendlyError(new Error('프로젝트 제목을 입력해 주세요.'), 'PRJ_REQUIRED_FIELD_MISSING');
   assert.equal(err.id, 'PRJ-001');

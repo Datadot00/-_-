@@ -5211,6 +5211,12 @@
       if (/already_applied|이미 참여/.test(combined)) {
         return { id: 'PART-001', message: '이미 참여를 완료한 테스트입니다.', formatted: '[PART-001] 이미 참여를 완료한 테스트입니다.' };
       }
+      if (/quiz answers? (?:are|is) required|quiz answer is incorrect|quiz configuration is invalid|검증 퀴즈/.test(combined)) {
+        return { id: 'PART-004', message: '검증 퀴즈 답변이 올바르지 않거나 입력되지 않았습니다.', formatted: '[PART-004] 검증 퀴즈 답변이 올바르지 않거나 입력되지 않았습니다.' };
+      }
+      if (/screenshot is required/.test(combined)) {
+        return { id: 'PART-008', message: '참여 확인용 스크린샷을 첨부해 주세요.', formatted: '[PART-008] 참여 확인용 스크린샷을 첨부해 주세요.' };
+      }
       if (/[가-힣]/.test(rawMsg) && rawMsg.length >= 4) {
         return { id: 'SYS-999', message: rawMsg, formatted: `[SYS-999] ${rawMsg}` };
       }
@@ -9920,7 +9926,7 @@
       currentFeedbackProjectQuizzes = quizzesList;
       const verificationItems = [
         ...questionsList.map((q, idx) => ({ q, idx, isQuiz: false })),
-        ...quizzesList.map((q, idx) => ({ q, idx: questionsList.length + idx, isQuiz: true }))
+        ...quizzesList.map((q, idx) => ({ q, idx: questionsList.length + idx, quizIndex: idx, isQuiz: true }))
       ];
 
       if (normalizedTestType === 'vote') {
@@ -10028,11 +10034,10 @@
             
             <div class="space-y-3 bg-[#FAFBF7] p-4 rounded-xl border border-[#E9EEDC] text-xs">
               ${verificationItems.length
-            ? verificationItems.map(({ q, idx, isQuiz }) => {
+            ? verificationItems.map(({ q, idx, quizIndex, isQuiz }) => {
               if (isQuiz) {
                 const quizQuestionText = q.question || '퀴즈 질문';
                 const options = (q.options && q.options.length > 0) ? q.options : null;
-                const expectedAnswer = q.answer || '';
                 return `
                       <div class="p-3.5 bg-amber-50/70 rounded-lg border border-amber-200/80 flex flex-col gap-2 fb-quiz-block">
                         <div class="flex items-center justify-between">
@@ -10045,7 +10050,7 @@
                           <div class="flex flex-col gap-1.5 text-[11px]">
                             ${options.map((optText, oIdx) => `
                               <label class="p-2.5 border border-amber-200/80 hover:border-amber-400 bg-white rounded-md flex items-center gap-2 cursor-pointer font-medium text-neutral-800 transition-colors">
-                                <input type="radio" name="fb-product-quiz-q${idx}" value="${escapeHtml(optText)}" data-quiz-expected="${escapeHtml(expectedAnswer)}" data-quiz-question="${escapeHtml(quizQuestionText)}" ${oIdx === 0 ? 'checked' : ''} class="accent-[#2F6517]">
+                                <input type="radio" name="fb-product-quiz-q${quizIndex}" value="${escapeHtml(optText)}" data-quiz-index="${quizIndex}" data-quiz-question="${escapeHtml(quizQuestionText)}" class="accent-[#2F6517]">
                                 <span>${oIdx + 1}. ${escapeHtml(optText)}</span>
                               </label>
                             `).join('')}
@@ -10054,9 +10059,8 @@
                           <div class="flex flex-col gap-1 text-[11px]">
                             <input type="text"
                               placeholder="서비스를 사용하고 확인한 퀴즈 정답을 입력하세요 (예: 8개, 파란색 등)"
-                              data-quiz-index="${idx}"
+                              data-quiz-index="${quizIndex}"
                               data-quiz-question="${escapeHtml(quizQuestionText)}"
-                              data-quiz-expected="${escapeHtml(expectedAnswer)}"
                               oninput="this.classList.remove('border-red-500', 'ring-2', 'ring-red-200')"
                               class="fb-quiz-answer-input w-full p-2.5 rounded-md border border-amber-300 bg-white text-xs font-semibold focus:outline-none focus:border-amber-500 text-neutral-800" />
                           </div>
@@ -10163,7 +10167,6 @@
                   placeholder="서비스를 이용하고 확인한 정답을 입력하세요"
                   data-quiz-index="${index}"
                   data-quiz-question="${escapeHtml(quiz.question || `퀴즈 ${index + 1}번`)}"
-                  data-quiz-expected="${escapeHtml(quiz.answer || '')}"
                   oninput="this.classList.remove('border-red-500', 'ring-2', 'ring-red-200')" />
               </label>
             `).join('')}
@@ -10304,13 +10307,10 @@
           return;
         }
 
-        const normalizeQuizText = (text) => String(text || '').trim().toLowerCase().replace(/\s+/g, '');
-
         for (let i = 0; i < quizInputs.length; i++) {
           const input = quizInputs[i];
           const val = input.value.trim();
           const qName = input.dataset.quizQuestion || `검증 퀴즈 ${i + 1}번`;
-          const expected = input.dataset.quizExpected || currentFeedbackProjectQuizzes[i]?.answer || '';
 
           // 1. 필수 답변 미입력 시 제출 및 코인 지급 차단
           if (!val) {
@@ -10321,19 +10321,10 @@
             return;
           }
 
-          // 2. 제작자가 정답을 등록한 경우 정답 일치 여부 검증
-          if (expected && expected.trim()) {
-            if (normalizeQuizText(val) !== normalizeQuizText(expected)) {
-              showGenericToast('[PART-004] 퀴즈 정답이 올바르지 않습니다. 서비스에서 확인한 내용을 다시 입력해 주세요.', '⚠️');
-              input.classList.add('border-red-500', 'ring-2', 'ring-red-200');
-              input.focus();
-              input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              return;
-            }
-          }
-
           input.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
-          quizAnswers[`quiz_${i + 1}`] = val;
+          const quizIndex = Number(input.dataset.quizIndex);
+          const quizKey = Number.isInteger(quizIndex) ? `quiz_${quizIndex + 1}` : `quiz_${i + 1}`;
+          quizAnswers[quizKey] = val;
         }
 
         // 객관식 퀴즈 문항이 포함된 경우 선택 및 정답 검증
@@ -10344,14 +10335,9 @@
             showGenericToast('[PART-004] 객관식 검증 퀴즈 항목을 선택해 주세요.', '⚠️');
             return;
           }
-          const expected = checkedRadio.dataset.quizExpected || '';
-          if (expected && expected.trim()) {
-            if (normalizeQuizText(checkedRadio.value) !== normalizeQuizText(expected)) {
-              showGenericToast('[PART-004] 퀴즈 정답이 올바르지 않습니다. 서비스에서 확인한 내용을 다시 입력해 주세요.', '⚠️');
-              return;
-            }
-          }
-          quizAnswers[radioName] = checkedRadio.value;
+          const quizIndex = Number(checkedRadio.dataset.quizIndex);
+          const quizKey = Number.isInteger(quizIndex) ? `quiz_${quizIndex + 1}` : radioName;
+          quizAnswers[quizKey] = checkedRadio.value;
         }
       } else {
         quizInputs.forEach((input, index) => {
@@ -10360,7 +10346,7 @@
       }
 
       if (currentFeedbackVerificationMethod === 'screenshot' && !feedbackScreenshotDataUrl) {
-        showGenericToast('[PART-006] 참여 확인용 스크린샷을 첨부해 주세요.', '⚠️');
+        showGenericToast('[PART-008] 참여 확인용 스크린샷을 첨부해 주세요.', '⚠️');
         document.querySelector('label[for="fb-screenshot-input"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
@@ -11727,7 +11713,7 @@
                   <span class="text-[11px] text-[#574B1A]">현재 보유: <strong>${balance.toLocaleString()} C</strong></span>
                 </div>
                 <p class="text-xs text-[#354326] mt-0.5 leading-relaxed">
-                  테스트 게시 시 보유 돼지코인에서 <strong>${newTotal.toLocaleString()} C</strong>가 즉시 차감되며, 
+                  테스트 게시 시 보유 돼지코인에서 <strong>${newTotal.toLocaleString()} C</strong>가 즉시 차감되며,
                   차감 후 잔여 돼지코인은 <strong>${remain.toLocaleString()} C</strong>가 됩니다.
                 </p>
               </div>
@@ -11764,7 +11750,7 @@
                   <span class="text-[11px] text-[#8A2B43] font-bold">부족분: ${deficit.toLocaleString()} C (₩${deficitAmountWon.toLocaleString()})</span>
                 </div>
                 <p class="text-xs text-[#622332] mt-1 leading-relaxed">
-                  총 필요 돼지코인 <strong>${newTotal.toLocaleString()} C</strong> 중 현재 보유 돼지코인(<strong>${balance.toLocaleString()} C</strong>)에서 
+                  총 필요 돼지코인 <strong>${newTotal.toLocaleString()} C</strong> 중 현재 보유 돼지코인(<strong>${balance.toLocaleString()} C</strong>)에서
                   <strong class="text-[#DC2626] underline font-extrabold">${deficit.toLocaleString()} C</strong>가 부족합니다.<br class="hidden sm:inline"/>
                   게시 버튼을 누르시면 부족한 돼지코인을 바로 충전할 수 있는 <strong>가상 결제창</strong>으로 바로 연결됩니다.
                 </p>

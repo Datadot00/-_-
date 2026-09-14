@@ -366,21 +366,31 @@ test('5단계 마이그레이션은 직접 쓰기를 차단하고 원자적 함�
 
 test('리뷰 작성 시 필수 검증 퀴즈를 입력하지 않거나 오답일 경우 제출 및 코인 지급이 차단된다', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const service = readFileSync(new URL('../src/dataService.js', import.meta.url), 'utf8');
+  const serverValidation = readFileSync(
+    new URL('../supabase/migrations/20260914090000_enforce_server_quiz_validation.sql', import.meta.url),
+    'utf8'
+  );
 
-  // 1. 퀴즈 검증 상태 변수와 렌더링에 필수 표기(*) 및 데이터 속성이 포함되어 있어야 함
+  // 브라우저는 정답을 받지 않고 답변 누락만 빠르게 안내한다.
   assert.match(html, /let currentFeedbackProjectQuizzes = \[\];/);
-  assert.match(html, /data-quiz-expected=/);
+  assert.doesNotMatch(html, /data-quiz-expected=/);
   assert.match(html, /정답 확인 \(필수\)/);
-
-  // 2. submitDetailedFeedback에서 퀴즈 답변 미입력 시 PART-004 에러와 함께 조기 반환(return)되어야 함
   assert.match(html, /const isQuizVerificationActive = currentFeedbackVerificationMethod === 'quiz'/);
   assert.match(html, /if \(!val\) \{[\s\S]*?showGenericToast\(`\[PART-004\][\s\S]*?return;/);
 
-  // 3. 정답이 지정된 경우 정답 불일치 시 PART-004 에러와 함께 조기 반환되어 코인 지급 함수 호출이 차단되어야 함
-  assert.match(html, /if \(normalizeQuizText\(val\) !== normalizeQuizText\(expected\)\) \{[\s\S]*?showGenericToast\('\[PART-004\][\s\S]*?return;/);
-  assert.match(html, /input\.classList\.add\('border-red-500', 'ring-2', 'ring-red-200'\)/);
+  // 정답 원문은 일반 프로젝트 SELECT에서 제외하고 권한별 RPC로만 가져온다.
+  assert.doesNotMatch(service.match(/export const PROJECT_PUBLIC_COLUMNS = \[[\s\S]*?\]\.join\(','\);/)?.[0] || '', /'quizzes'/);
+  assert.match(service, /rpc\('get_project_quizzes'/);
+  assert.match(serverValidation, /quiz\.item - 'answer'/i);
+  assert.match(serverValidation, /REVOKE SELECT \(quizzes\)/i);
 
-  // 4. 모든 검증을 통과한 경우에만 submitProjectReview를 호출
+  // DB가 모든 퀴즈를 직접 비교한 후에만 리뷰 저장과 코인 지급 구간에 도달한다.
+  assert.match(serverValidation, /p_quiz_answers ->> \('quiz_' \|\| v_quiz_index\)/i);
+  assert.match(serverValidation, /quiz answer is incorrect/i);
+  assert.ok(
+    serverValidation.indexOf('quiz answer is incorrect') < serverValidation.indexOf('INSERT INTO public.reviews'),
+    '서버 채점은 리뷰 저장 및 코인 지급보다 먼저 실행되어야 합니다.'
+  );
   assert.match(html, /const result = await window\.donDwaeDataService\.submitProjectReview/);
 });
-

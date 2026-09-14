@@ -63,7 +63,6 @@ export const PROJECT_PUBLIC_COLUMNS = [
   'privacy_items',
   'test_guide',
   'questions',
-  'quizzes',
   'verification_method',
   'duration',
   'start_date',
@@ -621,6 +620,11 @@ export async function fetchProjectById(projectId) {
     const { data, error } = await runProjectQueryWithColumnFallback(fetchProject);
     if (error) throw error;
 
+    // Correct answers are no longer part of public project reads. The RPC
+    // returns full quiz data only to the creator and question-only data to an
+    // active participant.
+    data.quizzes = await fetchProjectQuizzes(projectId);
+
     // Fallback: If joined users is null or missing nickname, fetch directly from users table
     if (data && data.creator_id && (!data.users || !data.users.nickname)) {
       const creatorProfile = await fetchUserProfile(data.creator_id);
@@ -633,6 +637,17 @@ export async function fetchProjectById(projectId) {
     console.warn('[dataService] fetchProjectById failed:', err.message);
     return null;
   }
+}
+
+export async function fetchProjectQuizzes(projectId) {
+  if (!supabase || !projectId) return [];
+
+  const { data, error } = await supabase.rpc('get_project_quizzes', {
+    p_project_id: projectId
+  });
+  if (!error) return Array.isArray(data) ? data : [];
+  console.warn('[dataService] fetchProjectQuizzes failed:', error.message);
+  return [];
 }
 
 /**

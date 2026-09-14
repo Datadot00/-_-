@@ -1,3 +1,5 @@
+import { toUserFriendlyError } from './errorCodes.js';
+
 function requireAuthClient(client) {
   if (!client?.auth) {
     const error = new Error('Supabase authentication is not configured.');
@@ -110,8 +112,6 @@ export async function clearExistingLocalSession(client) {
   return true;
 }
 
-import { toUserFriendlyError } from './errorCodes.js';
-
 export function getAuthErrorMessage(error) {
   const messagesByCode = {
     auth_not_configured: 'Supabase가 연동되어 있지 않습니다. 관리자에게 문의해 주세요.',
@@ -151,5 +151,5 @@ export function getAuthErrorMessage(error) {
 
 export function getAuthErrorWithId(error) {
   const friendly = toUserFriendlyError(error, 'AUTH_VALIDATION_FAILED');
-  return friendly.formatted;
+  return `[${friendly.id}] ${getAuthErrorMessage(error)}`;
 }

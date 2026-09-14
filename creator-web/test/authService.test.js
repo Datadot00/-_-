@@ -5,6 +5,7 @@ import {
   clearExistingLocalSession,
   clearLocalSession,
   getActiveSessionUser,
+  getAuthErrorWithId,
   getAuthErrorMessage,
   signInWithEmail,
   signUpWithEmail
@@ -177,5 +178,20 @@ test('Supabase 오류 코드를 사용자용 메시지로 변환한다', () => {
   assert.equal(
     getAuthErrorMessage({ code: 'email_not_confirmed' }),
     '이메일 인증을 먼저 완료해 주세요.'
+  );
+});
+
+test('인증 오류 ID를 붙여도 기존 세부 안내 문구는 유지한다', () => {
+  assert.equal(
+    getAuthErrorWithId({ code: 'email_address_invalid', message: 'Email address is invalid' }),
+    '[AUTH-010] 사용할 수 없는 이메일 주소입니다.'
+  );
+  assert.equal(
+    getAuthErrorWithId({ code: 'signup_disabled', message: 'Signups not allowed for this instance' }),
+    '[AUTH-010] 현재 신규 회원가입이 비활성화되어 있습니다.'
+  );
+  assert.equal(
+    getAuthErrorWithId({ code: 'captcha_failed', message: 'Captcha verification process failed' }),
+    '[AUTH-010] 보안 확인에 실패했습니다. 다시 시도해 주세요.'
   );
 });

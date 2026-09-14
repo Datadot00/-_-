@@ -25,7 +25,8 @@ const expectedMigrations = [
   '20260911170000_allow_platform_none_and_optional_test_credentials.sql',
   '20260912090000_verification_method_quiz_or_screenshot.sql',
   '20260912100000_make_project_verification_optional.sql',
-  '20260912110000_separate_project_tech_and_persona_tags.sql'
+  '20260912110000_separate_project_tech_and_persona_tags.sql',
+  '20260914090000_enforce_server_quiz_validation.sql'
 ];
 
 test('로컬 마이그레이션 파일명은 운영 DB 버전 순서와 일치한다', () => {

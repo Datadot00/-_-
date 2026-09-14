@@ -95,3 +95,22 @@ test('개발 환경 태그와 권장 참여 대상 태그는 DB에서도 분리�
   assert.match(schema, /CARDINALITY\(target_persona_tags\) <= 20/i);
 });
 
+test('검증 퀴즈 정답은 비공개이며 DB 채점 통과 전에는 코인을 지급하지 않는다', () => {
+  const serverQuizMigration = readFileSync(
+    new URL('../supabase/migrations/20260914090000_enforce_server_quiz_validation.sql', import.meta.url),
+    'utf8'
+  );
+
+  assert.match(serverQuizMigration, /REVOKE SELECT \(quizzes\).*FROM anon, authenticated/i);
+  assert.match(serverQuizMigration, /CREATE OR REPLACE FUNCTION public\.get_project_quizzes/i);
+  assert.match(serverQuizMigration, /quiz\.item - 'answer'/i);
+  assert.match(serverQuizMigration, /p_quiz_answers ->> \('quiz_' \|\| v_quiz_index\)/i);
+  assert.match(serverQuizMigration, /quiz answer is incorrect/i);
+  assert.ok(
+    serverQuizMigration.indexOf('quiz answer is incorrect') < serverQuizMigration.indexOf('INSERT INTO public.coin_transactions'),
+    '서버 채점은 코인 원장 기록 전에 실행되어야 합니다.'
+  );
+  assert.match(schema, /REVOKE SELECT \(quizzes\).*FROM anon, authenticated/i);
+  assert.match(schema, /CREATE OR REPLACE FUNCTION public\.get_project_quizzes/i);
+});
+
