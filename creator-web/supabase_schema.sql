@@ -489,8 +489,8 @@ BEGIN
 
   v_next_step := CASE
     WHEN NOT v_email_confirmed THEN 'verify_email'
-    WHEN v_onboarding_completed_version < 1 THEN 'onboarding'
     WHEN v_missing_required_terms_count > 0 THEN 'terms_review'
+    WHEN v_onboarding_completed_version < 1 THEN 'onboarding'
     ELSE 'ready'
   END;
 
@@ -539,8 +539,6 @@ DECLARE
   v_bio TEXT := BTRIM(COALESCE(p_bio, ''));
   v_interests TEXT[];
   v_sns_links JSONB;
-  v_accepted_document_ids UUID[] :=
-    COALESCE(p_accepted_document_ids, '{}'::UUID[]);
 BEGIN
   IF v_user_id IS NULL THEN
     RAISE EXCEPTION 'authentication required' USING ERRCODE = '42501';
@@ -556,6 +554,41 @@ BEGIN
   END IF;
   IF NOT v_email_confirmed THEN
     RAISE EXCEPTION 'email confirmation required' USING ERRCODE = '42501';
+  END IF;
+
+  IF EXISTS (
+    WITH current_required_documents AS (
+      SELECT DISTINCT ON (document.document_type)
+        document.id,
+        document.document_type,
+        document.effective_at,
+        document.created_at
+      FROM public.terms_documents AS document
+      WHERE document.is_required
+        AND document.published_at IS NOT NULL
+        AND document.effective_at IS NOT NULL
+        AND document.effective_at <= NOW()
+        AND (document.retired_at IS NULL OR document.retired_at > NOW())
+      ORDER BY
+        document.document_type,
+        document.effective_at DESC,
+        document.created_at DESC,
+        document.id DESC
+    )
+    SELECT 1
+    FROM current_required_documents AS document
+    LEFT JOIN LATERAL (
+      SELECT consent.event_type
+      FROM public.user_term_consents AS consent
+      WHERE consent.user_id = v_user_id
+        AND consent.terms_document_id = document.id
+      ORDER BY consent.recorded_at DESC, consent.id DESC
+      LIMIT 1
+    ) AS latest ON TRUE
+    WHERE COALESCE(latest.event_type, '') <> 'accepted'
+  ) THEN
+    RAISE EXCEPTION 'required terms must be accepted before onboarding'
+      USING ERRCODE = '42501';
   END IF;
 
   SELECT profile.onboarding_completed_version
@@ -637,8 +670,6 @@ BEGIN
       USING ERRCODE = '22023';
   END IF;
 
-  PERFORM public.record_my_current_term_consents(v_accepted_document_ids);
-
   UPDATE public.users AS profile
   SET
     nickname = v_nickname,
@@ -674,7 +705,7 @@ COMMENT ON FUNCTION public.get_my_account_state() IS
 COMMENT ON FUNCTION public.complete_my_onboarding(
   TEXT, TEXT[], TEXT, JSONB, UUID[]
 ) IS
-  'Validates profile input, records current terms choices, and completes onboarding atomically.';
+  'Completes profile onboarding only after current required terms have been accepted.';
 
 -- 2. Create Projects Table
 CREATE TABLE IF NOT EXISTS public.projects (

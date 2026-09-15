@@ -9,6 +9,7 @@ import {
 } from '../src/authService.js';
 import { routeAuthenticatedAccount } from '../src/accountRouting.js';
 import { completeMyOnboarding } from '../src/onboardingService.js';
+import { recordMyCurrentTermConsents } from '../src/termsService.js';
 
 function createFullFlowClient() {
   const account = {
@@ -18,6 +19,7 @@ function createFullFlowClient() {
     expectedOtp: '482193',
     created: false,
     emailConfirmed: false,
+    termsAccepted: false,
     onboardingVersion: 0,
     onboardingCompletedAt: null,
     profile: {
@@ -41,9 +43,11 @@ function createFullFlowClient() {
   function rawAccountState() {
     const nextStep = !account.emailConfirmed
       ? 'verify_email'
-      : account.onboardingVersion < 1
-        ? 'onboarding'
-        : 'ready';
+      : !account.termsAccepted
+        ? 'terms_review'
+        : account.onboardingVersion < 1
+          ? 'onboarding'
+          : 'ready';
 
     return {
       user_id: account.id,
@@ -56,9 +60,9 @@ function createFullFlowClient() {
         completed_at: account.onboardingCompletedAt
       },
       terms: {
-        requires_consent: false,
-        active_required_count: 0,
-        missing_required_count: 0
+        requires_consent: !account.termsAccepted,
+        active_required_count: 2,
+        missing_required_count: account.termsAccepted ? 0 : 2
       },
       profile: {
         nickname: account.profile.nickname,
@@ -136,7 +140,38 @@ function createFullFlowClient() {
       if (name === 'get_my_account_state') {
         return { data: rawAccountState(), error: null };
       }
+      if (name === 'record_my_current_term_consents') {
+        if (!Array.isArray(payload.p_accepted_document_ids)
+          || payload.p_accepted_document_ids.length < 2) {
+          return {
+            data: null,
+            error: Object.assign(new Error('all required terms must be accepted'), {
+              code: '22023'
+            })
+          };
+        }
+        account.termsAccepted = true;
+        return {
+          data: {
+            requires_consent: false,
+            documents: [
+              { id: 'terms-1', is_required: true, is_accepted: true },
+              { id: 'privacy-1', is_required: true, is_accepted: true }
+            ]
+          },
+          error: null
+        };
+      }
       if (name === 'complete_my_onboarding') {
+        if (!account.termsAccepted) {
+          return {
+            data: null,
+            error: Object.assign(
+              new Error('required terms must be accepted before onboarding'),
+              { code: '42501' }
+            )
+          };
+        }
         account.profile = {
           nickname: payload.p_nickname,
           bio: payload.p_bio,
@@ -177,7 +212,7 @@ async function readRoute(client) {
   return { route: selectedRoute, state: selectedState };
 }
 
-test('회원가입부터 OTP·온보딩·로그아웃·재로그인까지 하나의 계정 상태로 이어진다', async () => {
+test('회원가입부터 OTP·약관·온보딩·로그아웃·재로그인까지 하나의 계정 상태로 이어진다', async () => {
   const { account, calls, client, getSession } = createFullFlowClient();
 
   const signup = await signUpWithEmail(
@@ -196,6 +231,17 @@ test('회원가입부터 OTP·온보딩·로그아웃·재로그인까지 하나
   const verified = await verifySignupEmailOtp(client, account.email, account.expectedOtp);
   assert.equal(verified.user.id, account.id);
   assert.ok(getSession(), 'OTP 확인 후 세션이 생성되어야 한다');
+
+  const beforeTerms = await readRoute(client);
+  assert.equal(beforeTerms.route, 'terms_review');
+  assert.equal(beforeTerms.state.terms.requiresConsent, true);
+  assert.equal(beforeTerms.state.onboarding.required, true);
+
+  const acceptedTerms = await recordMyCurrentTermConsents(client, [
+    'terms-1',
+    'privacy-1'
+  ]);
+  assert.equal(acceptedTerms.requiresConsent, false);
 
   const beforeOnboarding = await readRoute(client);
   assert.equal(beforeOnboarding.route, 'onboarding');
@@ -234,6 +280,8 @@ test('회원가입부터 OTP·온보딩·로그아웃·재로그인까지 하나
       'signUp',
       'signInWithPassword',
       'verifyOtp',
+      'rpc:get_my_account_state',
+      'rpc:record_my_current_term_consents',
       'rpc:get_my_account_state',
       'rpc:complete_my_onboarding',
       'rpc:get_my_account_state',

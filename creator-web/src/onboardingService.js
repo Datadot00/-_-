@@ -117,18 +117,11 @@ export function prepareOnboardingPayload(input = {}) {
     );
   }
 
-  const acceptedDocumentIds = [...new Set(
-    (Array.isArray(input.acceptedDocumentIds) ? input.acceptedDocumentIds : [])
-      .map(toTrimmedString)
-      .filter(Boolean)
-  )];
-
   return {
     p_nickname: nickname,
     p_interests: interests,
     p_bio: bio,
-    p_sns_links: snsLinks,
-    p_accepted_document_ids: acceptedDocumentIds
+    p_sns_links: snsLinks
   };
 }
 

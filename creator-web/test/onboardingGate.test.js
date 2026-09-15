@@ -16,8 +16,7 @@ test('온보딩 입력은 RPC 계약과 같은 규칙으로 정규화된다', ()
     nickname: '  돈돼테스터  ',
     bio: '  안녕하세요  ',
     interests: [' 핀테크/금융 ', 'AI/개발도구'],
-    snsLinks: ['  https://example.com  ', '', '   '],
-    acceptedDocumentIds: ['doc-1', 'doc-1', ' doc-2 ']
+    snsLinks: ['  https://example.com  ', '', '   ']
   });
 
   assert.equal(payload.p_nickname, '돈돼테스터');
@@ -25,7 +24,7 @@ test('온보딩 입력은 RPC 계약과 같은 규칙으로 정규화된다', ()
   assert.deepEqual(payload.p_interests, ['핀테크/금융', 'AI/개발도구']);
   // 빈 링크 칸은 등록하지 않은 것으로 보고 버린다.
   assert.deepEqual(payload.p_sns_links, ['https://example.com']);
-  assert.deepEqual(payload.p_accepted_document_ids, ['doc-1', 'doc-2']);
+  assert.equal('p_accepted_document_ids' in payload, false);
 });
 
 test('닉네임과 관심분야는 필수이며 한도를 넘길 수 없다', () => {

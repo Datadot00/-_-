@@ -79,24 +79,10 @@ test('가입 직후 이메일 미인증 계정은 인증 단계로 라우팅된�
   assert.equal(state.onboarding.required, true);
 });
 
-test('이메일 인증을 마쳤지만 프로필이 없으면 온보딩 단계로 라우팅된다', async () => {
-  const client = createFakeClient({
-    get_my_account_state: { data: accountState({ nextStep: 'onboarding' }), error: null }
-  });
-  const { visited, handlers } = recordingHandlers();
-
-  const state = await routeAuthenticatedAccount(client, handlers);
-
-  assert.equal(visited[0].key, 'onboarding');
-  assert.equal(state.emailConfirmed, true);
-  assert.equal(state.onboarding.required, true);
-  assert.equal(state.onboarding.completedVersion, 0);
-});
-
-test('온보딩을 마쳤지만 필수 약관이 남으면 약관 단계로 라우팅된다', async () => {
+test('이메일 인증 후 필수 약관이 남으면 프로필보다 약관 단계가 먼저다', async () => {
   const client = createFakeClient({
     get_my_account_state: {
-      data: accountState({ nextStep: 'terms_review', onboardingVersion: 1, missingTerms: 1 }),
+      data: accountState({ nextStep: 'terms_review', missingTerms: 1 }),
       error: null
     }
   });
@@ -105,8 +91,25 @@ test('온보딩을 마쳤지만 필수 약관이 남으면 약관 단계로 라�
   const state = await routeAuthenticatedAccount(client, handlers);
 
   assert.equal(visited[0].key, 'terms_review');
-  assert.equal(state.onboarding.required, false);
+  assert.equal(state.emailConfirmed, true);
+  assert.equal(state.onboarding.required, true);
   assert.equal(state.terms.requiresConsent, true);
+});
+
+test('필수 약관 동의를 마치고 프로필이 없으면 온보딩 단계로 라우팅된다', async () => {
+  const client = createFakeClient({
+    get_my_account_state: {
+      data: accountState({ nextStep: 'onboarding', onboardingVersion: 0, missingTerms: 0 }),
+      error: null
+    }
+  });
+  const { visited, handlers } = recordingHandlers();
+
+  const state = await routeAuthenticatedAccount(client, handlers);
+
+  assert.equal(visited[0].key, 'onboarding');
+  assert.equal(state.onboarding.required, true);
+  assert.equal(state.terms.requiresConsent, false);
 });
 
 test('모두 마친 계정은 재로그인 시 곧바로 서비스로 들어간다', async () => {
@@ -189,11 +192,11 @@ test('온보딩 입력이 규칙을 어기면 RPC를 호출하지 않는다', as
 });
 
 // ── 3. 가입부터 재로그인까지 이어지는 전체 흐름 ────────────────────────────
-test('가입 → 인증 → 온보딩 → 약관 → 재로그인 전체 흐름이 순서대로 진행된다', async () => {
+test('가입 → 인증 → 약관 → 온보딩 → 재로그인 전체 흐름이 순서대로 진행된다', async () => {
   const journey = [
     accountState({ nextStep: 'verify_email', emailConfirmed: false }),
+    accountState({ nextStep: 'terms_review', missingTerms: 1 }),
     accountState({ nextStep: 'onboarding' }),
-    accountState({ nextStep: 'terms_review', onboardingVersion: 1, missingTerms: 1 }),
     accountState({ nextStep: 'ready', onboardingVersion: 1, nickname: '돈돼테스터' })
   ];
   let step = 0;
@@ -208,7 +211,7 @@ test('가입 → 인증 → 온보딩 → 약관 → 재로그인 전체 흐름�
 
   assert.deepEqual(
     visited.map(entry => entry.key),
-    ['verify_email', 'onboarding', 'terms_review', 'ready']
+    ['verify_email', 'terms_review', 'onboarding', 'ready']
   );
 
   // 마지막(재로그인) 시점에는 온보딩·약관 모두 요구하지 않는다.
