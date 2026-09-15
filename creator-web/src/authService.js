@@ -52,27 +52,6 @@ export async function signUpWithEmail(client, email, password, emailRedirectTo) 
   };
 }
 
-export async function verifySignupEmailOtp(client, email, token) {
-  requireAuthClient(client);
-
-  const normalizedEmail = String(email || '').trim();
-  const normalizedToken = String(token || '').replace(/\D/g, '').slice(0, 6);
-  if (!normalizedEmail || normalizedToken.length !== 6) {
-    const validationError = new Error('A valid email and 6-digit verification code are required.');
-    validationError.code = 'validation_failed';
-    throw validationError;
-  }
-
-  const { data, error } = await client.auth.verifyOtp({
-    email: normalizedEmail,
-    token: normalizedToken,
-    type: 'email'
-  });
-  if (error) throw error;
-
-  return requireAuthenticatedSession(data);
-}
-
 export async function requestPasswordReset(client, email, redirectTo) {
   requireAuthClient(client);
 
@@ -148,8 +127,8 @@ export function getAuthErrorMessage(error) {
     signup_disabled: '현재 신규 회원가입이 비활성화되어 있습니다.',
     captcha_failed: '보안 확인에 실패했습니다. 다시 시도해 주세요.',
     validation_failed: '입력한 정보를 다시 확인해 주세요.',
-    access_denied: '인증번호가 유효하지 않거나 만료되었습니다. 새 인증번호를 요청해 주세요.',
-    otp_expired: '인증번호가 만료되었거나 이미 사용되었습니다. 새 인증번호를 요청해 주세요.',
+    access_denied: '이메일 확인 링크가 유효하지 않거나 만료되었습니다. 확인 메일을 다시 요청해 주세요.',
+    otp_expired: '이메일 확인 링크가 만료되었거나 이미 사용되었습니다. 확인 메일을 다시 요청해 주세요.',
     flow_state_expired: '인증 요청이 만료되었습니다. 처음부터 다시 시도해 주세요.',
     session_expired: '인증 세션이 만료되었습니다. 다시 로그인해 주세요.',
     session_missing: '로그인 세션을 만들지 못했습니다. 이메일 인증 상태를 확인해 주세요.',

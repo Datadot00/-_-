@@ -4,8 +4,7 @@ import assert from 'node:assert/strict';
 import {
   clearLocalSession,
   signInWithEmail,
-  signUpWithEmail,
-  verifySignupEmailOtp
+  signUpWithEmail
 } from '../src/authService.js';
 import { routeAuthenticatedAccount } from '../src/accountRouting.js';
 import { completeMyOnboarding } from '../src/onboardingService.js';
@@ -16,7 +15,6 @@ function createFullFlowClient() {
     id: 'flow-user-1',
     email: 'flow-user@example.com',
     password: 'safe-password',
-    expectedOtp: '482193',
     created: false,
     emailConfirmed: false,
     termsAccepted: false,
@@ -81,25 +79,6 @@ function createFullFlowClient() {
         account.email = payload.email;
         account.password = payload.password;
         return { data: { user: user(), session: null }, error: null };
-      },
-      async verifyOtp(payload) {
-        calls.push({ operation: 'verifyOtp', payload });
-        if (
-          !account.created
-          || payload.email !== account.email
-          || payload.token !== account.expectedOtp
-          || payload.type !== 'email'
-        ) {
-          return {
-            data: { user: null, session: null },
-            error: Object.assign(new Error('Token has expired or is invalid'), {
-              code: 'otp_expired'
-            })
-          };
-        }
-        account.emailConfirmed = true;
-        session = activeSession();
-        return { data: { user: user(), session }, error: null };
       },
       async signInWithPassword(payload) {
         calls.push({ operation: 'signInWithPassword', payload });
@@ -190,7 +169,15 @@ function createFullFlowClient() {
     }
   };
 
-  return { account, calls, client, getSession: () => session };
+  function confirmEmailLink() {
+    if (!account.created) throw new Error('account must exist before confirmation');
+    calls.push({ operation: 'confirmEmailLink' });
+    account.emailConfirmed = true;
+    session = activeSession();
+    return { user: user(), session };
+  }
+
+  return { account, calls, client, confirmEmailLink, getSession: () => session };
 }
 
 async function readRoute(client) {
@@ -212,8 +199,8 @@ async function readRoute(client) {
   return { route: selectedRoute, state: selectedState };
 }
 
-test('회원가입부터 OTP·약관·온보딩·로그아웃·재로그인까지 하나의 계정 상태로 이어진다', async () => {
-  const { account, calls, client, getSession } = createFullFlowClient();
+test('회원가입부터 확인 링크·약관·온보딩·로그아웃·재로그인까지 하나의 계정 상태로 이어진다', async () => {
+  const { account, calls, client, confirmEmailLink, getSession } = createFullFlowClient();
 
   const signup = await signUpWithEmail(
     client,
@@ -228,9 +215,9 @@ test('회원가입부터 OTP·약관·온보딩·로그아웃·재로그인까�
     error => error.code === 'email_not_confirmed'
   );
 
-  const verified = await verifySignupEmailOtp(client, account.email, account.expectedOtp);
+  const verified = confirmEmailLink();
   assert.equal(verified.user.id, account.id);
-  assert.ok(getSession(), 'OTP 확인 후 세션이 생성되어야 한다');
+  assert.ok(getSession(), '확인 링크 복귀 후 세션이 생성되어야 한다');
 
   const beforeTerms = await readRoute(client);
   assert.equal(beforeTerms.route, 'terms_review');
@@ -279,7 +266,7 @@ test('회원가입부터 OTP·약관·온보딩·로그아웃·재로그인까�
     [
       'signUp',
       'signInWithPassword',
-      'verifyOtp',
+      'confirmEmailLink',
       'rpc:get_my_account_state',
       'rpc:record_my_current_term_consents',
       'rpc:get_my_account_state',

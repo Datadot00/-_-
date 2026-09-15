@@ -18,7 +18,7 @@ export const ERROR_CODES = {
   AUTH_WEAK_PASSWORD: { id: 'AUTH-004', message: '비밀번호는 6자 이상이어야 합니다.' },
   AUTH_SESSION_EXPIRED: { id: 'AUTH-005', message: '인증 세션이 만료되었습니다. 다시 로그인해 주세요.' },
   AUTH_RATE_LIMIT: { id: 'AUTH-006', message: '요청 횟수를 초과했습니다. 잠시 후 다시 시도해 주세요.' },
-  AUTH_OTP_EXPIRED: { id: 'AUTH-007', message: '인증번호가 만료되었거나 올바르지 않습니다. 새 인증번호를 요청해 주세요.' },
+  AUTH_OTP_EXPIRED: { id: 'AUTH-007', message: '이메일 확인 링크가 만료되었거나 올바르지 않습니다. 확인 메일을 다시 요청해 주세요.' },
   AUTH_REQUIRED: { id: 'AUTH-008', message: '로그인이 필요한 서비스입니다.' },
   AUTH_NOT_CONFIGURED: { id: 'AUTH-009', message: '인증 서비스가 준비되지 않았습니다. 관리자에게 문의해 주세요.' },
   AUTH_VALIDATION_FAILED: { id: 'AUTH-010', message: '입력하신 계정 정보를 다시 확인해 주세요.' },

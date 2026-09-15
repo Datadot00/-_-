@@ -8,8 +8,7 @@ import {
   getAuthErrorWithId,
   getAuthErrorMessage,
   signInWithEmail,
-  signUpWithEmail,
-  verifySignupEmailOtp
+  signUpWithEmail
 } from '../src/authService.js';
 
 test('returns the signed-in user from the active browser session', async () => {
@@ -114,52 +113,6 @@ test('회원가입은 명시적인 회원가입 요청에서만 호출한다', a
   assert.equal(result.session, null);
   assert.equal(calls.length, 1);
   assert.equal(calls[0].options.emailRedirectTo, 'http://localhost:3000/?auth=signup');
-});
-
-test('회원가입 이메일 인증번호는 6자리 OTP로 검증하고 활성 세션을 반환한다', async () => {
-  const calls = [];
-  const user = { id: 'verified-user', email: 'verified@example.com' };
-  const session = { access_token: 'verified-token', user };
-  const client = {
-    auth: {
-      verifyOtp: async (payload) => {
-        calls.push(payload);
-        return { data: { user, session }, error: null };
-      }
-    }
-  };
-
-  const result = await verifySignupEmailOtp(
-    client,
-    ' verified@example.com ',
-    '12 34-56'
-  );
-
-  assert.equal(result.user, user);
-  assert.equal(result.session, session);
-  assert.deepEqual(calls, [{
-    email: 'verified@example.com',
-    token: '123456',
-    type: 'email'
-  }]);
-});
-
-test('6자리가 아닌 이메일 인증번호는 Supabase 요청 전에 거부한다', async () => {
-  let verifyCalls = 0;
-  const client = {
-    auth: {
-      verifyOtp: async () => {
-        verifyCalls += 1;
-        return { data: null, error: null };
-      }
-    }
-  };
-
-  await assert.rejects(
-    verifySignupEmailOtp(client, 'member@example.com', '12345'),
-    error => error.code === 'validation_failed'
-  );
-  assert.equal(verifyCalls, 0);
 });
 
 test('이전 브라우저 세션은 로컬 범위로 제거한다', async () => {

@@ -4,43 +4,36 @@ import { readFileSync } from 'node:fs';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const authSource = readFileSync(new URL('../src/auth.js', import.meta.url), 'utf8');
-const authServiceSource = readFileSync(new URL('../src/authService.js', import.meta.url), 'utf8');
 const emailTemplate = readFileSync(
   new URL('../supabase/email-templates/confirmation.html', import.meta.url),
   'utf8'
 );
 
-test('회원가입 확인 화면은 붙여넣기 가능한 6자리 OTP 입력을 제공한다', () => {
-  assert.match(html, /id="auth-confirmation-panel"[^>]*novalidate/);
-  assert.match(html, /id="auth-otp-input"/);
-  assert.match(html, /inputmode="numeric"/);
-  assert.match(html, /autocomplete="one-time-code"/);
-  assert.match(html, /pattern="\[0-9\]\{6\}"/);
-  assert.match(html, /maxlength="6"/);
-  assert.match(html, /id="btn-auth-otp-submit"/);
+test('회원가입 확인 화면은 번호 입력 없이 이메일 확인 링크를 안내한다', () => {
+  assert.match(html, /id="auth-confirmation-panel"/);
+  assert.match(html, /메일의 회원가입 확인 버튼을 눌러 주세요/);
+  assert.match(html, /id="btn-auth-resend"/);
+  assert.doesNotMatch(html, /id="auth-otp-input"/);
+  assert.doesNotMatch(html, /id="btn-auth-otp-submit"/);
 });
 
-test('OTP 검증 성공은 기존 로그인과 같은 공통 계정 라우터로 이어진다', () => {
-  assert.match(authSource, /handleSignupOtpVerification/);
-  assert.match(authSource, /verifySignupEmailOtp\(/);
+test('Supabase 확인 링크 콜백은 공통 계정 라우터로 이어진다', () => {
+  assert.match(authSource, /callback\.hasCallback/);
+  assert.match(authSource, /hashParameters\.has\('access_token'\)/);
+  assert.match(authSource, /url\.searchParams\.has\('code'\)/);
   assert.match(authSource, /await routeAfterAuthentication\(/);
   assert.match(authSource, /dondwae:onboarding-required/);
-  assert.match(authSource, /replace\(\/\\D\/g, ''\)\.slice\(0, 6\)/);
+  assert.doesNotMatch(authSource, /handleSignupOtpVerification/);
+  assert.doesNotMatch(authSource, /verifySignupEmailOtp/);
 });
 
-test('Supabase 회원가입 OTP는 email verification type과 활성 세션을 요구한다', () => {
-  const otpFunction = authServiceSource.slice(
-    authServiceSource.indexOf('export async function verifySignupEmailOtp'),
-    authServiceSource.indexOf('export async function requestPasswordReset')
-  );
-
-  assert.match(otpFunction, /client\.auth\.verifyOtp\(\{/);
-  assert.match(otpFunction, /type: 'email'/);
-  assert.match(otpFunction, /return requireAuthenticatedSession\(data\)/);
+test('회원가입은 Supabase 확인 후 돌아올 앱 주소를 전달한다', () => {
+  assert.match(authSource, /getAuthRedirectUrl\('signup'\)/);
+  assert.match(authSource, /signUpWithEmail\(supabase, email, password, redirectTo\)/);
 });
 
-test('회원가입 메일 템플릿은 링크 대신 Supabase 6자리 토큰을 노출한다', () => {
-  assert.match(emailTemplate, /\{\{\s*\.Token\s*\}\}/);
-  assert.doesNotMatch(emailTemplate, /\.ConfirmationURL/);
+test('회원가입 메일 템플릿은 Supabase 기본 확인 링크를 노출한다', () => {
+  assert.match(emailTemplate, /\{\{\s*\.ConfirmationURL\s*\}\}/);
+  assert.doesNotMatch(emailTemplate, /\{\{\s*\.Token\s*\}\}/);
   assert.doesNotMatch(emailTemplate, /\.TokenHash/);
 });

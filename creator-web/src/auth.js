@@ -8,8 +8,7 @@ import {
   resendSignupConfirmation,
   signInWithEmail,
   signUpWithEmail,
-  updateAuthenticatedPassword,
-  verifySignupEmailOtp
+  updateAuthenticatedPassword
 } from './authService.js';
 import {
   closeTermsConsentGate,
@@ -37,9 +36,6 @@ const elements = {
   modeTabs: document.getElementById('auth-mode-tabs'),
 
   confirmationPanel: document.getElementById('auth-confirmation-panel'),
-  otpGroup: document.getElementById('auth-otp-group'),
-  otpInput: document.getElementById('auth-otp-input'),
-  otpSubmitButton: document.getElementById('btn-auth-otp-submit'),
   confirmationEmail: document.getElementById('auth-confirmation-email'),
   emailSentTitle: document.getElementById('auth-email-sent-title'),
   emailSentMessage: document.getElementById('auth-email-sent-message'),
@@ -237,8 +233,6 @@ function setAuthBusy(isBusy, action = authMode) {
     elements.recoveryBackButton,
     elements.resendButton,
     elements.backToLoginButton,
-    elements.otpInput,
-    elements.otpSubmitButton,
     elements.newPassword,
     elements.newPasswordConfirmation,
     elements.passwordUpdateButton,
@@ -275,13 +269,7 @@ function setAuthBusy(isBusy, action = authMode) {
       ? '메일 보내는 중...'
       : pendingEmailAction === 'recovery'
         ? '재설정 메일 다시 보내기'
-        : '인증번호 다시 보내기';
-  }
-
-  if (elements.otpSubmitButton) {
-    elements.otpSubmitButton.textContent = isBusy && action === 'otp-verification'
-      ? '인증번호 확인 중...'
-      : '인증하고 계속하기';
+        : '확인 메일 다시 보내기';
   }
 
   if (elements.passwordUpdateButton) {
@@ -485,7 +473,7 @@ function showEmailSentPanel(email, action) {
 
   const isRecovery = action === 'recovery';
   if (elements.title) {
-    elements.title.textContent = isRecovery ? '재설정 메일을 확인해 주세요' : '인증번호를 입력해 주세요';
+    elements.title.textContent = isRecovery ? '재설정 메일을 확인해 주세요' : '이메일을 확인해 주세요';
   }
   if (elements.description) {
     elements.description.textContent = isRecovery
@@ -495,62 +483,18 @@ function showEmailSentPanel(email, action) {
   if (elements.emailSentTitle) {
     elements.emailSentTitle.textContent = isRecovery
       ? '비밀번호 재설정 메일을 요청했어요'
-      : '6자리 인증번호를 보냈어요';
+      : '회원가입 확인 메일을 보냈어요';
   }
   if (elements.emailSentMessage) {
     elements.emailSentMessage.innerHTML = isRecovery
       ? '위 주소로 재설정 링크를 요청했습니다.<br />메일이 없다면 스팸함도 확인해 주세요.'
-      : '위 주소로 가입 인증번호를 보냈습니다.<br />메일이 없다면 스팸함도 확인해 주세요.';
-  }
-  elements.otpGroup?.classList.toggle('hidden', isRecovery);
-  elements.otpSubmitButton?.classList.toggle('hidden', isRecovery);
-  if (elements.otpInput) {
-    elements.otpInput.value = '';
-    elements.otpInput.disabled = isRecovery;
-    window.setTimeout(() => {
-      if (!isRecovery) elements.otpInput?.focus();
-    }, 0);
+      : '메일의 회원가입 확인 버튼을 눌러 주세요.<br />메일이 없다면 스팸함도 확인해 주세요.';
   }
   if (elements.confirmationEmail) elements.confirmationEmail.textContent = email;
   if (elements.resendButton) {
     elements.resendButton.textContent = isRecovery
       ? '재설정 메일 다시 보내기'
-      : '인증번호 다시 보내기';
-  }
-}
-
-async function handleSignupOtpVerification(event) {
-  event?.preventDefault();
-  if (!supabase || authRequestInFlight || pendingEmailAction !== 'signup') return;
-
-  clearAuthMessages();
-  const token = elements.otpInput?.value.replace(/\D/g, '').slice(0, 6) || '';
-  if (elements.otpInput) elements.otpInput.value = token;
-  if (token.length !== 6) {
-    showAuthMessage('error', '메일로 받은 6자리 인증번호를 입력해 주세요.');
-    elements.otpInput?.focus();
-    return;
-  }
-
-  setAuthBusy(true, 'otp-verification');
-  try {
-    const { user } = await verifySignupEmailOtp(
-      supabase,
-      pendingConfirmationEmail,
-      token
-    );
-    applyAuthenticatedUser(user);
-    recordUserActivity();
-    await refreshAuthenticatedData();
-    await routeAfterAuthentication(() => {
-      showToast('이메일 인증이 완료되었습니다.', '✅');
-      navigateTo('explore');
-    });
-  } catch (error) {
-    showAuthMessage('error', getAuthErrorWithId(error));
-    elements.otpInput?.select();
-  } finally {
-    setAuthBusy(false);
+      : '확인 메일 다시 보내기';
   }
 }
 
@@ -633,13 +577,12 @@ async function handleConfirmationResend() {
       await requestPasswordReset(supabase, pendingConfirmationEmail, redirectTo);
     } else {
       await resendSignupConfirmation(supabase, pendingConfirmationEmail, redirectTo);
-      if (elements.otpInput) elements.otpInput.value = '';
     }
     showAuthMessage(
       'success',
       isRecovery
         ? '비밀번호 재설정 메일을 다시 요청했습니다.'
-        : '새 인증번호를 보냈습니다. 받은 편지함을 확인해 주세요.'
+        : '회원가입 확인 메일을 다시 보냈습니다. 받은 편지함을 확인해 주세요.'
     );
   } catch (error) {
     showAuthMessage('error', getAuthErrorWithId(error));
@@ -784,7 +727,6 @@ function handlePasswordVisibility(button) {
 
 function bindAuthenticationEvents() {
   elements.form?.addEventListener('submit', handleAuthSubmit);
-  elements.confirmationPanel?.addEventListener('submit', handleSignupOtpVerification);
   elements.landingValidateButton?.addEventListener('click', handleLandingValidateService);
   elements.passwordUpdateForm?.addEventListener('submit', handlePasswordUpdate);
   elements.loginModeButton?.addEventListener('click', () => setAuthMode('login'));
@@ -797,9 +739,6 @@ function bindAuthenticationEvents() {
     setAuthMode('login');
     if (elements.email) elements.email.value = email;
     elements.password?.focus();
-  });
-  elements.otpInput?.addEventListener('input', () => {
-    elements.otpInput.value = elements.otpInput.value.replace(/\D/g, '').slice(0, 6);
   });
   window.addEventListener('dondwae:terms-declined', handleSignOut);
   document.querySelectorAll('[data-password-toggle]').forEach((button) => {
@@ -818,8 +757,6 @@ function disableAuthenticationUI() {
     elements.forgotPasswordButton,
     elements.recoveryBackButton,
     elements.resendButton,
-    elements.otpInput,
-    elements.otpSubmitButton,
     elements.newPassword,
     elements.newPasswordConfirmation,
     elements.passwordUpdateButton,
