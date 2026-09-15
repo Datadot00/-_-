@@ -53,6 +53,9 @@ const elements = {
   signupModeButton: document.getElementById('auth-mode-signup'),
   submitButton: document.getElementById('btn-auth-submit'),
   submitButtonText: document.getElementById('btn-auth-submit-text'),
+  submitButtonSpinner: document.getElementById('btn-auth-submit-spinner'),
+  submitButtonArrow: document.getElementById('btn-auth-submit-arrow'),
+  loadingStatus: document.getElementById('auth-loading-status'),
   forgotPasswordButton: document.getElementById('btn-auth-forgot-password'),
   recoveryBackButton: document.getElementById('btn-auth-recovery-back'),
   resendButton: document.getElementById('btn-auth-resend'),
@@ -337,6 +340,12 @@ function setAuthBusy(isBusy, action = authMode) {
     }
   }
 
+  const showLoginProgress = isBusy && action === 'login';
+  elements.submitButton?.setAttribute('aria-busy', String(isBusy));
+  elements.submitButtonSpinner?.classList.toggle('hidden', !showLoginProgress);
+  elements.submitButtonArrow?.classList.toggle('hidden', showLoginProgress);
+  elements.loadingStatus?.classList.toggle('hidden', !showLoginProgress);
+
   if (elements.resendButton) {
     elements.resendButton.textContent = isBusy && action === 'resend'
       ? '메일 보내는 중...'
@@ -442,6 +451,15 @@ async function refreshAuthenticatedData() {
   }
 }
 
+function refreshAuthenticatedDataInBackground() {
+  // 화면 전환을 먼저 브라우저에 그린 뒤 비필수 데이터를 갱신한다.
+  window.setTimeout(() => {
+    refreshAuthenticatedData().catch((error) => {
+      console.warn('[Auth] Background data refresh notice:', error);
+    });
+  }, 0);
+}
+
 async function continueThroughTermsGate(onReady, { recheckAfterAcceptance = false } = {}) {
   const blockedByTerms = await showTermsConsentGateIfRequired(supabase, {
     onAccepted: recheckAfterAcceptance
@@ -540,10 +558,10 @@ async function handleEmailLogin() {
     applyAuthenticatedUser(user);
     recordUserActivity();
     if (elements.password) elements.password.value = '';
-    await refreshAuthenticatedData();
     await routeAfterAuthentication(() => {
       showToast(`${user.email} 계정으로 로그인했습니다.`, '🔑');
       navigateTo('explore');
+      refreshAuthenticatedDataInBackground();
     });
   } catch (error) {
     applyAuthenticatedUser(null);
@@ -631,11 +649,11 @@ async function continueConfirmedSignup(user, successMessage) {
   recordUserActivity();
   clearPendingEmailConfirmation();
 
-  await routeAfterAuthentication(async () => {
-    await refreshAuthenticatedData();
+  await routeAfterAuthentication(() => {
     setAuthMode('login', { force: true });
     showToast(successMessage, '✅');
     navigateTo('explore');
+    refreshAuthenticatedDataInBackground();
   });
 }
 
@@ -721,10 +739,10 @@ async function handleEmailSignup() {
     if (session) {
       clearPendingEmailConfirmation();
       applyAuthenticatedUser(user);
-      await refreshAuthenticatedData();
       await routeAfterAuthentication(() => {
         showToast('회원가입과 로그인이 완료되었습니다.', '🎉');
         navigateTo('explore');
+        refreshAuthenticatedDataInBackground();
       });
       return;
     }

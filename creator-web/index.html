@@ -520,27 +520,6 @@
         </div>
       </div>
 
-      <!-- [VIEW C: 내부형 직접 진행 뷰 (투표/설문직접입력)] -->
-      <div id="participate-view-internal-flow" class="flex flex-col gap-5 hidden">
-        <div class="border-b border-neutral-100 pb-3 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-primary-dark bg-primary/20 px-2 py-0.5 rounded">내부 검증 진행</span>
-            <h3 id="part-internal-title" class="text-base font-extrabold text-neutral-dark">투표 및 검증 작성</h3>
-          </div>
-          <span class="text-xs font-bold text-[#7E22CE]" id="part-internal-reward">+600 돼지코인</span>
-        </div>
-
-        <!-- Dynamic Content (투표 선택 카드 또는 설문 문항) -->
-        <div id="part-internal-dynamic-content" class="flex flex-col gap-4">
-          <!-- Rendered dynamically -->
-        </div>
-
-        <button type="button" onclick="completeInternalTestFlow()"
-          class="w-full py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
-          <span>✓ 검증 완료하고 리워드 수령하기</span>
-        </button>
-      </div>
-
     </div>
   </div>
 
@@ -1306,10 +1285,19 @@
             </div>
 
             <button type="submit" id="btn-auth-submit"
-              class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20 cursor-pointer mt-1">
+              class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-98 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20 cursor-pointer disabled:cursor-wait disabled:opacity-80 mt-1"
+              aria-busy="false">
+              <span id="btn-auth-submit-spinner"
+                class="hidden h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-neutral-dark/25 border-t-neutral-dark"
+                aria-hidden="true"></span>
               <span id="btn-auth-submit-text">로그인하기</span>
-              <span>→</span>
+              <span id="btn-auth-submit-arrow" aria-hidden="true">→</span>
             </button>
+
+            <p id="auth-loading-status" role="status" aria-live="polite"
+              class="hidden text-center text-[11px] font-semibold text-neutral-500">
+              계정과 이용 상태를 확인하고 있습니다. 잠시만 기다려 주세요.
+            </p>
 
             <button type="button" id="btn-auth-recovery-back"
               class="hidden w-full py-3 px-4 rounded-xl bg-white hover:bg-neutral-50 active:scale-98 text-neutral-600 font-bold text-sm transition-all border border-neutral-300 cursor-pointer">
@@ -2419,28 +2407,29 @@
                   콘텐츠 입력 방식 선택 <span class="text-red-500">*</span>
                 </label>
                 <div class="grid grid-cols-2 gap-3 text-center text-xs">
-                  <button type="button" id="btn-vote-input-mode-image" onclick="setVoteInputMode('image')"
-                    class="py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                    <span>🖼️</span> <span>이미지 업로드 (최대 4개)</span>
+                  <button type="button" id="btn-vote-input-mode-image" disabled
+                    class="py-2.5 px-4 rounded-xl border border-neutral-200 bg-neutral-100 text-neutral-400 font-bold cursor-not-allowed flex items-center justify-center gap-1.5"
+                    title="이미지 저장소 연결 후 제공될 예정입니다.">
+                    <span>🖼️</span> <span>이미지 직접 업로드 (준비 중)</span>
                   </button>
                   <button type="button" id="btn-vote-input-mode-url" onclick="setVoteInputMode('url')"
-                    class="py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                    <span>🔗</span> <span>URL 링크 (최대 4개)</span>
+                    class="py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>🔗</span> <span>시안·이미지 URL (A/B)</span>
                   </button>
                 </div>
               </div>
 
               <!-- 콘텐츠 추가 UI (최대 4개) -->
               <div class="flex flex-col gap-3">
-                <div id="vote-image-input-container" class="flex flex-col gap-3">
+                <div id="vote-image-input-container" class="hidden flex-col gap-3">
                   <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
                     <span class="text-xs font-extrabold text-neutral-dark">이미지 다중 업로드 (최대 4개)</span>
-                    <input id="input-vote-multi-images" type="file" multiple accept="image/*"
+                    <input id="input-vote-multi-images" type="file" multiple accept="image/*" disabled
                       class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
                   </div>
                 </div>
 
-                <div id="vote-url-input-container" class="flex flex-col gap-3 hidden">
+                <div id="vote-url-input-container" class="flex flex-col gap-3">
                   <div id="vote-url-list" class="space-y-2.5">
                     <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
                       <span class="text-xs font-bold text-neutral-500 shrink-0">항목 1</span>
@@ -2455,10 +2444,9 @@
                         class="flex-1 text-xs font-medium focus:outline-none" />
                     </div>
                   </div>
-                  <button type="button" onclick="addVoteUrlItem()"
-                    class="w-full py-2.5 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
-                    <span>+ URL 항목 추가 (최대 4개)</span>
-                  </button>
+                  <p class="text-[11px] font-medium leading-5 text-neutral-500">
+                    직접 이미지 주소를 입력하면 투표 화면에서 바로 미리보기를 표시하고, 일반 웹·Figma 주소는 새 탭 확인 버튼으로 제공합니다.
+                  </p>
                 </div>
               </div>
 
@@ -3581,6 +3569,91 @@
       </div>
     </main>
   </div>
+
+  <!-- ==========================================================
+       VIEW 6: INTERNAL VOTE / MISSION PROGRESS
+  ========================================================== -->
+  <div id="view-vote-progress" class="view-container hidden w-full min-h-screen flex flex-col bg-[#F8FAF3]">
+    <header class="sticky top-0 z-20 border-b border-[#E4EBD3] bg-white/95 backdrop-blur-sm">
+      <div class="mx-auto flex h-16 w-full max-w-[1180px] items-center justify-between px-5 sm:px-8">
+        <button type="button" onclick="cancelInternalTestFlow()"
+          class="flex items-center gap-2 text-xs font-bold text-neutral-600 transition-colors hover:text-neutral-dark">
+          <span aria-hidden="true">←</span>
+          <span>테스트 상세로</span>
+        </button>
+        <button type="button" onclick="navigateTo('explore')" class="flex items-center gap-2.5">
+          <img src="./logo-default.png" alt="돈 돼?" class="h-8 w-auto object-contain"
+            onerror="this.onerror=null; this.src='./logo-default.png';" />
+          <span class="text-base font-extrabold text-[#2F6517]">돈 돼?</span>
+        </button>
+        <span id="part-internal-reward"
+          class="rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-extrabold text-[#7E22CE]">
+          +0 돼지코인
+        </span>
+      </div>
+    </header>
+
+    <main class="mx-auto grid w-full max-w-[1180px] flex-1 grid-cols-1 gap-6 px-5 py-8 sm:px-8 lg:grid-cols-[260px_minmax(0,1fr)] lg:py-10">
+      <aside class="h-fit rounded-[22px] border border-[#DFE8CB] bg-white p-5 shadow-subtle lg:sticky lg:top-24">
+        <span id="vote-progress-badge" class="inline-flex items-center gap-1.5 rounded-full bg-[#2F6517] px-3 py-1 text-[11px] font-extrabold text-white">
+          <span aria-hidden="true">🗳️</span> 내부 미션 진행
+        </span>
+        <h2 id="vote-progress-heading" class="mt-4 text-lg font-extrabold tracking-tight text-neutral-dark">시안을 비교해 주세요</h2>
+        <p id="vote-progress-description" class="mt-2 text-xs font-medium leading-5 text-neutral-500">
+          각 시안을 충분히 확인한 뒤 더 마음에 드는 안을 선택해 주세요.
+        </p>
+
+        <ol class="mt-5 space-y-3 border-t border-neutral-100 pt-5 text-xs">
+          <li class="flex items-start gap-3">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#2F6517] text-[10px] font-extrabold text-white">1</span>
+            <span class="pt-1 font-bold text-neutral-800">시안과 진행 안내 확인</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/40 text-[10px] font-extrabold text-[#2F6517]">2</span>
+            <span id="vote-progress-step-two" class="pt-1 font-bold text-neutral-800">선호 시안 및 이유 선택</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-[10px] font-extrabold text-neutral-500">3</span>
+            <span class="pt-1 font-bold text-neutral-600">리뷰 저장 후 리워드 수령</span>
+          </li>
+        </ol>
+
+        <div class="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[11px] font-medium leading-5 text-amber-900">
+          리워드는 투표 선택만으로 지급되지 않으며, 마지막 리뷰가 서버에 저장된 뒤 지급됩니다.
+        </div>
+      </aside>
+
+      <section class="min-w-0 rounded-[24px] border border-neutral-200 bg-white p-5 shadow-card sm:p-7 lg:p-8">
+        <div class="mb-6 border-b border-neutral-100 pb-5">
+          <div class="mb-2 flex flex-wrap items-center gap-2">
+            <span id="vote-progress-view-label" class="rounded-full bg-primary/25 px-2.5 py-1 text-[11px] font-extrabold text-[#2F6517]">시안 투표 진행</span>
+            <span class="text-[11px] font-bold text-neutral-400">선택 내용은 리뷰와 함께 안전하게 저장됩니다.</span>
+          </div>
+          <h1 id="part-internal-title" class="text-xl font-extrabold tracking-tight text-neutral-dark sm:text-2xl">
+            투표 정보를 불러오는 중입니다
+          </h1>
+        </div>
+
+        <div id="part-internal-dynamic-content" class="flex flex-col gap-5" aria-live="polite">
+          <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-10 text-center text-xs font-bold text-neutral-500">
+            등록된 시안과 질문을 불러오고 있습니다...
+          </div>
+        </div>
+
+        <div class="mt-7 flex flex-col-reverse gap-3 border-t border-neutral-100 pt-6 sm:flex-row sm:justify-between">
+          <button type="button" onclick="cancelInternalTestFlow()"
+            class="rounded-xl border border-neutral-300 bg-white px-5 py-3 text-xs font-bold text-neutral-600 transition-colors hover:bg-neutral-50">
+            나중에 참여하기
+          </button>
+          <button type="button" id="btn-complete-internal-test" onclick="completeInternalTestFlow()"
+            class="rounded-xl bg-[#2F6517] px-6 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-[#25500F] active:scale-98">
+            <span id="btn-complete-internal-test-text">선택 완료하고 리뷰 작성하기 →</span>
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
   <!-- ==========================================================
        VIEW 6: CREATOR FEEDBACK DASHBOARD (SCR-16 / SCR-17)
   ========================================================== -->
@@ -5314,6 +5387,7 @@
       'explore': { title: '메인 피드/대시보드 (SCR-05)' },
       'create': { title: '테스트 등록 폼 (SCR-15)' },
       'post': { title: '테스트 상세 (제작자 뷰)' },
+      'vote-progress': { title: '시안 투표 진행' },
       'feedback': { title: '피드백 결과 분석 (SCR-16/17)' },
       'market': { title: '돼코상점' },
       'mypage': { title: '마이페이지 (dektop-mypage)' },
@@ -7233,17 +7307,10 @@
         }
 
         if (currentMainCategory === 'vote') {
-          if (currentVoteInputMode === 'image') {
-            const voteImageInput = document.getElementById('input-vote-multi-images');
-            if ((voteImageInput?.files?.length || 0) < 2) {
-              return showCreateStepValidationError(2, voteImageInput, '비교할 이미지를 2개 이상 첨부해 주세요.');
-            }
-          } else {
-            const voteUrlInputs = Array.from(document.querySelectorAll('#vote-url-list input[type="url"]'));
-            const validVoteUrls = voteUrlInputs.filter(input => isValidCreateStepUrl(input.value));
-            if (validVoteUrls.length < 2) {
-              return showCreateStepValidationError(2, voteUrlInputs.find(input => !input.value.trim()) || voteUrlInputs[0], '비교할 URL을 2개 이상 올바르게 입력해 주세요.');
-            }
+          const voteUrlInputs = Array.from(document.querySelectorAll('#vote-url-list input[type="url"]'));
+          const validVoteUrls = voteUrlInputs.filter(input => isValidCreateStepUrl(input.value));
+          if (validVoteUrls.length < 2) {
+            return showCreateStepValidationError(2, voteUrlInputs.find(input => !input.value.trim()) || voteUrlInputs[0], 'A안과 B안 URL을 모두 올바르게 입력해 주세요.');
           }
           const voteQuestionInputs = Array.from(document.querySelectorAll('#vote-questions-list input[type="text"]'));
           if (!voteQuestionInputs.some(input => input.value.trim())) {
@@ -7701,6 +7768,44 @@
           `;
           qList.appendChild(itemDiv);
         });
+      }
+
+      if (editableCategory === 'vote') {
+        setVoteInputMode('url');
+        const voteUrlList = document.getElementById('vote-url-list');
+        if (voteUrlList) {
+          voteUrlList.innerHTML = '';
+          addVoteUrlItem();
+          addVoteUrlItem();
+          const voteUrlInputs = voteUrlList.querySelectorAll('input[type="url"]');
+          if (voteUrlInputs[0]) voteUrlInputs[0].value = test.abUrlA || test.serviceUrl || '';
+          if (voteUrlInputs[1]) voteUrlInputs[1].value = test.abUrlB || '';
+          voteUrlInputs.forEach(input => {
+            input.disabled = hasApplicants;
+            input.classList.toggle('cursor-not-allowed', hasApplicants);
+            input.classList.toggle('opacity-70', hasApplicants);
+          });
+        }
+
+        const voteQuestionList = document.getElementById('vote-questions-list');
+        if (voteQuestionList) {
+          voteQuestionList.innerHTML = '';
+          const savedVoteQuestions = Array.isArray(test.questions) && test.questions.length > 0
+            ? test.questions
+            : [{ title: '' }];
+          savedVoteQuestions.slice(0, 5).forEach((question) => {
+            addVoteQuestionItem();
+            const row = voteQuestionList.lastElementChild;
+            const input = row?.querySelector('input[type="text"]');
+            if (input) {
+              input.value = typeof question === 'string' ? question : (question?.title || question?.question || '');
+              input.disabled = hasApplicants;
+              input.classList.toggle('cursor-not-allowed', hasApplicants);
+              input.classList.toggle('opacity-70', hasApplicants);
+            }
+            row?.querySelector('button')?.classList.toggle('hidden', hasApplicants);
+          });
+        }
       }
 
       // Restore the saved optional verification method.
@@ -9433,14 +9538,12 @@
       const modal = document.getElementById('test-participate-modal');
       const viewInitial = document.getElementById('participate-view-initial');
       const viewExternal = document.getElementById('participate-view-external-done');
-      const viewInternal = document.getElementById('participate-view-internal-flow');
 
       if (!modal) return;
 
       // Reset views
       viewInitial.classList.remove('hidden');
       viewExternal.classList.add('hidden');
-      viewInternal.classList.add('hidden');
 
       // Populate content based on post data
       const project = getCurrentParticipationProject(targetPostId);
@@ -9651,17 +9754,16 @@
       setDetailParticipationCta(participationWasCompleted ? 'completed' : 'review-needed', pId, rewardVal);
 
       // 2. 분기 처리 (외부형 vs 내부형)
-      // prototype -> 내부형 (투표/AB), moneylog -> 외부형 (프로덕트 앱)
       const viewInitial = document.getElementById('participate-view-initial');
       const viewExternal = document.getElementById('participate-view-external-done');
-      const viewInternal = document.getElementById('participate-view-internal-flow');
 
       viewInitial.classList.add('hidden');
 
       if (isInternalMission) {
-        // 내부형 분기: 하드코딩 데모 대신 등록된 프로젝트 데이터로 검증 화면을 구성합니다.
-        viewInternal.classList.remove('hidden');
+        // 내부 투표와 직접 설문은 좁은 모달 대신 전용 진행 화면에서 수행합니다.
+        closeTestParticipateModal();
         renderInternalMissionFlow(project, rewardVal);
+        navigateTo('vote-progress');
       } else {
         // 참여 등록을 마친 뒤에만 실제 미션 URL을 새 탭으로 엽니다.
         if (!missionUrl) {
@@ -9685,15 +9787,20 @@
     function completeInternalTestFlow() {
       const pId = currentParticipatingPostId || currentPostId || 'prototype';
       const dynamicContent = document.getElementById('part-internal-dynamic-content');
-      if (dynamicContent?.querySelector('#opt-card-A') && !selectedInternalVoteOption) {
+      if (dynamicContent?.querySelector('[data-internal-vote-option]') && !selectedInternalVoteOption) {
         showGenericToast('먼저 마음에 드는 시안을 선택해 주세요.', '🗳️');
         return;
       }
       const collected = collectInternalMissionAnswers();
       internalMissionAnswers = collected ? { projectId: String(pId), data: collected } : null;
-      closeTestParticipateModal();
       showGenericToast('검증을 완료했습니다. 피드백 저장이 완료되면 리워드가 지급됩니다.', '✍️');
       openFeedbackWriteModal(pId);
+    }
+
+    function cancelInternalTestFlow() {
+      internalMissionAnswers = null;
+      selectedInternalVoteOption = null;
+      navigateTo('post');
     }
 
     let internalMissionAnswers = null;
@@ -9727,34 +9834,55 @@
     }
 
     function getInternalVoteOptions(project) {
-      return ['A', 'B'].map(key => {
-        const rawValue = String(
-          (key === 'A' ? (project?.ab_url_a || project?.abUrlA) : (project?.ab_url_b || project?.abUrlB)) || ''
-        ).trim();
+      const transientOptions = Array.isArray(project?.typeSpecificData?.content)
+        ? project.typeSpecificData.content.map(value => String(value || '').trim()).filter(Boolean).slice(0, 4)
+        : [];
+      const persistedOptions = [
+        project?.ab_url_a || project?.abUrlA,
+        project?.ab_url_b || project?.abUrlB
+      ].map(value => String(value || '').trim());
+      const rawOptions = transientOptions.length >= 2 ? transientOptions : persistedOptions;
+      const optionValues = rawOptions.some(Boolean)
+        ? rawOptions.map((value, index) => value || `${String.fromCharCode(65 + index)}안`)
+        : ['A안', 'B안'];
+
+      return optionValues.map((value, index) => {
+        const key = String.fromCharCode(65 + index);
+        const rawValue = String(value || '').trim();
         return {
           key,
           label: rawValue || `${key}안`,
-          isUrl: /^https?:\/\//i.test(rawValue)
+          isUrl: /^https?:\/\//i.test(rawValue),
+          isImage: /^data:image\//i.test(rawValue)
+            || /^https?:\/\/[^?#]+\.(?:avif|gif|jpe?g|png|webp|svg)(?:[?#].*)?$/i.test(rawValue)
         };
       });
     }
 
     function renderInternalVoteOptionCard(option) {
-      const preview = option.isUrl
-        ? `<a href="${escapeHtml(option.label)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
-             class="text-xs font-extrabold text-[#2F6517] hover:underline break-all">${escapeHtml(option.label)} ↗</a>
-           <span class="text-[11px] text-neutral-500 font-medium">새 탭에서 시안을 확인한 뒤 선택해 주세요.</span>`
+      const preview = option.isImage
+        ? `<img src="${escapeHtml(option.label)}" alt="${option.key}안 시안"
+             class="h-full max-h-[420px] w-full rounded-xl object-contain" loading="lazy" />`
+        : option.isUrl
+          ? `<div class="flex min-h-[220px] w-full flex-col items-center justify-center gap-3 rounded-xl bg-white px-5 py-8">
+               <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/20 text-2xl" aria-hidden="true">🔗</span>
+               <span class="max-w-full break-all text-center text-xs font-bold text-neutral-600">${escapeHtml(option.label)}</span>
+               <a href="${escapeHtml(option.label)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+                 class="rounded-lg bg-[#1F242D] px-4 py-2.5 text-xs font-extrabold text-white hover:bg-neutral-700">시안 새 탭에서 확인하기 ↗</a>
+             </div>`
         : `<span class="text-xs font-extrabold text-neutral-dark break-words">${escapeHtml(option.label)}</span>
            <span class="text-[11px] text-neutral-500 font-medium">제작자가 등록한 시안 설명입니다.</span>`;
 
       return `
         <label id="opt-card-${option.key}" onclick="selectInternalVoteOption('${option.key}')"
+          data-internal-vote-option="${option.key}" role="radio" aria-checked="false" tabindex="0"
+          onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectInternalVoteOption('${option.key}'); }"
           class="${INTERNAL_VOTE_CARD_IDLE_CLASS}">
           <div class="flex items-center gap-2">
             <input type="radio" name="internal-ab-vote" value="${option.key}" class="w-4 h-4 accent-[#2F6517]">
             <span class="text-xs font-extrabold text-neutral-dark">${option.key}안 선택하기</span>
           </div>
-          <div class="w-full bg-[#F4F9EE] border border-[#DCE4B8] rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 min-h-[120px]">
+          <div class="w-full bg-[#F4F9EE] border border-[#DCE4B8] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 min-h-[240px] overflow-hidden">
             <span class="text-[10px] uppercase font-bold tracking-widest text-[#2F6517]">OPTION ${option.key}</span>
             ${preview}
           </div>
@@ -9800,7 +9928,11 @@
       const dynamicContent = document.getElementById('part-internal-dynamic-content');
       if (!dynamicContent) return;
 
-      const isVoteMission = project?.category === 'vote' || project?.mainCategory === 'vote';
+      const isVoteMission = project?.category === 'vote'
+        || project?.mainCategory === 'vote'
+        || project?.category === 'abtest'
+        || project?.is_ab_test === true
+        || project?.isAbTest === true;
       const questions = parseProjectQuestions(project);
       const serviceName = project?.service_name || project?.title || project?.serviceName || '서비스';
       const rewardValue = Number(rewardCoin || project?.reward_coin || project?.rewardCoin || 0);
@@ -9811,6 +9943,24 @@
           : '투표 및 검증 작성';
       }
       if (rewardEl) rewardEl.textContent = `+${rewardValue.toLocaleString()} 돼지코인`;
+      const descriptionEl = document.getElementById('vote-progress-description');
+      if (descriptionEl) {
+        descriptionEl.textContent = isVoteMission
+          ? '각 시안을 충분히 확인한 뒤 더 마음에 드는 안과 그 이유를 선택해 주세요.'
+          : '등록된 진행 안내를 확인하고 준비된 질문에 답변해 주세요.';
+      }
+      const badgeEl = document.getElementById('vote-progress-badge');
+      const headingEl = document.getElementById('vote-progress-heading');
+      const stepTwoEl = document.getElementById('vote-progress-step-two');
+      const viewLabelEl = document.getElementById('vote-progress-view-label');
+      const completeButtonTextEl = document.getElementById('btn-complete-internal-test-text');
+      if (badgeEl) badgeEl.innerHTML = isVoteMission ? '<span aria-hidden="true">🗳️</span> 내부 투표 진행' : '<span aria-hidden="true">📋</span> 내부 설문 진행';
+      if (headingEl) headingEl.textContent = isVoteMission ? '시안을 비교해 주세요' : '질문에 답변해 주세요';
+      if (stepTwoEl) stepTwoEl.textContent = isVoteMission ? '선호 시안 및 이유 선택' : '준비된 질문에 답변';
+      if (viewLabelEl) viewLabelEl.textContent = isVoteMission ? '시안 투표 진행' : '설문 응답 진행';
+      if (completeButtonTextEl) completeButtonTextEl.textContent = isVoteMission
+        ? '선택 완료하고 리뷰 작성하기 →'
+        : '응답 완료하고 리뷰 작성하기 →';
 
       if (!project) {
         dynamicContent.innerHTML = `
@@ -9840,6 +9990,7 @@
       let bodyHtml = '';
       if (isVoteMission) {
         const options = getInternalVoteOptions(project);
+        const questionHtml = questions.map(renderInternalQuestionCard).join('');
         bodyHtml = `
           <div class="text-center my-1">
             <h4 class="text-base font-extrabold text-neutral-dark tracking-tight">${escapeHtml(serviceName)}</h4>
@@ -9857,7 +10008,8 @@
             </label>
             <textarea data-internal-vote-reason rows="3" placeholder="어떤 요소가 더 와닿았는지 알려주시면 서비스 개선에 큰 도움이 됩니다."
               class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary bg-white leading-relaxed resize-none"></textarea>
-          </div>`;
+          </div>
+          ${questionHtml}`;
       } else {
         const answerQuestions = questions.length > 0
           ? questions
@@ -9897,14 +10049,15 @@
     }
 
     function selectInternalVoteOption(optionKey) {
-      const cardA = document.getElementById('opt-card-A');
-      const cardB = document.getElementById('opt-card-B');
-      if (!cardA || !cardB) return;
+      const cards = [...document.querySelectorAll('[data-internal-vote-option]')];
+      if (!cards.some(card => card.dataset.internalVoteOption === optionKey)) return;
 
-      const isOptionA = optionKey === 'A';
-      selectedInternalVoteOption = isOptionA ? 'A' : 'B';
-      cardA.className = isOptionA ? INTERNAL_VOTE_CARD_SELECTED_CLASS : INTERNAL_VOTE_CARD_IDLE_CLASS;
-      cardB.className = isOptionA ? INTERNAL_VOTE_CARD_IDLE_CLASS : INTERNAL_VOTE_CARD_SELECTED_CLASS;
+      selectedInternalVoteOption = optionKey;
+      cards.forEach((card) => {
+        const isSelected = card.dataset.internalVoteOption === optionKey;
+        card.className = isSelected ? INTERNAL_VOTE_CARD_SELECTED_CLASS : INTERNAL_VOTE_CARD_IDLE_CLASS;
+        card.setAttribute('aria-checked', String(isSelected));
+      });
       const radio = document.querySelector(`input[name="internal-ab-vote"][value="${selectedInternalVoteOption}"]`);
       if (radio) radio.checked = true;
     }
@@ -9949,9 +10102,21 @@
         }
       }
 
+      const isVoteProject = dbProj?.category === 'vote'
+        || dbProj?.category === 'abtest'
+        || dbProj?.is_ab_test === true;
+      const hasCurrentVoteAnswer = internalMissionAnswers?.projectId === String(pId)
+        && Boolean(internalMissionAnswers?.data?.selected_option);
+      if (isVoteProject && !hasCurrentVoteAnswer) {
+        closeFeedbackWriteModal();
+        renderInternalMissionFlow(dbProj, dbProj?.reward_coin || 0);
+        navigateTo('vote-progress');
+        return;
+      }
+
       const titleText = dbProj?.title || dbProj?.service_name || '테스트 피드백';
       const rewardCoin = dbProj?.reward_coin || 500;
-      const categoryText = dbProj?.category === 'vote' ? '🗳️ 투표 테스트' : (dbProj?.category === 'survey' ? '📋 설문조사' : '📱 프로덕트 테스트');
+      const categoryText = isVoteProject ? '🗳️ 투표 테스트' : (dbProj?.category === 'survey' ? '📋 설문조사' : '📱 프로덕트 테스트');
 
       if (badge) badge.textContent = `${categoryText} 피드백`;
       if (reward) reward.textContent = `🪙 +${rewardCoin} 돼지코인 지급`;
@@ -9959,7 +10124,7 @@
 
       // Render content based on test type & DB questions/quizzes
       try {
-        renderFeedbackFormByTestType(dbProj?.category || 'product', body, dbProj);
+        renderFeedbackFormByTestType(isVoteProject ? 'vote' : (dbProj?.category || 'product'), body, dbProj);
       } catch (error) {
         console.error('[openFeedbackWriteModal] Form render failed:', error);
         body.innerHTML = `
@@ -9981,6 +10146,7 @@
       closeFeedbackWriteModal();
       updatePendingReviewBadge();
       showGenericToast('내 프로젝트 > 참여 프로젝트 관리에서 리뷰를 이어서 작성할 수 있어요.', '✍️');
+      if (currentViewKey === 'vote-progress') navigateTo('post');
     }
 
     function renderFeedbackFormByTestType(testType, container, dbProj = null) {
@@ -10015,7 +10181,15 @@
       ];
 
       if (normalizedTestType === 'vote') {
+        const selectedOption = internalMissionAnswers?.projectId === String(currentParticipatingPostId || currentPostId || '')
+          ? internalMissionAnswers?.data?.selected_option
+          : '';
         container.innerHTML = `
+          <div class="flex items-center justify-between rounded-xl border border-[#DCE4B8] bg-[#F4F9EE] px-4 py-3">
+            <span class="text-xs font-bold text-neutral-600">선택한 시안</span>
+            <span class="rounded-full bg-[#2F6517] px-3 py-1 text-xs font-extrabold text-white">${escapeHtml(selectedOption || '-')}안</span>
+          </div>
+
           <!-- 별점 평가 -->
           <div class="flex flex-col gap-2">
             <label class="text-xs font-bold text-neutral-800">1. 시안 디자인 만족도 (별점)</label>
@@ -10029,26 +10203,10 @@
             </div>
           </div>
 
-          <!-- 투표 선택 이유 -->
+          <!-- 추가 피드백 -->
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-neutral-800">2. 선호하는 시안 및 선택 이유 <span class="text-red-500">*</span></label>
-            <div class="grid grid-cols-2 gap-2.5 mb-1">
-              <label class="p-3 border-2 border-primary bg-primary/5 rounded-xl flex items-center gap-2 text-xs font-bold text-primary-dark cursor-pointer">
-                <input type="radio" name="fb-vote-opt" value="A" checked class="accent-[#2F6517]">
-                <span>A안 (그리드 레이아웃)</span>
-              </label>
-              <label class="p-3 border border-neutral-200 bg-white rounded-xl flex items-center gap-2 text-xs font-bold text-neutral-700 cursor-pointer hover:border-neutral-300">
-                <input type="radio" name="fb-vote-opt" value="B" class="accent-[#2F6517]">
-                <span>B안 (스크롤 리스트)</span>
-              </label>
-            </div>
-            <textarea rows="3" placeholder="선택하신 이유 및 더 인상 깊었던 점을 작성해 주세요 (최소 10자)" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
-          </div>
-
-          <!-- 개선 피드백 -->
-          <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-neutral-800">3. 추가 개선 제안 (선택)</label>
-            <textarea rows="2" placeholder="색상, 버튼 위치, 텍스트 가독성 등 추가 피드백이 있다면 남겨주세요" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
+            <label class="text-xs font-bold text-neutral-800">2. 추가 개선 제안 (선택)</label>
+            <textarea rows="3" placeholder="색상, 버튼 위치, 텍스트 가독성 등 추가 피드백이 있다면 남겨주세요" class="w-full text-xs p-3.5 rounded-xl border border-neutral-200 outline-none focus:border-primary"></textarea>
           </div>
         `;
       } else if (normalizedTestType === 'survey') {
@@ -10441,16 +10599,18 @@
         submitButton.textContent = '피드백 저장 및 리워드 지급 중...';
       }
 
+      const submittedAnswers = {
+        review_text: reviewText,
+        ...(Object.keys(questionAnswers).length > 0 ? { question_answers: questionAnswers } : {}),
+        ...(internalMissionAnswers?.projectId === String(projectId) ? internalMissionAnswers.data : {})
+      };
+
       try {
         const result = await window.donDwaeDataService.submitProjectReview({
           projectId,
           rating: selectedFeedbackStarCount || 5,
           reuseIntention: true,
-          answers: {
-            review_text: reviewText,
-            ...(Object.keys(questionAnswers).length > 0 ? { question_answers: questionAnswers } : {}),
-            ...(internalMissionAnswers?.projectId === String(projectId) ? internalMissionAnswers.data : {})
-          },
+          answers: submittedAnswers,
           quizAnswers,
           isQuizPassed: true,
           screenshotUrl: currentFeedbackVerificationMethod === 'screenshot' ? feedbackScreenshotDataUrl : null
@@ -10538,7 +10698,7 @@
           id: result?.review_id || ('local-' + Date.now()),
           project_id: projectId,
           rating: selectedFeedbackStarCount || 5,
-          answers: { review_text: reviewText },
+          answers: submittedAnswers,
           content: reviewText,
           feedback_text: reviewText,
           created_at: new Date().toISOString(),
@@ -10652,6 +10812,9 @@
       const project = getCurrentParticipationProject(normalizedId);
       if (project) {
         return project.category === 'vote'
+          || project.category === 'abtest'
+          || project.is_ab_test === true
+          || project.isAbTest === true
           || project.testMethod === 'internal'
           || !getProjectMissionUrl(normalizedId);
       }
@@ -10862,7 +11025,7 @@
 
       const voteFileInput = document.getElementById('input-vote-multi-images');
       if (voteFileInput) voteFileInput.value = '';
-      setVoteInputMode('image');
+      setVoteInputMode('url');
 
       const directMissionInput = document.querySelector('input[name="missionFormatMode"][value="direct"]');
       if (directMissionInput) directMissionInput.checked = true;
@@ -11127,14 +11290,12 @@
       const modal = document.getElementById('test-participate-modal');
       const viewInitial = document.getElementById('participate-view-initial');
       const viewExternal = document.getElementById('participate-view-external-done');
-      const viewInternal = document.getElementById('participate-view-internal-flow');
 
       if (!modal) return;
 
       // Reset views
       viewInitial.classList.remove('hidden');
       viewExternal.classList.add('hidden');
-      viewInternal.classList.add('hidden');
 
       if (project) {
         const thumbBox = document.getElementById('part-modal-thumb-box');
@@ -11326,21 +11487,18 @@
       list.appendChild(div);
     }
 
-    let currentVoteInputMode = 'image'; // 'image' | 'url'
-
-    function setVoteInputMode(mode) {
-      currentVoteInputMode = mode;
+    function setVoteInputMode() {
       const btnImage = document.getElementById('btn-vote-input-mode-image');
       const btnUrl = document.getElementById('btn-vote-input-mode-url');
 
-      if (btnImage) btnImage.className = mode === 'image' ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5' : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
-      if (btnUrl) btnUrl.className = mode === 'url' ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5' : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
+      if (btnImage) btnImage.className = 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-neutral-100 text-neutral-400 font-bold cursor-not-allowed flex items-center justify-center gap-1.5';
+      if (btnUrl) btnUrl.className = 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5';
 
       const imgBox = document.getElementById('vote-image-input-container');
       const urlBox = document.getElementById('vote-url-input-container');
 
-      if (imgBox) imgBox.style.display = mode === 'image' ? 'flex' : 'none';
-      if (urlBox) urlBox.style.display = mode === 'url' ? 'flex' : 'none';
+      if (imgBox) imgBox.style.display = 'none';
+      if (urlBox) urlBox.style.display = 'flex';
     }
 
     function addVoteUrlItem() {
@@ -12051,17 +12209,9 @@
           };
         }
       } else if (currentMainCategory === 'vote') {
-        const inputMode = currentVoteInputMode; // 'image' | 'url'
-        testCategoryName = inputMode === 'image' ? '투표 (이미지형)' : '투표 (URL형)';
-        let contentData = [];
-
-        if (inputMode === 'image') {
-          const voteImageInput = document.getElementById('input-vote-multi-images');
-          contentData = Array.from(voteImageInput?.files || []).slice(0, 4).map(file => file.name);
-        } else {
-          const voteUrlInputs = document.querySelectorAll('#vote-url-list input[type="url"]');
-          contentData = Array.from(voteUrlInputs).map(input => input.value.trim()).filter(Boolean).slice(0, 4);
-        }
+        testCategoryName = '투표 (URL형)';
+        const voteUrlInputs = document.querySelectorAll('#vote-url-list input[type="url"]');
+        const contentData = Array.from(voteUrlInputs).map(input => input.value.trim()).filter(Boolean).slice(0, 2);
 
         // Extract questions from reusable vote questions list
         const voteQInputs = document.querySelectorAll('#vote-questions-list input[type="text"]');
@@ -12136,6 +12286,13 @@
           choices: ['매우 양호함 / 이상 없음', '일부 개선 필요']
         });
       }
+      const persistedQuestions = currentMainCategory === 'vote'
+        ? (typeSpecificData.questions || []).map(title => ({
+            title,
+            type: 'essay',
+            choices: []
+          }))
+        : questions;
 
       // Extract quiz items (up to 3 questions & answers)
       const quizItemEls = document.querySelectorAll('#quiz-questions-list .quiz-item');
@@ -12166,7 +12323,7 @@
         serviceUrlRaw = typeSpecificData.platform === 'app'
           ? (typeSpecificData.testLink || typeSpecificData.playstoreUrl || typeSpecificData.appstoreUrl || typeSpecificData.abUrlA)
           : (typeSpecificData.url || typeSpecificData.abUrlA);
-      } else if (currentMainCategory === 'vote' && currentVoteInputMode === 'url') {
+      } else if (currentMainCategory === 'vote') {
         requiresServiceUrl = true;
         serviceUrlRaw = typeSpecificData.content?.[0] || '';
       } else if (currentMainCategory === 'survey') {
@@ -12175,7 +12332,7 @@
       }
 
       const sUrl = dataService.normalizeHttpUrl(serviceUrlRaw, { required: requiresServiceUrl });
-      const isVoteUrlMode = currentMainCategory === 'vote' && currentVoteInputMode === 'url';
+      const isVoteUrlMode = currentMainCategory === 'vote';
       const abUrlA = dataService.normalizeHttpUrl(
         typeSpecificData.abUrlA || (isVoteUrlMode ? typeSpecificData.content?.[0] : '')
       );
@@ -12244,7 +12401,7 @@
         external_survey_url: externalSurveyUrl,
         ...loginConfiguration,
         test_guide: testGuide,
-        questions,
+        questions: persistedQuestions,
         ...dataService.prepareProjectVerification(currentVerificationMethod, quizzes),
         start_date: startDate,
         end_date: endDate,
@@ -13579,9 +13736,21 @@
         }
         const userId = session?.user?.id || null;
         window.currentFeedUserId = userId;
+        const liveProjectsPromise = ds.fetchExploreProjects();
+        const marketItemsPromise = ds.fetchMarketplaceItems();
 
         if (isLoggedIn && userId) {
-          const profile = await ds.fetchUserProfile(userId);
+          const [profile, stats, registeredProjects, participatedProjects, scrapRows, wallet, coinTransactions, exchanges, notifications] = await Promise.all([
+            ds.fetchUserProfile(userId),
+            ds.fetchUserAggregateStats(userId),
+            ds.fetchMyProjects(userId, 'registered'),
+            ds.fetchMyProjects(userId, 'participated'),
+            ds.fetchUserScraps(userId),
+            ds.fetchUserWallet(userId),
+            ds.fetchCoinTransactions(userId),
+            ds.fetchUserExchanges(userId),
+            ds.fetchUserNotifications(userId)
+          ]);
           const emailPrefix = session.user.email?.split('@')[0] || '로그인 사용자';
           const activeNick = profile?.nickname || session.user.user_metadata?.nickname || emailPrefix;
           const activeBio = profile?.bio || '프로필 소개를 입력해 주세요.';
@@ -13590,15 +13759,6 @@
           window.saveProfileChangesLocal(activeNick, activeBio);
           updatePledgeModalUI();
 
-          const [stats, registeredProjects, participatedProjects, scrapRows, wallet, coinTransactions, exchanges] = await Promise.all([
-            ds.fetchUserAggregateStats(userId),
-            ds.fetchMyProjects(userId, 'registered'),
-            ds.fetchMyProjects(userId, 'participated'),
-            ds.fetchUserScraps(userId),
-            ds.fetchUserWallet(userId),
-            ds.fetchCoinTransactions(userId),
-            ds.fetchUserExchanges(userId)
-          ]);
           const scrapedProjects = scrapRows.map(row => row.projects).filter(Boolean);
           window.myProjectCollections = {
             registered: registeredProjects,
@@ -13644,7 +13804,6 @@
           renderMyProjectCollection(currentMyProjectTab);
           window.renderMyCoinData(wallet, coinTransactions, exchanges);
 
-          const notifications = await ds.fetchUserNotifications(userId);
           if (notifications) {
             window.notificationsData = notifications.map(n => ({
               id: n.id,
@@ -13687,12 +13846,14 @@
           }
         }
 
-        const liveProjects = await ds.fetchExploreProjects();
+        const [liveProjects, marketItems] = await Promise.all([
+          liveProjectsPromise,
+          marketItemsPromise
+        ]);
         if (liveProjects && liveProjects.length > 0) {
           window.renderLiveProjectsToFeed(liveProjects);
         }
 
-        const marketItems = await ds.fetchMarketplaceItems();
         if (marketItems && marketItems.length > 0) {
           const grid = document.getElementById('market-product-grid');
           if (grid) {

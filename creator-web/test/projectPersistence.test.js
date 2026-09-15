@@ -333,11 +333,14 @@ test('does not persist the current page URL when no thumbnail was selected', () 
   assert.match(html, /onerror="handleBrokenProjectThumbnail\(this\)"/);
 });
 
-test('vote projects use the visible image or URL input mode without a removed subtype variable', () => {
+test('투표 프로젝트는 현재 저장 가능한 A/B URL과 전용 질문을 영속화한다', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
   assert.doesNotMatch(html, /currentVoteSubOption/);
-  assert.match(html, /testCategoryName = inputMode === 'image' \? '투표 \(이미지형\)' : '투표 \(URL형\)'/);
+  assert.match(html, /id="btn-vote-input-mode-image" disabled/);
+  assert.match(html, /testCategoryName = '투표 \(URL형\)'/);
+  assert.match(html, /const persistedQuestions = currentMainCategory === 'vote'/);
+  assert.match(html, /questions: persistedQuestions/);
   assert.match(html, /is_ab_test: \['product', 'prototype'\]\.includes\(currentMainCategory\) && isProductAbMode/);
 });
 

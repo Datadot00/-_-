@@ -166,23 +166,22 @@ test("'이전으로'는 홈이 아니라 직전 화면으로 돌아간다", () =
   assert.match(navigateBack, /navigateTo\(fallbackViewKey, \{ isBack: true \}\)/);
 });
 
-test('쓰지 않는 전체화면 A/B 투표 뷰와 가짜 제출 경로는 제거되어 있다', () => {
+test('시안 투표는 실제 프로젝트 기반 전용 화면과 리뷰 RPC 경로를 사용한다', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
-  // 화면·전용 함수·상태값이 모두 사라져야 한다.
+  // 과거 하드코딩 화면과 가짜 지급 함수는 되살리지 않는다.
   assert.doesNotMatch(html, /view-abtest/);
   assert.doesNotMatch(html, /renderFullPageInternalTestScreen|openAbTest|submitAbVote/);
   assert.doesNotMatch(html, /selectAbOption|resetAbSelection|updateAbCharCount/);
   assert.doesNotMatch(html, /currentAbMode|selectedAbOption|currentBlindVariant/);
 
-  // 화면 레지스트리와 개발용 전환 패널에서도 빠져야 한다.
-  assert.doesNotMatch(html, /'abtest': \{ title:/);
-  assert.doesNotMatch(html, /data-view-btn="abtest"/);
+  // 실제 프로젝트 데이터를 렌더링하는 독립 투표 진행 화면을 사용한다.
+  assert.match(html, /id="view-vote-progress"/);
+  assert.match(html, /'vote-progress': \{ title: '시안 투표 진행' \}/);
+  assert.match(html, /renderInternalMissionFlow\(project, rewardVal\);\s*navigateTo\('vote-progress'\)/);
+  assert.match(html, /project\.is_ab_test === true/);
 
-  // 알림으로 들어오던 SaaS 경로는 실제 상세 페이지로 간다.
-  assert.match(html, /openPostDetail\('saas'\);/);
-
-  // 리워드가 실제로 적립되는 경로는 리뷰 RPC 하나만 남는다.
+  // 리워드가 실제로 적립되는 경로는 리뷰 RPC 하나뿐이다.
   assert.match(html, /submitProjectReview\(\{/);
 });
 
@@ -343,12 +342,15 @@ test('내부 미션 화면은 데모 문구 대신 등록된 프로젝트 문항
   assert.match(html, /function parseProjectQuestions\(project\)/);
   assert.match(html, /function getInternalVoteOptions\(project\)[\s\S]*ab_url_a[\s\S]*ab_url_b/);
   assert.match(html, /function renderInternalQuestionCard\(question, index\)/);
-  assert.match(html, /project\?\.category === 'vote' \|\| project\?\.mainCategory === 'vote'/);
+  assert.match(html, /const isVoteMission = project\?\.category === 'vote'[\s\S]*?project\?\.is_ab_test === true/);
 
   // 투표 미션은 시안을 고르기 전에는 제출할 수 없고, 응답은 리뷰 payload로 이어진다.
-  assert.match(html, /if \(dynamicContent\?\.querySelector\(.#opt-card-A.\) && !selectedInternalVoteOption\)/);
+  assert.match(html, /if \(dynamicContent\?\.querySelector\('\[data-internal-vote-option\]'\) && !selectedInternalVoteOption\)/);
   assert.match(html, /function collectInternalMissionAnswers\(\)/);
   assert.match(html, /internalMissionAnswers\?\.projectId === String\(projectId\) \? internalMissionAnswers\.data : \{\}/);
+  assert.match(html, /answers: submittedAnswers/);
+  assert.match(html, /if \(isVoteProject && !hasCurrentVoteAnswer\)[\s\S]*?navigateTo\('vote-progress'\)/);
+  assert.doesNotMatch(html, /name="fb-vote-opt"/);
 });
 
 test('5단계 마이그레이션은 직접 쓰기를 차단하고 원자적 함수를 선언한다', () => {

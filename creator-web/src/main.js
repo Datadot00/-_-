@@ -16,36 +16,5 @@ if (typeof window !== 'undefined') {
   window.donDwaeProfileFields = profileFields;
 }
 
-/**
- * Initialize Supabase Live Sync on Page Load
- */
-document.addEventListener('DOMContentLoaded', async () => {
-  console.log('[Don Dwae] Initializing Live Data Layer with Supabase...');
-
-  if (!dataService.supabase) {
-    console.warn('[Don Dwae] Supabase client not initialized.');
-    return;
-  }
-
-  try {
-    const { data: { session } } = await dataService.supabase.auth.getSession();
-    if (session && session.user) {
-      const profile = await dataService.fetchUserProfile(session.user.id);
-      if (profile && typeof window.updateProfileUI === 'function') {
-        window.updateProfileUI(profile);
-      }
-
-      const wallet = await dataService.fetchUserWallet(session.user.id);
-      if (wallet && typeof window.setUserCoinBalance === 'function') {
-        window.setUserCoinBalance(wallet.earned_coins + wallet.paid_coins);
-      }
-    }
-
-    const marketItems = await dataService.fetchMarketplaceItems();
-    if (marketItems && marketItems.length > 0) {
-      console.log(`[Don Dwae] Loaded ${marketItems.length} active items from Supabase Marketplace.`);
-    }
-  } catch (err) {
-    console.warn('[Don Dwae] Live sync initialization notice:', err.message);
-  }
-});
+// 실제 데이터 초기화는 index.html의 initSupabaseLiveDB 한 곳에서 담당한다.
+// 여기서 다시 조회하면 첫 진입 때 프로필·지갑·상점 요청이 중복된다.
