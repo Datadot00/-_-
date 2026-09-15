@@ -5,6 +5,7 @@ import {
   getAuthErrorMessage,
   getAuthErrorWithId,
   requestPasswordReset,
+  resumeEmailConfirmation,
   resendSignupConfirmation,
   signInWithEmail,
   signUpWithEmail,
@@ -25,6 +26,9 @@ const INACTIVITY_TIMEOUT_MS = 60 * 60 * 1000; // 1시간 (3,600,000ms)
 const LAST_ACTIVITY_KEY = 'dondwae_last_activity';
 const CURRENT_VIEW_KEY = 'dondwae_current_view';
 const CURRENT_POST_ID_KEY = 'dondwae_current_post_id';
+const AUTH_TAB_ID_KEY = 'dondwae_auth_tab_id';
+const PENDING_EMAIL_CONFIRMATION_KEY = 'dondwae_pending_email_confirmation';
+const PENDING_EMAIL_CONFIRMATION_MAX_AGE_MS = 30 * 60 * 1000;
 
 let lastActivityRecordedAt = 0;
 
@@ -52,6 +56,8 @@ const elements = {
   forgotPasswordButton: document.getElementById('btn-auth-forgot-password'),
   recoveryBackButton: document.getElementById('btn-auth-recovery-back'),
   resendButton: document.getElementById('btn-auth-resend'),
+  confirmationCompleteButton: document.getElementById('btn-auth-confirmation-complete'),
+  continueCurrentTabButton: document.getElementById('btn-auth-continue-current-tab'),
   backToLoginButton: document.getElementById('btn-auth-back-to-login'),
   passwordUpdateForm: document.getElementById('auth-password-update-panel'),
   newPassword: document.getElementById('auth-new-password-input'),
@@ -67,8 +73,73 @@ let authRequestInFlight = false;
 let currentUser = null;
 let pendingConfirmationEmail = '';
 let pendingEmailAction = 'signup';
+let pendingSignupCredentials = null;
 let pendingOnboardingAccountState = null;
 let passwordRecoveryActive = sessionStorage.getItem(PASSWORD_RECOVERY_STORAGE_KEY) === 'true';
+const currentAuthTabId = getOrCreateAuthTabId();
+
+function getOrCreateAuthTabId() {
+  const existingTabId = sessionStorage.getItem(AUTH_TAB_ID_KEY);
+  if (existingTabId) return existingTabId;
+
+  const nextTabId = globalThis.crypto?.randomUUID?.()
+    || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  sessionStorage.setItem(AUTH_TAB_ID_KEY, nextTabId);
+  return nextTabId;
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLocaleLowerCase();
+}
+
+function rememberPendingEmailConfirmation(email) {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return;
+
+  try {
+    localStorage.setItem(PENDING_EMAIL_CONFIRMATION_KEY, JSON.stringify({
+      email: normalizedEmail,
+      sourceTabId: currentAuthTabId,
+      createdAt: Date.now()
+    }));
+  } catch {
+    // 저장소를 사용할 수 없어도 현재 탭의 완료 버튼은 계속 사용할 수 있다.
+  }
+}
+
+function readPendingEmailConfirmation() {
+  try {
+    const rawValue = localStorage.getItem(PENDING_EMAIL_CONFIRMATION_KEY);
+    if (!rawValue) return null;
+
+    const marker = JSON.parse(rawValue);
+    const createdAt = Number(marker?.createdAt);
+    const isExpired = !Number.isFinite(createdAt)
+      || createdAt > Date.now()
+      || Date.now() - createdAt > PENDING_EMAIL_CONFIRMATION_MAX_AGE_MS;
+    if (!normalizeEmail(marker?.email) || !marker?.sourceTabId || isExpired) {
+      localStorage.removeItem(PENDING_EMAIL_CONFIRMATION_KEY);
+      return null;
+    }
+
+    return {
+      email: normalizeEmail(marker.email),
+      sourceTabId: String(marker.sourceTabId),
+      createdAt
+    };
+  } catch {
+    return null;
+  }
+}
+
+function clearPendingEmailConfirmation() {
+  pendingSignupCredentials = null;
+  try {
+    localStorage.removeItem(PENDING_EMAIL_CONFIRMATION_KEY);
+  } catch {
+    // 저장소 정리 실패는 인증 완료 자체를 막지 않는다.
+  }
+}
 
 function getVisibleViewKey() {
   const visibleView = [...document.querySelectorAll('.view-container')]
@@ -232,6 +303,8 @@ function setAuthBusy(isBusy, action = authMode) {
     elements.forgotPasswordButton,
     elements.recoveryBackButton,
     elements.resendButton,
+    elements.confirmationCompleteButton,
+    elements.continueCurrentTabButton,
     elements.backToLoginButton,
     elements.newPassword,
     elements.newPasswordConfirmation,
@@ -270,6 +343,18 @@ function setAuthBusy(isBusy, action = authMode) {
       : pendingEmailAction === 'recovery'
         ? '재설정 메일 다시 보내기'
         : '확인 메일 다시 보내기';
+  }
+
+  if (elements.confirmationCompleteButton) {
+    elements.confirmationCompleteButton.textContent = isBusy && action === 'confirmation-check'
+      ? '인증 확인 중...'
+      : '인증 완료했어요';
+  }
+
+  if (elements.continueCurrentTabButton) {
+    elements.continueCurrentTabButton.textContent = isBusy && action === 'continue-current-tab'
+      ? '계정 확인 중...'
+      : '이 탭에서 계속하기';
   }
 
   if (elements.passwordUpdateButton) {
@@ -454,6 +539,7 @@ async function handleEmailLogin() {
   } catch (error) {
     applyAuthenticatedUser(null);
     if (error?.code === 'email_not_confirmed') {
+      pendingSignupCredentials = { email, password };
       showEmailSentPanel(email, 'signup');
     }
     showAuthMessage('error', getAuthErrorWithId(error));
@@ -465,6 +551,7 @@ async function handleEmailLogin() {
 function showEmailSentPanel(email, action) {
   pendingConfirmationEmail = email;
   pendingEmailAction = action;
+  if (action === 'signup') rememberPendingEmailConfirmation(email);
   clearAuthMessages();
   elements.formPanel?.classList.add('hidden');
   elements.confirmationPanel?.classList.remove('hidden');
@@ -492,9 +579,107 @@ function showEmailSentPanel(email, action) {
   }
   if (elements.confirmationEmail) elements.confirmationEmail.textContent = email;
   if (elements.resendButton) {
+    elements.resendButton.classList.remove('hidden');
     elements.resendButton.textContent = isRecovery
       ? '재설정 메일 다시 보내기'
       : '확인 메일 다시 보내기';
+  }
+  elements.confirmationCompleteButton?.classList.toggle('hidden', isRecovery);
+  elements.continueCurrentTabButton?.classList.add('hidden');
+  elements.backToLoginButton?.classList.remove('hidden');
+}
+
+function showEmailConfirmedHandoffPanel(email) {
+  pendingConfirmationEmail = email;
+  pendingEmailAction = 'signup-handoff';
+  clearAuthMessages();
+  navigateTo('login');
+  elements.formPanel?.classList.add('hidden');
+  elements.confirmationPanel?.classList.remove('hidden');
+  elements.passwordUpdateForm?.classList.add('hidden');
+  elements.passwordUpdateForm?.classList.remove('flex');
+
+  if (elements.title) elements.title.textContent = '이메일 인증이 완료되었습니다';
+  if (elements.description) {
+    elements.description.textContent = '가입을 시작한 탭에서 안전하게 다음 단계를 이어갈 수 있어요.';
+  }
+  if (elements.emailSentTitle) {
+    elements.emailSentTitle.textContent = '가입하던 탭으로 돌아가 주세요';
+  }
+  if (elements.emailSentMessage) {
+    elements.emailSentMessage.innerHTML = '기존 탭에서 <strong>인증 완료했어요</strong> 버튼을 눌러 주세요.<br />기존 탭을 닫았다면 아래 버튼으로 이 탭에서 계속할 수 있습니다.';
+  }
+  if (elements.confirmationEmail) elements.confirmationEmail.textContent = email;
+
+  elements.resendButton?.classList.add('hidden');
+  elements.confirmationCompleteButton?.classList.add('hidden');
+  elements.continueCurrentTabButton?.classList.remove('hidden');
+  elements.backToLoginButton?.classList.add('hidden');
+}
+
+async function continueConfirmedSignup(user, successMessage) {
+  applyAuthenticatedUser(user);
+  recordUserActivity();
+  clearPendingEmailConfirmation();
+
+  await routeAfterAuthentication(async () => {
+    await refreshAuthenticatedData();
+    setAuthMode('login', { force: true });
+    showToast(successMessage, '✅');
+    navigateTo('explore');
+  });
+}
+
+async function handleEmailConfirmationComplete() {
+  if (!supabase || authRequestInFlight || pendingEmailAction !== 'signup') return;
+
+  clearAuthMessages();
+  setAuthBusy(true, 'confirmation-check');
+
+  try {
+    const email = normalizeEmail(pendingConfirmationEmail);
+    const credentials = pendingSignupCredentials;
+    const pendingPassword = credentials
+      && normalizeEmail(credentials.email) === email
+      ? credentials.password
+      : '';
+    const { user } = await resumeEmailConfirmation(supabase, email, pendingPassword);
+
+    await continueConfirmedSignup(user, '이메일 인증을 확인했습니다.');
+  } catch (error) {
+    if (error?.code === 'email_not_confirmed') {
+      showAuthMessage('error', '아직 이메일 인증이 완료되지 않았습니다. 메일의 확인 링크를 먼저 눌러 주세요.');
+    } else if (error?.code === 'confirmation_credentials_missing') {
+      showAuthMessage('error', '현재 탭의 가입 정보가 만료되었습니다. 로그인 화면에서 이메일과 비밀번호를 다시 입력해 주세요.');
+    } else if (error?.code === 'confirmation_account_mismatch') {
+      showAuthMessage('error', '다른 계정으로 인증되어 있습니다. 로그인 화면에서 가입한 계정으로 다시 로그인해 주세요.');
+    } else {
+      showAuthMessage('error', getAuthErrorWithId(error));
+    }
+  } finally {
+    setAuthBusy(false);
+  }
+}
+
+async function handleContinueCurrentTab() {
+  if (!supabase || authRequestInFlight || pendingEmailAction !== 'signup-handoff') return;
+
+  clearAuthMessages();
+  setAuthBusy(true, 'continue-current-tab');
+
+  try {
+    const { user } = await resumeEmailConfirmation(supabase, pendingConfirmationEmail);
+
+    await continueConfirmedSignup(user, '이메일 인증이 완료되었습니다.');
+  } catch (error) {
+    if (error?.code === 'confirmation_credentials_missing') {
+      showAuthMessage('error', '인증 세션을 찾지 못했습니다. 로그인 화면에서 가입한 이메일과 비밀번호를 입력해 주세요.');
+      elements.backToLoginButton?.classList.remove('hidden');
+    } else {
+      showAuthMessage('error', getAuthErrorWithId(error));
+    }
+  } finally {
+    setAuthBusy(false);
   }
 }
 
@@ -514,15 +699,18 @@ async function handleEmailSignup() {
     return;
   }
 
+  clearPendingEmailConfirmation();
   setAuthBusy(true, 'signup');
   try {
     await ensureNoStaleSession();
     const redirectTo = getAuthRedirectUrl('signup');
     const { user, session } = await signUpWithEmail(supabase, email, password, redirectTo);
+    pendingSignupCredentials = { email, password };
     if (elements.password) elements.password.value = '';
     if (elements.passwordConfirmation) elements.passwordConfirmation.value = '';
 
     if (session) {
+      clearPendingEmailConfirmation();
       applyAuthenticatedUser(user);
       await refreshAuthenticatedData();
       await routeAfterAuthentication(() => {
@@ -697,6 +885,7 @@ async function handleSignOut() {
     closeTermsConsentGate();
     closeOnboardingGate();
     pendingOnboardingAccountState = null;
+    clearPendingEmailConfirmation();
     applyAuthenticatedUser(null);
     passwordRecoveryActive = false;
     sessionStorage.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
@@ -734,8 +923,11 @@ function bindAuthenticationEvents() {
   elements.forgotPasswordButton?.addEventListener('click', () => setAuthMode('recovery'));
   elements.recoveryBackButton?.addEventListener('click', () => setAuthMode('login'));
   elements.resendButton?.addEventListener('click', handleConfirmationResend);
+  elements.confirmationCompleteButton?.addEventListener('click', handleEmailConfirmationComplete);
+  elements.continueCurrentTabButton?.addEventListener('click', handleContinueCurrentTab);
   elements.backToLoginButton?.addEventListener('click', () => {
     const email = pendingConfirmationEmail;
+    clearPendingEmailConfirmation();
     setAuthMode('login');
     if (elements.email) elements.email.value = email;
     elements.password?.focus();
@@ -757,6 +949,8 @@ function disableAuthenticationUI() {
     elements.forgotPasswordButton,
     elements.recoveryBackButton,
     elements.resendButton,
+    elements.confirmationCompleteButton,
+    elements.continueCurrentTabButton,
     elements.newPassword,
     elements.newPasswordConfirmation,
     elements.passwordUpdateButton,
@@ -793,6 +987,10 @@ async function checkInactivityTimeout(silent = false) {
       console.warn('[Auth] Sign out error on inactivity:', e);
     }
     applyAuthenticatedUser(null);
+    closeTermsConsentGate();
+    closeOnboardingGate();
+    pendingOnboardingAccountState = null;
+    clearPendingEmailConfirmation();
     localStorage.removeItem(LAST_ACTIVITY_KEY);
     localStorage.removeItem(CURRENT_VIEW_KEY);
     localStorage.removeItem(CURRENT_POST_ID_KEY);
@@ -860,8 +1058,17 @@ async function initializeAuthentication() {
     applyAuthenticatedUser(session?.user || null);
     if (session?.user) {
       recordUserActivity();
+      if (
+        event === 'SIGNED_IN'
+        && pendingEmailAction === 'signup'
+        && normalizeEmail(session.user.email) === normalizeEmail(pendingConfirmationEmail)
+      ) {
+        showAuthMessage('success', '이메일 인증이 확인되었습니다. 아래 버튼을 눌러 계속해 주세요.');
+      }
     } else {
       closeTermsConsentGate();
+      closeOnboardingGate();
+      pendingOnboardingAccountState = null;
     }
 
     if (event === 'PASSWORD_RECOVERY') {
@@ -900,6 +1107,18 @@ async function initializeAuthentication() {
 
     if (restoredUser && callback.hasCallback) {
       cleanAuthCallbackUrl();
+      const pendingConfirmation = callback.flow === 'signup'
+        ? readPendingEmailConfirmation()
+        : null;
+      const shouldReturnToSourceTab = pendingConfirmation
+        && pendingConfirmation.sourceTabId !== currentAuthTabId
+        && pendingConfirmation.email === normalizeEmail(restoredUser.email);
+      if (shouldReturnToSourceTab) {
+        showEmailConfirmedHandoffPanel(restoredUser.email || pendingConfirmation.email);
+        return;
+      }
+
+      clearPendingEmailConfirmation();
       await routeAfterAuthentication(() => {
         showToast('이메일 인증이 완료되었습니다.', '✅');
         navigateTo('explore');

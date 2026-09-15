@@ -47,8 +47,8 @@ test('account state is normalized into one frontend routing contract', () => {
 
   assert.deepEqual(ACCOUNT_NEXT_STEPS, [
     'verify_email',
-    'onboarding',
     'terms_review',
+    'onboarding',
     'ready'
   ]);
   assert.equal(state.nextStep, 'onboarding');

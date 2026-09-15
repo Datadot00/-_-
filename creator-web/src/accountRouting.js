@@ -2,8 +2,8 @@ const ACCOUNT_STATE_RPC = 'get_my_account_state';
 
 export const ACCOUNT_NEXT_STEPS = Object.freeze([
   'verify_email',
-  'onboarding',
   'terms_review',
+  'onboarding',
   'ready'
 ]);
 

@@ -7,6 +7,7 @@ import {
   getActiveSessionUser,
   getAuthErrorWithId,
   getAuthErrorMessage,
+  resumeEmailConfirmation,
   signInWithEmail,
   signUpWithEmail
 } from '../src/authService.js';
@@ -30,6 +31,83 @@ test('returns null when the browser has no active session', async () => {
   };
 
   assert.equal(await getActiveSessionUser(client), null);
+});
+
+test('이메일 확인 완료는 같은 계정의 기존 브라우저 세션을 우선 사용한다', async () => {
+  const user = { id: 'confirmed-user', email: 'confirmed@example.com' };
+  const session = { access_token: 'confirmed-token', user };
+  let passwordLoginCalls = 0;
+  const client = {
+    auth: {
+      getSession: async () => ({ data: { session }, error: null }),
+      signInWithPassword: async () => {
+        passwordLoginCalls += 1;
+        return { data: null, error: null };
+      }
+    }
+  };
+
+  const result = await resumeEmailConfirmation(client, 'CONFIRMED@example.com');
+
+  assert.equal(result.user, user);
+  assert.equal(result.session, session);
+  assert.equal(passwordLoginCalls, 0);
+});
+
+test('다른 기기에서 이메일을 확인했으면 가입 탭의 메모리 비밀번호로 로그인한다', async () => {
+  const user = { id: 'confirmed-user', email: 'confirmed@example.com' };
+  const session = { access_token: 'confirmed-token', user };
+  const calls = [];
+  const client = {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: null }),
+      signInWithPassword: async credentials => {
+        calls.push(credentials);
+        return { data: { user, session }, error: null };
+      }
+    }
+  };
+
+  const result = await resumeEmailConfirmation(
+    client,
+    ' Confirmed@Example.com ',
+    'signup-password'
+  );
+
+  assert.equal(result.user, user);
+  assert.deepEqual(calls, [{
+    email: 'confirmed@example.com',
+    password: 'signup-password'
+  }]);
+});
+
+test('인증 세션과 가입 비밀번호가 모두 없으면 완료 처리하지 않는다', async () => {
+  const client = {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: null })
+    }
+  };
+
+  await assert.rejects(
+    resumeEmailConfirmation(client, 'confirmed@example.com'),
+    error => error.code === 'confirmation_credentials_missing'
+  );
+});
+
+test('다른 이메일 계정의 세션으로 가입 완료를 진행하지 않는다', async () => {
+  const client = {
+    auth: {
+      getSession: async () => ({
+        data: { session: { user: { id: 'other-user', email: 'other@example.com' } } },
+        error: null
+      })
+    }
+  };
+
+  await assert.rejects(
+    resumeEmailConfirmation(client, 'confirmed@example.com', 'signup-password'),
+    error => error.code === 'confirmation_account_mismatch'
+  );
 });
 
 test('로그인 오류를 회원가입으로 우회하지 않는다', async () => {

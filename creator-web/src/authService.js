@@ -30,6 +30,37 @@ export async function signInWithEmail(client, email, password) {
   return requireAuthenticatedSession(data);
 }
 
+function normalizeAuthEmail(email) {
+  return String(email || '').trim().toLocaleLowerCase();
+}
+
+export async function resumeEmailConfirmation(client, email, password = '') {
+  requireAuthClient(client);
+
+  const normalizedEmail = normalizeAuthEmail(email);
+  const { data, error } = await client.auth.getSession();
+  if (error) throw error;
+
+  const activeSession = data?.session || null;
+  const activeUser = activeSession?.user || null;
+  if (activeUser) {
+    if (normalizeAuthEmail(activeUser.email) !== normalizedEmail) {
+      const accountMismatchError = new Error('A different account is active in this browser.');
+      accountMismatchError.code = 'confirmation_account_mismatch';
+      throw accountMismatchError;
+    }
+    return { session: activeSession, user: activeUser };
+  }
+
+  if (!password) {
+    const missingCredentialsError = new Error('Pending sign-up credentials are unavailable.');
+    missingCredentialsError.code = 'confirmation_credentials_missing';
+    throw missingCredentialsError;
+  }
+
+  return signInWithEmail(client, normalizedEmail, password);
+}
+
 export async function signUpWithEmail(client, email, password, emailRedirectTo) {
   requireAuthClient(client);
 
