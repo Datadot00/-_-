@@ -418,24 +418,8 @@ COMMENT ON FUNCTION public.complete_my_onboarding(
 ) IS
   'Completes profile onboarding only after current required terms have been accepted.';
 
--- 온보딩에서 새로 받는 항목을 개인정보 처리방침 수집 항목 표에도 반영한다.
--- 아직 공개 전 초안이라 버전은 올리지 않고 본문만 고친다.
-UPDATE public.terms_documents
-SET content = REPLACE(
-  content,
-  '필수(온보딩) | 생년월일, 전화번호, 관심사 | 최초 로그인 시',
-  '필수(온보딩) | 생년월일, 전화번호, 관심사, 성별, 연령대 | 최초 로그인 시'
-)
-WHERE document_type = 'privacy_policy'
-  AND content LIKE '%필수(온보딩) | 생년월일, 전화번호, 관심사 | 최초 로그인 시%';
-
-UPDATE public.terms_documents
-SET content = REPLACE(
-  content,
-  '선택 | 닉네임, 한줄소개, SNS 링크 | 프로필 수정 시',
-  '선택 | 닉네임, 한줄소개, SNS 링크, 직업군, 주 사용기기 | 온보딩 및 프로필 수정 시'
-)
-WHERE document_type = 'privacy_policy'
-  AND content LIKE '%선택 | 닉네임, 한줄소개, SNS 링크 | 프로필 수정 시%';
+-- 개인정보 처리방침의 수집 항목 표에도 성별·연령대·직업군·주 사용기기를 넣어야 하지만,
+-- 동의 이력이 있는 약관 문서는 protect_consented_terms_document 트리거가 수정을 막는다.
+-- 본문을 바꾸려면 새 버전 문서를 발행해 재동의를 받아야 하므로 별도 마이그레이션으로 분리한다.
 
 COMMIT;

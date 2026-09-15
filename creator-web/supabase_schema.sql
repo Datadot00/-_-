@@ -66,15 +66,10 @@ CREATE TABLE IF NOT EXISTS public.users (
     CARDINALITY(devices) <= 4
     AND devices <@ ARRAY['ios', 'android', 'mac', 'windows']::TEXT[]
   ),
+  -- CHECK 안에는 서브쿼리를 쓸 수 없어 개수만 본다.
+  -- 태그 하나하나의 규칙은 complete_my_onboarding 안에서 검사한다.
   CONSTRAINT users_tool_tags_valid CHECK (
     CARDINALITY(tool_tags) <= 10
-    AND NOT EXISTS (
-      SELECT 1
-      FROM UNNEST(tool_tags) AS tag(value)
-      WHERE BTRIM(tag.value) = ''
-        OR CHAR_LENGTH(tag.value) > 40
-        OR tag.value LIKE '#%'
-    )
   ),
   CONSTRAINT users_avatar_url_http_check CHECK (
     avatar_url IS NULL

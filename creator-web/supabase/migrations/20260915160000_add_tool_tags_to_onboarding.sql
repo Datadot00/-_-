@@ -10,15 +10,11 @@ ALTER TABLE public.users
   DROP CONSTRAINT IF EXISTS users_tool_tags_valid;
 
 ALTER TABLE public.users
+  -- CHECK 안에는 서브쿼리를 쓸 수 없어 개수만 본다.
+  -- 태그 하나하나의 규칙(빈 값·40자·'#' 접두사)은 interests 와 마찬가지로
+  -- complete_my_onboarding 안에서 검사한다.
   ADD CONSTRAINT users_tool_tags_valid CHECK (
     CARDINALITY(tool_tags) <= 10
-    AND NOT EXISTS (
-      SELECT 1
-      FROM UNNEST(tool_tags) AS tag(value)
-      WHERE BTRIM(tag.value) = ''
-        OR CHAR_LENGTH(tag.value) > 40
-        OR tag.value LIKE '#%'
-    )
   );
 
 CREATE OR REPLACE FUNCTION public.get_my_account_state()
