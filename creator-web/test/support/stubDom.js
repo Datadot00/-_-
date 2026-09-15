@@ -250,4 +250,61 @@ export function installWizardDom({ interests = ['핀테크/금융', 'AI/개발�
   return { byId, root, el: id => byId[id] };
 }
 
+/**
+ * 내 정보 수정 모달에서 온보딩 항목을 다루는 부분만 흉내 낸다.
+ * 위저드와 id·data 속성이 다르므로 별도로 세운다.
+ */
+export function installProfileModalDom() {
+  const byId = {};
+
+  const create = (tagName, id = '') => {
+    const node = new StubElement(tagName);
+    if (id) {
+      node.id = id;
+      byId[id] = node;
+    }
+    return node;
+  };
+
+  const root = create('body');
+
+  ['profile-job-group', 'profile-device-count', 'profile-tool-tag-input',
+    'profile-tool-tag-count', 'btn-profile-add-tool-tag']
+    .forEach(id => root.append(create('div', id)));
+
+  const genderBox = create('div', 'profile-gender-box');
+  const ageRangeBox = create('div', 'profile-age-range-box');
+  const deviceBox = create('div', 'profile-device-box');
+  const toolTagsContainer = create('div', 'profile-tool-tags-container');
+  root.append(genderBox, ageRangeBox, deviceBox, toolTagsContainer);
+
+  const addChoices = (box, property, values, stateAttribute) => {
+    values.forEach(value => {
+      const choice = create('button');
+      choice.dataset[property] = value;
+      choice.setAttribute(stateAttribute, 'false');
+      box.append(choice);
+    });
+  };
+  addChoices(genderBox, 'profileGender', ['male', 'female'], 'aria-checked');
+  addChoices(
+    ageRangeBox,
+    'profileAgeRange',
+    ['10s', '20s', '30s', '40s', '50s', '60s_plus'],
+    'aria-checked'
+  );
+  addChoices(deviceBox, 'profileDevice', ['ios', 'android', 'mac', 'windows'], 'aria-pressed');
+
+  global.document = {
+    getElementById: id => byId[id] || null,
+    createElement: tagName => new StubElement(tagName),
+    querySelectorAll: selector => root.querySelectorAll(selector),
+    querySelector: selector => root.querySelector(selector),
+    body: { classList: { add() {}, remove() {} } }
+  };
+  global.window = { setTimeout: fn => fn() };
+
+  return { byId, root, el: id => byId[id] };
+}
+
 export { StubElement };

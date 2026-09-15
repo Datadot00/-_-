@@ -725,7 +725,17 @@ export async function fetchMyPrivateProfile() {
   return data;
 }
 
-export async function updateMyPrivateProfile({ nickname, bio = '', interests = [], snsLinks = [] } = {}) {
+export async function updateMyPrivateProfile({
+  nickname,
+  bio = '',
+  interests = [],
+  snsLinks = [],
+  jobGroup = '',
+  gender = '',
+  ageRange = '',
+  devices = [],
+  toolTags = []
+} = {}) {
   if (!supabase) throw new Error('Supabase 연결이 설정되지 않았습니다.');
   const normalizedLinks = prepareProfileLinks(snsLinks);
   const { data, error } = await supabase
@@ -733,7 +743,13 @@ export async function updateMyPrivateProfile({ nickname, bio = '', interests = [
       p_nickname: typeof nickname === 'string' ? nickname.trim() : '',
       p_bio: typeof bio === 'string' ? bio.trim() : '',
       p_interests: Array.isArray(interests) ? interests : [],
-      p_sns_links: normalizedLinks
+      p_sns_links: normalizedLinks,
+      // 온보딩 전에 가입한 계정은 비어 있을 수 있어 빈 값을 그대로 보낸다.
+      p_job_group: typeof jobGroup === 'string' ? jobGroup.trim() : '',
+      p_gender: typeof gender === 'string' ? gender.trim() : '',
+      p_age_range: typeof ageRange === 'string' ? ageRange.trim() : '',
+      p_devices: Array.isArray(devices) ? devices : [],
+      p_tool_tags: Array.isArray(toolTags) ? toolTags : []
     })
     .single();
   if (error) throw error;
