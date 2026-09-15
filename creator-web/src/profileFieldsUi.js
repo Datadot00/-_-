@@ -21,11 +21,21 @@ const CHIP_IDLE_CLASSES = ['bg-white', 'border-neutral-300', 'text-neutral-700']
 
 let eventsBound = false;
 
+// 이미 저장된 성별·연령대는 바꿀 수 없다. 모집 조건 매칭에 쓰는 값이라
+// 본인이 고칠 수 있으면 조건에 맞추려고 바꾸는 유인이 생기기 때문이다.
+// 값이 비어 있는 계정(컬럼이 생기기 전 가입자)만 한 번 채울 수 있다.
+const lockedChoices = { gender: false, 'age-range': false };
+
+const LOCKED_HINT = '🔒 모집 조건 매칭에 사용되어 변경할 수 없습니다.';
+const UNLOCKED_HINT = '한 번 저장하면 변경할 수 없으니 신중히 선택해 주세요.';
+
 function getElements() {
   return {
     jobGroup: document.getElementById('profile-job-group'),
     genderBox: document.getElementById('profile-gender-box'),
+    genderHint: document.getElementById('profile-gender-hint'),
     ageRangeBox: document.getElementById('profile-age-range-box'),
+    ageRangeHint: document.getElementById('profile-age-range-hint'),
     deviceBox: document.getElementById('profile-device-box'),
     deviceCount: document.getElementById('profile-device-count'),
     toolTagInput: document.getElementById('profile-tool-tag-input'),
@@ -61,11 +71,27 @@ export function getSingleChoiceValue(attribute) {
 function setSingleChoice(attribute, value) {
   const key = datasetKeyFor(attribute);
   getSingleChoiceButtons(attribute).forEach(button => {
-    // 같은 값을 다시 누르면 해제해 비워 둘 수 있어야 한다.
-    // 온보딩 전 가입자는 이 값이 없는 상태가 정상이기 때문이다.
     const isSelected = Boolean(value) && button.dataset[key] === value;
     button.setAttribute('aria-checked', String(isSelected));
     setChoiceStyle(button, isSelected);
+  });
+}
+
+/** 잠긴 항목은 고른 값만 회색으로 남기고 나머지 버튼은 눌리지 않게 한다. */
+function applyChoiceLock(attribute, isLocked) {
+  lockedChoices[attribute] = isLocked;
+
+  const { genderHint, ageRangeHint } = getElements();
+  const hint = attribute === 'gender' ? genderHint : ageRangeHint;
+  if (hint) hint.textContent = isLocked ? LOCKED_HINT : UNLOCKED_HINT;
+
+  getSingleChoiceButtons(attribute).forEach(button => {
+    const isSelected = button.getAttribute('aria-checked') === 'true';
+    button.disabled = isLocked;
+    button.setAttribute('aria-disabled', String(isLocked));
+    // 선택되지 않은 항목은 잠겼을 때 보이지 않게 흐린다.
+    button.classList.toggle('opacity-40', isLocked && !isSelected);
+    button.classList.toggle('cursor-not-allowed', isLocked);
   });
 }
 
@@ -153,8 +179,11 @@ export function renderProfileExtraFields(profile = {}) {
   const { jobGroup, toolTagsContainer } = getElements();
 
   if (jobGroup) jobGroup.value = profile.job_group || '';
+
   setSingleChoice('gender', profile.gender || '');
   setSingleChoice('age-range', profile.age_range || '');
+  applyChoiceLock('gender', Boolean(profile.gender));
+  applyChoiceLock('age-range', Boolean(profile.age_range));
 
   const selectedDevices = new Set(Array.isArray(profile.devices) ? profile.devices : []);
   getDeviceButtons().forEach(button => {
@@ -200,14 +229,15 @@ export function bindProfileExtraFields() {
 
   genderBox?.addEventListener('click', event => {
     const choice = event.target.closest('[data-profile-gender]');
-    if (!choice) return;
+    if (!choice || lockedChoices.gender) return;
+    // 아직 잠기지 않은 동안에는 다시 눌러 해제할 수 있다. 저장 전에 고친다.
     const isSelected = choice.getAttribute('aria-checked') === 'true';
     setSingleChoice('gender', isSelected ? '' : choice.dataset.profileGender);
   });
 
   ageRangeBox?.addEventListener('click', event => {
     const choice = event.target.closest('[data-profile-age-range]');
-    if (!choice) return;
+    if (!choice || lockedChoices['age-range']) return;
     const isSelected = choice.getAttribute('aria-checked') === 'true';
     setSingleChoice('age-range', isSelected ? '' : choice.dataset.profileAgeRange);
   });

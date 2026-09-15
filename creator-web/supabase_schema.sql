@@ -1738,6 +1738,8 @@ DECLARE
   v_age_range TEXT := NULLIF(BTRIM(COALESCE(p_age_range, '')), '');
   v_devices TEXT[];
   v_tool_tags TEXT[];
+  v_existing_gender TEXT;
+  v_existing_age_range TEXT;
 BEGIN
   IF v_user_id IS NULL THEN
     RAISE EXCEPTION 'authentication required' USING ERRCODE = '42501';
@@ -1786,6 +1788,27 @@ BEGIN
   IF v_age_range IS NOT NULL
      AND v_age_range NOT IN ('10s', '20s', '30s', '40s', '50s', '60s_plus') THEN
     RAISE EXCEPTION 'age range must be one of the supported buckets' USING ERRCODE = '22023';
+  END IF;
+
+  -- 성별과 연령대는 한 번 저장되면 잠근다.
+  -- 모집 조건 매칭에 쓸 값이라 본인이 마음대로 바꿀 수 있으면 조건에 맞추려고
+  -- 고치는 유인이 생겨 값을 믿을 수 없게 된다. 화면에서 잠그는 것만으로는
+  -- RPC 를 직접 부르면 그만이므로 여기서 막는다.
+  --
+  -- 이미 값이 있으면 들어온 값을 무시하고 기존 값을 그대로 둔다. 화면은 잠긴
+  -- 값을 그대로 돌려보내므로 정상 경로에서는 아무 차이가 없고, 손으로 만든
+  -- 요청만 조용히 무시된다.
+  SELECT profile.gender, profile.age_range
+  INTO v_existing_gender, v_existing_age_range
+  FROM public.users AS profile
+  WHERE profile.id = v_user_id;
+
+  IF v_existing_gender IS NOT NULL THEN
+    v_gender := v_existing_gender;
+  END IF;
+
+  IF v_existing_age_range IS NOT NULL THEN
+    v_age_range := v_existing_age_range;
   END IF;
 
   SELECT COALESCE(

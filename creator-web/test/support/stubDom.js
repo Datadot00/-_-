@@ -269,7 +269,8 @@ export function installProfileModalDom() {
   const root = create('body');
 
   ['profile-job-group', 'profile-device-count', 'profile-tool-tag-input',
-    'profile-tool-tag-count', 'btn-profile-add-tool-tag']
+    'profile-tool-tag-count', 'btn-profile-add-tool-tag',
+    'profile-gender-hint', 'profile-age-range-hint']
     .forEach(id => root.append(create('div', id)));
 
   const genderBox = create('div', 'profile-gender-box');

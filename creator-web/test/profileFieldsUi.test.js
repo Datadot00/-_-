@@ -97,10 +97,13 @@ test('온보딩 전에 가입한 계정은 값이 비어 있어도 저장할 수
   });
 });
 
-test('성별과 연령대는 하나만 선택되고 다시 누르면 해제된다', async () => {
+test('아직 값이 없으면 성별·연령대를 한 번 고를 수 있다', async () => {
   const dom = installProfileModalDom();
-  const { bindProfileExtraFields, collectProfileExtraFields } = await importProfileFields();
+  const {
+    bindProfileExtraFields, renderProfileExtraFields, collectProfileExtraFields
+  } = await importProfileFields();
   bindProfileExtraFields();
+  renderProfileExtraFields({ gender: null, age_range: null });
 
   const genderBox = dom.el('profile-gender-box');
   const [male, female] = genderBox.querySelectorAll('[data-profile-gender]');
@@ -112,9 +115,70 @@ test('성별과 연령대는 하나만 선택되고 다시 누르면 해제된�
   assert.equal(male.getAttribute('aria-checked'), 'false');
   assert.equal(collectProfileExtraFields().gender, 'female');
 
-  // 같은 값을 다시 누르면 비워진다. 잘못 고른 값을 되돌릴 수 있어야 한다.
+  // 저장 전에는 다시 눌러 비울 수 있다. 잘못 고른 값을 되돌릴 수 있어야 한다.
   genderBox.dispatch('click', { target: female });
   assert.equal(collectProfileExtraFields().gender, '');
+});
+
+test('이미 저장된 성별·연령대는 화면에서 바꿀 수 없다', async () => {
+  const dom = installProfileModalDom();
+  const {
+    bindProfileExtraFields, renderProfileExtraFields, collectProfileExtraFields
+  } = await importProfileFields();
+  bindProfileExtraFields();
+  renderProfileExtraFields({ gender: 'female', age_range: '30s' });
+
+  const genderBox = dom.el('profile-gender-box');
+  const [male, female] = genderBox.querySelectorAll('[data-profile-gender]');
+  assert.equal(male.disabled, true);
+  assert.equal(female.disabled, true);
+  assert.match(dom.el('profile-gender-hint').textContent, /변경할 수 없습니다/);
+
+  // 눌러도 값이 바뀌지 않는다.
+  genderBox.dispatch('click', { target: male });
+  assert.equal(collectProfileExtraFields().gender, 'female');
+  // 선택된 값을 다시 눌러도 해제되지 않는다.
+  genderBox.dispatch('click', { target: female });
+  assert.equal(collectProfileExtraFields().gender, 'female');
+
+  const ageBox = dom.el('profile-age-range-box');
+  ageBox.dispatch('click', {
+    target: ageBox.querySelectorAll('[data-profile-age-range]')[0]
+  });
+  assert.equal(collectProfileExtraFields().ageRange, '30s');
+});
+
+test('성별만 저장된 계정은 연령대를 아직 고를 수 있다', async () => {
+  const dom = installProfileModalDom();
+  const {
+    bindProfileExtraFields, renderProfileExtraFields, collectProfileExtraFields
+  } = await importProfileFields();
+  bindProfileExtraFields();
+  renderProfileExtraFields({ gender: 'male', age_range: null });
+
+  // 항목마다 따로 잠긴다. 하나가 잠겼다고 나머지까지 막으면 안 된다.
+  const ageBox = dom.el('profile-age-range-box');
+  ageBox.dispatch('click', {
+    target: ageBox.querySelectorAll('[data-profile-age-range]')[1]
+  });
+  assert.equal(collectProfileExtraFields().ageRange, '20s');
+  assert.equal(collectProfileExtraFields().gender, 'male');
+});
+
+test('성별·연령대는 서버에서도 덮어쓸 수 없게 막는다', () => {
+  const lock = readFileSync(
+    new URL('../supabase/migrations/20260915220000_lock_gender_and_age_range.sql', import.meta.url),
+    'utf8'
+  );
+  for (const sql of [lock, schema]) {
+    // 화면에서만 잠그면 RPC 를 직접 부르는 경로가 남는다.
+    assert.match(sql, /v_existing_gender IS NOT NULL THEN\s*\n\s*v_gender := v_existing_gender;/i);
+    assert.match(sql, /v_existing_age_range IS NOT NULL THEN\s*\n\s*v_age_range := v_existing_age_range;/i);
+  }
+  // 직업군·기기·툴 태그는 계속 고칠 수 있어야 한다.
+  assert.match(schema, /job_group = v_job_group/);
+  assert.match(schema, /devices = v_devices/);
+  assert.match(schema, /tool_tags = v_tool_tags/);
 });
 
 test('툴 태그는 위저드와 같은 규칙으로 다듬어 저장된다', async () => {
