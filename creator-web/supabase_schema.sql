@@ -25,6 +25,11 @@ CREATE TABLE IF NOT EXISTS public.users (
   completed_test_count INT NOT NULL DEFAULT 0,
   onboarding_completed_version SMALLINT NOT NULL DEFAULT 0,
   onboarding_completed_at TIMESTAMPTZ,
+  job_group TEXT,
+  gender TEXT,
+  age_range TEXT,
+  devices TEXT[] NOT NULL DEFAULT '{}'::TEXT[],
+  tool_tags TEXT[] NOT NULL DEFAULT '{}'::TEXT[],
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT users_sns_links_array
@@ -45,6 +50,31 @@ CREATE TABLE IF NOT EXISTS public.users (
   CONSTRAINT users_onboarding_state_consistent CHECK (
     (onboarding_completed_version = 0 AND onboarding_completed_at IS NULL)
     OR (onboarding_completed_version > 0 AND onboarding_completed_at IS NOT NULL)
+  ),
+  CONSTRAINT users_job_group_valid CHECK (
+    job_group IS NULL
+    OR (BTRIM(job_group) <> '' AND CHAR_LENGTH(job_group) <= 50)
+  ),
+  CONSTRAINT users_gender_valid CHECK (
+    gender IS NULL OR gender IN ('male', 'female')
+  ),
+  CONSTRAINT users_age_range_valid CHECK (
+    age_range IS NULL
+    OR age_range IN ('10s', '20s', '30s', '40s', '50s', '60s_plus')
+  ),
+  CONSTRAINT users_devices_valid CHECK (
+    CARDINALITY(devices) <= 4
+    AND devices <@ ARRAY['ios', 'android', 'mac', 'windows']::TEXT[]
+  ),
+  CONSTRAINT users_tool_tags_valid CHECK (
+    CARDINALITY(tool_tags) <= 10
+    AND NOT EXISTS (
+      SELECT 1
+      FROM UNNEST(tool_tags) AS tag(value)
+      WHERE BTRIM(tag.value) = ''
+        OR CHAR_LENGTH(tag.value) > 40
+        OR tag.value LIKE '#%'
+    )
   ),
   CONSTRAINT users_avatar_url_http_check CHECK (
     avatar_url IS NULL
@@ -413,6 +443,11 @@ DECLARE
   v_email_confirmed BOOLEAN;
   v_nickname TEXT;
   v_bio TEXT;
+  v_job_group TEXT;
+  v_gender TEXT;
+  v_age_range TEXT;
+  v_devices TEXT[];
+  v_tool_tags TEXT[];
   v_interests TEXT[];
   v_sns_links JSONB;
   v_onboarding_completed_version SMALLINT;
@@ -430,6 +465,11 @@ BEGIN
     auth_account.email_confirmed_at IS NOT NULL,
     profile.nickname,
     profile.bio,
+    profile.job_group,
+    profile.gender,
+    profile.age_range,
+    profile.devices,
+    profile.tool_tags,
     profile.interests,
     profile.sns_links,
     profile.onboarding_completed_version,
@@ -439,6 +479,11 @@ BEGIN
     v_email_confirmed,
     v_nickname,
     v_bio,
+    v_job_group,
+    v_gender,
+    v_age_range,
+    v_devices,
+    v_tool_tags,
     v_interests,
     v_sns_links,
     v_onboarding_completed_version,
@@ -512,6 +557,11 @@ BEGIN
     'profile', JSONB_BUILD_OBJECT(
       'nickname', v_nickname,
       'bio', v_bio,
+      'job_group', v_job_group,
+      'gender', v_gender,
+      'age_range', v_age_range,
+      'devices', COALESCE(v_devices, '{}'::TEXT[]),
+      'tool_tags', COALESCE(v_tool_tags, '{}'::TEXT[]),
       'interests', COALESCE(v_interests, '{}'::TEXT[]),
       'sns_links', COALESCE(v_sns_links, '[]'::JSONB)
     )
@@ -519,12 +569,23 @@ BEGIN
 END;
 $$;
 
+-- 파라미터가 늘어나면 새 오버로드가 생겨 PostgREST 호출이 모호해지므로
+-- 이전 시그니처를 먼저 지운다.
+DROP FUNCTION IF EXISTS public.complete_my_onboarding(
+  TEXT, TEXT[], TEXT, JSONB, UUID[], TEXT, TEXT, TEXT, TEXT[]
+);
+
 CREATE OR REPLACE FUNCTION public.complete_my_onboarding(
   p_nickname TEXT,
   p_interests TEXT[],
   p_bio TEXT DEFAULT '',
   p_sns_links JSONB DEFAULT '[]'::JSONB,
-  p_accepted_document_ids UUID[] DEFAULT '{}'::UUID[]
+  p_accepted_document_ids UUID[] DEFAULT '{}'::UUID[],
+  p_job_group TEXT DEFAULT '',
+  p_gender TEXT DEFAULT '',
+  p_age_range TEXT DEFAULT '',
+  p_devices TEXT[] DEFAULT '{}'::TEXT[],
+  p_tool_tags TEXT[] DEFAULT '{}'::TEXT[]
 )
 RETURNS JSONB
 LANGUAGE PLPGSQL
@@ -537,6 +598,11 @@ DECLARE
   v_current_onboarding_version SMALLINT;
   v_nickname TEXT := BTRIM(COALESCE(p_nickname, ''));
   v_bio TEXT := BTRIM(COALESCE(p_bio, ''));
+  v_job_group TEXT := NULLIF(BTRIM(COALESCE(p_job_group, '')), '');
+  v_gender TEXT := NULLIF(BTRIM(COALESCE(p_gender, '')), '');
+  v_age_range TEXT := NULLIF(BTRIM(COALESCE(p_age_range, '')), '');
+  v_devices TEXT[];
+  v_tool_tags TEXT[];
   v_interests TEXT[];
   v_sns_links JSONB;
 BEGIN
@@ -611,6 +677,80 @@ BEGIN
       USING ERRCODE = '22023';
   END IF;
 
+  IF v_job_group IS NOT NULL AND CHAR_LENGTH(v_job_group) > 50 THEN
+    RAISE EXCEPTION 'job group must contain at most 50 characters'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF v_gender IS NULL OR v_gender NOT IN ('male', 'female') THEN
+    RAISE EXCEPTION 'gender must be male or female'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF v_age_range IS NULL
+     OR v_age_range NOT IN ('10s', '20s', '30s', '40s', '50s', '60s_plus') THEN
+    RAISE EXCEPTION 'age range must be one of the supported buckets'
+      USING ERRCODE = '22023';
+  END IF;
+
+  SELECT COALESCE(
+    ARRAY_AGG(BTRIM(device.value) ORDER BY device.ordinality),
+    '{}'::TEXT[]
+  )
+  INTO v_devices
+  FROM UNNEST(COALESCE(p_devices, '{}'::TEXT[]))
+    WITH ORDINALITY AS device(value, ordinality)
+  WHERE BTRIM(device.value) <> '';
+
+  -- 주 사용기기는 선택 항목이라 빈 배열을 허용하고, 값이 있으면 목록 안에 있어야 한다.
+  IF CARDINALITY(v_devices) > 4 THEN
+    RAISE EXCEPTION 'devices must contain at most 4 values'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM UNNEST(v_devices) AS device(value)
+    WHERE device.value NOT IN ('ios', 'android', 'mac', 'windows')
+  )
+  OR (
+    SELECT COUNT(*) FROM UNNEST(v_devices) AS device(value)
+  ) <> (
+    SELECT COUNT(DISTINCT device.value) FROM UNNEST(v_devices) AS device(value)
+  ) THEN
+    RAISE EXCEPTION 'devices contain unsupported or duplicate values'
+      USING ERRCODE = '22023';
+  END IF;
+
+  -- 다뤄본 툴/관심 기술은 선택 항목이며, 제작자 모집글의 tech_tags 와 같은 규칙을 쓴다.
+  SELECT COALESCE(
+    ARRAY_AGG(BTRIM(tag.value) ORDER BY tag.ordinality),
+    '{}'::TEXT[]
+  )
+  INTO v_tool_tags
+  FROM UNNEST(COALESCE(p_tool_tags, '{}'::TEXT[]))
+    WITH ORDINALITY AS tag(value, ordinality)
+  WHERE BTRIM(tag.value) <> '';
+
+  IF CARDINALITY(v_tool_tags) > 10 THEN
+    RAISE EXCEPTION 'tool tags must contain at most 10 values'
+      USING ERRCODE = '22023';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM UNNEST(v_tool_tags) AS tag(value)
+    WHERE CHAR_LENGTH(tag.value) > 40 OR tag.value LIKE '#%'
+  )
+  OR (
+    SELECT COUNT(*) FROM UNNEST(v_tool_tags) AS tag(value)
+  ) <> (
+    SELECT COUNT(DISTINCT LOWER(tag.value)) FROM UNNEST(v_tool_tags) AS tag(value)
+  ) THEN
+    RAISE EXCEPTION 'tool tags contain oversized, prefixed, or duplicate values'
+      USING ERRCODE = '22023';
+  END IF;
+
   SELECT COALESCE(
     ARRAY_AGG(BTRIM(interest.value) ORDER BY interest.ordinality),
     '{}'::TEXT[]
@@ -674,6 +814,11 @@ BEGIN
   SET
     nickname = v_nickname,
     bio = v_bio,
+    job_group = v_job_group,
+    gender = v_gender,
+    age_range = v_age_range,
+    devices = v_devices,
+    tool_tags = v_tool_tags,
     interests = v_interests,
     sns_links = v_sns_links,
     onboarding_completed_version =
@@ -692,18 +837,18 @@ $$;
 REVOKE ALL ON FUNCTION public.get_my_account_state()
   FROM PUBLIC, anon, authenticated;
 REVOKE ALL ON FUNCTION public.complete_my_onboarding(
-  TEXT, TEXT[], TEXT, JSONB, UUID[]
+  TEXT, TEXT[], TEXT, JSONB, UUID[], TEXT, TEXT, TEXT, TEXT[], TEXT[]
 ) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.get_my_account_state()
   TO authenticated;
 GRANT EXECUTE ON FUNCTION public.complete_my_onboarding(
-  TEXT, TEXT[], TEXT, JSONB, UUID[]
+  TEXT, TEXT[], TEXT, JSONB, UUID[], TEXT, TEXT, TEXT, TEXT[], TEXT[]
 ) TO authenticated;
 
 COMMENT ON FUNCTION public.get_my_account_state() IS
   'Returns the authenticated account routing state without exposing it through public profile grants.';
 COMMENT ON FUNCTION public.complete_my_onboarding(
-  TEXT, TEXT[], TEXT, JSONB, UUID[]
+  TEXT, TEXT[], TEXT, JSONB, UUID[], TEXT, TEXT, TEXT, TEXT[], TEXT[]
 ) IS
   'Completes profile onboarding only after current required terms have been accepted.';
 

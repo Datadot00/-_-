@@ -31,7 +31,10 @@ const expectedMigrations = [
   '20260914193000_add_terms_and_user_consent_history.sql',
   '20260914200000_prepare_terms_gate.sql',
   '20260914203000_add_account_state_and_onboarding_rpcs.sql',
-  '20260915090000_require_terms_before_onboarding.sql'
+  '20260915090000_require_terms_before_onboarding.sql',
+  '20260915120000_add_job_group_to_onboarding.sql',
+  '20260915140000_add_demographics_to_onboarding.sql',
+  '20260915160000_add_tool_tags_to_onboarding.sql'
 ];
 
 test('로컬 마이그레이션 파일명은 운영 DB 버전 순서와 일치한다', () => {

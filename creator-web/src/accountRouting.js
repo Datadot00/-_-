@@ -57,6 +57,11 @@ export function normalizeAccountState(payload, { configured = true } = {}) {
       profile: {
         nickname: '',
         bio: '',
+      jobGroup: '',
+      gender: '',
+      ageRange: '',
+      devices: [],
+      toolTags: [],
         interests: [],
         snsLinks: []
       }
@@ -101,6 +106,15 @@ export function normalizeAccountState(payload, { configured = true } = {}) {
     profile: {
       nickname: String(profile.nickname || ''),
       bio: String(profile.bio || ''),
+    jobGroup: String(profile.job_group || ''),
+    gender: String(profile.gender || ''),
+    ageRange: String(profile.age_range || ''),
+    devices: Array.isArray(profile.devices)
+      ? profile.devices.map(value => String(value))
+      : [],
+    toolTags: Array.isArray(profile.tool_tags)
+      ? profile.tool_tags.map(value => String(value))
+      : [],
       interests: Array.isArray(profile.interests)
         ? profile.interests.map(value => String(value))
         : [],

@@ -17,9 +17,9 @@ import {
 } from './termsGate.js';
 import { routeAuthenticatedAccount } from './accountRouting.js';
 import {
-  closeOnboardingGate,
-  showOnboardingGateIfRequired
-} from './onboardingGate.js';
+  closeOnboardingWizard,
+  showOnboardingWizard
+} from './onboardingWizard.js';
 
 const PASSWORD_RECOVERY_STORAGE_KEY = 'dondwae-password-recovery';
 const INACTIVITY_TIMEOUT_MS = 60 * 60 * 1000; // 1시간 (3,600,000ms)
@@ -454,11 +454,36 @@ async function continueThroughTermsGate(onReady, { recheckAfterAcceptance = fals
   return !blockedByTerms;
 }
 
+/**
+ * 가입 직후 계정은 약관 동의까지 위저드 1단계에서 처리하므로,
+ * 온보딩이 남아 있으면 단독 약관 모달 대신 위저드 하나로 흐름을 모은다.
+ */
+async function openOnboardingWizardFlow(state, onReady) {
+  closeTermsConsentGate();
+  pendingOnboardingAccountState = state;
+  window.dispatchEvent(new CustomEvent('dondwae:onboarding-required', {
+    detail: state
+  }));
+
+  const opened = await showOnboardingWizard(supabase, state, {
+    onCompleted: () => routeAfterAuthentication(onReady)
+  });
+  if (opened) return;
+
+  // 위저드를 열 수 없는 환경이면 최소한 안내는 남긴다.
+  navigateTo('login');
+  setAuthMode('login', { force: true });
+  showAuthMessage(
+    'success',
+    '이메일 인증이 완료되었습니다. 온보딩 정보를 입력하면 서비스를 시작할 수 있습니다.'
+  );
+}
+
 async function routeAfterAuthentication(onReady) {
   return routeAuthenticatedAccount(supabase, {
     verify_email: async (state) => {
       closeTermsConsentGate();
-      closeOnboardingGate();
+      closeOnboardingWizard();
       pendingOnboardingAccountState = null;
 
       const { error } = await supabase.auth.signOut({ scope: 'local' });
@@ -468,29 +493,13 @@ async function routeAfterAuthentication(onReady) {
       navigateTo('login');
       showEmailSentPanel(state.email, 'signup');
     },
-    onboarding: async (state) => {
-      closeTermsConsentGate();
-      pendingOnboardingAccountState = state;
-      window.dispatchEvent(new CustomEvent('dondwae:onboarding-required', {
-        detail: state
-      }));
-
-      const opened = await showOnboardingGateIfRequired(supabase, state, {
-        onCompleted: () => routeAfterAuthentication(onReady)
-      });
-      if (opened) return;
-
-      // 게이트를 열 수 없는 환경이면 최소한 안내는 남긴다.
-      navigateTo('login');
-      setAuthMode('login', { force: true });
-      showAuthMessage(
-        'success',
-        '이메일 인증이 완료되었습니다. 온보딩 정보를 입력하면 서비스를 시작할 수 있습니다.'
-      );
-    },
-    terms_review: () => continueThroughTermsGate(onReady, {
-      recheckAfterAcceptance: true
-    }),
+    onboarding: (state) => openOnboardingWizardFlow(state, onReady),
+    terms_review: (state) => (
+      // 온보딩까지 끝낸 기존 회원의 약관 개정 재동의는 단독 약관 모달을 그대로 쓴다.
+      state.onboarding.required
+        ? openOnboardingWizardFlow(state, onReady)
+        : continueThroughTermsGate(onReady, { recheckAfterAcceptance: true })
+    ),
     ready: async (state) => {
       pendingOnboardingAccountState = null;
       await onReady?.(state);
@@ -883,7 +892,7 @@ async function handleSignOut() {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     closeTermsConsentGate();
-    closeOnboardingGate();
+    closeOnboardingWizard();
     pendingOnboardingAccountState = null;
     clearPendingEmailConfirmation();
     applyAuthenticatedUser(null);
@@ -988,7 +997,7 @@ async function checkInactivityTimeout(silent = false) {
     }
     applyAuthenticatedUser(null);
     closeTermsConsentGate();
-    closeOnboardingGate();
+    closeOnboardingWizard();
     pendingOnboardingAccountState = null;
     clearPendingEmailConfirmation();
     localStorage.removeItem(LAST_ACTIVITY_KEY);
@@ -1067,7 +1076,7 @@ async function initializeAuthentication() {
       }
     } else {
       closeTermsConsentGate();
-      closeOnboardingGate();
+      closeOnboardingWizard();
       pendingOnboardingAccountState = null;
     }
 

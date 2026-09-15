@@ -237,6 +237,9 @@ test('회원가입부터 확인 링크·약관·온보딩·로그아웃·재로�
   const completed = await completeMyOnboarding(client, {
     nickname: '통합테스터',
     bio: '전체 가입 흐름 테스트 계정',
+    gender: 'male',
+    ageRange: '30s',
+    devices: ['android'],
     interests: ['생산성/업무도구', 'AI/개발도구'],
     snsLinks: ['https://example.com/flow']
   });

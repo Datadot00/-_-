@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 
 import { routeAuthenticatedAccount } from '../src/accountRouting.js';
 import { completeMyOnboarding } from '../src/onboardingService.js';
+import { installWizardDom } from './support/stubDom.js';
 
 // ── 가짜 Supabase 클라이언트 ────────────────────────────────────────────────
 // rpc 이름별로 응답을 주입하고, 실제로 어떤 호출이 나갔는지 기록한다.
@@ -163,6 +164,9 @@ test('온보딩 제출은 정규화된 프로필을 RPC로 보내고 갱신된 �
   const state = await completeMyOnboarding(client, {
     nickname: '  돈돼테스터  ',
     bio: '  안녕하세요  ',
+    gender: 'female',
+    ageRange: '20s',
+    devices: ['ios', 'windows'],
     interests: [' 핀테크/금융 ', 'AI/개발도구'],
     snsLinks: ['  https://portfolio.io  ', '']
   });
@@ -174,6 +178,9 @@ test('온보딩 제출은 정규화된 프로필을 RPC로 보내고 갱신된 �
   assert.equal(params.p_bio, '안녕하세요');
   assert.deepEqual(params.p_interests, ['핀테크/금융', 'AI/개발도구']);
   assert.deepEqual(params.p_sns_links, ['https://portfolio.io']);
+  assert.equal(params.p_gender, 'female');
+  assert.equal(params.p_age_range, '20s');
+  assert.deepEqual(params.p_devices, ['ios', 'windows']);
 
   // 완료 후 상태는 더 이상 온보딩을 요구하지 않아야 한다.
   assert.equal(state.nextStep, 'ready');
@@ -185,7 +192,9 @@ test('온보딩 입력이 규칙을 어기면 RPC를 호출하지 않는다', as
   const client = createFakeClient({ complete_my_onboarding: { data: null, error: null } });
 
   await assert.rejects(
-    () => completeMyOnboarding(client, { nickname: '돈돼', interests: [] }),
+    () => completeMyOnboarding(client, {
+      nickname: '돈돼', gender: 'male', ageRange: '20s', interests: []
+    }),
     /관심분야는 1개 이상/
   );
   assert.equal(client.calls.length, 0, '검증 실패 시 서버를 호출하면 안 된다');
@@ -232,98 +241,59 @@ test('알 수 없는 단계가 오면 조용히 통과시키지 않고 오류로
   );
 });
 
-// ── 4. 온보딩 게이트가 화면에서 실제로 열리고 닫히는지 ─────────────────────
+// ── 4. 온보딩 위저드가 화면에서 실제로 열리고 닫히는지 ─────────────────────
 // 브라우저 없이 확인하려고 최소한의 DOM 만 흉내 낸다.
-function installStubDom() {
-  const make = (className = '') => {
-    const classes = new Set(className.split(' ').filter(Boolean));
-    return {
-      value: '', textContent: '', disabled: false, attrs: {}, listeners: {},
-      classList: {
-        add: name => classes.add(name),
-        remove: name => classes.delete(name),
-        toggle: (name, on) => (on ? classes.add(name) : classes.delete(name))
-      },
-      get hidden() { return classes.has('hidden'); },
-      setAttribute(name, v) { this.attrs[name] = String(v); },
-      getAttribute(name) { return this.attrs[name] ?? null; },
-      addEventListener(type, fn) { (this.listeners[type] ||= []).push(fn); },
-      click() { (this.listeners.click || []).forEach(fn => fn()); },
-      focus() {},
-      dataset: {}
-    };
-  };
+const TERMS_SETTLED = {
+  requires_consent: false,
+  documents: [
+    {
+      id: 'doc-tos',
+      document_type: 'terms_of_service',
+      version: 'v1',
+      title: '이용약관',
+      content: '본문',
+      is_required: true,
+      is_accepted: true
+    }
+  ]
+};
 
-  const els = {};
-  ['edit-profile-modal', 'onboarding-notice', 'btn-complete-onboarding', 'onboarding-error']
-    .forEach(id => { els[id] = make('hidden'); });
-  ['profile-modal-title', 'profile-modal-subtitle', 'btn-profile-modal-dismiss',
-    'btn-profile-modal-cancel', 'btn-save-profile', 'profile-edit-nickname',
-    'profile-edit-bio', 'profile-edit-email', 'interest-chips-box']
-    .forEach(id => { els[id] = make(); });
-
-  const chips = ['핀테크/금융', 'AI/개발도구'].map(name => {
-    const chip = make();
-    chip.dataset.interest = name;
-    chip.setAttribute('aria-pressed', 'false');
-    return chip;
-  });
-  let snsInputs = [];
-
-  global.document = {
-    getElementById: id => els[id] || null,
-    querySelectorAll: selector => {
-      if (selector.includes('data-interest')) return chips;
-      if (selector.includes('data-profile-sns-link')) return snsInputs;
-      return [];
-    },
-    body: { classList: { add() {}, remove() {} } }
-  };
-  global.window = {
-    setTimeout: fn => fn(),
-    setInterestChipSelected: (btn, on) => btn.setAttribute('aria-pressed', String(on)),
-    renderProfileSnsLinks: links => {
-      snsInputs = links.map(link => { const i = make(); i.value = link; i.dataset.profileSnsLink = ''; return i; });
-    },
-    updateProfileInputCounts: () => {}
-  };
-  return { els, chips };
+async function importWizard() {
+  // 모듈 상태(현재 단계 등)를 테스트마다 초기화하려고 새 인스턴스를 받는다.
+  return import(`../src/onboardingWizard.js?t=${Math.random()}`);
 }
 
-test('온보딩이 필요한 계정에서는 프로필 폼이 온보딩 모드로 열린다', async () => {
-  const { els } = installStubDom();
-  const { showOnboardingGateIfRequired } = await import('../src/onboardingGate.js');
+test('온보딩이 필요한 계정에서는 전용 위저드가 열린다', async () => {
+  const dom = installWizardDom();
+  const client = createFakeClient({
+    get_my_terms_requirement_status: { data: TERMS_SETTLED, error: null }
+  });
+  const { showOnboardingWizard } = await importWizard();
 
-  const opened = await showOnboardingGateIfRequired(createFakeClient(), {
+  const opened = await showOnboardingWizard(client, {
     email: 'tester@dondwae.io',
     onboarding: { required: true },
     profile: { nickname: '기존닉', bio: '', interests: ['AI/개발도구'], snsLinks: [] }
   }, {});
 
   assert.equal(opened, true);
-  assert.equal(els['edit-profile-modal'].hidden, false);
-  assert.match(els['profile-modal-title'].textContent, /시작하기/);
-  assert.equal(els['onboarding-notice'].hidden, false);
-  assert.equal(els['btn-complete-onboarding'].hidden, false);
-  // 건너뛸 수 없어야 하므로 닫기·취소·일반 저장은 감춘다.
-  assert.equal(els['btn-profile-modal-dismiss'].hidden, true);
-  assert.equal(els['btn-profile-modal-cancel'].hidden, true);
-  assert.equal(els['btn-save-profile'].hidden, true);
+  assert.equal(dom.el('onboarding-wizard-modal').hidden, false);
+  // 프로필 수정 모달은 건드리지 않는다.
+  assert.equal(document.getElementById('edit-profile-modal'), null);
   // 기존 프로필 값이 채워져 있어야 한다.
-  assert.equal(els['profile-edit-nickname'].value, '기존닉');
-  assert.equal(els['profile-edit-email'].textContent, 'tester@dondwae.io');
+  assert.equal(dom.el('wizard-nickname').value, '기존닉');
+  const selectedChips = dom.el('wizard-interest-chips-box')
+    .querySelectorAll('[data-wizard-interest]')
+    .filter(chip => chip.getAttribute('aria-pressed') === 'true');
+  assert.deepEqual(selectedChips.map(chip => chip.dataset.wizardInterest), ['AI/개발도구']);
 });
 
-test('재로그인(온보딩 완료 계정)에서는 게이트가 열리지 않는다', async () => {
-  const { els } = installStubDom();
-  const { showOnboardingGateIfRequired } = await import('../src/onboardingGate.js');
+test('재로그인(온보딩 완료 계정)에서는 위저드가 닫힌 상태로 남는다', async () => {
+  const dom = installWizardDom();
+  const { closeOnboardingWizard } = await importWizard();
 
-  const opened = await showOnboardingGateIfRequired(createFakeClient(), {
-    email: 'tester@dondwae.io',
-    onboarding: { required: false, completedVersion: 1 },
-    profile: { nickname: '돈돼테스터', interests: ['핀테크/금융'] }
-  }, {});
+  // 라우팅이 ready 로 떨어지면 위저드를 열지 않고 닫아 둔다.
+  closeOnboardingWizard();
 
-  assert.equal(opened, false);
-  assert.equal(els['edit-profile-modal'].hidden, true, '모달이 열리면 안 된다');
+  assert.equal(dom.el('onboarding-wizard-modal').hidden, true, '모달이 열리면 안 된다');
 });
