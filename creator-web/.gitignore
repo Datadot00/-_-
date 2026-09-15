@@ -7,3 +7,6 @@ dist/
 !.env.example
 
 npm-debug.log*
+
+# Supabase CLI 로컬 임시 파일
+supabase/.temp/
