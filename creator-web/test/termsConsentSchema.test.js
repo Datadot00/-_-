@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 
 const migration = readFileSync(
   new URL(
@@ -52,4 +52,30 @@ test('terms visibility and consent history are restricted by RLS', () => {
     assert.match(sql, /Users view own term consent history/i);
     assert.match(sql, /auth\.uid\(\)\) = user_id/i);
   }
+});
+
+test('약관 본문 변경은 수정이 아니라 새 버전 발행으로만 한다', () => {
+  const migrationDir = new URL('../supabase/migrations/', import.meta.url);
+  const files = readdirSync(migrationDir).filter(file => file.endsWith('.sql'));
+
+  // 동의 이력이 있는 문서의 본문을 고치면 protect_consented_terms_document 가 막는다.
+  // 동의 기록이 "이 문장에 동의했다"를 증명해야 하므로 수정 대신 새 버전을 발행한다.
+  files.forEach(file => {
+    const sql = readFileSync(new URL(file, migrationDir), 'utf8');
+    const updatesContent = /UPDATE\s+public\.terms_documents[\s\S]*?SET[\s\S]{0,200}?\bcontent\s*=/i;
+    assert.doesNotMatch(sql, updatesContent, `${file} 이 약관 본문을 직접 수정한다`);
+  });
+
+  const republish = readFileSync(
+    new URL('20260915180000_publish_privacy_policy_v2.sql', migrationDir),
+    'utf8'
+  );
+  assert.match(republish, /INSERT INTO public\.terms_documents/i);
+  assert.match(republish, /'draft-2026-09-15'/);
+  // 이전 버전은 지우지 않고 회수만 한다. 지우면 동의 이력이 가리킬 대상이 사라진다.
+  assert.match(republish, /SET retired_at = NOW\(\)/i);
+  assert.doesNotMatch(republish, /DELETE FROM public\.terms_documents/i);
+  // 새 수집 항목이 실제로 표에 들어가 있어야 한다.
+  assert.match(republish, /관심사, 성별, 연령대/);
+  assert.match(republish, /직업군, 주 사용기기/);
 });
