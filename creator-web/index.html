@@ -5299,8 +5299,14 @@
       if (/insufficient_funds|not enough coin|코인이 부족/.test(combined)) {
         return { id: 'COIN-001', message: '보유하신 돼지코인이 부족합니다.', formatted: '[COIN-001] 보유하신 돼지코인이 부족합니다.' };
       }
-      if (/already_applied|이미 참여/.test(combined)) {
+      if (/already[_\s]*participat|already_applied|already[_\s]*submitted|이미 참여/.test(combined)) {
         return { id: 'PART-001', message: '이미 참여를 완료한 테스트입니다.', formatted: '[PART-001] 이미 참여를 완료한 테스트입니다.' };
+      }
+      if (/creator[_\s]*cannot[_\s]*(?:participate|apply)|creator_cannot_apply/.test(combined)) {
+        return { id: 'PART-002', message: '본인이 등록한 프로젝트에는 참여할 수 없습니다.', formatted: '[PART-002] 본인이 등록한 프로젝트에는 참여할 수 없습니다.' };
+      }
+      if (/capacity[_\s]*reached|closed_project|모집이 마감/.test(combined)) {
+        return { id: 'PART-003', message: '모집이 마감되었거나 종료된 테스트입니다.', formatted: '[PART-003] 모집이 마감되었거나 종료된 테스트입니다.' };
       }
       if (/quiz answers? (?:are|is) required|quiz answer is incorrect|quiz configuration is invalid|검증 퀴즈/.test(combined)) {
         return { id: 'PART-004', message: '검증 퀴즈 답변이 올바르지 않거나 입력되지 않았습니다.', formatted: '[PART-004] 검증 퀴즈 답변이 올바르지 않거나 입력되지 않았습니다.' };
@@ -9862,21 +9868,67 @@
           return;
         }
 
+        // 1. DB 참여 레코드 보장 (미참여 시 자동 등록)
+        try {
+          await ensureDatabaseParticipation(pId);
+        } catch (partErr) {
+          const errMsg = String(partErr?.message || '');
+          if (/creator[_\s]*cannot[_\s]*(?:participate|apply)|creator_cannot_apply/i.test(errMsg)) {
+            showGenericToast('본인이 등록한 프로젝트는 테스트 참여 및 리워드 지급 대상이 아닙니다.', 'ℹ️');
+            clearInternalMissionDraft(pId);
+            internalMissionAnswers = null;
+            selectedInternalVoteOption = null;
+            navigateTo('explore');
+            return;
+          }
+          if (!/already[_\s]*participat/i.test(errMsg)) {
+            console.warn('[Don Dwae DB] ensureDatabaseParticipation pre-check:', partErr);
+          }
+        }
+
         const submittedAnswers = {
           selected_option: selectedInternalVoteOption,
           review_text: '내부 시안 투표 참여 완료',
           ...(collected?.question_answers ? { question_answers: collected.question_answers } : {})
         };
 
-        const result = await window.donDwaeDataService.submitProjectReview({
-          projectId: pId,
-          rating: 5,
-          reuseIntention: true,
-          answers: submittedAnswers,
-          quizAnswers: {},
-          isQuizPassed: true,
-          screenshotUrl: null
-        });
+        let result;
+        try {
+          result = await window.donDwaeDataService.submitProjectReview({
+            projectId: pId,
+            rating: 5,
+            reuseIntention: true,
+            answers: submittedAnswers,
+            quizAnswers: {},
+            isQuizPassed: true,
+            screenshotUrl: null
+          });
+        } catch (subErr) {
+          const subMsg = String(subErr?.message || '');
+          if (/already[_\s]*submitted|already[_\s]*participat/i.test(subMsg) || subErr?.code === '23505') {
+            showGenericToast('이미 참여 및 리워드 지급이 완료된 투표입니다.', '✓');
+            clearInternalMissionDraft(pId);
+            internalMissionAnswers = null;
+            selectedInternalVoteOption = null;
+            navigateTo('explore');
+            return;
+          }
+          if (/active participation not found/i.test(subMsg)) {
+            // participation 레코드 누락 시 1회 즉시 생성 후 재시도
+            await ensureDatabaseParticipation(pId);
+            result = await window.donDwaeDataService.submitProjectReview({
+              projectId: pId,
+              rating: 5,
+              reuseIntention: true,
+              answers: submittedAnswers,
+              quizAnswers: {},
+              isQuizPassed: true,
+              screenshotUrl: null
+            });
+          } else {
+            throw subErr;
+          }
+        }
 
         const reward = Number(result?.reward_amount || 0);
         const walletTotal = Number(result?.wallet_total || 0);

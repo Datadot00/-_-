@@ -89,9 +89,9 @@ const ERROR_RULES = [
   { pattern: /insufficient_funds|not enough coin|코인이 부족/i, code: 'COIN_INSUFFICIENT' },
 
   // Participation
-  { pattern: /already_applied|이미 참여/i, code: 'PART_ALREADY_APPLIED' },
-  { pattern: /creator_cannot_apply/i, code: 'PART_CREATOR_CANNOT_APPLY' },
-  { pattern: /closed_project|모집이 마감/i, code: 'PART_RECRUITMENT_CLOSED' },
+  { pattern: /already[_\s]*participat|already_applied|already[_\s]*submitted|이미 참여/i, code: 'PART_ALREADY_APPLIED' },
+  { pattern: /creator[_\s]*cannot[_\s]*(?:participate|apply)|creator_cannot_apply/i, code: 'PART_CREATOR_CANNOT_APPLY' },
+  { pattern: /capacity[_\s]*reached|closed_project|모집이 마감/i, code: 'PART_RECRUITMENT_CLOSED' },
   { pattern: /quiz answers? (?:are|is) required|quiz answer is incorrect|quiz configuration is invalid|검증 퀴즈/i, code: 'PART_QUIZ_FAILED' },
   { pattern: /screenshot is required/i, code: 'PART_SCREENSHOT_REQUIRED' },
   { pattern: /screenshot URL is invalid|스크린샷.*(?:2MB|용량)/i, code: 'PART_SCREENSHOT_TOO_LARGE' }
