@@ -24,9 +24,10 @@ test('게이팅 검사는 캐시된 값이 아니라 서버 프로필로 확인�
 });
 
 test('자격 미달이면 폼을 초기화하지 않고 서약 모달로 되돌린다', () => {
-  const gate = html.slice(
-    html.indexOf("if (viewKey === 'create' && !preserveProjectEdit"),
-    html.indexOf("      if (viewKey === 'create') {\n        if (!preserveProjectEdit)")
+  const normalizedHtml = html.replace(/\r\n/g, '\n');
+  const gate = normalizedHtml.slice(
+    normalizedHtml.indexOf("if (viewKey === 'create' && !preserveProjectEdit"),
+    normalizedHtml.indexOf("      if (viewKey === 'create') {\n        if (!preserveProjectEdit)")
   );
   // resetCreateProjectForm 은 관문을 통과한 뒤에만 실행돼야 한다.
   assert.doesNotMatch(gate, /resetCreateProjectForm\(\)/);

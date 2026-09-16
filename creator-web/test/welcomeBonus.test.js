@@ -15,8 +15,8 @@ test('환영 보너스는 원장에 별도 타입으로 남는다', () => {
   assert.match(migration, /coin_transactions_direction_valid[\s\S]*?welcome_bonus'\]\) and amount > 0/);
 });
 
-test('지급액은 100 코인이다', () => {
-  assert.match(migration, /v_welcome_bonus constant integer := 100;/);
+test('지급액은 500 코인이다', () => {
+  assert.match(migration, /v_welcome_bonus constant integer := 500;/);
 });
 
 test('게이팅을 처음 통과한 순간에만 지급한다', () => {

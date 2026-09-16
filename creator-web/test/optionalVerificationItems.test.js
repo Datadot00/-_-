@@ -71,3 +71,23 @@ test('내부 시안 투표 화면은 선택 이유 작성란이 없고 완료 �
   assert.match(html, /투표 완료하고 리워드 받기 →/);
 });
 
+test('상점은 스타벅스/CU 기프티콘을 제외하고 바이브코더 초보자용 정보성 디지털 상품으로 구성된다', () => {
+  // 스타벅스 및 CU 관련 상품명 미노출
+  assert.doesNotMatch(html, /스타벅스 아이스 아메리카노/);
+  assert.doesNotMatch(html, /스타벅스 아메리카노 Tall/);
+  assert.doesNotMatch(html, /CU 모바일 기프티콘/);
+
+  // 4대 카테고리 필터 탭
+  assert.match(html, /⚡ 프롬프트 템플릿/);
+  assert.match(html, /📑 노션 템플릿/);
+  assert.match(html, /🛠️ 툴 비교\/세팅 가이드/);
+  assert.match(html, /📈 부업 리서치 자료/);
+
+  // 실제 정보성 상품 아이템
+  assert.match(html, /바이브코더 입문용 AI 프롬프트 템플릿 패키지/);
+  assert.match(html, /1인 창업 & MVP 프로젝트 관리 노션 템플릿/);
+  assert.match(html, /v0 vs Cursor vs Windsurf 완벽 비교 & 초보자 세팅 가이드/);
+  assert.match(html, /바이브코더 부업 리서치 자료집 \(이모티콘·펀딩·프리랜서\)/);
+});
+
+

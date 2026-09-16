@@ -1,4 +1,4 @@
--- 테스트 3회 완료 환영 이벤트: 100 코인 지급
+-- 테스트 3회 게이팅 완료 초반 가입 보너스: 500 코인 지급
 --
 -- 게이팅을 처음 통과하는 순간 한 번만 지급한다. 지급은 원장
 -- (coin_transactions) 에 남기고 지갑은 원장에 맞춰 올린다. 잔액만 올리면
@@ -45,7 +45,7 @@ security definer
 set search_path to ''
 as $function$
 declare
-  v_welcome_bonus constant integer := 100;
+  v_welcome_bonus constant integer := 500;
   v_user_id uuid := auth.uid();
   v_participation_id uuid;
   v_participation_status text;
@@ -185,7 +185,7 @@ begin
       v_welcome_bonus,
       'earned',
       'welcome_bonus',
-      '[환영 이벤트] 테스트 3회 완료 보너스',
+      '[가입 보너스] 테스트 3회 게이팅 완료 보너스',
       'review',
       v_review_id
     );
