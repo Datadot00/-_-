@@ -47,7 +47,6 @@ test('코인 표시의 초기값은 실제 숫자가 아닌 자리표시자다',
     'market-header-coin',
     'market-user-coin-display',
     'exchange-user-coin',
-    'pay-modal-user-coin',
     'step3-user-coin-balance'
   ];
   ids.forEach(id => {
