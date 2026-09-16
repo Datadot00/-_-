@@ -2407,29 +2407,48 @@
                   콘텐츠 입력 방식 선택 <span class="text-red-500">*</span>
                 </label>
                 <div class="grid grid-cols-2 gap-3 text-center text-xs">
-                  <button type="button" id="btn-vote-input-mode-image" disabled
-                    class="py-2.5 px-4 rounded-xl border border-neutral-200 bg-neutral-100 text-neutral-400 font-bold cursor-not-allowed flex items-center justify-center gap-1.5"
-                    title="이미지 저장소 연결 후 제공될 예정입니다.">
-                    <span>🖼️</span> <span>이미지 직접 업로드 (준비 중)</span>
+                  <button type="button" id="btn-vote-input-mode-image" onclick="setVoteInputMode('image')"
+                    class="py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>🖼️</span> <span>이미지 직접 업로드 (A/B)</span>
                   </button>
                   <button type="button" id="btn-vote-input-mode-url" onclick="setVoteInputMode('url')"
-                    class="py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    class="py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5">
                     <span>🔗</span> <span>시안·이미지 URL (A/B)</span>
                   </button>
                 </div>
               </div>
 
-              <!-- 콘텐츠 추가 UI (최대 4개) -->
+              <!-- A/B 콘텐츠 추가 UI -->
               <div class="flex flex-col gap-3">
-                <div id="vote-image-input-container" class="hidden flex-col gap-3">
-                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
-                    <span class="text-xs font-extrabold text-neutral-dark">이미지 다중 업로드 (최대 4개)</span>
-                    <input id="input-vote-multi-images" type="file" multiple accept="image/*" disabled
-                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-[#FAFAFA]" />
+                <div id="vote-image-input-container" class="flex flex-col gap-3">
+                  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div class="rounded-xl border border-neutral-200 bg-white p-4">
+                      <label for="input-vote-image-a" class="mb-2 block text-xs font-extrabold text-primary-dark">A안 이미지 <span class="text-red-500">*</span></label>
+                      <input id="input-vote-image-a" type="file" accept="image/png,image/jpeg,image/webp,image/gif"
+                        onchange="handleVoteImageSelected('A', this)"
+                        class="w-full rounded-lg border border-neutral-200 bg-[#FAFAFA] p-2.5 text-xs" />
+                      <div id="vote-image-preview-a" class="mt-3 hidden rounded-xl border border-[#DCE4B8] bg-[#F4F9EE] p-2">
+                        <img id="vote-image-preview-img-a" alt="A안 업로드 미리보기" class="h-40 w-full rounded-lg object-contain" />
+                        <p id="vote-image-preview-name-a" class="mt-2 truncate text-[10px] font-semibold text-neutral-500"></p>
+                      </div>
+                    </div>
+                    <div class="rounded-xl border border-neutral-200 bg-white p-4">
+                      <label for="input-vote-image-b" class="mb-2 block text-xs font-extrabold text-secondary-wine">B안 이미지 <span class="text-red-500">*</span></label>
+                      <input id="input-vote-image-b" type="file" accept="image/png,image/jpeg,image/webp,image/gif"
+                        onchange="handleVoteImageSelected('B', this)"
+                        class="w-full rounded-lg border border-neutral-200 bg-[#FAFAFA] p-2.5 text-xs" />
+                      <div id="vote-image-preview-b" class="mt-3 hidden rounded-xl border border-[#F2D4DD] bg-[#FFF7FA] p-2">
+                        <img id="vote-image-preview-img-b" alt="B안 업로드 미리보기" class="h-40 w-full rounded-lg object-contain" />
+                        <p id="vote-image-preview-name-b" class="mt-2 truncate text-[10px] font-semibold text-neutral-500"></p>
+                      </div>
+                    </div>
                   </div>
+                  <p class="text-[11px] font-medium leading-5 text-neutral-500">
+                    PNG, JPG, WEBP, GIF · 파일당 최대 5MB. 게시 시 안전한 이미지 저장소에 업로드됩니다.
+                  </p>
                 </div>
 
-                <div id="vote-url-input-container" class="flex flex-col gap-3">
+                <div id="vote-url-input-container" class="hidden flex-col gap-3">
                   <div id="vote-url-list" class="space-y-2.5">
                     <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
                       <span class="text-xs font-bold text-neutral-500 shrink-0">항목 1</span>
@@ -2774,7 +2793,7 @@
             <div>
               <label class="block text-xs font-bold text-neutral-dark mb-1">모집인원 (명) <span
                   class="text-red-500">*</span></label>
-              <input id="input-target-count" type="number" value="0" min="30" required
+              <input id="input-target-count" type="number" value="0" min="1" step="1" required
                 class="w-full p-3 rounded-xl border border-neutral-200 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-primary/60"
                 oninput="calculateTotalCost()" />
             </div>
@@ -2951,7 +2970,7 @@
             <div class="flex items-center gap-2 bg-white rounded-xl border border-[#E1DBB0] px-4 py-2.5 shadow-2xs">
               <img src="../logo-coin.png" alt="돼지코인" class="w-5 h-5 object-contain"
                 onerror="this.onerror=null; this.src='./logo-coin.png';" />
-              <input id="input-reward-coin" type="number" value="70" min="10" step="10" required
+              <input id="input-reward-coin" type="number" value="70" min="0" step="1" required
                 class="flex-1 font-bold text-lg text-neutral-dark focus:outline-none" oninput="calculateTotalCost()" />
               <span class="text-xs font-semibold text-neutral-muted">돼지코인</span>
             </div>
@@ -5916,7 +5935,7 @@
                     <span class="font-bold text-neutral-700">참여 <strong>${currentCount}/${targetCount}명</strong></span>
                     <div class="w-28 h-2 bg-neutral-100 rounded-full overflow-hidden"><div class="h-full bg-[#B4E380]" style="width:${progress}%"></div></div>
                     <span class="font-extrabold text-emerald-700 text-[11px]">${progress}%</span>
-                    <span class="font-black text-[#D97706] text-xs">🪙 ${Number(project.reward_coin || 0).toLocaleString()} C / 명</span>
+                    <span class="font-black text-[#D97706] text-xs">🪙 ${Number(project.reward_coin ?? 0).toLocaleString()} C / 명</span>
                   </div>
                 </div>
               </div>
@@ -7307,10 +7326,32 @@
         }
 
         if (currentMainCategory === 'vote') {
-          const voteUrlInputs = Array.from(document.querySelectorAll('#vote-url-list input[type="url"]'));
-          const validVoteUrls = voteUrlInputs.filter(input => isValidCreateStepUrl(input.value));
-          if (validVoteUrls.length < 2) {
-            return showCreateStepValidationError(2, voteUrlInputs.find(input => !input.value.trim()) || voteUrlInputs[0], 'A안과 B안 URL을 모두 올바르게 입력해 주세요.');
+          if (currentVoteInputMode === 'image') {
+            const dataService = window.donDwaeDataService;
+            for (const optionKey of ['A', 'B']) {
+              const key = optionKey.toLowerCase();
+              const input = document.getElementById(`input-vote-image-${key}`);
+              const file = input?.files?.[0];
+              const existingStorageUrl = dataService?.isVoteImageStorageUrl(existingVoteImageUrls[optionKey])
+                ? existingVoteImageUrls[optionKey]
+                : '';
+              if (!file && !existingStorageUrl) {
+                return showCreateStepValidationError(2, input, `${optionKey}안 이미지를 선택해 주세요.`);
+              }
+              if (file) {
+                try {
+                  dataService?.validateVoteImageFile(file);
+                } catch (error) {
+                  return showCreateStepValidationError(2, input, error?.message || `${optionKey}안 이미지 파일을 확인해 주세요.`);
+                }
+              }
+            }
+          } else {
+            const voteUrlInputs = Array.from(document.querySelectorAll('#vote-url-list input[type="url"]'));
+            const validVoteUrls = voteUrlInputs.filter(input => isValidCreateStepUrl(input.value));
+            if (validVoteUrls.length < 2) {
+              return showCreateStepValidationError(2, voteUrlInputs.find(input => !input.value.trim()) || voteUrlInputs[0], 'A안과 B안 URL을 모두 올바르게 입력해 주세요.');
+            }
           }
           const voteQuestionInputs = Array.from(document.querySelectorAll('#vote-questions-list input[type="text"]'));
           if (!voteQuestionInputs.some(input => input.value.trim())) {
@@ -7400,11 +7441,13 @@
         }
         if (!durationSelect?.value) return showCreateStepValidationError(3, durationSelect, '예상 소요 시간을 선택해 주세요.');
         const minimumTarget = Number(targetCountInput?.min || 1);
-        if (!targetCountInput?.value || Number(targetCountInput.value) < minimumTarget) {
+        const targetCount = Number(targetCountInput?.value);
+        if (!targetCountInput?.value || !Number.isInteger(targetCount) || targetCount < minimumTarget) {
           return showCreateStepValidationError(3, targetCountInput, `모집인원은 ${minimumTarget}명 이상 입력해 주세요.`);
         }
         const minimumReward = Number(rewardInput?.min || 0);
-        if (!rewardInput?.value || Number(rewardInput.value) < minimumReward) {
+        const rewardCoin = Number(rewardInput?.value);
+        if (!rewardInput?.value || !Number.isInteger(rewardCoin) || rewardCoin < minimumReward) {
           return showCreateStepValidationError(3, rewardInput, `1인당 보상은 ${minimumReward}돼지코인 이상 입력해 주세요.`);
         }
         return true;
@@ -7535,7 +7578,7 @@
               endDate: dbP.end_date,
               targetCount: dbP.target_count || 10,
               currentRecruits: dbP.current_count || 0,
-              rewardCoin: dbP.reward_coin || 500,
+              rewardCoin: dbP.reward_coin ?? 500,
               techTags: (dbP.tech_tags && Array.isArray(dbP.tech_tags)) ? dbP.tech_tags : [],
               personaTags: (dbP.target_persona_tags && Array.isArray(dbP.target_persona_tags)) ? dbP.target_persona_tags : [],
               questions: typeof dbP.questions === 'string' ? JSON.parse(dbP.questions) : (dbP.questions || []),
@@ -7663,19 +7706,21 @@
 
       // 모집인원: 수정 가능 (단, 기존 모집인원 미만으로는 축소 불가)
       if (targetCountInput) {
-        targetCountInput.value = test.targetCount || 30;
+        const existingTargetCount = Number(test.targetCount ?? 1);
+        targetCountInput.value = existingTargetCount;
         targetCountInput.disabled = false;
-        targetCountInput.min = test.targetCount || 30;
-        targetCountInput.title = `기존 모집인원(${test.targetCount || 30}명) 이상으로 상향 조절이 가능합니다.`;
+        targetCountInput.min = existingTargetCount;
+        targetCountInput.title = `기존 모집인원(${existingTargetCount}명) 이상으로 상향 조절이 가능합니다.`;
         targetCountInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
 
       // 1인당 보상 돼지코인: 수정 가능 (단, 기존 보상 미만으로는 삭감 불가)
       if (rewardCoinInput) {
-        rewardCoinInput.value = test.rewardCoin || 50;
+        const existingRewardCoin = Number(test.rewardCoin ?? 0);
+        rewardCoinInput.value = existingRewardCoin;
         rewardCoinInput.disabled = false;
-        rewardCoinInput.min = test.rewardCoin || 50;
-        rewardCoinInput.title = `기존 1인당 보상(${test.rewardCoin || 50}돼지코인) 이상으로 상향 설정 가능합니다.`;
+        rewardCoinInput.min = existingRewardCoin;
+        rewardCoinInput.title = `기존 1인당 보상(${existingRewardCoin}돼지코인) 이상으로 상향 설정 가능합니다.`;
         rewardCoinInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
 
@@ -7771,7 +7816,23 @@
       }
 
       if (editableCategory === 'vote') {
-        setVoteInputMode('url');
+        resetVoteImageInputs();
+        existingVoteImageUrls.A = test.abUrlA || test.serviceUrl || '';
+        existingVoteImageUrls.B = test.abUrlB || '';
+        const usesStoredVoteImages = ['A', 'B'].every(optionKey => (
+          window.donDwaeDataService?.isVoteImageStorageUrl(existingVoteImageUrls[optionKey])
+        ));
+        setVoteInputMode(usesStoredVoteImages ? 'image' : 'url');
+        if (usesStoredVoteImages) {
+          setVoteImagePreview('A', existingVoteImageUrls.A, '기존 저장 A안 이미지');
+          setVoteImagePreview('B', existingVoteImageUrls.B, '기존 저장 B안 이미지');
+        }
+        ['A', 'B'].forEach(optionKey => {
+          const imageInput = document.getElementById(`input-vote-image-${optionKey.toLowerCase()}`);
+          if (imageInput) imageInput.disabled = hasApplicants;
+        });
+        setVoteInputModeLocked(hasApplicants);
+
         const voteUrlList = document.getElementById('vote-url-list');
         if (voteUrlList) {
           voteUrlList.innerHTML = '';
@@ -8310,7 +8371,7 @@
         typeTag.className = 'px-3 py-1 rounded-md bg-[#EDF8E5] text-[#2F6517] text-xs font-bold border border-[#2F6517]/20';
       }
       if (timeTag) timeTag.innerHTML = `⏱️ 소요시간: 약 ${test.duration || '3분'}`;
-      if (rewardTag) rewardTag.innerHTML = `🪙 ${test.reward_coin || 500} 돼지코인`;
+      if (rewardTag) rewardTag.innerHTML = `🪙 ${test.reward_coin ?? 500} 돼지코인`;
       if (creatorName) creatorName.textContent = `제작자: ${creatorNick}`;
       if (creatorTools) creatorTools.innerHTML = isApp ? `📱 플랫폼: 모바일 앱 (iOS/Android)` : `🛠️ 플랫폼: ${test.platform || 'web'}`;
       if (creatorMeta) creatorMeta.innerHTML = `👥 모집 현황: ${test.current_count || 0}/${test.target_count || 10}명`;
@@ -8393,7 +8454,7 @@
               </div>
               <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
                 <span class="text-[10px] text-neutral-400 block mb-1">1인당 지급 돼지코인</span>
-                <span class="text-lg font-extrabold text-[#7E22CE]">${test.reward_coin || 500} 돼지코인</span>
+                <span class="text-lg font-extrabold text-[#7E22CE]">${test.reward_coin ?? 500} 돼지코인</span>
               </div>
             </div>
             <div class="w-full h-36 bg-[#F9FBEC] rounded-xl border border-[#DCE4B8] p-3 flex flex-col items-center justify-center text-center overflow-hidden">
@@ -8499,7 +8560,7 @@
       if (recruitsBar) recruitsBar.style.width = `${Math.max(percent, 4)}%`;
       if (regDate) regDate.textContent = test.created_at ? test.created_at.split('T')[0] : '2026-09-08';
       if (endDate) endDate.textContent = test.end_date || '2026-09-22';
-      if (rewardMeta) rewardMeta.innerHTML = `${test.reward_coin || 500} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인">`;
+      if (rewardMeta) rewardMeta.innerHTML = `${test.reward_coin ?? 500} <img src="../logo-coin.png" class="w-3.5 h-3.5 inline" alt="돼지코인">`;
 
       // 1. 참여 권장 대상 / 키워드 태그 바인딩 (기존 DB 필드 그대로 호환)
       const projectTargetTags = (test.target_persona_tags && Array.isArray(test.target_persona_tags) && test.target_persona_tags.length > 0)
@@ -8557,7 +8618,7 @@
       if (sideDuration) sideDuration.textContent = test.duration ? `약 ${test.duration}` : '약 3~5분';
 
       const sideRewardCoin = document.getElementById('post-reward-coin-num');
-      if (sideRewardCoin) sideRewardCoin.textContent = `${test.reward_coin || 500} C`;
+      if (sideRewardCoin) sideRewardCoin.textContent = `${test.reward_coin ?? 500} C`;
 
       // 5. 사이드바 '이런 분이면 딱이에요' 태그 바인딩 (기존 '사용 도구' 위치)
       const toolsRow = document.getElementById('post-side-tools-row');
@@ -9572,7 +9633,7 @@
             : project.platform === 'app' ? '📱' : project.category === 'survey' ? '📋' : '🖥️';
         }
         if (badge) badge.textContent = `[${categoryLabel}]`;
-        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin || 0).toLocaleString()} 돼지코인 수령`;
+        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin ?? 0).toLocaleString()} 돼지코인 수령`;
         if (title) title.textContent = project.service_name || project.title || '서비스 테스트';
         if (desc) desc.textContent = project.service_desc || project.test_notice || '안내 항목을 확인한 뒤 테스트를 시작해 주세요.';
 
@@ -9793,18 +9854,117 @@
       }
       const collected = collectInternalMissionAnswers();
       internalMissionAnswers = collected ? { projectId: String(pId), data: collected } : null;
+      saveInternalMissionDraft(pId, collected);
       showGenericToast('검증을 완료했습니다. 피드백 저장이 완료되면 리워드가 지급됩니다.', '✍️');
       openFeedbackWriteModal(pId);
     }
 
     function cancelInternalTestFlow() {
-      internalMissionAnswers = null;
-      selectedInternalVoteOption = null;
+      const pId = currentParticipatingPostId || currentPostId || '';
+      const collected = collectInternalMissionAnswers();
+      internalMissionAnswers = collected ? { projectId: String(pId), data: collected } : null;
+      if (collected) saveInternalMissionDraft(pId, collected);
+      else clearInternalMissionDraft(pId);
       navigateTo('post');
     }
 
     let internalMissionAnswers = null;
     let selectedInternalVoteOption = null;
+    const INTERNAL_MISSION_DRAFT_STORAGE_PREFIX = 'dondwae_internal_mission_draft';
+    const INTERNAL_MISSION_DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+    function getInternalMissionDraftStorageKey(projectId) {
+      const userId = String(window.currentAuthUserId || '').trim();
+      const normalizedProjectId = String(projectId || '').trim();
+      if (!userId || !isDatabaseProjectId(normalizedProjectId)) return '';
+      return `${INTERNAL_MISSION_DRAFT_STORAGE_PREFIX}:${userId}:${normalizedProjectId}`;
+    }
+
+    function normalizeInternalMissionDraftData(rawData) {
+      if (!rawData || typeof rawData !== 'object' || Array.isArray(rawData)) return null;
+
+      const normalized = {};
+      const selectedOption = String(rawData.selected_option || '').trim().toUpperCase();
+      if (/^[A-D]$/.test(selectedOption)) normalized.selected_option = selectedOption;
+
+      const voteReason = String(rawData.vote_reason || '').trim().slice(0, 2000);
+      if (voteReason) normalized.vote_reason = voteReason;
+
+      if (rawData.question_answers && typeof rawData.question_answers === 'object' && !Array.isArray(rawData.question_answers)) {
+        const questionAnswers = {};
+        Object.entries(rawData.question_answers).slice(0, 20).forEach(([question, answer]) => {
+          const normalizedQuestion = String(question || '').trim().slice(0, 300);
+          if (!normalizedQuestion) return;
+          if (Array.isArray(answer)) {
+            const answers = answer.map(value => String(value || '').trim().slice(0, 1000)).filter(Boolean).slice(0, 20);
+            if (answers.length > 0) questionAnswers[normalizedQuestion] = answers;
+          } else {
+            const normalizedAnswer = String(answer || '').trim().slice(0, 2000);
+            if (normalizedAnswer) questionAnswers[normalizedQuestion] = normalizedAnswer;
+          }
+        });
+        if (Object.keys(questionAnswers).length > 0) normalized.question_answers = questionAnswers;
+      }
+
+      return Object.keys(normalized).length > 0 ? normalized : null;
+    }
+
+    function saveInternalMissionDraft(projectId, rawData) {
+      const storageKey = getInternalMissionDraftStorageKey(projectId);
+      const data = normalizeInternalMissionDraftData(rawData);
+      if (!storageKey || !data) return false;
+
+      try {
+        sessionStorage.setItem(storageKey, JSON.stringify({
+          version: 1,
+          projectId: String(projectId),
+          userId: String(window.currentAuthUserId),
+          savedAt: Date.now(),
+          data
+        }));
+        return true;
+      } catch (error) {
+        console.warn('[Internal mission draft] Save failed:', error?.message || error);
+        return false;
+      }
+    }
+
+    function readInternalMissionDraft(projectId) {
+      const storageKey = getInternalMissionDraftStorageKey(projectId);
+      if (!storageKey) return null;
+
+      try {
+        const storedValue = sessionStorage.getItem(storageKey);
+        if (!storedValue) return null;
+        const draft = JSON.parse(storedValue);
+        const isExpired = !Number.isFinite(Number(draft?.savedAt))
+          || Number(draft.savedAt) > Date.now()
+          || Date.now() - Number(draft.savedAt) > INTERNAL_MISSION_DRAFT_MAX_AGE_MS;
+        const isMismatched = String(draft?.projectId || '') !== String(projectId)
+          || String(draft?.userId || '') !== String(window.currentAuthUserId || '');
+        if (isExpired || isMismatched) {
+          sessionStorage.removeItem(storageKey);
+          return null;
+        }
+        return normalizeInternalMissionDraftData(draft.data);
+      } catch (error) {
+        try {
+          sessionStorage.removeItem(storageKey);
+        } catch (storageError) {}
+        console.warn('[Internal mission draft] Restore failed:', error?.message || error);
+        return null;
+      }
+    }
+
+    function clearInternalMissionDraft(projectId) {
+      const storageKey = getInternalMissionDraftStorageKey(projectId);
+      if (!storageKey) return;
+      try {
+        sessionStorage.removeItem(storageKey);
+      } catch (error) {
+        console.warn('[Internal mission draft] Clear failed:', error?.message || error);
+      }
+    }
 
     const INTERNAL_VOTE_CARD_SELECTED_CLASS = 'border-2 border-[#2F6517] bg-[#FAFBF7] rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-subtle hover:shadow-md transition-all relative';
     const INTERNAL_VOTE_CARD_IDLE_CLASS = 'border border-neutral-200 bg-white rounded-2xl p-4 flex flex-col gap-3 cursor-pointer shadow-2xs hover:border-neutral-300 transition-all relative';
@@ -9892,6 +10052,38 @@
         </label>`;
     }
 
+    function renderFeedbackSelectedVotePreview(project, selectedOption) {
+      const normalizedOption = String(selectedOption || '').trim().toUpperCase();
+      const selected = getInternalVoteOptions(project)
+        .find(option => option.key === normalizedOption);
+      if (!selected) return '';
+
+      const preview = selected.isUrl
+        ? `<div class="rounded-xl bg-white p-2">
+             <img src="${escapeHtml(selected.label)}" alt="선택한 ${selected.key}안 시안"
+               class="${selected.isImage ? '' : 'hidden '}max-h-64 w-full rounded-lg object-contain" loading="lazy"
+               onload="this.classList.remove('hidden'); this.nextElementSibling.classList.add('hidden')"
+               onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden')" />
+             <div class="${selected.isImage ? 'hidden ' : ''}flex min-h-32 flex-col items-center justify-center gap-2 px-4 py-5 text-center">
+               <span class="text-2xl" aria-hidden="true">🔗</span>
+               <span class="max-w-full break-all text-[11px] font-semibold text-neutral-500">${escapeHtml(selected.label)}</span>
+               <a href="${escapeHtml(selected.label)}" target="_blank" rel="noopener noreferrer"
+                 class="rounded-lg bg-[#1F242D] px-3.5 py-2 text-[11px] font-extrabold text-white">선택한 시안 확인하기 ↗</a>
+             </div>
+           </div>`
+        : `<div class="rounded-xl bg-white px-4 py-6 text-center text-xs font-bold text-neutral-700">${escapeHtml(selected.label)}</div>`;
+
+      return `
+        <div data-feedback-selected-vote-preview class="rounded-2xl border border-[#DCE4B8] bg-[#F4F9EE] p-3">
+          <div class="mb-2 flex items-center justify-between px-1">
+            <span class="text-xs font-extrabold text-neutral-700">선택한 ${selected.key}안 미리보기</span>
+            <button type="button" onclick="returnToInternalVoteFromFeedback()"
+              class="text-[11px] font-bold text-[#2F6517] underline underline-offset-2">다시 비교하기</button>
+          </div>
+          ${preview}
+        </div>`;
+    }
+
     function renderInternalQuestionCard(question, index) {
       const typeLabel = question.choices.length === 0
         ? '주관식 서술형'
@@ -9919,9 +10111,36 @@
         </div>`;
     }
 
+    function restoreInternalMissionDraftToForm(rawData) {
+      const data = normalizeInternalMissionDraftData(rawData);
+      const dynamicContent = document.getElementById('part-internal-dynamic-content');
+      if (!data || !dynamicContent) return;
+
+      if (data.selected_option) selectInternalVoteOption(data.selected_option);
+      const reasonInput = dynamicContent.querySelector('[data-internal-vote-reason]');
+      if (reasonInput && data.vote_reason) reasonInput.value = data.vote_reason;
+
+      const questionAnswers = data.question_answers || {};
+      dynamicContent.querySelectorAll('[data-internal-question]').forEach((questionEl) => {
+        const answer = questionAnswers[questionEl.dataset.questionTitle || ''];
+        if (answer === undefined) return;
+        const answerValues = (Array.isArray(answer) ? answer : [answer]).map(value => String(value));
+        const textarea = questionEl.querySelector('textarea[data-internal-answer]');
+        if (textarea) textarea.value = answerValues[0] || '';
+        questionEl.querySelectorAll('input[data-internal-answer]').forEach((input) => {
+          input.checked = answerValues.includes(input.value);
+        });
+      });
+    }
+
     function renderInternalMissionFlow(project, rewardCoin = 0) {
-      selectedInternalVoteOption = null;
-      internalMissionAnswers = null;
+      const projectId = String(project?.id || currentParticipatingPostId || currentPostId || '');
+      const inMemoryDraft = internalMissionAnswers?.projectId === projectId
+        ? normalizeInternalMissionDraftData(internalMissionAnswers.data)
+        : null;
+      const restoredDraft = inMemoryDraft || readInternalMissionDraft(projectId);
+      selectedInternalVoteOption = restoredDraft?.selected_option || null;
+      internalMissionAnswers = restoredDraft ? { projectId, data: restoredDraft } : null;
 
       const titleEl = document.getElementById('part-internal-title');
       const rewardEl = document.getElementById('part-internal-reward');
@@ -9935,7 +10154,7 @@
         || project?.isAbTest === true;
       const questions = parseProjectQuestions(project);
       const serviceName = project?.service_name || project?.title || project?.serviceName || '서비스';
-      const rewardValue = Number(rewardCoin || project?.reward_coin || project?.rewardCoin || 0);
+      const rewardValue = Number(rewardCoin ?? project?.reward_coin ?? project?.rewardCoin ?? 0);
 
       if (titleEl) {
         titleEl.textContent = project
@@ -10018,6 +10237,7 @@
       }
 
       dynamicContent.innerHTML = `${headerHtml}${guideHtml}${bodyHtml}`;
+      restoreInternalMissionDraftToForm(restoredDraft);
     }
 
     function collectInternalMissionAnswers() {
@@ -10068,6 +10288,7 @@
     let currentFeedbackVerificationMethod = 'none';
     let feedbackScreenshotDataUrl = null;
     let currentFeedbackProjectQuizzes = [];
+    let currentFeedbackProject = null;
 
     async function openFeedbackWriteModal(postId) {
       closeTestParticipateModal();
@@ -10101,21 +10322,27 @@
           console.warn('[openFeedbackWriteModal] DB fetch warning:', e.message);
         }
       }
+      currentFeedbackProject = dbProj;
 
       const isVoteProject = dbProj?.category === 'vote'
         || dbProj?.category === 'abtest'
         || dbProj?.is_ab_test === true;
+      if (isVoteProject && internalMissionAnswers?.projectId !== String(pId)) {
+        const restoredDraft = readInternalMissionDraft(pId);
+        internalMissionAnswers = restoredDraft ? { projectId: String(pId), data: restoredDraft } : null;
+        selectedInternalVoteOption = restoredDraft?.selected_option || null;
+      }
       const hasCurrentVoteAnswer = internalMissionAnswers?.projectId === String(pId)
         && Boolean(internalMissionAnswers?.data?.selected_option);
       if (isVoteProject && !hasCurrentVoteAnswer) {
         closeFeedbackWriteModal();
-        renderInternalMissionFlow(dbProj, dbProj?.reward_coin || 0);
+        renderInternalMissionFlow(dbProj, dbProj?.reward_coin ?? 0);
         navigateTo('vote-progress');
         return;
       }
 
       const titleText = dbProj?.title || dbProj?.service_name || '테스트 피드백';
-      const rewardCoin = dbProj?.reward_coin || 500;
+      const rewardCoin = dbProj?.reward_coin ?? 500;
       const categoryText = isVoteProject ? '🗳️ 투표 테스트' : (dbProj?.category === 'survey' ? '📋 설문조사' : '📱 프로덕트 테스트');
 
       if (badge) badge.textContent = `${categoryText} 피드백`;
@@ -10147,6 +10374,18 @@
       updatePendingReviewBadge();
       showGenericToast('내 프로젝트 > 참여 프로젝트 관리에서 리뷰를 이어서 작성할 수 있어요.', '✍️');
       if (currentViewKey === 'vote-progress') navigateTo('post');
+    }
+
+    function returnToInternalVoteFromFeedback() {
+      const pId = currentParticipatingPostId || currentPostId || '';
+      const project = currentFeedbackProject || getCurrentParticipationProject(pId);
+      if (!project) {
+        showGenericToast('시안 정보를 다시 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', '⚠️');
+        return;
+      }
+      closeFeedbackWriteModal();
+      renderInternalMissionFlow(project, project.reward_coin ?? project.rewardCoin ?? 0);
+      navigateTo('vote-progress');
     }
 
     function renderFeedbackFormByTestType(testType, container, dbProj = null) {
@@ -10184,11 +10423,14 @@
         const selectedOption = internalMissionAnswers?.projectId === String(currentParticipatingPostId || currentPostId || '')
           ? internalMissionAnswers?.data?.selected_option
           : '';
+        const selectedPreview = renderFeedbackSelectedVotePreview(dbProj, selectedOption);
         container.innerHTML = `
           <div class="flex items-center justify-between rounded-xl border border-[#DCE4B8] bg-[#F4F9EE] px-4 py-3">
             <span class="text-xs font-bold text-neutral-600">선택한 시안</span>
             <span class="rounded-full bg-[#2F6517] px-3 py-1 text-xs font-extrabold text-white">${escapeHtml(selectedOption || '-')}안</span>
           </div>
+
+          ${selectedPreview}
 
           <!-- 별점 평가 -->
           <div class="flex flex-col gap-2">
@@ -10620,6 +10862,7 @@
 
         internalMissionAnswers = null;
         selectedInternalVoteOption = null;
+        clearInternalMissionDraft(projectId);
 
         const completedAt = new Date().toISOString();
         userParticipatedTests[projectId] = {
@@ -10768,6 +11011,9 @@
       const normalizedId = String(projectId || '');
       const project = getCurrentParticipationProject(normalizedId);
       if (project) {
+        // 투표 시안은 앱 내부 A/B 화면에서 함께 비교해야 하므로 A안 이미지를
+        // 외부 서비스 URL처럼 단독 노출하지 않는다.
+        if (project.category === 'vote') return '';
         const isApp = project.platform === 'app';
         const rawUrl = isApp
           ? (project.app_playstore_url || project.app_appstore_url || project.service_url || project.serviceUrl)
@@ -10939,13 +11185,13 @@
       }
       if (targetCountInput) {
         targetCountInput.value = 0;
-        targetCountInput.min = 30;
+        targetCountInput.min = 1;
         targetCountInput.disabled = false;
         targetCountInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
       if (rewardCoinInput) {
         rewardCoinInput.value = 70;
-        rewardCoinInput.min = 50;
+        rewardCoinInput.min = 0;
         rewardCoinInput.disabled = false;
         rewardCoinInput.classList.remove('bg-neutral-100', 'cursor-not-allowed', 'opacity-70');
       }
@@ -11023,9 +11269,8 @@
       if (productAbToggle) productAbToggle.checked = false;
       toggleProductAbMode(false);
 
-      const voteFileInput = document.getElementById('input-vote-multi-images');
-      if (voteFileInput) voteFileInput.value = '';
-      setVoteInputMode('url');
+      resetVoteImageInputs();
+      setVoteInputMode('image');
 
       const directMissionInput = document.querySelector('input[name="missionFormatMode"][value="direct"]');
       if (directMissionInput) directMissionInput.checked = true;
@@ -11320,7 +11565,7 @@
 
         if (thumbBox) thumbBox.textContent = project.category === 'vote' || project.category === 'abtest' ? '🗳️' : '📱';
         if (badge) badge.textContent = categoryLabels[project.category] || '[서비스 테스트]';
-        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin || 0).toLocaleString()} 돼지코인 수령`;
+        if (reward) reward.textContent = `🪙 ${Number(project.reward_coin ?? 0).toLocaleString()} 돼지코인 수령`;
         if (title) title.textContent = project.service_name || project.title;
         if (desc) desc.textContent = project.service_desc || project.title;
         if (checklist) {
@@ -11487,18 +11732,102 @@
       list.appendChild(div);
     }
 
-    function setVoteInputMode() {
+    let currentVoteInputMode = 'image';
+    const existingVoteImageUrls = { A: '', B: '' };
+    const voteImagePreviewObjectUrls = { A: '', B: '' };
+
+    function setVoteInputMode(mode = 'image') {
+      currentVoteInputMode = mode === 'url' ? 'url' : 'image';
       const btnImage = document.getElementById('btn-vote-input-mode-image');
       const btnUrl = document.getElementById('btn-vote-input-mode-url');
 
-      if (btnImage) btnImage.className = 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-neutral-100 text-neutral-400 font-bold cursor-not-allowed flex items-center justify-center gap-1.5';
-      if (btnUrl) btnUrl.className = 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5';
+      if (btnImage) btnImage.className = currentVoteInputMode === 'image'
+        ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5'
+        : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
+      if (btnUrl) btnUrl.className = currentVoteInputMode === 'url'
+        ? 'py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5'
+        : 'py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5';
 
       const imgBox = document.getElementById('vote-image-input-container');
       const urlBox = document.getElementById('vote-url-input-container');
 
-      if (imgBox) imgBox.style.display = 'none';
-      if (urlBox) urlBox.style.display = 'flex';
+      if (imgBox) imgBox.style.display = currentVoteInputMode === 'image' ? 'flex' : 'none';
+      if (urlBox) urlBox.style.display = currentVoteInputMode === 'url' ? 'flex' : 'none';
+    }
+
+    function setVoteInputModeLocked(isLocked) {
+      ['image', 'url'].forEach(mode => {
+        const button = document.getElementById(`btn-vote-input-mode-${mode}`);
+        if (!button) return;
+        button.disabled = Boolean(isLocked);
+        button.classList.toggle('opacity-60', Boolean(isLocked));
+        button.classList.toggle('cursor-not-allowed', Boolean(isLocked));
+        button.classList.toggle('cursor-pointer', !isLocked);
+      });
+    }
+
+    function setVoteImagePreview(optionKey, imageUrl = '', label = '') {
+      const key = String(optionKey || '').toUpperCase();
+      if (!['A', 'B'].includes(key)) return;
+      const suffix = key.toLowerCase();
+      const preview = document.getElementById(`vote-image-preview-${suffix}`);
+      const image = document.getElementById(`vote-image-preview-img-${suffix}`);
+      const name = document.getElementById(`vote-image-preview-name-${suffix}`);
+      if (!preview || !image || !name) return;
+
+      if (!imageUrl) {
+        image.removeAttribute('src');
+        name.textContent = '';
+        preview.classList.add('hidden');
+        return;
+      }
+      image.src = imageUrl;
+      name.textContent = label || `${key}안 이미지`;
+      preview.classList.remove('hidden');
+    }
+
+    function revokeVoteImagePreview(optionKey) {
+      const key = String(optionKey || '').toUpperCase();
+      const objectUrl = voteImagePreviewObjectUrls[key];
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      voteImagePreviewObjectUrls[key] = '';
+    }
+
+    function handleVoteImageSelected(optionKey, input) {
+      const key = String(optionKey || '').toUpperCase();
+      const file = input?.files?.[0];
+      revokeVoteImagePreview(key);
+      if (!file) {
+        setVoteImagePreview(key, existingVoteImageUrls[key], existingVoteImageUrls[key] ? '기존 저장 이미지' : '');
+        return;
+      }
+
+      try {
+        window.donDwaeDataService?.validateVoteImageFile(file);
+      } catch (error) {
+        input.value = '';
+        setVoteImagePreview(key, existingVoteImageUrls[key], existingVoteImageUrls[key] ? '기존 저장 이미지' : '');
+        showGenericToast(error?.message || '이미지 파일을 확인해 주세요.', '⚠️');
+        return;
+      }
+
+      const objectUrl = URL.createObjectURL(file);
+      voteImagePreviewObjectUrls[key] = objectUrl;
+      setVoteImagePreview(key, objectUrl, `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+    }
+
+    function resetVoteImageInputs() {
+      ['A', 'B'].forEach(optionKey => {
+        revokeVoteImagePreview(optionKey);
+        existingVoteImageUrls[optionKey] = '';
+        const input = document.getElementById(`input-vote-image-${optionKey.toLowerCase()}`);
+        if (input) {
+          input.value = '';
+          input.disabled = false;
+        }
+        setVoteImagePreview(optionKey);
+      });
+      setVoteInputModeLocked(false);
     }
 
     function addVoteUrlItem() {
@@ -11834,8 +12163,8 @@
       const btnPublish = document.getElementById('btn-publish-test-step3');
 
       if (isProjectEditMode && myCreatedTest) {
-        const origReward = myCreatedTest.rewardCoin || 50;
-        const origTarget = myCreatedTest.targetCount || 30;
+        const origReward = Number(myCreatedTest.rewardCoin ?? 0);
+        const origTarget = Number(myCreatedTest.targetCount ?? 1);
         const origTotal = origReward * origTarget;
         const diffTotal = Math.max(0, newTotal - origTotal);
 
@@ -12022,13 +12351,12 @@
       }
 
       const reward = parseInt(document.getElementById('input-reward-coin')?.value, 10) || 0;
-      let target = parseInt(document.getElementById('input-target-count')?.value, 10) || 0;
-      if (target < 30) target = 30;
+      const target = Math.max(1, parseInt(document.getElementById('input-target-count')?.value, 10) || 1);
       const newTotal = reward * target;
 
       if (isProjectEditMode) {
-        const origReward = myCreatedTest?.rewardCoin || 50;
-        const origTarget = myCreatedTest?.targetCount || 30;
+        const origReward = Number(myCreatedTest?.rewardCoin ?? 0);
+        const origTarget = Number(myCreatedTest?.targetCount ?? 1);
         const origTotal = origReward * origTarget;
         const diffTotal = Math.max(0, newTotal - origTotal);
 
@@ -12058,9 +12386,9 @@
 
       const modal = document.getElementById('test-coin-payment-modal');
       const sName = (document.getElementById('input-service-name')?.value || '').trim() || '가계부 앱 베타테스트';
-      const reward = parseInt(document.getElementById('input-reward-coin')?.value, 10) || 70;
-      let target = parseInt(document.getElementById('input-target-count')?.value, 10) || 30;
-      if (target < 30) target = 30;
+      const rewardValue = parseInt(document.getElementById('input-reward-coin')?.value, 10);
+      const reward = Number.isFinite(rewardValue) ? Math.max(0, rewardValue) : 0;
+      const target = Math.max(1, parseInt(document.getElementById('input-target-count')?.value, 10) || 1);
       const wonAmount = deficit * 10;
 
       const sNameEl = document.getElementById('pay-modal-service-name');
@@ -12161,6 +12489,11 @@
 
       const editingProjectId = getActiveProjectEditId();
       const wasEditing = Boolean(editingProjectId);
+      let uploadedVoteAssetPaths = [];
+      let previousVoteImageUrls = [];
+      let uploadDataService = null;
+      let uploadCreatorId = '';
+      let voteImageUrlsCommitted = false;
 
       try {
       // 1. STEP 1 수집 (공통)
@@ -12209,9 +12542,18 @@
           };
         }
       } else if (currentMainCategory === 'vote') {
-        testCategoryName = '투표 (URL형)';
+        const inputMode = currentVoteInputMode;
+        testCategoryName = inputMode === 'image' ? '투표 (이미지형)' : '투표 (URL형)';
         const voteUrlInputs = document.querySelectorAll('#vote-url-list input[type="url"]');
-        const contentData = Array.from(voteUrlInputs).map(input => input.value.trim()).filter(Boolean).slice(0, 2);
+        const contentData = inputMode === 'url'
+          ? Array.from(voteUrlInputs).map(input => input.value.trim()).filter(Boolean).slice(0, 2)
+          : [existingVoteImageUrls.A, existingVoteImageUrls.B];
+        const uploadFiles = inputMode === 'image'
+          ? {
+              A: document.getElementById('input-vote-image-a')?.files?.[0] || null,
+              B: document.getElementById('input-vote-image-b')?.files?.[0] || null
+            }
+          : {};
 
         // Extract questions from reusable vote questions list
         const voteQInputs = document.querySelectorAll('#vote-questions-list input[type="text"]');
@@ -12224,8 +12566,9 @@
         }
 
         typeSpecificData = {
-          inputMode: inputMode,
+          inputMode,
           content: contentData,
+          uploadFiles,
           questions: voteQuestions
         };
       } else if (currentMainCategory === 'survey') {
@@ -12245,9 +12588,8 @@
       initializeProjectDateDefaults();
       const startDate = document.getElementById('input-start-date')?.value;
       const endDate = document.getElementById('input-end-date')?.value;
-      const rCoin = parseInt(document.getElementById('input-reward-coin')?.value || '70', 10);
-      let tCount = parseInt(document.getElementById('input-target-count')?.value || '30', 10);
-      if (tCount < 30) tCount = 30;
+      const rCoin = Math.max(0, parseInt(document.getElementById('input-reward-coin')?.value || '0', 10));
+      const tCount = Math.max(1, parseInt(document.getElementById('input-target-count')?.value || '1', 10));
 
       // Extract target age & interests
       const targetAges = Array.from(document.querySelectorAll('input[name="targetAge"]:checked')).map(c => c.value);
@@ -12310,6 +12652,47 @@
         throw new Error('Supabase 데이터 연결이 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.');
       }
 
+      const { data: { session }, error: sessionError } = await dataService.supabase.auth.getSession();
+      if (sessionError || !session?.user) {
+        throw new Error('로그인 세션이 만료되었습니다. 다시 로그인해 주세요.');
+      }
+
+      const activeCreatorId = session.user.id;
+      uploadDataService = dataService;
+      uploadCreatorId = activeCreatorId;
+      if (currentMainCategory === 'vote') {
+        previousVoteImageUrls = [existingVoteImageUrls.A, existingVoteImageUrls.B].filter(Boolean);
+      }
+
+      if (currentMainCategory === 'vote' && typeSpecificData.inputMode === 'image') {
+        if (typeof dataService.uploadVoteProjectImage !== 'function') {
+          throw new Error('투표 이미지 업로드 기능을 불러오지 못했습니다. 페이지를 새로고침해 주세요.');
+        }
+        const publishButtonText = document.getElementById('btn-publish-step3-text');
+        if (publishButtonText) publishButtonText.textContent = 'A/B 이미지 업로드 중...';
+        const resolvedImageUrls = [];
+        for (const optionKey of ['A', 'B']) {
+          const file = typeSpecificData.uploadFiles?.[optionKey];
+          if (file) {
+            const uploaded = await dataService.uploadVoteProjectImage(file, {
+              userId: activeCreatorId,
+              optionKey
+            });
+            uploadedVoteAssetPaths.push(uploaded.objectPath);
+            resolvedImageUrls.push(uploaded.publicUrl);
+          } else {
+            const existingUrl = dataService.isVoteImageStorageUrl(existingVoteImageUrls[optionKey])
+              ? existingVoteImageUrls[optionKey]
+              : '';
+            if (!existingUrl) throw new Error(`${optionKey}안 이미지를 선택해 주세요.`);
+            resolvedImageUrls.push(existingUrl);
+          }
+        }
+        typeSpecificData.content = resolvedImageUrls;
+        delete typeSpecificData.uploadFiles;
+        if (publishButtonText) publishButtonText.textContent = '이미지 저장 완료 · 프로젝트 게시 중...';
+      }
+
       const missionFormat = document.querySelector('input[name="missionFormatMode"]:checked')?.value || 'direct';
       const externalSurveyUrl = dataService.normalizeHttpUrl(
         missionFormat === 'link' ? document.getElementById('input-external-survey-url')?.value : '',
@@ -12324,8 +12707,10 @@
           ? (typeSpecificData.testLink || typeSpecificData.playstoreUrl || typeSpecificData.appstoreUrl || typeSpecificData.abUrlA)
           : (typeSpecificData.url || typeSpecificData.abUrlA);
       } else if (currentMainCategory === 'vote') {
-        requiresServiceUrl = true;
-        serviceUrlRaw = typeSpecificData.content?.[0] || '';
+        // 이미지 URL은 ab_url_a / ab_url_b에 각각 저장하고, 내부 투표에는
+        // 별도의 외부 서비스 URL을 만들지 않는다.
+        requiresServiceUrl = false;
+        serviceUrlRaw = '';
       } else if (currentMainCategory === 'survey') {
         requiresServiceUrl = false;
         serviceUrlRaw = '';
@@ -12377,12 +12762,6 @@
         throw new Error('테스트 진행 방법을 입력해 주세요.');
       }
 
-      const { data: { session }, error: sessionError } = await dataService.supabase.auth.getSession();
-      if (sessionError || !session?.user) {
-        throw new Error('로그인 세션이 만료되었습니다. 다시 로그인해 주세요.');
-      }
-
-      const activeCreatorId = session.user.id;
       const dbPayload = {
         creator_id: activeCreatorId,
         title: tTitle,
@@ -12422,11 +12801,25 @@
       } else {
         persistedProject = await dataService.createProjectRecord(dbPayload);
       }
+      voteImageUrlsCommitted = uploadedVoteAssetPaths.length > 0;
 
       const verifiedProject = await dataService.fetchProjectById(persistedProject.id);
       if (!verifiedProject) {
         throw new Error('프로젝트 저장 후 재조회 검증에 실패했습니다. 잠시 후 내 프로젝트에서 확인해 주세요.');
       }
+
+      if (previousVoteImageUrls.length > 0 && typeof dataService.removeVoteProjectImagesByUrls === 'function') {
+        const retainedUrls = new Set([verifiedProject.ab_url_a, verifiedProject.ab_url_b].filter(Boolean));
+        const replacedUrls = previousVoteImageUrls.filter(url => !retainedUrls.has(url));
+        if (replacedUrls.length > 0) {
+          try {
+            await dataService.removeVoteProjectImagesByUrls(replacedUrls, { userId: activeCreatorId });
+          } catch (cleanupError) {
+            console.warn('[Vote image storage] Replaced image cleanup failed:', cleanupError?.message || cleanupError);
+          }
+        }
+      }
+      ['A', 'B'].forEach(revokeVoteImagePreview);
 
       const createdId = verifiedProject.id;
       myCreatedTest = {
@@ -12451,6 +12844,8 @@
         targetCount: verifiedProject.target_count,
         currentRecruits: verifiedProject.current_count,
         serviceUrl: verifiedProject.service_url,
+        abUrlA: verifiedProject.ab_url_a,
+        abUrlB: verifiedProject.ab_url_b,
         techTags: verifiedProject.tech_tags || techTags,
         personaTags: verifiedProject.target_persona_tags || personaTags
       };
@@ -12476,7 +12871,7 @@
           <div class="h-32 bg-gradient-to-br from-primary/30 to-[#B4E380]/40 flex flex-col items-center justify-center p-4 text-center relative border-b border-primary/20">
             <span class="text-3xl mb-1 filter drop-shadow-xs">🎉</span>
             <span class="text-sm font-extrabold text-neutral-dark">${sName}</span>
-            <span class="text-[11px] text-neutral-muted mt-1 font-mono">${sUrl}</span>
+            <span class="text-[11px] text-neutral-muted mt-1 font-mono">${sUrl || (currentMainCategory === 'vote' ? '돈돼 내부 투표' : '연결 URL 없음')}</span>
             <div class="mt-3 flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
               <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-primary/30 text-primary-dark font-extrabold">
@@ -12566,6 +12961,13 @@
       startRealtimeReviewTimer();
       return verifiedProject;
       } catch (error) {
+        if (!voteImageUrlsCommitted && uploadedVoteAssetPaths.length > 0 && uploadDataService && uploadCreatorId) {
+          try {
+            await uploadDataService.removeVoteProjectImagePaths(uploadedVoteAssetPaths, { userId: uploadCreatorId });
+          } catch (cleanupError) {
+            console.warn('[Vote image storage] Failed upload cleanup failed:', cleanupError?.message || cleanupError);
+          }
+        }
         console.error('[Supabase DB] Project persistence failed:', error);
         const friendly = resolveFriendlyError(error, 'PRJ_SAVE_FAILED');
         const message = error?.code === '42501'
@@ -12741,7 +13143,7 @@
         newCard.onclick = () => navigateTo('post');
         newCard.className = 'feed-card bg-white rounded-2xl border-2 border-primary shadow-card hover:shadow-float hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group animate-in fade-in zoom-in-95';
         newCard.setAttribute('data-category', 'product');
-        newCard.setAttribute('data-reward', testCreationStore.rewardCoin || '500');
+        newCard.setAttribute('data-reward', testCreationStore.rewardCoin ?? '500');
         newCard.setAttribute('data-time', '5');
         newCard.setAttribute('data-date', new Date().toISOString().split('T')[0]);
         newCard.setAttribute('data-deadline', '14');
@@ -13545,15 +13947,15 @@
       const newCard = document.createElement('article');
       newCard.id = 'newly-published-card';
       newCard.setAttribute('data-category', 'product');
-      newCard.setAttribute('data-reward', String(myCreatedTest.rewardCoin || 70));
+      newCard.setAttribute('data-reward', String(myCreatedTest.rewardCoin ?? 70));
       newCard.onclick = () => openPostDetail('my-created-test');
       newCard.className = 'dashboard-card bg-white rounded-2xl border-2 border-primary shadow-card hover:shadow-float hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col justify-between group animate-in fade-in zoom-in-95 relative';
 
       const sName = myCreatedTest.serviceName;
       const sDesc = myCreatedTest.serviceDesc;
       const sUrl = myCreatedTest.serviceUrl || 'try-money-pig.io';
-      const rCoin = myCreatedTest.rewardCoin || 70;
-      const tCount = myCreatedTest.targetCount || 30;
+      const rCoin = myCreatedTest.rewardCoin ?? 70;
+      const tCount = myCreatedTest.targetCount ?? 1;
       const tags = myCreatedTest.techTags || ['#v0', '#Cursor', '#Next.js', '#Supabase'];
 
       newCard.innerHTML = `
@@ -13637,7 +14039,7 @@
       projects.forEach(p => {
         const card = document.createElement('article');
         card.setAttribute('data-category', p.category || 'product');
-        card.setAttribute('data-reward', p.reward_coin || 500);
+        card.setAttribute('data-reward', p.reward_coin ?? 500);
         card.setAttribute('data-time', p.duration || '3분');
         card.setAttribute('data-date', p.created_at ? p.created_at.split('T')[0] : '');
         card.setAttribute('data-card-id', p.id);
@@ -13687,7 +14089,7 @@
                 ${categoryLabel} · ${p.duration || '3분'}
               </span>
               <span class="px-2.5 py-1 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[11px] font-extrabold flex items-center gap-1 shadow-2xs">
-                <span>🪙</span> +${p.reward_coin || 500} C
+                <span>🪙</span> +${p.reward_coin ?? 500} C
               </span>
             </div>
             <button type="button" onclick="toggleBookmark(event, this, '${p.id}')"

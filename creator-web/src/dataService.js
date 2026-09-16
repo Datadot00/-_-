@@ -151,6 +151,122 @@ export const SUPPORT_TICKET_COLUMNS = [
 const SUPPORT_TICKET_CATEGORIES = new Set(['account', 'project', 'coin', 'bug', 'other']);
 const DEFAULT_EXPLORE_PAGE_SIZE = 30;
 const MAX_EXPLORE_PAGE_SIZE = 100;
+export const VOTE_IMAGE_BUCKET = 'project-vote-assets';
+export const VOTE_IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+export const VOTE_IMAGE_MIME_TYPES = Object.freeze({
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/webp': 'webp',
+  'image/gif': 'gif'
+});
+
+export function validateVoteImageFile(file) {
+  if (!file || typeof file !== 'object') {
+    throw new Error('A안과 B안 이미지를 모두 선택해 주세요.');
+  }
+  const mimeType = String(file.type || '').toLowerCase();
+  const extension = VOTE_IMAGE_MIME_TYPES[mimeType];
+  if (!extension) {
+    throw new Error('투표 이미지는 PNG, JPG, WEBP, GIF 파일만 업로드할 수 있습니다.');
+  }
+  const size = Number(file.size || 0);
+  if (!Number.isFinite(size) || size <= 0 || size > VOTE_IMAGE_MAX_BYTES) {
+    throw new Error('투표 이미지는 파일당 5MB 이하로 업로드해 주세요.');
+  }
+  return { mimeType, extension, size };
+}
+
+async function hasValidVoteImageSignature(file, mimeType) {
+  if (typeof file?.slice !== 'function') return false;
+  const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+  if (mimeType === 'image/png') {
+    return [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]
+      .every((value, index) => bytes[index] === value);
+  }
+  if (mimeType === 'image/jpeg') {
+    return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  }
+  if (mimeType === 'image/gif') {
+    return String.fromCharCode(...bytes.slice(0, 6)) === 'GIF87a'
+      || String.fromCharCode(...bytes.slice(0, 6)) === 'GIF89a';
+  }
+  if (mimeType === 'image/webp') {
+    return String.fromCharCode(...bytes.slice(0, 4)) === 'RIFF'
+      && String.fromCharCode(...bytes.slice(8, 12)) === 'WEBP';
+  }
+  return false;
+}
+
+export async function validateVoteImageFileContent(file) {
+  const metadata = validateVoteImageFile(file);
+  if (!(await hasValidVoteImageSignature(file, metadata.mimeType))) {
+    throw new Error('이미지 파일 내용이 확장자 또는 형식과 일치하지 않습니다.');
+  }
+  return metadata;
+}
+
+export async function uploadVoteProjectImage(file, { userId, optionKey } = {}) {
+  if (!supabase) throw new Error('Supabase 연결이 설정되지 않았습니다.');
+  const normalizedUserId = String(userId || '').trim();
+  const normalizedOptionKey = String(optionKey || '').trim().toUpperCase();
+  if (!normalizedUserId || !['A', 'B'].includes(normalizedOptionKey)) {
+    throw new Error('투표 이미지 업로드 대상 정보가 올바르지 않습니다.');
+  }
+
+  const { mimeType, extension } = await validateVoteImageFileContent(file);
+
+  const assetId = globalThis.crypto?.randomUUID?.()
+    || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const objectPath = `${normalizedUserId}/votes/${assetId}-${normalizedOptionKey.toLowerCase()}.${extension}`;
+  const bucket = supabase.storage.from(VOTE_IMAGE_BUCKET);
+  const { error } = await bucket.upload(objectPath, file, {
+    cacheControl: '3600',
+    contentType: mimeType,
+    upsert: false
+  });
+  if (error) throw error;
+
+  const { data } = bucket.getPublicUrl(objectPath);
+  const publicUrl = normalizeHttpUrl(data?.publicUrl || '', { required: true });
+  return { objectPath, publicUrl };
+}
+
+export function getVoteImageStoragePath(publicUrl) {
+  if (typeof publicUrl !== 'string' || !publicUrl.trim()) return '';
+  try {
+    const parsedUrl = new URL(publicUrl);
+    const storageOrigin = new URL(supabaseUrl).origin;
+    const marker = `/storage/v1/object/public/${VOTE_IMAGE_BUCKET}/`;
+    if (parsedUrl.origin !== storageOrigin || !parsedUrl.pathname.startsWith(marker)) return '';
+    return decodeURIComponent(parsedUrl.pathname.slice(marker.length));
+  } catch {
+    return '';
+  }
+}
+
+export function isVoteImageStorageUrl(publicUrl) {
+  return Boolean(getVoteImageStoragePath(publicUrl));
+}
+
+export async function removeVoteProjectImagePaths(objectPaths, { userId } = {}) {
+  if (!supabase) throw new Error('Supabase 연결이 설정되지 않았습니다.');
+  const normalizedUserId = String(userId || '').trim();
+  if (!normalizedUserId) return false;
+  const safePaths = [...new Set(Array.isArray(objectPaths) ? objectPaths : [])]
+    .map(path => String(path || '').trim())
+    .filter(path => path.startsWith(`${normalizedUserId}/votes/`));
+  if (safePaths.length === 0) return true;
+  const { error } = await supabase.storage.from(VOTE_IMAGE_BUCKET).remove(safePaths);
+  if (error) throw error;
+  return true;
+}
+
+export async function removeVoteProjectImagesByUrls(publicUrls, { userId } = {}) {
+  const objectPaths = (Array.isArray(publicUrls) ? publicUrls : [])
+    .map(getVoteImageStoragePath)
+    .filter(Boolean);
+  return removeVoteProjectImagePaths(objectPaths, { userId });
+}
 
 export function sanitizeProjectSearchQuery(value) {
   return String(value ?? '')
@@ -785,11 +901,30 @@ export async function updateProjectRecord(projectId, updateFields) {
 export async function deleteProjectRecord(projectId) {
   if (!supabase || !projectId) return false;
   try {
+    const [{ data: project }, { data: { session } }] = await Promise.all([
+      supabase
+        .from('projects')
+        .select('id,creator_id,ab_url_a,ab_url_b')
+        .eq('id', projectId)
+        .maybeSingle(),
+      supabase.auth.getSession()
+    ]);
     const { error } = await supabase
       .from('projects')
       .delete()
       .eq('id', projectId);
     if (error) throw error;
+
+    if (project && session?.user?.id === project.creator_id) {
+      try {
+        await removeVoteProjectImagesByUrls(
+          [project.ab_url_a, project.ab_url_b],
+          { userId: session.user.id }
+        );
+      } catch (cleanupError) {
+        console.warn('[dataService] deleteProjectRecord asset cleanup warning:', cleanupError?.message || cleanupError);
+      }
+    }
     return true;
   } catch (err) {
     console.error('[dataService] deleteProjectRecord error:', err.message);

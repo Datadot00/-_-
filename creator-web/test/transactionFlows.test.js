@@ -353,6 +353,33 @@ test('내부 미션 화면은 데모 문구 대신 등록된 프로젝트 문항
   assert.doesNotMatch(html, /name="fb-vote-opt"/);
 });
 
+test('나중에 작성하는 투표 피드백은 선택 시안 이미지와 사용자별 초안을 복원한다', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const auth = readFileSync(new URL('../src/auth.js', import.meta.url), 'utf8');
+  const submitFeedbackFlow = html.match(/async function submitFeedbackForm\(\)[\s\S]*?\n    \}/)?.[0] || '';
+
+  // 초안은 다른 계정과 섞이지 않도록 사용자 ID와 프로젝트 ID를 모두 키에 포함한다.
+  assert.match(auth, /window\.currentAuthUserId = currentUser\?\.id \|\| null/);
+  assert.match(html, /`\$\{INTERNAL_MISSION_DRAFT_STORAGE_PREFIX\}:\$\{userId\}:\$\{normalizedProjectId\}`/);
+  assert.match(html, /sessionStorage\.setItem\(storageKey/);
+  assert.match(html, /const restoredDraft = inMemoryDraft \|\| readInternalMissionDraft\(projectId\)/);
+  assert.match(html, /restoreInternalMissionDraftToForm\(restoredDraft\)/);
+
+  // 투표 완료 시 저장하고, 리뷰 RPC 성공 후에만 초안을 제거한다.
+  assert.match(html, /internalMissionAnswers = collected[\s\S]{0,160}saveInternalMissionDraft\(pId, collected\)/);
+  assert.match(submitFeedbackFlow, /const result = await window\.donDwaeDataService\.submitProjectReview/);
+  assert.match(submitFeedbackFlow, /clearInternalMissionDraft\(projectId\)/);
+
+  // 피드백 모달은 선택값 텍스트뿐 아니라 실제 이미지 또는 안전한 원본 링크도 다시 보여준다.
+  assert.match(html, /function renderFeedbackSelectedVotePreview\(project, selectedOption\)/);
+  assert.match(html, /data-feedback-selected-vote-preview/);
+  assert.match(html, /alt="선택한 \$\{selected\.key\}안 시안"/);
+  assert.match(html, /onload="this\.classList\.remove\('hidden'\); this\.nextElementSibling\.classList\.add\('hidden'\)"/);
+  assert.match(html, /onerror="this\.classList\.add\('hidden'\); this\.nextElementSibling\.classList\.remove\('hidden'\)"/);
+  assert.match(html, /const selectedPreview = renderFeedbackSelectedVotePreview\(dbProj, selectedOption\)/);
+  assert.match(html, /function returnToInternalVoteFromFeedback\(\)/);
+});
+
 test('5단계 마이그레이션은 직접 쓰기를 차단하고 원자적 함수를 선언한다', () => {
   const sql = readFileSync(
     new URL('../supabase/migrations/20260910122642_stage_5_transactional_participation_review_shop.sql', import.meta.url),

@@ -3,12 +3,17 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import {
+  getVoteImageStoragePath,
   normalizeHttpUrl,
   prepareProjectLoginConfiguration,
   prepareProjectPayload,
   prepareProjectTagList,
   prepareProjectVerification,
-  PROJECT_PUBLIC_COLUMNS
+  PROJECT_PUBLIC_COLUMNS,
+  validateVoteImageFile,
+  validateVoteImageFileContent,
+  VOTE_IMAGE_BUCKET,
+  VOTE_IMAGE_MAX_BYTES
 } from '../src/dataService.js';
 
 test('normalizes a schemeless service URL to HTTPS', () => {
@@ -171,13 +176,23 @@ test('개발 환경 태그와 권장 참여 대상 태그는 정리되어 별도
   assert.deepEqual(payload.target_persona_tags, ['20대 직장인', '핀테크 관심자']);
 });
 
-test('모집인원과 서비스 카테고리는 기본값 없이 직접 입력·선택하게 한다', () => {
+test('모집인원과 보상 하한을 낮추고 서비스 카테고리는 직접 선택하게 한다', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const schema = readFileSync(new URL('../supabase_schema.sql', import.meta.url), 'utf8');
 
-  // 모집인원은 0으로 비워 두되, 최소 30명 규칙은 그대로 둔다.
-  assert.match(html, /<input id="input-target-count" type="number" value="0" min="30" required/);
+  // 신규 등록은 모집 1명, 무보상 프로젝트까지 허용한다.
+  assert.match(html, /<input id="input-target-count" type="number" value="0" min="1" step="1" required/);
+  assert.match(html, /<input id="input-reward-coin" type="number" value="70" min="0" step="1" required/);
   assert.match(html, /targetCountInput\.value = 0;/);
+  assert.match(html, /targetCountInput\.min = 1;/);
+  assert.match(html, /rewardCoinInput\.min = 0;/);
   assert.doesNotMatch(html, /<input id="input-target-count"[^>]*value="30"/);
+  assert.doesNotMatch(html, /if \(target < 30\) target = 30;/);
+  assert.doesNotMatch(html, /if \(tCount < 30\) tCount = 30;/);
+  assert.match(html, /rewardCoin: dbP\.reward_coin \?\? 500/);
+  assert.match(html, /const origReward = Number\(myCreatedTest\?\.rewardCoin \?\? 0\)/);
+  assert.match(schema, /target_count > 0 AND current_count >= 0/);
+  assert.match(schema, /reward_coin >= 0 AND total_funded_cost >= 0/);
 
   // 서비스 카테고리는 아무것도 선택하지 않은 상태로 시작한다.
   const categoryBlock = html.slice(html.indexOf('서비스 카테고리 선택'), html.indexOf('name="targetAge"'));
@@ -333,15 +348,68 @@ test('does not persist the current page URL when no thumbnail was selected', () 
   assert.match(html, /onerror="handleBrokenProjectThumbnail\(this\)"/);
 });
 
-test('투표 프로젝트는 현재 저장 가능한 A/B URL과 전용 질문을 영속화한다', () => {
+test('투표 프로젝트는 A/B 이미지 직접 업로드와 URL 입력을 모두 영속화한다', () => {
   const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 
   assert.doesNotMatch(html, /currentVoteSubOption/);
-  assert.match(html, /id="btn-vote-input-mode-image" disabled/);
-  assert.match(html, /testCategoryName = '투표 \(URL형\)'/);
+  assert.match(html, /id="btn-vote-input-mode-image" onclick="setVoteInputMode\('image'\)"/);
+  assert.match(html, /id="input-vote-image-a" type="file"/);
+  assert.match(html, /id="input-vote-image-b" type="file"/);
+  assert.match(html, /testCategoryName = inputMode === 'image' \? '투표 \(이미지형\)' : '투표 \(URL형\)'/);
+  assert.match(html, /uploadVoteProjectImage\(file, \{/);
+  assert.match(html, /typeSpecificData\.content = resolvedImageUrls/);
+  assert.match(html, /dataService\.isVoteImageStorageUrl\(existingVoteImageUrls\[optionKey\]\)/);
+  assert.match(html, /ab_url_a: abUrlA/);
+  assert.match(html, /ab_url_b: abUrlB/);
+  assert.match(html, /currentMainCategory === 'vote'[\s\S]*?requiresServiceUrl = false;[\s\S]*?serviceUrlRaw = '';/);
+  assert.match(html, /if \(project\.category === 'vote'\) return '';/);
+  assert.match(html, /removeVoteProjectImagePaths\(uploadedVoteAssetPaths/);
   assert.match(html, /const persistedQuestions = currentMainCategory === 'vote'/);
   assert.match(html, /questions: persistedQuestions/);
   assert.match(html, /is_ab_test: \['product', 'prototype'\]\.includes\(currentMainCategory\) && isProductAbMode/);
+});
+
+test('투표 이미지 파일은 안전한 형식과 파일당 5MB 제한을 적용한다', () => {
+  assert.equal(VOTE_IMAGE_BUCKET, 'project-vote-assets');
+  assert.equal(VOTE_IMAGE_MAX_BYTES, 5 * 1024 * 1024);
+  assert.deepEqual(validateVoteImageFile({ type: 'image/png', size: 1024 }), {
+    mimeType: 'image/png',
+    extension: 'png',
+    size: 1024
+  });
+  assert.throws(() => validateVoteImageFile({ type: 'image/svg+xml', size: 1024 }), /PNG, JPG, WEBP, GIF/);
+  assert.throws(() => validateVoteImageFile({ type: 'image/png', size: VOTE_IMAGE_MAX_BYTES + 1 }), /5MB/);
+});
+
+test('투표 이미지 업로드 전에 실제 파일 시그니처를 확인한다', async () => {
+  const validPng = new Blob([
+    Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x00])
+  ], { type: 'image/png' });
+  const fakePng = new Blob([
+    Uint8Array.from([0x3c, 0x73, 0x76, 0x67, 0x3e, 0x00, 0x00, 0x00])
+  ], { type: 'image/png' });
+
+  assert.equal((await validateVoteImageFileContent(validPng)).extension, 'png');
+  await assert.rejects(() => validateVoteImageFileContent(fakePng), /파일 내용이 확장자 또는 형식과 일치/);
+});
+
+test('투표 이미지 Storage 공개 URL에서 삭제 가능한 객체 경로만 해석한다', () => {
+  const projectUrl = `https://mikswhcchbatrlpetngb.supabase.co/storage/v1/object/public/${VOTE_IMAGE_BUCKET}/user-id/votes/sample-a.png`;
+  assert.equal(getVoteImageStoragePath(projectUrl), 'user-id/votes/sample-a.png');
+  assert.equal(getVoteImageStoragePath('https://attacker.example/storage/v1/object/public/project-vote-assets/user/votes/a.png'), '');
+});
+
+test('투표 이미지 Storage는 공개 읽기와 제작자별 쓰기·삭제 권한을 제한한다', () => {
+  const migration = readFileSync(
+    new URL('../supabase/migrations/20260915221000_add_vote_image_storage.sql', import.meta.url),
+    'utf8'
+  );
+  assert.match(migration, /'project-vote-assets'[\s\S]*TRUE[\s\S]*5242880/);
+  assert.doesNotMatch(migration, /image\/svg\+xml/i);
+  assert.match(migration, /FOR SELECT[\s\S]*TO anon, authenticated[\s\S]*bucket_id = 'project-vote-assets'/i);
+  assert.match(migration, /FOR INSERT[\s\S]*storage\.foldername\(name\)\)\[1\] = \(SELECT auth\.uid\(\)\)::TEXT/i);
+  assert.match(migration, /profile\.has_passed_gating/i);
+  assert.match(migration, /FOR DELETE[\s\S]*storage\.foldername\(name\)\)\[1\] = \(SELECT auth\.uid\(\)\)::TEXT/i);
 });
 
 test('creator report opens with the current project instead of the static feedback sample', () => {

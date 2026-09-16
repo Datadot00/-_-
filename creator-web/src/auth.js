@@ -198,6 +198,7 @@ function applyAuthenticatedUser(user) {
 
   document.body.dataset.authenticated = currentUser ? 'true' : 'false';
   window.isUserLoggedIn = Boolean(currentUser);
+  window.currentAuthUserId = currentUser?.id || null;
 
   if (accountChanged && typeof window.saveProfileChangesLocal === 'function') {
     if (currentUser) {
