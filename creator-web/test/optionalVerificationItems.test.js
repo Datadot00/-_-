@@ -59,3 +59,15 @@ test('참여 모달의 이런 분이면 딱이에요 영역은 하드코딩 텍�
   assert.match(html, /targetBox\.style\.display\s*=\s*'none'/);
   assert.match(html, /targetBox\.style\.display\s*=\s*'flex'/);
 });
+
+test('내부 시안 투표 화면은 선택 이유 작성란이 없고 완료 시 별도 피드백 모달 없이 즉시 리워드를 지급한다', () => {
+  // 투표 화면에서 '선택하신 이유를 간단히 적어주세요' 영역은 제거되어야 한다.
+  assert.doesNotMatch(html, /선택하신 이유를 간단히 적어주세요/);
+  assert.doesNotMatch(html, /어떤 요소가 더 와닿았는지 알려주시면 서비스 개선에 큰 도움이 됩니다/);
+
+  // 투표 완료 시 피드백 모달을 열지 않고 바로 제출 및 코인 지급
+  assert.match(html, /const isVote = Boolean\(dynamicContent\?\.querySelector\('\[data-internal-vote-option\]'\)\);/);
+  assert.match(html, /if \(!isVote\) \{\s*showGenericToast\('검증을 완료했습니다\. 피드백 저장이 완료되면 리워드가 지급됩니다\.', '✍️'\);\s*openFeedbackWriteModal\(pId\);\s*return;\s*\}/);
+  assert.match(html, /투표 완료하고 리워드 받기 →/);
+});
+
