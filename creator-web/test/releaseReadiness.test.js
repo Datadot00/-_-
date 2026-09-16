@@ -38,7 +38,8 @@ const expectedMigrations = [
   '20260915180000_publish_privacy_policy_v2.sql',
   '20260915200000_edit_new_profile_fields.sql',
   '20260915220000_lock_gender_and_age_range.sql',
-  '20260915221000_add_vote_image_storage.sql'
+  '20260915221000_add_vote_image_storage.sql',
+  '20260916120000_drop_prototype_wallet_default.sql'
 ];
 
 test('로컬 마이그레이션 파일명은 운영 DB 버전 순서와 일치한다', () => {
