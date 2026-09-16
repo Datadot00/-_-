@@ -30,7 +30,6 @@ export const PROJECT_CARD_COLUMNS = [
   'creator_id',
   'title',
   'service_name',
-  'thumbnail_url',
   'category',
   'platform',
   'is_ab_test',
@@ -78,6 +77,11 @@ export const PROJECT_PUBLIC_COLUMNS = [
   'created_at'
 ].join(',');
 
+export const PROJECT_COLLECTION_COLUMNS = PROJECT_PUBLIC_COLUMNS
+  .split(',')
+  .filter(column => column !== 'thumbnail_url')
+  .join(',');
+
 const PROJECT_INCREMENTAL_COLUMNS = ['verification_method', 'target_persona_tags'];
 
 // Keep project reads usable while incremental optional columns are waiting to
@@ -97,18 +101,24 @@ function getMissingIncrementalProjectColumn(error) {
   return looksLikeMissingColumn ? missingColumn : '';
 }
 
-function getProjectColumns(excludedColumns = new Set()) {
-  return PROJECT_PUBLIC_COLUMNS
+function getProjectColumns(excludedColumns = new Set(), baseColumns = PROJECT_PUBLIC_COLUMNS) {
+  return baseColumns
     .split(',')
     .filter(column => !excludedColumns.has(column))
     .join(',');
 }
 
-async function runProjectQueryWithColumnFallback(queryFactory) {
+async function runProjectQueryWithColumnFallback(
+  queryFactory,
+  { baseColumns = PROJECT_PUBLIC_COLUMNS } = {}
+) {
   const excludedColumns = new Set();
   let result = { data: null, error: null };
   for (let attempt = 0; attempt <= PROJECT_INCREMENTAL_COLUMNS.length; attempt += 1) {
-    result = await queryFactory(getProjectColumns(excludedColumns), excludedColumns);
+    result = await queryFactory(
+      getProjectColumns(excludedColumns, baseColumns),
+      excludedColumns
+    );
     const missingColumn = getMissingIncrementalProjectColumn(result.error);
     if (!missingColumn || excludedColumns.has(missingColumn)) return result;
     excludedColumns.add(missingColumn);
@@ -722,6 +732,26 @@ export async function fetchExploreProjects(options = {}) {
   }
 }
 
+/**
+ * Fetch a card thumbnail separately so large legacy data URLs never block the
+ * lightweight project list or the first screen shown after login.
+ */
+export async function fetchProjectThumbnail(projectId) {
+  if (!supabase || !projectId) return '';
+  try {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('thumbnail_url')
+      .eq('id', projectId)
+      .maybeSingle();
+    if (error) throw error;
+    return typeof data?.thumbnail_url === 'string' ? data.thumbnail_url : '';
+  } catch (err) {
+    console.warn('[dataService] fetchProjectThumbnail failed:', err.message);
+    return '';
+  }
+}
+
 export async function fetchProjectById(projectId) {
   if (!supabase || !projectId) return null;
   try {
@@ -778,7 +808,9 @@ export async function fetchMyProjects(userId, type = 'registered') {
         .select(columns)
         .eq('creator_id', userId)
         .order('created_at', { ascending: false });
-      const { data, error } = await runProjectQueryWithColumnFallback(fetchRegistered);
+      const { data, error } = await runProjectQueryWithColumnFallback(fetchRegistered, {
+        baseColumns: PROJECT_COLLECTION_COLUMNS
+      });
       if (error) throw error;
       return data || [];
     } else if (type === 'participated') {
@@ -790,7 +822,9 @@ export async function fetchMyProjects(userId, type = 'registered') {
         `)
         .eq('user_id', userId)
         .order('applied_at', { ascending: false });
-      const { data, error } = await runProjectQueryWithColumnFallback(fetchParticipated);
+      const { data, error } = await runProjectQueryWithColumnFallback(fetchParticipated, {
+        baseColumns: PROJECT_COLLECTION_COLUMNS
+      });
       if (error) throw error;
       return (data || []).map(participation => {
         if (!participation.projects) return null;
@@ -1131,7 +1165,9 @@ export async function fetchUserScraps(userId) {
       `)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
-    const { data, error } = await runProjectQueryWithColumnFallback(fetchScraps);
+    const { data, error } = await runProjectQueryWithColumnFallback(fetchScraps, {
+      baseColumns: PROJECT_COLLECTION_COLUMNS
+    });
     if (error) throw error;
     return data || [];
   } catch (err) {

@@ -6,6 +6,7 @@ import {
   NOTIFICATION_COLUMNS,
   PARTICIPATION_COLUMNS,
   PROJECT_CARD_COLUMNS,
+  PROJECT_COLLECTION_COLUMNS,
   PROJECT_PUBLIC_LEGACY_COLUMNS,
   PROJECT_PUBLIC_COLUMNS,
   sanitizeProjectSearchQuery
@@ -25,12 +26,14 @@ test('프로젝트 검색어는 와일드카드를 제거하고 길이를 제한
   assert.equal(sanitizeProjectSearchQuery(null), '');
 });
 
-test('피드 카드 조회는 카드 썸네일만 포함하고 상세 JSON과 민감 필드를 가져오지 않는다', () => {
+test('피드 카드 조회는 대용량 썸네일·상세 JSON·민감 필드를 가져오지 않는다', () => {
   const cardColumns = PROJECT_CARD_COLUMNS.split(',');
   assert.equal(cardColumns.includes('questions'), false);
   assert.equal(cardColumns.includes('quizzes'), false);
   assert.equal(cardColumns.includes('service_desc'), false);
-  assert.equal(cardColumns.includes('thumbnail_url'), true);
+  // Legacy rows may contain multi-megabyte data URLs. The list query must stay
+  // lightweight; full thumbnails are fetched only with project detail data.
+  assert.equal(cardColumns.includes('thumbnail_url'), false);
   assert.equal(cardColumns.includes('test_account_pw'), false);
   assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('questions'), true);
   assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('quizzes'), false);
@@ -58,8 +61,10 @@ test('점진적 프로젝트 컬럼 마이그레이션 전에도 기존 프로�
   assert.equal(PROJECT_PUBLIC_COLUMNS.split(',').includes('target_persona_tags'), true);
   assert.equal(PROJECT_PUBLIC_LEGACY_COLUMNS.split(',').includes('verification_method'), false);
   assert.equal(PROJECT_PUBLIC_LEGACY_COLUMNS.split(',').includes('target_persona_tags'), false);
-  assert.match(service, /runProjectQueryWithColumnFallback\(fetchParticipated\)/);
-  assert.match(service, /runProjectQueryWithColumnFallback\(fetchScraps\)/);
+  assert.equal(PROJECT_COLLECTION_COLUMNS.split(',').includes('thumbnail_url'), false);
+  assert.match(service, /runProjectQueryWithColumnFallback\(fetchParticipated, \{/);
+  assert.match(service, /runProjectQueryWithColumnFallback\(fetchScraps, \{/);
+  assert.match(service, /baseColumns: PROJECT_COLLECTION_COLUMNS/);
 });
 
 test('탐색 썸네일은 내 프로젝트와 참여완료 상태를 개인별로 구분한다', () => {

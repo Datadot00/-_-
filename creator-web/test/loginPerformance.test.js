@@ -35,3 +35,12 @@ test('초기 데이터는 단일 진입점에서 병렬로 조회한다', () => 
   );
   assert.match(html, /Promise\.all\(\[\s*liveProjectsPromise,\s*marketItemsPromise\s*\]\)/);
 });
+
+test('the real project feed replaces prototype markup independently of account data', () => {
+  assert.match(html, /id="dashboard-cards-grid" data-feed-status="loading" aria-busy="true"/);
+  assert.match(html, /const liveProjectsPromise = ds\.fetchExploreProjects\(\)\.then\(projects =>/);
+  assert.match(html, /if \(Array\.isArray\(projects\)\) \{\s*window\.renderLiveProjectsToFeed\(projects\)/);
+  assert.match(html, /if \(projects\.length === 0\) \{\s*renderExploreFeedState\('empty'\)/);
+  assert.match(html, /renderExploreFeedState\('error'\)/);
+  assert.doesNotMatch(html, /setTimeout\(\(\) => \{\s*window\.initSupabaseLiveDB\(\);\s*\}, 300\)/);
+});

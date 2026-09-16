@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>돈 돼? (Don Dwae) - 프로토타입</title>
+  <title>돈 돼? (Don Dwae) - 프로젝트 검증 플랫폼</title>
   <link rel="icon" type="image/png" href="./penny-logo-circle.png">
   <link rel="shortcut icon" href="./penny-logo-circle.png">
 
@@ -142,6 +142,26 @@
 
     ::-webkit-scrollbar-thumb:hover {
       background: #A1A1AA;
+    }
+
+    /* Never expose the old hard-coded prototype cards while live data loads. */
+    #dashboard-cards-grid[data-feed-status="loading"]>* {
+      display: none !important;
+    }
+
+    #dashboard-cards-grid[data-feed-status="loading"]::before {
+      content: '실제 프로젝트를 불러오는 중입니다...';
+      grid-column: 1 / -1;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #D4D4D8;
+      border-radius: 24px;
+      background: #FFFFFF;
+      color: #71717A;
+      font-size: 13px;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -1634,8 +1654,9 @@
           </div>
         </section>
 
-        <!-- 3-Column Card Grid (6 Cards based 1:1 on user reference image) -->
-        <section id="dashboard-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Live project card grid. Legacy markup stays hidden until it is replaced. -->
+        <section id="dashboard-cards-grid" data-feed-status="loading" aria-busy="true"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
           <!-- Card 2: 가계부 앱 베타테스터 모집 - 새로운 디자인 어떠신가요? -->
           <article data-category="product" data-reward="300" data-time="5" data-date="2026-09-09" data-deadline="0"
@@ -11161,7 +11182,6 @@
           control.value = '';
         }
       });
-
       const titleInput = document.getElementById('input-test-title');
       const nameInput = document.getElementById('input-service-name');
       const descInput = document.getElementById('input-service-desc');
@@ -14030,11 +14050,122 @@
       grid.insertBefore(newCard, grid.firstChild);
     }
 
+    function renderExploreFeedState(state = 'loading') {
+      const grid = document.getElementById('dashboard-cards-grid');
+      if (!grid) return;
+
+      grid.dataset.feedStatus = state;
+      grid.setAttribute('aria-busy', String(state === 'loading'));
+      if (state === 'loading') {
+        grid.innerHTML = '';
+        return;
+      }
+
+      const isError = state === 'error';
+      const icon = isError ? '⚠️' : '📭';
+      const title = isError
+        ? '프로젝트를 불러오지 못했어요'
+        : '현재 모집 중인 프로젝트가 없어요';
+      const description = isError
+        ? '네트워크 연결을 확인한 뒤 다시 시도해 주세요.'
+        : '새 프로젝트가 등록되면 이곳에 바로 표시됩니다.';
+      const action = isError
+        ? `<button type="button" onclick="window.initSupabaseLiveDB()"
+            class="mt-5 px-5 py-2.5 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-bold text-xs shadow-xs transition-all">
+            다시 불러오기
+          </button>`
+        : '';
+
+      grid.innerHTML = `
+        <div id="feed-${state}-state"
+          class="col-span-1 md:col-span-2 lg:col-span-3 py-16 flex flex-col items-center justify-center text-center bg-white rounded-3xl border border-dashed border-neutral-300 p-8 shadow-xs">
+          <div class="w-16 h-16 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-3xl mb-4 shadow-inner">${icon}</div>
+          <h3 class="text-base font-black text-neutral-dark mb-1">${title}</h3>
+          <p class="text-xs text-neutral-500 font-medium max-w-sm leading-relaxed">${description}</p>
+          ${action}
+        </div>`;
+    }
+
+    function appendFilteredFeedEmptyState(grid) {
+      grid.insertAdjacentHTML('beforeend', `
+        <div id="feed-empty-state"
+          class="hidden col-span-1 md:col-span-2 lg:col-span-3 py-16 flex-col items-center justify-center text-center bg-white rounded-3xl border border-dashed border-neutral-300 p-8 shadow-xs">
+          <div class="w-16 h-16 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-3xl mb-4 shadow-inner">🔍</div>
+          <h3 class="text-base font-black text-neutral-dark mb-1">조건에 맞는 프로젝트가 없어요</h3>
+          <p class="text-xs text-neutral-500 font-medium max-w-sm mb-5 leading-relaxed">검색어나 카테고리 필터를 변경해 보세요.</p>
+          <button type="button" onclick="filterFeed('all'); if(document.getElementById('header-search-input')) document.getElementById('header-search-input').value='';"
+            class="px-5 py-2.5 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-bold text-xs shadow-xs transition-all">
+            전체 프로젝트 보기
+          </button>
+        </div>`);
+    }
+
+    // Legacy rows still store multi-megabyte data: URLs in thumbnail_url. Those
+    // must never ride along with the list query that gates the first screen after
+    // login, so each card pulls its own thumbnail once it scrolls into view.
+    let thumbnailObserver = null;
+
+    async function loadSlotThumbnail(slot) {
+      const projectId = slot.dataset.thumbnailSlot;
+      if (!projectId || slot.dataset.thumbnailState) return;
+      slot.dataset.thumbnailState = 'loading';
+
+      const ds = window.donDwaeDataService;
+      if (!ds || typeof ds.fetchProjectThumbnail !== 'function') {
+        slot.dataset.thumbnailState = 'skipped';
+        return;
+      }
+
+      const url = await ds.fetchProjectThumbnail(projectId);
+      if (!url) {
+        // No thumbnail stored: keep the text placeholder already rendered.
+        slot.dataset.thumbnailState = 'empty';
+        return;
+      }
+
+      const alt = slot.dataset.thumbnailAlt || '프로젝트';
+      slot.classList.remove('p-3', 'flex', 'flex-col', 'justify-between');
+      slot.innerHTML = `
+        <img src="${escapeHtml(url)}" onerror="handleBrokenProjectThumbnail(this)"
+          data-thumbnail-variant="card" loading="lazy" decoding="async"
+          class="w-full h-full object-cover" alt="${escapeHtml(alt)} 미리보기" />`;
+      slot.dataset.thumbnailState = 'ready';
+    }
+
+    function observePendingThumbnails(grid) {
+      const slots = grid.querySelectorAll('[data-thumbnail-slot]');
+      if (!slots.length) return;
+
+      if (!('IntersectionObserver' in window)) {
+        slots.forEach(loadSlotThumbnail);
+        return;
+      }
+
+      if (!thumbnailObserver) {
+        thumbnailObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+            loadSlotThumbnail(entry.target);
+          });
+        }, { rootMargin: '200px' });
+      }
+
+      slots.forEach(slot => thumbnailObserver.observe(slot));
+    }
+
     window.renderLiveProjectsToFeed = function(projects) {
       const grid = document.getElementById('dashboard-cards-grid');
-      if (!grid || !projects || projects.length === 0) return;
+      if (!grid || !Array.isArray(projects)) return;
 
       window.liveExploreProjects = projects;
+      if (projects.length === 0) {
+        renderExploreFeedState('empty');
+        return;
+      }
+
+      grid.dataset.feedStatus = 'ready';
+      grid.setAttribute('aria-busy', 'false');
       grid.innerHTML = '';
       projects.forEach(p => {
         const card = document.createElement('article');
@@ -14055,6 +14186,12 @@
         };
         const categoryLabel = categoryLabels[p.category] || '프로덕트';
         const creatorNick = p.users?.nickname || '크리에이터';
+        // The list query intentionally omits thumbnail_url so login stays fast.
+        // A direct URL renders immediately; anything else is fetched lazily.
+        const thumbnailUrl = /^https?:\/\//i.test(String(p.thumbnail_url || ''))
+          ? String(p.thumbnail_url)
+          : '';
+        const needsLazyThumbnail = !thumbnailUrl && p.thumbnail_url !== null;
         const personalState = getProjectPersonalState(p);
         card.setAttribute('data-personal-state', personalState);
 
@@ -14068,9 +14205,10 @@
 
         card.innerHTML = `
           <div class="relative bg-[#EFF6FF] border-b border-[#F0F2F5] p-3">
-            <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden ${p.thumbnail_url ? '' : 'p-3 flex flex-col justify-between'}">
-              ${p.thumbnail_url ? `
-                <img src="${p.thumbnail_url}" onerror="handleBrokenProjectThumbnail(this)" data-thumbnail-variant="card" loading="lazy" decoding="async" class="w-full h-full object-cover" alt="${p.service_name || p.title} 미리보기" />
+            <div class="w-full h-40 rounded-xl bg-white border border-[#E2E8F0] shadow-2xs overflow-hidden ${thumbnailUrl ? '' : 'p-3 flex flex-col justify-between'}"
+              ${needsLazyThumbnail ? `data-thumbnail-slot="${escapeHtml(String(p.id))}" data-thumbnail-alt="${escapeHtml(p.service_name || p.title || '프로젝트')}"` : ''}>
+              ${thumbnailUrl ? `
+                <img src="${escapeHtml(thumbnailUrl)}" onerror="handleBrokenProjectThumbnail(this)" data-thumbnail-variant="card" loading="lazy" decoding="async" class="w-full h-full object-cover" alt="${escapeHtml(p.service_name || p.title || '프로젝트')} 미리보기" />
               ` : `
                 <div class="flex items-center justify-between text-[10px] text-neutral-400 border-b border-neutral-100 pb-1">
                   <span class="font-bold text-neutral-700">${p.service_name || p.title}</span>
@@ -14124,11 +14262,19 @@
         `;
         grid.appendChild(card);
       });
+      appendFilteredFeedEmptyState(grid);
+      observePendingThumbnails(grid);
     };
 
     window.initSupabaseLiveDB = async function() {
-      if (!window.donDwaeDataService || !window.donDwaeDataService.supabase) return;
+      if (!window.donDwaeDataService || !window.donDwaeDataService.supabase) {
+        renderExploreFeedState('error');
+        return;
+      }
       const ds = window.donDwaeDataService;
+      if (!Array.isArray(window.liveExploreProjects)) {
+        renderExploreFeedState('loading');
+      }
 
       try {
         const { data: { session } } = await ds.supabase.auth.getSession();
@@ -14138,7 +14284,14 @@
         }
         const userId = session?.user?.id || null;
         window.currentFeedUserId = userId;
-        const liveProjectsPromise = ds.fetchExploreProjects();
+        const liveProjectsPromise = ds.fetchExploreProjects().then(projects => {
+          if (Array.isArray(projects)) {
+            window.renderLiveProjectsToFeed(projects);
+          } else if (!Array.isArray(window.liveExploreProjects)) {
+            renderExploreFeedState('error');
+          }
+          return projects;
+        });
         const marketItemsPromise = ds.fetchMarketplaceItems();
 
         if (isLoggedIn && userId) {
@@ -14252,7 +14405,7 @@
           liveProjectsPromise,
           marketItemsPromise
         ]);
-        if (liveProjects && liveProjects.length > 0) {
+        if (Array.isArray(liveProjects)) {
           window.renderLiveProjectsToFeed(liveProjects);
         }
 
@@ -14290,6 +14443,9 @@
         }
       } catch (err) {
         console.warn('[Don Dwae DB] Live sync init warning:', err.message);
+        if (!Array.isArray(window.liveExploreProjects)) {
+          renderExploreFeedState('error');
+        }
       }
     };
 
@@ -14329,9 +14485,7 @@
         }, 0);
       }
 
-      setTimeout(() => {
-        window.initSupabaseLiveDB();
-      }, 300);
+      window.initSupabaseLiveDB();
     });
   </script>
   <!-- ========================================================
