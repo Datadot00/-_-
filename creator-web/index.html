@@ -10991,6 +10991,14 @@
             ? ` 등록 자격을 충족했습니다. (총 ${result.completed_test_count}회)`
             : ` (등록 조건 ${result.completed_test_count}/3회)`;
           showGenericToast(`🎉 피드백 저장 완료! +${reward.toLocaleString()} 돼지코인이 지급되었습니다.${countNotice}`, '🪙');
+
+          // 3회를 처음 채운 사람에게만 서버가 환영 보너스를 지급한다.
+          const welcomeBonus = Number(result.welcome_bonus_amount || 0);
+          if (welcomeBonus > 0) {
+            setTimeout(() => {
+              showGenericToast(`🎊 환영 이벤트! 테스트 3회 완료로 +${welcomeBonus.toLocaleString()} 돼지코인을 추가로 받았습니다.`, '🎁');
+            }, 1200);
+          }
           navigateTo('explore');
         }
       } catch (err) {
