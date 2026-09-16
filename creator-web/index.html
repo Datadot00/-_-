@@ -9902,6 +9902,19 @@
     async function completeInternalTestFlow() {
       const pId = currentParticipatingPostId || currentPostId || 'prototype';
       const dynamicContent = document.getElementById('part-internal-dynamic-content');
+
+      // 시안 선택 값 동기화 보장: 라디오나 카드가 선택되어 있으면 즉시 동기화
+      if (!selectedInternalVoteOption && dynamicContent) {
+        const checkedRadio = dynamicContent.querySelector('input[name="internal-ab-vote"]:checked');
+        const checkedCard = dynamicContent.querySelector('[data-internal-vote-option][aria-checked="true"]');
+        const detected = checkedRadio?.value || checkedCard?.dataset?.internalVoteOption || null;
+        if (detected && typeof selectInternalVoteOption === 'function') {
+          selectInternalVoteOption(detected);
+        } else if (detected) {
+          selectedInternalVoteOption = String(detected).trim().toUpperCase();
+        }
+      }
+
       if (dynamicContent?.querySelector('[data-internal-vote-option]') && !selectedInternalVoteOption) {
         showGenericToast('먼저 마음에 드는 시안을 선택해 주세요.', '🗳️');
         return;
@@ -9952,21 +9965,48 @@
           return;
         }
 
-        // 1. DB 참여 레코드 보장 (미참여 시 자동 등록)
+        // 1. 참여 상태 선제 확인 (이미 참여 레코드가 있는지 먼저 확인하여 중복 apply 호출 방지)
+        let existingParticipation = null;
         try {
-          await ensureDatabaseParticipation(pId);
-        } catch (partErr) {
-          const errMsg = String(partErr?.message || '');
-          if (/creator[_\s]*cannot[_\s]*(?:participate|apply)|creator_cannot_apply/i.test(errMsg)) {
-            showGenericToast('본인이 등록한 프로젝트는 테스트 참여 및 리워드 지급 대상이 아닙니다.', 'ℹ️');
-            clearInternalMissionDraft(pId);
-            internalMissionAnswers = null;
-            selectedInternalVoteOption = null;
-            navigateTo('explore');
-            return;
+          const ds = window.donDwaeDataService;
+          const { data: { session } } = await ds.supabase.auth.getSession();
+          if (session?.user) {
+            existingParticipation = await ds.checkUserParticipation(pId, session.user.id);
           }
-          if (!/already[_\s]*participat/i.test(errMsg)) {
-            console.warn('[Don Dwae DB] ensureDatabaseParticipation pre-check:', partErr);
+        } catch (checkErr) {
+          console.warn('[Don Dwae DB] checkUserParticipation warning:', checkErr);
+        }
+
+        // 1-1. 이미 리뷰까지 제출 완료되어 리워드를 받은 상태인 경우
+        if (existingParticipation && isParticipationCompleted({
+          participation_status: existingParticipation.status,
+          participation_completed_at: existingParticipation.completed_at
+        })) {
+          showGenericToast('이미 참여 및 리워드 지급이 완료된 투표입니다.', '✓');
+          clearInternalMissionDraft(pId);
+          internalMissionAnswers = null;
+          selectedInternalVoteOption = null;
+          navigateTo('explore');
+          return;
+        }
+
+        // 1-2. 아직 참여 레코드가 없는 경우에만 신규 참여 등록
+        if (!existingParticipation) {
+          try {
+            await ensureDatabaseParticipation(pId);
+          } catch (partErr) {
+            const errMsg = String(partErr?.message || '');
+            if (/creator[_\s]*cannot[_\s]*(?:participate|apply)|creator_cannot_apply/i.test(errMsg)) {
+              showGenericToast('본인이 등록한 프로젝트는 테스트 참여 및 리워드 지급 대상이 아닙니다.', 'ℹ️');
+              clearInternalMissionDraft(pId);
+              internalMissionAnswers = null;
+              selectedInternalVoteOption = null;
+              navigateTo('explore');
+              return;
+            }
+            if (!/already[_\s]*participat/i.test(errMsg)) {
+              console.warn('[Don Dwae DB] ensureDatabaseParticipation pre-check:', partErr);
+            }
           }
         }
 
@@ -9988,8 +10028,11 @@
             screenshotUrl: null
           });
         } catch (subErr) {
+          console.error('[Don Dwae DB] submitProjectReview error:', subErr);
           const subMsg = String(subErr?.message || '');
-          if (/already[_\s]*submitted|already[_\s]*participat/i.test(subMsg) || subErr?.code === '23505') {
+
+          // 이미 리뷰가 제출 완료된 건인 경우
+          if (/already[_\s]*submitted/i.test(subMsg) || (subErr?.code === '23505' && !/participation/i.test(subMsg))) {
             showGenericToast('이미 참여 및 리워드 지급이 완료된 투표입니다.', '✓');
             clearInternalMissionDraft(pId);
             internalMissionAnswers = null;
@@ -9997,6 +10040,7 @@
             navigateTo('explore');
             return;
           }
+
           if (/active participation not found/i.test(subMsg)) {
             // participation 레코드 누락 시 1회 즉시 생성 후 재시도
             await ensureDatabaseParticipation(pId);
@@ -10109,7 +10153,9 @@
         navigateTo('explore');
       } catch (err) {
         console.error('[Don Dwae DB] Vote submission failed:', err);
-        showGenericToast(resolveFriendlyError(err, 'PART_SUBMISSION_FAILED').formatted, '⚠️');
+        const friendly = resolveFriendlyError(err, 'PART_SUBMISSION_FAILED');
+        const detail = err?.message && !friendly.message.includes(err.message) ? ` (${err.message})` : '';
+        showGenericToast(`${friendly.formatted}${detail}`, '⚠️');
       } finally {
         if (completeBtn) {
           completeBtn.disabled = false;
@@ -10293,22 +10339,24 @@
            <span class="text-[11px] text-neutral-500 font-medium">제작자가 등록한 시안 설명입니다.</span>`;
 
       return `
-        <label id="opt-card-${option.key}" onclick="selectInternalVoteOption('${option.key}')"
+        <div id="opt-card-${option.key}" onclick="selectInternalVoteOption('${option.key}')"
           data-internal-vote-option="${option.key}" role="radio" aria-checked="false" tabindex="0"
           onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectInternalVoteOption('${option.key}'); }"
           class="${INTERNAL_VOTE_CARD_IDLE_CLASS}">
           <div class="flex items-center gap-2">
-            <input type="radio" name="internal-ab-vote" value="${option.key}" class="w-4 h-4 accent-[#2F6517]">
-            <span class="text-xs font-extrabold text-neutral-dark">${option.key}안 선택하기</span>
+            <input type="radio" name="internal-ab-vote" value="${option.key}"
+              onchange="selectInternalVoteOption('${option.key}')" class="w-4 h-4 accent-[#2F6517] cursor-pointer">
+            <span class="text-xs font-extrabold text-neutral-dark cursor-pointer">${option.key}안 선택하기</span>
           </div>
-          <div class="w-full bg-[#F4F9EE] border border-[#DCE4B8] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 min-h-[240px] overflow-hidden">
+          <div class="w-full bg-[#F4F9EE] border border-[#DCE4B8] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 min-h-[240px] overflow-hidden cursor-pointer">
             <span class="text-[10px] uppercase font-bold tracking-widest text-[#2F6517]">OPTION ${option.key}</span>
             ${preview}
           </div>
-          <button type="button" class="w-full py-2.5 rounded-xl bg-[#1F242D] text-white text-xs font-bold flex items-center justify-center gap-1.5">
+          <button type="button" onclick="event.stopPropagation(); selectInternalVoteOption('${option.key}');"
+            class="w-full py-2.5 rounded-xl bg-[#1F242D] hover:bg-neutral-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors">
             <span>✓</span> <span>이 안 선택하기</span>
           </button>
-        </label>`;
+        </div>`;
     }
 
     function renderFeedbackSelectedVotePreview(project, selectedOption) {
@@ -10531,18 +10579,30 @@
     }
 
     function selectInternalVoteOption(optionKey) {
+      const normalized = String(optionKey || '').trim().toUpperCase();
       const cards = [...document.querySelectorAll('[data-internal-vote-option]')];
-      if (!cards.some(card => card.dataset.internalVoteOption === optionKey)) return;
+      if (!cards.some(card => (card.dataset.internalVoteOption || '').toUpperCase() === normalized)) return;
 
-      selectedInternalVoteOption = optionKey;
+      selectedInternalVoteOption = normalized;
       cards.forEach((card) => {
-        const isSelected = card.dataset.internalVoteOption === optionKey;
+        const isSelected = (card.dataset.internalVoteOption || '').toUpperCase() === normalized;
         card.className = isSelected ? INTERNAL_VOTE_CARD_SELECTED_CLASS : INTERNAL_VOTE_CARD_IDLE_CLASS;
         card.setAttribute('aria-checked', String(isSelected));
+        const btn = card.querySelector('button');
+        if (btn) {
+          if (isSelected) {
+            btn.className = 'w-full py-2.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white text-xs font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs';
+            btn.innerHTML = '<span>✓</span> <span>선택됨 (이 안으로 투표)</span>';
+          } else {
+            btn.className = 'w-full py-2.5 rounded-xl bg-[#1F242D] hover:bg-neutral-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors';
+            btn.innerHTML = '<span>✓</span> <span>이 안 선택하기</span>';
+          }
+        }
       });
-      const radio = document.querySelector(`input[name="internal-ab-vote"][value="${selectedInternalVoteOption}"]`);
+      const radio = document.querySelector(`input[name="internal-ab-vote"][value="${normalized}"]`);
       if (radio) radio.checked = true;
     }
+    window.selectInternalVoteOption = selectInternalVoteOption;
 
     // ========================================================
     // TEST TYPE FEEDBACK SUBMISSION MODAL LOGIC
