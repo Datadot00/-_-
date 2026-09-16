@@ -35,11 +35,18 @@ test('비어 있으면 기본 문항을 끼워 넣지 않는다', () => {
   assert.match(html, /제작자가 등록한 추가 검증 문항이 없습니다/);
 });
 
-test('문항이 없는 프로젝트의 리뷰 폼은 프로토타입 샘플 대신 안내를 보여준다', () => {
+test('문항이 없는 프로젝트의 리뷰 폼은 검증 항목 영역을 완전히 노출하지 않는다', () => {
   assert.doesNotMatch(html, /영수증 OCR 촬영 후 자동 입력된 상호명 인식 정확도/);
-  assert.match(html, /제작자가 등록한 검증 문항이 없습니다/);
+  // 검증항목이 있을 때만 검증 문항 영역이 렌더링되고, 비어있으면 아예 노출되지 않는다.
+  assert.match(html, /\$\{hasVerificationItems \? `/);
+  assert.match(html, /<span>2\. 테스트 미션 검증 문항<\/span>/);
 });
 
-test('리뷰 폼의 검증 문항 라벨에서 필수 표시를 뗀다', () => {
-  assert.match(html, /<span>2\. 테스트 미션 검증 문항<\/span>/);
+test('외부 설문조사 피드백 모달은 더미 문항 없이 종합 의견만 노출한다', () => {
+  // 하드코딩된 더미 설문 문항은 제거되어야 한다.
+  assert.doesNotMatch(html, /fb-surv-q1/);
+  assert.doesNotMatch(html, /해당 서비스를 일주일에 얼마나 자주 이용하시나요\?/);
+  assert.doesNotMatch(html, /서비스 사용 시 가장 중요하게 생각하는 요소는\?/);
+  // 외부 설문 시 종합 의견 단독 노출
+  assert.match(html, /제작자에게 전하고 싶은 종합 의견/);
 });
