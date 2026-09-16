@@ -10010,8 +10010,9 @@
           }
         }
 
+        const voteOptionChoice = selectedInternalVoteOption || 'A';
         const submittedAnswers = {
-          selected_option: selectedInternalVoteOption,
+          selected_option: voteOptionChoice,
           review_text: '내부 시안 투표 참여 완료',
           ...(collected?.question_answers ? { question_answers: collected.question_answers } : {})
         };
@@ -10061,10 +10062,6 @@
         const reward = Number(result?.reward_amount || 0);
         const walletTotal = Number(result?.wallet_total || 0);
 
-        internalMissionAnswers = null;
-        selectedInternalVoteOption = null;
-        clearInternalMissionDraft(pId);
-
         const completedAt = new Date().toISOString();
         userParticipatedTests[pId] = {
           completedAt,
@@ -10103,7 +10100,7 @@
         if (fbContainer) {
           const nickname = document.getElementById('mypage-user-nickname')?.textContent || '나';
           const cardArticle = document.createElement('article');
-          cardArticle.id = `feedback-card-${result.review_id}`;
+          cardArticle.id = `feedback-card-${result?.review_id || Date.now()}`;
           cardArticle.setAttribute('data-has-reply', 'false');
           cardArticle.className = 'feedback-card bg-white rounded-2xl border border-primary/40 p-7 shadow-subtle flex flex-col gap-5 animate-in fade-in duration-300';
           cardArticle.innerHTML = `
@@ -10112,7 +10109,7 @@
                 <div class="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center font-bold text-xs text-primary-dark">나</div>
                 <div>
                   <span class="font-bold text-sm text-neutral-dark">${escapeHtml(nickname)} (방금 투표 완료)</span>
-                  <div class="text-[#2F6517] text-xs font-bold mt-0.5">${escapeHtml(selectedInternalVoteOption)}안 선택</div>
+                  <div class="text-[#2F6517] text-xs font-bold mt-0.5">${escapeHtml(voteOptionChoice)}안 선택</div>
                 </div>
               </div>
               <span class="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] text-xs font-semibold">투표 완료</span>
@@ -10132,8 +10129,8 @@
           project_id: pId,
           rating: 5,
           answers: submittedAnswers,
-          content: `${selectedInternalVoteOption}안 투표 완료`,
-          feedback_text: `${selectedInternalVoteOption}안 투표 완료`,
+          content: `${voteOptionChoice}안 투표 완료`,
+          feedback_text: `${voteOptionChoice}안 투표 완료`,
           created_at: new Date().toISOString(),
           users: { nickname: authorNick }
         });
@@ -10150,6 +10147,12 @@
             openWelcomeBonusModal(welcomeBonus);
           }, 800);
         }
+
+        // 모든 상태 갱신 및 UI 반영 완료 후 초기화
+        internalMissionAnswers = null;
+        selectedInternalVoteOption = null;
+        clearInternalMissionDraft(pId);
+
         navigateTo('explore');
       } catch (err) {
         console.error('[Don Dwae DB] Vote submission failed:', err);
@@ -13715,7 +13718,8 @@
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>'"]/g,
+      if (str === null || str === undefined) return '';
+      return String(str).replace(/[&<>'"]/g,
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
       );
     }
