@@ -46,6 +46,11 @@ test('RPC가 지급 여부를 반환하고 화면이 안내한다', () => {
   assert.match(html, /const welcomeBonus = Number\(result\.welcome_bonus_amount \|\| 0\);/);
   assert.match(html, /if \(welcomeBonus > 0\)/);
   assert.match(html, /환영 이벤트!/);
+  // 500코인 지급 인지를 위한 전용 축하 모달 및 알림 함수를 선언한다
+  assert.match(html, /id="welcome-bonus-modal"/);
+  assert.match(html, /openWelcomeBonusModal\(welcomeBonus\)/);
+  assert.match(html, /function openWelcomeBonusModal\(/);
+  assert.match(html, /function closeWelcomeBonusModal\(/);
 });
 
 test('익명 사용자는 리뷰 제출 RPC를 실행할 수 없다', () => {

@@ -920,6 +920,89 @@
     </div>
   </div>
 
+  <!-- ========================================================
+       WELCOME BONUS CELEBRATION MODAL (3회 게이팅 완료 & 500코인 보너스 축하 모달)
+  ======================================================== -->
+  <div id="welcome-bonus-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-neutral-dark/60 backdrop-blur-xs hidden transition-all duration-200">
+    <div
+      class="w-full max-w-[480px] mx-4 bg-white rounded-[24px] border border-[#E9E4C2] shadow-float p-7 sm:p-8 text-center flex flex-col items-center animate-in fade-in zoom-in-95 duration-200 relative overflow-hidden">
+      
+      <!-- Top festive decorative accent bar -->
+      <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#FDE047] via-[#B4E380] to-[#2F6517]"></div>
+      
+      <!-- Close button (X) -->
+      <button type="button" onclick="closeWelcomeBonusModal()" aria-label="모달 닫기"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-800 flex items-center justify-center text-sm font-bold transition-colors cursor-pointer">
+        ✕
+      </button>
+
+      <!-- Icon & Festive Mascot -->
+      <div class="relative my-2 flex flex-col items-center">
+        <div class="w-20 h-20 flex items-center justify-center bg-gradient-to-br from-[#FFFBEB] to-[#FEF3C7] rounded-full border border-[#FDE68A] p-2.5 shadow-subtle mb-3">
+          <img src="./mascot-full.png" alt="축하 마스코트" class="w-full h-full object-contain filter drop-shadow-sm"
+            onerror="this.onerror=null; this.src='./mascot-full.png';" />
+        </div>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] text-xs font-black shadow-2xs border border-[#A7F3D0]">
+          🎊 3회 참여 게이팅 완료
+        </span>
+      </div>
+
+      <!-- Title & Subtitle -->
+      <h3 class="text-2xl font-black text-neutral-dark mt-2 mb-1 tracking-tight">
+        가입 보너스 500코인 지급!
+      </h3>
+      <p class="text-xs text-neutral-500 font-medium mb-5 leading-relaxed">
+        다른 창업자의 서비스를 3회 이상 성실하게 검증하여<br>
+        <strong class="text-[#2F6517] font-bold">정식 크리에이터 자격</strong>을 획득하셨습니다! 🎉
+      </p>
+
+      <!-- Big Highlight Coin Badge -->
+      <div class="w-full bg-gradient-to-br from-[#FFFDF0] to-[#F7FEE7] border-2 border-[#DCE4B8] rounded-2xl p-4.5 mb-5 flex items-center justify-between shadow-2xs">
+        <div class="flex items-center gap-3 text-left">
+          <div class="w-11 h-11 rounded-xl bg-[#FEF9C3] border border-[#FDE047] flex items-center justify-center text-2xl shrink-0 shadow-xs">
+            🎁
+          </div>
+          <div>
+            <span class="text-[11px] font-extrabold text-[#713F12] block">웰컴 축하 특별 보너스</span>
+            <span class="text-xs font-semibold text-neutral-600">내 지갑으로 즉시 지급 완료</span>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-1 text-[#2F6517]">
+          <span class="text-2xl font-black">+<span id="welcome-bonus-amount-text">500</span></span>
+          <span class="text-xs font-extrabold">돼지코인</span>
+        </div>
+      </div>
+
+      <!-- What is unlocked Checklist -->
+      <div class="w-full bg-[#FAFBF5] rounded-xl border border-[#EBEFE0] p-3.5 mb-6 text-left text-xs text-neutral-700 flex flex-col gap-2">
+        <div class="flex items-start gap-2">
+          <span class="text-[#2F6517] font-bold shrink-0">✓</span>
+          <span><strong>내 프로젝트 등록 잠금 해제:</strong> 이제 내가 만든 웹/앱 서비스를 직접 등록하고 테스터 피드백을 모을 수 있어요.</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span class="text-[#2F6517] font-bold shrink-0">✓</span>
+          <span><strong>돼코상점 교환 가능:</strong> 지급받은 보너스 코인으로 바이브코더를 위한 템플릿과 가이드 자료를 교환해보세요.</span>
+        </div>
+      </div>
+
+      <!-- Modal Actions -->
+      <div class="w-full flex flex-col sm:flex-row items-center gap-2.5">
+        <button type="button" onclick="closeWelcomeBonusModal(); navigateTo('market');"
+          class="w-full sm:flex-1 py-3 px-4 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-xs font-bold text-neutral-700 transition-all cursor-pointer">
+          돼코상점 둘러보기
+        </button>
+        <button type="button" onclick="closeWelcomeBonusModal(); navigateTo('create');"
+          class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white text-xs font-extrabold shadow-xs transition-all flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer">
+          <span>프로젝트 등록하러 가기</span>
+          <span>→</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
 
   <!-- ========================================================
        VIEW 1: LANDING PAGE (SCR-01 & SCR-02)
@@ -9860,7 +9943,8 @@
             userCoinBalance += 500;
             setTimeout(() => {
               showGenericToast('🎊 환영 이벤트! 초반 가입 보너스(3회 게이팅 완료)로 +500 돼지코인을 추가로 받았습니다.', '🎁');
-            }, 1200);
+              openWelcomeBonusModal(500);
+            }, 800);
           }
           setUserCoinBalance(userCoinBalance);
           showGenericToast(`🎉 투표 완료! +${rewardVal.toLocaleString()} 돼지코인이 지급되었습니다.${countNotice}`, '🪙');
@@ -10019,7 +10103,8 @@
         if (welcomeBonus > 0) {
           setTimeout(() => {
             showGenericToast(`🎊 환영 이벤트! 초반 가입 보너스(3회 게이팅 완료)로 +${welcomeBonus.toLocaleString()} 돼지코인을 추가로 받았습니다.`, '🎁');
-          }, 1200);
+            openWelcomeBonusModal(welcomeBonus);
+          }, 800);
         }
         navigateTo('explore');
       } catch (err) {
@@ -11163,7 +11248,8 @@
           if (welcomeBonus > 0) {
             setTimeout(() => {
               showGenericToast(`🎊 환영 이벤트! 초반 가입 보너스(3회 게이팅 완료)로 +${welcomeBonus.toLocaleString()} 돼지코인을 추가로 받았습니다.`, '🎁');
-            }, 1200);
+              openWelcomeBonusModal(welcomeBonus);
+            }, 800);
           }
           navigateTo('explore');
         }
@@ -11828,6 +11914,40 @@
       const modal = document.getElementById('pledge-modal');
       if (modal) modal.classList.add('hidden');
     }
+
+    function openWelcomeBonusModal(amount = 500) {
+      const bonusNum = Number(amount || 500);
+      const modal = document.getElementById('welcome-bonus-modal');
+      const amountText = document.getElementById('welcome-bonus-amount-text');
+      if (amountText) amountText.textContent = bonusNum.toLocaleString();
+      if (modal) modal.classList.remove('hidden');
+
+      // 알림함에 축하 알림 추가
+      try {
+        window.notificationsData = window.notificationsData || [];
+        const hasNotif = window.notificationsData.some(n => n.id === 'welcome-bonus-gating');
+        if (!hasNotif) {
+          window.notificationsData.unshift({
+            id: 'welcome-bonus-gating',
+            type: 'coin',
+            title: '🎁 3회 게이팅 완료 보너스 지급!',
+            message: `다른 창업자의 서비스를 3회 이상 검증하여 초반 가입 보너스로 +${bonusNum.toLocaleString()} 돼지코인이 지급되었습니다. 이제 프로젝트를 등록해보세요!`,
+            is_read: false,
+            created_at: new Date().toISOString()
+          });
+          if (typeof renderNotificationsUI === 'function') renderNotificationsUI();
+        }
+      } catch (e) {
+        console.warn('[Welcome Bonus] Notification registration warning:', e);
+      }
+    }
+    window.openWelcomeBonusModal = openWelcomeBonusModal;
+
+    function closeWelcomeBonusModal() {
+      const modal = document.getElementById('welcome-bonus-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+    window.closeWelcomeBonusModal = closeWelcomeBonusModal;
 
     async function confirmPledgeAndProceed() {
       const ds = window.donDwaeDataService;
