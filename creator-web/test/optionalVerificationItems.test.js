@@ -50,3 +50,12 @@ test('외부 설문조사 피드백 모달은 더미 문항 없이 종합 의견
   // 외부 설문 시 종합 의견 단독 노출
   assert.match(html, /제작자에게 전하고 싶은 종합 의견/);
 });
+
+test('참여 모달의 이런 분이면 딱이에요 영역은 하드코딩 텍스트를 제거하고 등록된 대상을 동적으로 반영한다', () => {
+  // 초기 HTML에 하드코딩된 연령대/관심사 텍스트가 없어야 한다.
+  assert.doesNotMatch(html, /연령대:\s*20대,\s*30대\s*\|\s*관심사:\s*핀테크,\s*자산관리/);
+  // 등록된 persona/tech 태그를 기반으로 동적 렌더링하고, 없으면 박스를 숨긴다.
+  assert.match(html, /rawPPersona/);
+  assert.match(html, /targetBox\.style\.display\s*=\s*'none'/);
+  assert.match(html, /targetBox\.style\.display\s*=\s*'flex'/);
+});

@@ -347,10 +347,9 @@
 
         <!-- 3. 대상 조건 확인용 추가 질문 (있을 시 노출) -->
         <div id="part-modal-target-box"
-          class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex flex-col gap-1">
+          class="hidden p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex flex-col gap-1.5">
           <span class="font-bold flex items-center gap-1">🎯 이런 분이면 딱이에요!</span>
-          <p id="part-modal-target-text" class="text-[11px] text-amber-800 leading-relaxed font-medium">연령대: 20대, 30대 |
-            관심사: 핀테크, 자산관리</p>
+          <div id="part-modal-target-text" class="flex flex-wrap gap-1.5 text-[11px] text-amber-800 leading-relaxed font-medium"></div>
         </div>
 
         <!-- 4. 모달 하단 버튼 -->
@@ -9590,21 +9589,48 @@
             </div>`).join('');
         }
 
-        const rawPPersona = Array.isArray(project.target_persona_tags) ? project.target_persona_tags.filter(Boolean) : [];
-        const rawPTech = Array.isArray(project.tech_tags) ? project.tech_tags.filter(Boolean) : [];
-        const targetTags = [...rawPPersona];
+        const rawPPersona = Array.isArray(project.target_persona_tags)
+          ? project.target_persona_tags
+          : (Array.isArray(project.personaTags) ? project.personaTags : (Array.isArray(project.targetPersonaTags) ? project.targetPersonaTags : []));
+        const rawPTech = Array.isArray(project.tech_tags)
+          ? project.tech_tags
+          : (Array.isArray(project.techTags) ? project.techTags : []);
+
+        const targetTags = [...rawPPersona.filter(Boolean)];
         rawPTech.forEach(t => {
           const clean = String(t || '').replace(/^#/, '').trim();
           const lower = clean.toLowerCase();
           const isP = ['분', '직', '자', '관심', '필요', '타겟', '유저', '사용자', '세일즈', '영업', '인맥', '학생', '직장인', '대표', '20대', '30대', '40대', '50대', '남성', '여성', '습관', '초보', '경험', '보유', '인터뷰', '기획', '마케터', '디자이너', '개발자', '자영업', '고객', '매칭'].some(kw => lower.includes(kw)) || (clean.length >= 7 && (clean.includes(' ') || /[가-힣]/.test(clean)));
           if (isP && !targetTags.includes(clean)) targetTags.push(clean);
         });
-        if (targetBox) targetBox.classList.toggle('hidden', targetTags.length === 0);
-        if (targetText && targetTags.length > 0) {
-          targetText.textContent = `이런 분이면 딱이에요: ${targetTags.map(tag => String(tag).replace(/^#/, '')).join(', ')}`;
+
+        if (targetBox) {
+          if (targetTags.length > 0) {
+            targetBox.classList.remove('hidden');
+            targetBox.style.display = 'flex';
+            if (targetText) {
+              targetText.innerHTML = targetTags.map(tag => {
+                const cleanTag = String(tag).replace(/^#/, '');
+                return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-950 font-bold text-[11px] shadow-2xs">🎯 ${escapeHtml(cleanTag)}</span>`;
+              }).join(' ');
+            }
+          } else {
+            targetBox.classList.add('hidden');
+            targetBox.style.display = 'none';
+            if (targetText) targetText.innerHTML = '';
+          }
         }
       } else if (isPrototype) {
-        if (targetBox) targetBox.classList.remove('hidden');
+        if (targetBox) {
+          targetBox.classList.remove('hidden');
+          targetBox.style.display = 'flex';
+          if (targetText) {
+            targetText.innerHTML = `
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-950 font-bold text-[11px] shadow-2xs">🎯 #UI/UX디자이너</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-950 font-bold text-[11px] shadow-2xs">🎯 #프로토타입테스터</span>
+            `;
+          }
+        }
         if (thumbBox) thumbBox.innerHTML = '⚡';
         if (badge) badge.textContent = '[투표/A-B 테스트]';
         if (reward) reward.textContent = '🪙 350 돼지코인 수령';
@@ -9621,7 +9647,16 @@
           `;
         }
       } else {
-        if (targetBox) targetBox.classList.remove('hidden');
+        if (targetBox) {
+          targetBox.classList.remove('hidden');
+          targetBox.style.display = 'flex';
+          if (targetText) {
+            targetText.innerHTML = `
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-950 font-bold text-[11px] shadow-2xs">🎯 #20대·30대</span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-950 font-bold text-[11px] shadow-2xs">🎯 #가계부관심자</span>
+            `;
+          }
+        }
         if (thumbBox) thumbBox.innerHTML = '📱';
         if (badge) badge.textContent = '[프로덕트 테스트]';
         if (reward) reward.textContent = '🪙 600 돼지코인 수령';
@@ -10952,6 +10987,22 @@
       if (postData && String(postData.id || '') === normalizedId) return postData;
 
       if (['my-created-test', 'my-test'].includes(normalizedId)) return myCreatedTest;
+      if (myCreatedTest && String(myCreatedTest.id || '') === normalizedId) return myCreatedTest;
+
+      if (Array.isArray(window.liveExploreProjects)) {
+        const found = window.liveExploreProjects.find(p => String(p?.id || '') === normalizedId);
+        if (found) return found;
+      }
+
+      if (window.myProjectCollections) {
+        for (const list of Object.values(window.myProjectCollections)) {
+          if (Array.isArray(list)) {
+            const found = list.find(p => String(p?.id || '') === normalizedId);
+            if (found) return found;
+          }
+        }
+      }
+
       return null;
     }
 
@@ -12596,7 +12647,9 @@
         abUrlA: verifiedProject.ab_url_a,
         abUrlB: verifiedProject.ab_url_b,
         techTags: verifiedProject.tech_tags || techTags,
-        personaTags: verifiedProject.target_persona_tags || personaTags
+        personaTags: verifiedProject.target_persona_tags || personaTags,
+        tech_tags: verifiedProject.tech_tags || techTags,
+        target_persona_tags: verifiedProject.target_persona_tags || personaTags
       };
       // 화면상의 돼지코인은 DB 저장 성공 이후에만 반영합니다.
       userCoinBalance = Math.max(0, userCoinBalance - totalCost);
