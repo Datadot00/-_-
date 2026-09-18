@@ -689,8 +689,13 @@ function prefillFromAccountState(state) {
   const { nickname, bio, jobGroup } = getElements();
   const profile = state?.profile || {};
 
-  if (nickname) nickname.value = profile.nickname || '';
-  if (bio) bio.value = profile.bio || '';
+  // 구글 로그인 계정은 닉네임이 구글 표시 이름으로 미리 채워지는데,
+  // 이 값이 상한을 넘으면 2단계에서 곧바로 검증 오류를 만나게 된다.
+  // input 의 maxlength 는 값을 코드로 넣을 때 적용되지 않으므로 여기서 직접 자른다.
+  if (nickname) {
+    nickname.value = (profile.nickname || '').slice(0, ONBOARDING_LIMITS.nicknameMax);
+  }
+  if (bio) bio.value = (profile.bio || '').slice(0, ONBOARDING_LIMITS.bioMax);
   if (jobGroup) jobGroup.value = profile.jobGroup || '';
 
   setSingleChoice('gender', profile.gender || '');

@@ -8,6 +8,7 @@ import {
   resumeEmailConfirmation,
   resendSignupConfirmation,
   signInWithEmail,
+  signInWithOAuthProvider,
   signUpWithEmail,
   updateAuthenticatedPassword
 } from './authService.js';
@@ -29,6 +30,8 @@ const CURRENT_POST_ID_KEY = 'dondwae_current_post_id';
 const AUTH_TAB_ID_KEY = 'dondwae_auth_tab_id';
 const PENDING_EMAIL_CONFIRMATION_KEY = 'dondwae_pending_email_confirmation';
 const PENDING_EMAIL_CONFIRMATION_MAX_AGE_MS = 30 * 60 * 1000;
+const OAUTH_PENDING_PROVIDER_KEY = 'dondwae_oauth_pending_provider';
+const OAUTH_PENDING_MAX_AGE_MS = 5 * 60 * 1000;
 
 let lastActivityRecordedAt = 0;
 
@@ -57,6 +60,8 @@ const elements = {
   submitButtonArrow: document.getElementById('btn-auth-submit-arrow'),
   loadingStatus: document.getElementById('auth-loading-status'),
   forgotPasswordButton: document.getElementById('btn-auth-forgot-password'),
+  googleButton: document.getElementById('btn-auth-google'),
+  socialPanel: document.getElementById('auth-social-panel'),
   recoveryBackButton: document.getElementById('btn-auth-recovery-back'),
   resendButton: document.getElementById('btn-auth-resend'),
   confirmationCompleteButton: document.getElementById('btn-auth-confirmation-complete'),
@@ -266,6 +271,7 @@ function setAuthMode(mode, { force = false } = {}) {
   elements.passwordGroup?.classList.toggle('hidden', isRecovery);
   elements.passwordHint?.classList.toggle('hidden', !isSignup);
   elements.passwordConfirmationGroup?.classList.toggle('hidden', !isSignup);
+  elements.socialPanel?.classList.toggle('hidden', isRecovery);
   elements.forgotPasswordButton?.classList.toggle('hidden', mode !== 'login');
   elements.recoveryBackButton?.classList.toggle('hidden', !isRecovery);
 
@@ -304,6 +310,7 @@ function setAuthBusy(isBusy, action = authMode) {
     elements.loginModeButton,
     elements.signupModeButton,
     elements.submitButton,
+    elements.googleButton,
     elements.forgotPasswordButton,
     elements.recoveryBackButton,
     elements.resendButton,
@@ -339,6 +346,10 @@ function setAuthBusy(isBusy, action = authMode) {
         recovery: '재설정 링크 받기'
       }[authMode];
     }
+  }
+
+  if (elements.googleButton) {
+    elements.googleButton.setAttribute('aria-busy', String(isBusy && action === 'google'));
   }
 
   const showLoginProgress = isBusy && action === 'login';
@@ -410,6 +421,51 @@ function getAuthRedirectUrl(flow) {
   url.hash = '';
   url.searchParams.set('auth', flow);
   return url.toString();
+}
+
+/**
+ * OAuth 리다이렉트는 Supabase Redirect URL 허용목록과 정확히 맞아야 하므로
+ * 쿼리스트링 없이 현재 오리진만 돌려준다. 어떤 흐름이었는지는 세션 저장소로 기억한다.
+ */
+function getOAuthRedirectUrl() {
+  const url = new URL(window.location.href);
+  url.search = '';
+  url.hash = '';
+  return url.toString();
+}
+
+function rememberPendingOAuthProvider(provider) {
+  try {
+    sessionStorage.setItem(OAUTH_PENDING_PROVIDER_KEY, JSON.stringify({
+      provider,
+      createdAt: Date.now()
+    }));
+  } catch {
+    // 저장소를 못 써도 로그인 자체는 진행된다. 안내 문구만 일반 문구로 나온다.
+  }
+}
+
+/**
+ * 리다이렉트가 다른 오리진으로 착지하거나 사용자가 구글 화면에서 되돌아오면
+ * 마커가 소비되지 않은 채 남는다. 남은 마커를 그대로 믿으면 다음 방문에서
+ * 엉뚱한 실패 안내가 뜨므로, 방금 시작한 흐름일 때만 유효하다고 본다.
+ */
+function takePendingOAuthProvider() {
+  try {
+    const rawValue = sessionStorage.getItem(OAUTH_PENDING_PROVIDER_KEY);
+    if (!rawValue) return '';
+    sessionStorage.removeItem(OAUTH_PENDING_PROVIDER_KEY);
+
+    const marker = JSON.parse(rawValue);
+    const createdAt = Number(marker?.createdAt);
+    const isExpired = !Number.isFinite(createdAt)
+      || createdAt > Date.now()
+      || Date.now() - createdAt > OAUTH_PENDING_MAX_AGE_MS;
+
+    return isExpired ? '' : String(marker?.provider || '');
+  } catch {
+    return '';
+  }
 }
 
 function readAuthCallback() {
@@ -538,6 +594,29 @@ function restoreAuthenticatedDestination() {
     }
   } else if (getVisibleViewKey() === 'login' || getVisibleViewKey() === 'landing') {
     navigateTo('explore');
+  }
+}
+
+async function handleGoogleSignIn() {
+  if (authRequestInFlight) return;
+  clearAuthMessages();
+
+  if (!supabase) {
+    showAuthMessage('error', getAuthErrorWithId({ code: 'auth_not_configured' }));
+    return;
+  }
+
+  setAuthBusy(true, 'google');
+  try {
+    // 남아 있는 로컬 세션이 리다이렉트 직후 계정 판정을 흐리지 않도록 먼저 비운다.
+    await ensureNoStaleSession();
+    rememberPendingOAuthProvider('google');
+    await signInWithOAuthProvider(supabase, 'google', getOAuthRedirectUrl());
+    // 성공하면 구글 동의 화면으로 이동하므로 이 아래 코드는 실행되지 않는다.
+  } catch (error) {
+    takePendingOAuthProvider();
+    setAuthBusy(false);
+    showAuthMessage('error', getAuthErrorWithId(error));
   }
 }
 
@@ -948,6 +1027,7 @@ function bindAuthenticationEvents() {
   elements.passwordUpdateForm?.addEventListener('submit', handlePasswordUpdate);
   elements.loginModeButton?.addEventListener('click', () => setAuthMode('login'));
   elements.signupModeButton?.addEventListener('click', () => setAuthMode('signup'));
+  elements.googleButton?.addEventListener('click', handleGoogleSignIn);
   elements.forgotPasswordButton?.addEventListener('click', () => setAuthMode('recovery'));
   elements.recoveryBackButton?.addEventListener('click', () => setAuthMode('login'));
   elements.resendButton?.addEventListener('click', handleConfirmationResend);
@@ -974,6 +1054,7 @@ function disableAuthenticationUI() {
     elements.loginModeButton,
     elements.signupModeButton,
     elements.submitButton,
+    elements.googleButton,
     elements.forgotPasswordButton,
     elements.recoveryBackButton,
     elements.resendButton,
@@ -1082,6 +1163,9 @@ async function initializeAuthentication() {
   }
 
   const callback = readAuthCallback();
+  const pendingOAuthProvider = takePendingOAuthProvider();
+  const isOAuthReturn = Boolean(pendingOAuthProvider) && callback.hasCallback;
+
   supabase.auth.onAuthStateChange((event, session) => {
     applyAuthenticatedUser(session?.user || null);
     if (session?.user) {
@@ -1106,8 +1190,14 @@ async function initializeAuthentication() {
 
   try {
     // 1. 1시간 비활성 상태 검사 (새로고침 시에도 검사)
-    const wasTimedOut = await checkInactivityTimeout(true);
-    if (wasTimedOut) return;
+    // 단, 인증 콜백으로 막 돌아온 순간에는 직전 방문의 비활성 기록이
+    // 방금 발급된 세션을 끊어버리므로 검사를 건너뛰고 활동 시각을 새로 찍는다.
+    if (callback.hasCallback) {
+      recordUserActivity();
+    } else {
+      const wasTimedOut = await checkInactivityTimeout(true);
+      if (wasTimedOut) return;
+    }
 
     const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
@@ -1121,10 +1211,14 @@ async function initializeAuthentication() {
       cleanAuthCallbackUrl();
       setAuthMode('login');
       navigateTo('login');
-      showAuthMessage('error', getAuthErrorWithId({
-        code: callback.errorCode,
-        message: callback.errorDescription
-      }));
+      if (pendingOAuthProvider && callback.errorCode === 'access_denied') {
+        showAuthMessage('error', '구글 로그인이 취소되었습니다. 다시 시도해 주세요.');
+      } else {
+        showAuthMessage('error', getAuthErrorWithId({
+          code: callback.errorCode,
+          message: callback.errorDescription
+        }));
+      }
       return;
     }
 
@@ -1148,8 +1242,13 @@ async function initializeAuthentication() {
 
       clearPendingEmailConfirmation();
       await routeAfterAuthentication(() => {
-        showToast('이메일 인증이 완료되었습니다.', '✅');
+        if (isOAuthReturn) {
+          showToast(`${restoredUser.email || '구글'} 계정으로 로그인했습니다.`, '🔑');
+        } else {
+          showToast('이메일 인증이 완료되었습니다.', '✅');
+        }
         navigateTo('explore');
+        refreshAuthenticatedDataInBackground();
       });
       return;
     }
@@ -1162,6 +1261,14 @@ async function initializeAuthentication() {
         passwordRecoveryActive = false;
         sessionStorage.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
       }
+      if (pendingOAuthProvider) {
+        cleanAuthCallbackUrl();
+        setAuthMode('login');
+        navigateTo('login');
+        showAuthMessage('error', getAuthErrorWithId({ code: 'session_missing' }));
+        return;
+      }
+
       const currentView = getVisibleViewKey();
       if (['mypage', 'create', 'feedback'].includes(currentView)) {
         navigateTo('landing');

@@ -83,6 +83,30 @@ export async function signUpWithEmail(client, email, password, emailRedirectTo) 
   };
 }
 
+export const SUPPORTED_OAUTH_PROVIDERS = Object.freeze(['google']);
+
+export async function signInWithOAuthProvider(client, provider, redirectTo) {
+  requireAuthClient(client);
+
+  if (!SUPPORTED_OAUTH_PROVIDERS.includes(provider)) {
+    const unsupportedError = new Error(`Unsupported OAuth provider: ${provider}`);
+    unsupportedError.code = 'oauth_provider_unsupported';
+    throw unsupportedError;
+  }
+
+  const { data, error } = await client.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo,
+      // 테스트 중 계정을 바꿔 가며 확인할 수 있도록 매번 계정 선택 화면을 띄운다.
+      queryParams: { prompt: 'select_account' }
+    }
+  });
+
+  if (error) throw error;
+  return data;
+}
+
 export async function requestPasswordReset(client, email, redirectTo) {
   requireAuthClient(client);
 
@@ -166,6 +190,12 @@ export function getAuthErrorMessage(error) {
     signup_user_missing: '회원가입 정보를 만들지 못했습니다. 잠시 후 다시 시도해 주세요.',
     over_email_send_rate_limit: '인증 메일 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.',
     over_request_rate_limit: '요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.',
+    oauth_provider_unsupported: '지원하지 않는 소셜 로그인입니다.',
+    provider_disabled: '현재 구글 로그인을 사용할 수 없습니다. 관리자에게 문의해 주세요.',
+    provider_email_needs_verification: '구글 계정의 이메일 확인이 필요합니다.',
+    bad_oauth_state: '로그인 요청이 만료되었습니다. 다시 시도해 주세요.',
+    bad_oauth_callback: '구글 로그인 응답이 올바르지 않습니다. 다시 시도해 주세요.',
+    identity_already_exists: '이미 다른 계정에 연결된 구글 계정입니다.',
     unexpected_failure: '인증 데이터 처리 중 오류가 발생했습니다. 관리자에게 문의해 주세요.'
   };
 
