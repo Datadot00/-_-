@@ -32,12 +32,28 @@ Vite 로컬 개발 주소는 `http://localhost:3000`입니다. `creator-web/pack
 ```text
 돈돼/
 ├── creator-web/          # 실제 서비스 루트 및 개발 기준 폴더
-│   └── index.html        # 실제 서비스 진입 파일
+│   ├── index.html        # 실제 서비스 진입 파일
+│   ├── public/           # 서비스 이미지 원본 1벌(저장소 유일본)
+│   └── src/              # 분리된 JavaScript 모듈
 ├── tester-mobile/        # 모바일 플로우 참고용 프로토타입(배포 제외)
 ├── index(mode).html      # 과거 웹/모바일 선택 포털(배포 제외)
-├── assets/               # 공통 이미지 리소스
-└── docs/                 # 설계, 리서치 및 체크리스트 문서
+├── assets/               # 화면에 쓰지 않는 디자인 원본
+├── docs/                 # 설계, 리서치 및 체크리스트 문서
+│   ├── mockups/          # 화면 설계 시안 스크린샷(desktop/, mobile/)
+│   └── legal/            # 약관 및 방침 원본 문서
+└── .gitignore            # 저장소 전체 제외 규칙(루트 한 곳에서 관리)
 ```
+
+### 이미지 규칙
+
+서비스가 쓰는 이미지는 `creator-web/public/`에 **한 벌만** 둡니다. 예전에는 같은 이미지가 루트, `assets/`, `creator-web/`, `tester-mobile/`에 최대 4벌씩 흩어져 있었습니다.
+
+- 참조는 항상 루트 절대경로로 씁니다. 예: `src="/logo-coin.png"`
+- `./`나 `../`로 시작하는 상대경로는 쓰지 않습니다. 인라인 `<script>` 안의 JavaScript 문자열은 Vite가 경로를 바꿔주지 않아 배포본에서 404가 납니다.
+- `public/` 파일은 Vite가 `dist/` 루트로 그대로 복사하므로 base64 인라인이 아니라 브라우저 캐시를 탑니다.
+- 프로토타입(`tester-mobile/`, `index(mode).html`)은 빌드를 거치지 않으므로 `../creator-web/public/...` 경로로 같은 원본을 참조합니다.
+
+화면 설계 시안(`docs/mockups/`)은 참고 자료이며 코드가 불러오지 않습니다.
 
 ## 배포 기준
 
@@ -80,7 +96,7 @@ refactor: 코드 구조 개선
 - API Secret Key와 비밀번호는 절대 Git에 Commit하지 않습니다.
 - 브라우저에는 Supabase publishable key만 사용합니다.
 - Supabase secret/service role key는 프론트엔드 코드와 `VITE_` 환경변수에 넣지 않습니다.
-- `.env.local`, `node_modules`, `dist`는 Git에서 제외합니다.
+- `.env.local`, `node_modules`, `dist`, `.vercel`은 루트 `.gitignore`에서 제외합니다.
 
 ## 관련 문서
 

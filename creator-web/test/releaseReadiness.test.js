@@ -64,7 +64,8 @@ test('과거 원격 시드 이력과 팀 마이그레이션 지침을 저장한�
 });
 
 test('환경 파일 정책은 로컬 비밀 파일을 제외하고 예제만 허용한다', () => {
-  const ignore = readFileSync(new URL('../.gitignore', import.meta.url), 'utf8');
+  // .gitignore는 저장소 루트 한 곳에서 관리한다.
+  const ignore = readFileSync(new URL('../../.gitignore', import.meta.url), 'utf8');
   const example = readFileSync(new URL('../.env.example', import.meta.url), 'utf8');
   assert.match(ignore, /^\.env\.\*$/m);
   assert.match(ignore, /^!\.env\.example$/m);
