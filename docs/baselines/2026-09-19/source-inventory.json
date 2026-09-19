@@ -1,0 +1,1421 @@
+﻿{
+    "recordedAt":  "2026-09-19T17:58:41.1855976+09:00",
+    "commit":  "15c4d45e947581561e38aceb2e025f02a400fba8",
+    "lineCount":  15114,
+    "countMethod":  "Physical lines from Get-Content. Function inventory is a source regex inventory, not an AST or runtime audit.",
+    "views":  [
+                  {
+                      "id":  "view-landing",
+                      "line":  1010
+                  },
+                  {
+                      "id":  "view-login",
+                      "line":  1156
+                  },
+                  {
+                      "id":  "view-explore",
+                      "line":  1364
+                  },
+                  {
+                      "id":  "view-create",
+                      "line":  2017
+                  },
+                  {
+                      "id":  "view-post",
+                      "line":  3054
+                  },
+                  {
+                      "id":  "view-vote-progress",
+                      "line":  3620
+                  },
+                  {
+                      "id":  "view-feedback",
+                      "line":  3704
+                  },
+                  {
+                      "id":  "view-market",
+                      "line":  3948
+                  },
+                  {
+                      "id":  "view-mypage",
+                      "line":  4327
+                  },
+                  {
+                      "id":  "view-notifications",
+                      "line":  5100
+                  },
+                  {
+                      "id":  "view-notification-settings",
+                      "line":  5242
+                  }
+              ],
+    "functions":  [
+                      {
+                          "name":  "resolveFriendlyError",
+                          "line":  5380,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getServiceSidebarNavigationMarkup",
+                          "line":  5462,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderServiceSidebarNavigations",
+                          "line":  5536,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateServiceSidebarNavigation",
+                          "line":  5544,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateMyInfoSidebarDisclosure",
+                          "line":  5583,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleMyInfoSidebar",
+                          "line":  5597,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "showMypageSectionOnly",
+                          "line":  5602,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "navigateToMypageSection",
+                          "line":  5642,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "changeFeedbackReportProject",
+                          "line":  5659,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "showSidebarFeatureNotice",
+                          "line":  5681,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "normalizeMyProjectStatus",
+                          "line":  5689,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "isParticipationCompleted",
+                          "line":  5693,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getProjectPersonalState",
+                          "line":  5698,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderProjectPersonalBadge",
+                          "line":  5715,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "resumeProjectReview",
+                          "line":  5741,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updatePendingReviewBadge",
+                          "line":  5748,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "sortParticipatedProjectsByReviewState",
+                          "line":  5755,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateParticipatedReviewTabs",
+                          "line":  5761,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "switchParticipatedReviewTab",
+                          "line":  5785,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setDetailParticipationCta",
+                          "line":  5791,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setDetailParticipationNotice",
+                          "line":  5838,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "refreshFeedPersonalState",
+                          "line":  5849,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderMyProjectCollection",
+                          "line":  5863,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "deleteRegisteredProject",
+                          "line":  5986,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "deleteScrapedItem",
+                          "line":  6016,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "switchMyProjectTab",
+                          "line":  6034,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "filterMyProjects",
+                          "line":  6061,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getServiceTopNavigationMarkup",
+                          "line":  6109,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderServiceTopNavigations",
+                          "line":  6168,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateServiceTopNavigation",
+                          "line":  6176,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateTopMyInfoNavigationDisclosure",
+                          "line":  6215,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleTopMyInfoNavigation",
+                          "line":  6227,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeTopMyInfoNavigation",
+                          "line":  6233,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "showTopNavigationFeatureNotice",
+                          "line":  6239,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "formatRelativeTime",
+                          "line":  6264,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getNotificationTypeIconHTML",
+                          "line":  6280,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getNotificationTargetActionText",
+                          "line":  6334,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleNotificationItemClick",
+                          "line":  6346,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "deleteNotification",
+                          "line":  6366,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateNotificationToggleUI",
+                          "line":  6379,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleNotificationSetting",
+                          "line":  6410,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "markAllNotificationsAsRead",
+                          "line":  6419,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderNotificationsUI",
+                          "line":  6425,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "createNotificationCardHTML",
+                          "line":  6506,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "showGenericToast",
+                          "line":  6567,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "filterFeed",
+                          "line":  6599,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "searchFeed",
+                          "line":  6643,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "sortFeed",
+                          "line":  6672,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleBookmark",
+                          "line":  6724,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateDetailBookmarkUI",
+                          "line":  6798,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleCurrentDetailBookmark",
+                          "line":  6834,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updatePledgeModalUI",
+                          "line":  6870,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "normalizeMarketCategory",
+                          "line":  6896,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "filterMarketCategory",
+                          "line":  6905,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "selectMarketProduct",
+                          "line":  6925,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "executeExchange",
+                          "line":  6981,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateAllCoinDisplays",
+                          "line":  7030,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "normalizeProjectTag",
+                          "line":  7073,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "appendProjectTagChip",
+                          "line":  7081,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addProjectTagsFromInput",
+                          "line":  7113,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addTechTag",
+                          "line":  7120,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addPersonaTag",
+                          "line":  7129,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderProjectTagChips",
+                          "line":  7138,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "collectProjectTags",
+                          "line":  7145,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "scrollToMypageMarket",
+                          "line":  7151,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "createDefaultProjectPreview",
+                          "line":  7158,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "formatLocalDateValue",
+                          "line":  7186,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getTodayDateValue",
+                          "line":  7193,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "applyProjectStartDateLimit",
+                          "line":  7199,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "initializeProjectDateDefaults",
+                          "line":  7211,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "goToStep",
+                          "line":  7230,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "isValidCreateStepUrl",
+                          "line":  7282,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "showCreateStepValidationError",
+                          "line":  7293,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "validateCreateStep",
+                          "line":  7313,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "requestCreateStep",
+                          "line":  7501,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleFormBottomPrev",
+                          "line":  7513,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleFormBottomNext",
+                          "line":  7521,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "readStoredProjectEditId",
+                          "line":  7533,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getActiveProjectEditId",
+                          "line":  7545,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setProjectEditContext",
+                          "line":  7551,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "clearProjectEditContext",
+                          "line":  7571,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openEditPostModal",
+                          "line":  7581,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateHomeFeedThumbnails",
+                          "line":  7971,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "copyTextToClipboard",
+                          "line":  7987,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "fallbackCopyText",
+                          "line":  8000,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderDetailLoginInfo",
+                          "line":  8016,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "parseReviewAnswers",
+                          "line":  8072,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "buildReviewAnswerSummary",
+                          "line":  8100,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderReviewAnswerSummary",
+                          "line":  8121,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderReviewAnswerItems",
+                          "line":  8156,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderDetailReviews",
+                          "line":  8168,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleBrokenProjectThumbnail",
+                          "line":  8330,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderDBProjectToDetail",
+                          "line":  8362,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "openLatestFeedbackReport",
+                          "line":  8757,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openFeedbackReport",
+                          "line":  8778,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openPostDetail",
+                          "line":  8954,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "switchPostDetailTab",
+                          "line":  9598,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openTestParticipateModal",
+                          "line":  9637,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeTestParticipateModal",
+                          "line":  9802,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "deferParticipationReview",
+                          "line":  9807,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "isDatabaseProjectId",
+                          "line":  9813,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "ensureDatabaseParticipation",
+                          "line":  9817,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "confirmParticipationAndProceed",
+                          "line":  9827,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "completeInternalTestFlow",
+                          "line":  9926,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "cancelInternalTestFlow",
+                          "line":  10194,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getInternalMissionDraftStorageKey",
+                          "line":  10208,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "normalizeInternalMissionDraftData",
+                          "line":  10215,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "saveInternalMissionDraft",
+                          "line":  10244,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "readInternalMissionDraft",
+                          "line":  10264,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "clearInternalMissionDraft",
+                          "line":  10291,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "parseProjectQuestions",
+                          "line":  10304,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getInternalVoteOptions",
+                          "line":  10328,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderInternalVoteOptionCard",
+                          "line":  10354,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderFeedbackSelectedVotePreview",
+                          "line":  10389,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderInternalQuestionCard",
+                          "line":  10421,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "restoreInternalMissionDraftToForm",
+                          "line":  10448,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderInternalMissionFlow",
+                          "line":  10470,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "collectInternalMissionAnswers",
+                          "line":  10580,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "selectInternalVoteOption",
+                          "line":  10608,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openFeedbackWriteModal",
+                          "line":  10642,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeFeedbackWriteModal",
+                          "line":  10715,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "deferFeedbackReview",
+                          "line":  10721,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "returnToInternalVoteFromFeedback",
+                          "line":  10728,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderFeedbackFormByTestType",
+                          "line":  10740,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "clearFeedbackScreenshot",
+                          "line":  11043,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleFeedbackScreenshotSelected",
+                          "line":  11055,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setFeedbackStar",
+                          "line":  11090,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "submitFeedbackForm",
+                          "line":  11105,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "normalizePublicServiceUrl",
+                          "line":  11354,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getCurrentParticipationProject",
+                          "line":  11366,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getProjectPublicUrl",
+                          "line":  11394,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getProjectMissionUrl",
+                          "line":  11417,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "isInternalMissionProject",
+                          "line":  11440,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "startMissionParticipation",
+                          "line":  11454,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "resolveMissionServiceName",
+                          "line":  11458,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setMissionPreviewCard",
+                          "line":  11473,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openPublicServiceUrl",
+                          "line":  11515,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "resetCreateProjectForm",
+                          "line":  11525,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "ensureProjectGatingPassed",
+                          "line":  11711,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "navigateTo",
+                          "line":  11730,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "navigateBack",
+                          "line":  11826,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleGatingBypassMode",
+                          "line":  11840,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "getCompletedTestCount",
+                          "line":  11859,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openPledgeModalLocal",
+                          "line":  11867,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "proceedPledgeModal",
+                          "line":  11887,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openPledgeModal",
+                          "line":  11913,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closePledgeModal",
+                          "line":  11917,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openTestParticipateModal",
+                          "line":  11922,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "proceedTestParticipateModal",
+                          "line":  11950,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closePledgeModal",
+                          "line":  12000,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openWelcomeBonusModal",
+                          "line":  12005,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeWelcomeBonusModal",
+                          "line":  12033,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "confirmPledgeAndProceed",
+                          "line":  12039,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleMainCategoryChange",
+                          "line":  12066,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleProductPlatformFields",
+                          "line":  12123,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleMissionFormatMode",
+                          "line":  12150,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleProductAbMode",
+                          "line":  12159,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addProductAbQuestionItem",
+                          "line":  12174,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setVoteInputMode",
+                          "line":  12192,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setVoteInputModeLocked",
+                          "line":  12211,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setVoteImagePreview",
+                          "line":  12222,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "revokeVoteImagePreview",
+                          "line":  12242,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleVoteImageSelected",
+                          "line":  12249,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "resetVoteImageInputs",
+                          "line":  12272,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addVoteUrlItem",
+                          "line":  12286,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addVoteQuestionItem",
+                          "line":  12300,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleSurveySubMode",
+                          "line":  12314,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleThumbnailUpload",
+                          "line":  12321,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "removeThumbnailImage",
+                          "line":  12337,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addSurveyQuestionItem",
+                          "line":  12349,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateTestCredentialFieldGuidance",
+                          "line":  12363,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleLoginRequirementChange",
+                          "line":  12402,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleQuestionTypeChange",
+                          "line":  12419,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addOptionToQuestion",
+                          "line":  12430,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "removeOptionFromQuestion",
+                          "line":  12454,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "reindexQuestionOptions",
+                          "line":  12461,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addQuestionItem",
+                          "line":  12469,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "reindexQuestionTitles",
+                          "line":  12521,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setVerificationMethod",
+                          "line":  12533,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addQuizQuestionItem",
+                          "line":  12554,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "reindexQuizTitles",
+                          "line":  12584,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "calculateTotalCost",
+                          "line":  12599,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleStep3PublishClick",
+                          "line":  12685,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "publishNewTestAndReturnToDashboard",
+                          "line":  12705,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setUserCoinBalance",
+                          "line":  13204,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "renderMyCoinData",
+                          "line":  13210,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "renderSupportTickets",
+                          "line":  13264,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "loadSupportTickets",
+                          "line":  13291,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "submitSupportTicket",
+                          "line":  13309,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "originalPublishOld",
+                          "line":  13343,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "startRealtimeReviewTimer",
+                          "line":  13498,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "showReviewToast",
+                          "line":  13503,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "dismissReviewToast",
+                          "line":  13512,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "handleToastClick",
+                          "line":  13520,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "showGoalAchievedModal",
+                          "line":  13528,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "triggerGoalCompletion",
+                          "line":  13546,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeGoalAchievedModal",
+                          "line":  13550,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateFeedbackRecruitsUI",
+                          "line":  13567,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleUnrepliedFeedbackFilter",
+                          "line":  13603,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "applyFeedbackFilter",
+                          "line":  13608,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "sortFeedback",
+                          "line":  13650,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "submitCreatorReply",
+                          "line":  13671,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "verifyUrlAction",
+                          "line":  13710,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "escapeHtml",
+                          "line":  13744,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openNotifyModal",
+                          "line":  13754,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeNotifyModal",
+                          "line":  13759,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "sendUpdateNotification",
+                          "line":  13764,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "dismissUpdateToast",
+                          "line":  13780,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "updateProfileInputCounts",
+                          "line":  13791,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openEditProfileModal",
+                          "line":  13800,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeEditProfileModal",
+                          "line":  13854,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "openUserProfileModal",
+                          "line":  13860,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "closeUserProfileModal",
+                          "line":  13887,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "setInterestChipSelected",
+                          "line":  13892,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleInterestChip",
+                          "line":  13903,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "createSnsLinkRow",
+                          "line":  13908,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderProfileSnsLinks",
+                          "line":  13933,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "addSnsLinkInput",
+                          "line":  13941,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "saveProfileChangesLocal",
+                          "line":  13951,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "updateHeaderAuthUI",
+                          "line":  13979,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "saveProfileChanges",
+                          "line":  14028,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "isInterviewerControllerEnabled",
+                          "line":  14106,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "initializeInterviewerController",
+                          "line":  14110,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "toggleSwitcherPanel",
+                          "line":  14120,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "restoreUserCreatedProjectToFeed",
+                          "line":  14157,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderExploreFeedState",
+                          "line":  14251,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "appendFilteredFeedEmptyState",
+                          "line":  14287,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "loadSlotThumbnail",
+                          "line":  14306,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "observePendingThumbnails",
+                          "line":  14333,
+                          "kind":  "function declaration"
+                      },
+                      {
+                          "name":  "renderLiveProjectsToFeed",
+                          "line":  14355,
+                          "kind":  "window assignment"
+                      },
+                      {
+                          "name":  "initSupabaseLiveDB",
+                          "line":  14467,
+                          "kind":  "window assignment"
+                      }
+                  ],
+    "sourceFiles":  [
+                        {
+                            "path":  "creator-web/index.html",
+                            "sha256":  "C5FB3A652A82F646AD37327E4F46C6E159947E19AE4C4E5BF72B831669C87F35",
+                            "bytes":  854123
+                        },
+                        {
+                            "path":  "creator-web/package.json",
+                            "sha256":  "0DF869DDF42B5805DE01CDF5BB746B7053252EF9FD66062E146EC348111231E2",
+                            "bytes":  460
+                        },
+                        {
+                            "path":  "creator-web/package-lock.json",
+                            "sha256":  "3FFDFCC431DB12B802DB9F0F30C7A2994D64B794EB441C11983430A099BA06B0",
+                            "bytes":  29415
+                        },
+                        {
+                            "path":  "creator-web/src/accountRouting.js",
+                            "sha256":  "934B45D2081FEC422D06534103A5662602DF249F45DDBD12651442B6B218B86C",
+                            "bytes":  4472
+                        },
+                        {
+                            "path":  "creator-web/src/auth.js",
+                            "sha256":  "C1AF9A6967FADBC92FF63E25B7642AEE9DD772F0009F119A422F8013F7349A46",
+                            "bytes":  46696
+                        },
+                        {
+                            "path":  "creator-web/src/authService.js",
+                            "sha256":  "C45F7506CC777437192C30D0EEC46D17A33E422F46F0AEC9BBCE0C2AB61019CD",
+                            "bytes":  8271
+                        },
+                        {
+                            "path":  "creator-web/src/dataService.js",
+                            "sha256":  "C5A5980BEC9E4E9804B5D04FD911F626845E6712D0B4A6E3830A650255ED0129",
+                            "bytes":  42983
+                        },
+                        {
+                            "path":  "creator-web/src/errorCodes.js",
+                            "sha256":  "9AD1FE86E10D33C53A1C1044F68F5C9B01439F6530061585D99A9FA4B093B171",
+                            "bytes":  10549
+                        },
+                        {
+                            "path":  "creator-web/src/lib/supabaseClient.js",
+                            "sha256":  "2668334BACA9B922BE0593AC7DA856115AFFFC6A4B8487FE74DAD3AD79FCC3A6",
+                            "bytes":  592
+                        },
+                        {
+                            "path":  "creator-web/src/main.js",
+                            "sha256":  "6C48FD18E2453D34A5B5810988AA6530516E7B9CECC58D2BE72BC63F12FC8B40",
+                            "bytes":  983
+                        },
+                        {
+                            "path":  "creator-web/src/onboardingService.js",
+                            "sha256":  "06942DBA7DEF597AB69964F17F558AB23BFC226D5790B4986255A8DBF25A2378",
+                            "bytes":  8689
+                        },
+                        {
+                            "path":  "creator-web/src/onboardingWizard.js",
+                            "sha256":  "A4E441D196765651DD2EE9BB83798F7B3235F3426B813D375076DC7898CDCB30",
+                            "bytes":  32869
+                        },
+                        {
+                            "path":  "creator-web/src/profileFieldsUi.js",
+                            "sha256":  "5A0C64121988238EF85DAB84D09B8F64931B5B336A399899FAA684CBF53BC124",
+                            "bytes":  10103
+                        },
+                        {
+                            "path":  "creator-web/src/termsGate.js",
+                            "sha256":  "CE3717B0A1742506D95FFF8D99D30D9BAC56324032372BDAED5550B52E59CF92",
+                            "bytes":  9618
+                        },
+                        {
+                            "path":  "creator-web/src/termsService.js",
+                            "sha256":  "8A9AFE533A4ADA4AEC64FE37F5CA43CA11A98470758C9C49D96384C24051DC09",
+                            "bytes":  2531
+                        },
+                        {
+                            "path":  "creator-web/test/accountFlowIntegration.test.js",
+                            "sha256":  "D7ADCCE30846FB98A1C0C045F7217FAB616C5AF726D49CDE8EAF9CA3C9F25D16",
+                            "bytes":  11338
+                        },
+                        {
+                            "path":  "creator-web/test/accountOnboardingRpc.test.js",
+                            "sha256":  "5AAAF0ECA44F7CE5F87A29F99C6D610776C406C37500D61DEAF190C0B2806C94",
+                            "bytes":  4173
+                        },
+                        {
+                            "path":  "creator-web/test/accountRouting.test.js",
+                            "sha256":  "E02437A42B8F8373664B901FD11074BE1C243B59CC99E8F85A1AEA5828C42CFF",
+                            "bytes":  3776
+                        },
+                        {
+                            "path":  "creator-web/test/authService.test.js",
+                            "sha256":  "78E9875D1F9F6A43DFB5E8F60756A60C2EB46FD44FD2D4CC29DEA9462971A56E",
+                            "bytes":  8453
+                        },
+                        {
+                            "path":  "creator-web/test/coinBalanceSync.test.js",
+                            "sha256":  "89D6194DC0414A5AE2DDF9C0E31F06F499BAB666BF926DA89299A04B296985DA",
+                            "bytes":  2625
+                        },
+                        {
+                            "path":  "creator-web/test/dataServiceSecurity.test.js",
+                            "sha256":  "4A2C0E1841D43D78084AFB2E0F53A5C649F4D91745D33A175D8B1DBBF013CA3F",
+                            "bytes":  1810
+                        },
+                        {
+                            "path":  "creator-web/test/emailOtpFlow.test.js",
+                            "sha256":  "6ED0A5CC47C486F3138CDE95E536C1605B8D5DAE4037EFACCD036347C73831D7",
+                            "bytes":  3200
+                        },
+                        {
+                            "path":  "creator-web/test/errorCodes.test.js",
+                            "sha256":  "1E44CF71B51C64D4D706B394FB69845EC70FF60FFBEF0218C12C3DA73004BEF0",
+                            "bytes":  3767
+                        },
+                        {
+                            "path":  "creator-web/test/loginPerformance.test.js",
+                            "sha256":  "F23F7859FFD8C3C000BD330B79403EB3842A71BE13A0E47979691F5CB776FB32",
+                            "bytes":  2465
+                        },
+                        {
+                            "path":  "creator-web/test/myInfoData.test.js",
+                            "sha256":  "9E1B0C29FF78AAB34F2D80310CD102AF51A7194E976815FFE5C664D041AA200D",
+                            "bytes":  3768
+                        },
+                        {
+                            "path":  "creator-web/test/onboardingSchema.test.js",
+                            "sha256":  "3579FCA30E32A9CCBE07BAF9639187211129702EDD4A48542EAD9E67FBF1E81D",
+                            "bytes":  1648
+                        },
+                        {
+                            "path":  "creator-web/test/onboardingWizard.test.js",
+                            "sha256":  "799B3FAB8274A1989DB4F231480F21A62FCAED1756AF3105F71628A5724D93EE",
+                            "bytes":  25965
+                        },
+                        {
+                            "path":  "creator-web/test/optionalVerificationItems.test.js",
+                            "sha256":  "304D85A50A841E54CF338FF84EA512726423D199A5C85F825EA50EEF5D251755",
+                            "bytes":  5710
+                        },
+                        {
+                            "path":  "creator-web/test/profileFieldsUi.test.js",
+                            "sha256":  "495002B53214EF2CAC6F92C648A79596F86216FD921E231DB5C09E320D423753",
+                            "bytes":  9592
+                        },
+                        {
+                            "path":  "creator-web/test/projectGating.test.js",
+                            "sha256":  "0A41F773FDC87D7219621A833F42967AFE48FE93F65D6D9708CC6AF8671164D8",
+                            "bytes":  2605
+                        },
+                        {
+                            "path":  "creator-web/test/projectPersistence.test.js",
+                            "sha256":  "027BF429BDA7B04A0BD0E3396C5C1C898CD2BA9E73A29A1B40C7B89040C30777",
+                            "bytes":  21798
+                        },
+                        {
+                            "path":  "creator-web/test/queryOptimization.test.js",
+                            "sha256":  "A471B255E7E8DC7EE41E8C9984260BC3B1FF1A645047DCE0473D866D03227556",
+                            "bytes":  5626
+                        },
+                        {
+                            "path":  "creator-web/test/releaseReadiness.test.js",
+                            "sha256":  "2BCF6C9485E5379C989B74850E998FE837037355CF9B527A4A4B69E530043A5D",
+                            "bytes":  3696
+                        },
+                        {
+                            "path":  "creator-web/test/rewardBudgetCalculator.test.js",
+                            "sha256":  "7E3EE599760AB4EA54DE1D5A594D0EF586752443B3E73C998236A7D85E908F68",
+                            "bytes":  2961
+                        },
+                        {
+                            "path":  "creator-web/test/schemaConstraints.test.js",
+                            "sha256":  "B89E146AE6DF1F5302D0E7941846ED3086868CBF15F0FD1793CA66257A634D58",
+                            "bytes":  6121
+                        },
+                        {
+                            "path":  "creator-web/test/signupOnboardingReloginFlow.test.js",
+                            "sha256":  "5F67ECCC5C062F57C2223D53A14B23574AC17E797E9BB48C89948A8F30B5B15F",
+                            "bytes":  8780
+                        },
+                        {
+                            "path":  "creator-web/test/support/stubDom.js",
+                            "sha256":  "8DFF2B013944FEA75E25E861AA7BEE113006B33EDE0AC3C6F067DC9E92249F50",
+                            "bytes":  9715
+                        },
+                        {
+                            "path":  "creator-web/test/termsConsentFlow.test.js",
+                            "sha256":  "D26E6A1A2075338C10C30FA8337EF4477E20F3F0060E2EA4007A022699DB8C0D",
+                            "bytes":  2937
+                        },
+                        {
+                            "path":  "creator-web/test/termsConsentSchema.test.js",
+                            "sha256":  "AD24219411398C34CDA2194109ED0DEFB06A93EA4F1A131D1A3F9CDFE1ACA9D4",
+                            "bytes":  3471
+                        },
+                        {
+                            "path":  "creator-web/test/termsService.test.js",
+                            "sha256":  "CC193C5D34D8DA807F4725140FBE82719420B03CBA3BC8931643457E9B57AC30",
+                            "bytes":  2786
+                        },
+                        {
+                            "path":  "creator-web/test/transactionFlows.test.js",
+                            "sha256":  "254CC94F6F6EFB33C94629234494894F79A06E7F643A0BF526C3A615F3DFE03F",
+                            "bytes":  27019
+                        },
+                        {
+                            "path":  "creator-web/test/welcomeBonus.test.js",
+                            "sha256":  "65C771171E55A16F1D6FB44EB63544D6710CD634FF4D8B385EABD830B5F3D104",
+                            "bytes":  2924
+                        }
+                    ]
+}
