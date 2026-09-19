@@ -1,3 +1,4 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -7,10 +8,10 @@ import {
   MARKETPLACE_ITEM_COLUMNS,
   prepareReviewRpcPayload,
   sanitizeUserProfileUpdates
-} from '../src/dataService.js';
+} from '../src/shared/data/dataService.js';
 
 test('프로젝트 등록 헤더는 불필요한 로그인 및 회원가입 버튼을 노출하지 않는다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const createViewStart = html.indexOf('id="view-create"');
   const createViewEnd = html.indexOf('id="view-post"', createViewStart);
   const createView = html.slice(createViewStart, createViewEnd);
@@ -58,7 +59,7 @@ test('제작자에게 궁금한 점 문항은 선택 사항이며 빈 내용으�
     rating: 5,
     answers: { review_text: '' }
   });
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   assert.deepEqual(payload.p_answers, { review_text: '' });
   assert.match(html, /제작자에게 궁금한 점 <span[^>]*>\(선택\)<\/span>/);
@@ -81,7 +82,7 @@ test('코인 원장은 원인 참조를 포함하고 상점 컬럼은 서버 가
 });
 
 test('데이터 서비스 쓰기는 트랜잭션 RPC만 호출한다', () => {
-  const source = readFileSync(new URL('../src/dataService.js', import.meta.url), 'utf8');
+  const source = readFileSync(new URL('../src/shared/data/dataService.js', import.meta.url), 'utf8');
   assert.match(source, /rpc\('apply_to_project'/);
   assert.match(source, /rpc\('submit_project_review'/);
   assert.match(source, /rpc\('exchange_marketplace_item'/);
@@ -90,7 +91,7 @@ test('데이터 서비스 쓰기는 트랜잭션 RPC만 호출한다', () => {
 });
 
 test('미션 참여와 서비스 공개 URL 구경 동선을 분리한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const publicPreviewFlow = html.match(/function openPublicServiceUrl\(\)[\s\S]*?\n    \}/)?.[0] || '';
   const participationFlow = html.match(/async function confirmParticipationAndProceed\(\)[\s\S]*?\n    \}/)?.[0] || '';
 
@@ -108,7 +109,7 @@ test('미션 참여와 서비스 공개 URL 구경 동선을 분리한다', () =
 });
 
 test('참여 후 미작성 리뷰는 내 프로젝트와 상세 화면에서 다시 이어 쓸 수 있다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const feedbackRenderer = html.match(/function renderFeedbackFormByTestType\(testType, container, dbProj = null\)[\s\S]*?\n    \}/)?.[0] || '';
 
   assert.match(html, /내 프로젝트 &gt; 참여 프로젝트 관리/);
@@ -141,7 +142,7 @@ test('참여 후 미작성 리뷰는 내 프로젝트와 상세 화면에서 다
 });
 
 test("'이전으로'는 홈이 아니라 직전 화면으로 돌아간다", () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // 상세 페이지는 피드 외에 내 프로젝트·알림에서도 들어오므로 항상 홈으로 보내면 안 된다.
   const backButton = html.match(/<button onclick="navigate[^"]*"[\s\S]{0,400}?← 이전으로/)?.[0] || '';
@@ -167,7 +168,7 @@ test("'이전으로'는 홈이 아니라 직전 화면으로 돌아간다", () =
 });
 
 test('시안 투표는 실제 프로젝트 기반 전용 화면과 리뷰 RPC 경로를 사용한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // 과거 하드코딩 화면과 가짜 지급 함수는 되살리지 않는다.
   assert.doesNotMatch(html, /view-abtest/);
@@ -186,7 +187,7 @@ test('시안 투표는 실제 프로젝트 기반 전용 화면과 리뷰 RPC �
 });
 
 test('상세 우측 참여 패널은 스크롤을 따라오는 sticky로 고정된다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   const panel = html.match(/<div id="post-sidebar-panel"[\s\S]{0,400}?>/)?.[0] || '';
   assert.notEqual(panel, '', '우측 패널 컨테이너를 찾지 못했습니다.');
@@ -211,7 +212,7 @@ test('상세 우측 참여 패널은 스크롤을 따라오는 sticky로 고정�
 });
 
 test('테스트 미션 탭은 URL을 노출하지 않고 구경하기 버튼으로만 외부로 나간다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // URL 표시 줄과 그 앵커는 완전히 제거되어야 한다.
   assert.doesNotMatch(html, /post-mission-url-row/);
@@ -260,7 +261,7 @@ test('테스트 미션 탭은 URL을 노출하지 않고 구경하기 버튼으�
 });
 
 test('상세 CTA는 최초 미션 참여하기에서 리뷰 완료 후 서비스 구경하기로 전환된다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // 최초 1회는 "미션 참여하기"가 활성화된 상태로 노출된다.
   assert.match(html, /<span id="btn-participate-test-text">미션 참여하기<\/span>/);
@@ -284,7 +285,7 @@ test('상세 CTA는 최초 미션 참여하기에서 리뷰 완료 후 서비스
 });
 
 test('결과 및 피드백 리포트도 검증 문항 질문·답변을 모두 노출한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // 리포트 카드도 상세 리뷰 탭과 같은 해석·렌더 헬퍼를 쓴다.
   assert.match(html, /const parsedAnswers = parseReviewAnswers\(r\.answers\);/);
@@ -304,7 +305,7 @@ test('결과 및 피드백 리포트도 검증 문항 질문·답변을 모두 �
 });
 
 test('리뷰 탭은 서술형 한 덩어리 대신 문항별 답변과 응답 분포를 보여준다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // 저장: 문항별로 질문과 함께 구조화해 담는다.
   assert.match(html, /data-feedback-question="\$\{escapeHtml\(String\(titleText\)\)\}"/);
@@ -331,7 +332,7 @@ test('리뷰 탭은 서술형 한 덩어리 대신 문항별 답변과 응답 �
 });
 
 test('내부 미션 화면은 데모 문구 대신 등록된 프로젝트 문항과 시안을 렌더링한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // 참여 모달에만 있던 하드코딩 데모 투표 마크업은 사라져야 한다.
   assert.doesNotMatch(html, /Option A 선택하기/);
@@ -354,8 +355,8 @@ test('내부 미션 화면은 데모 문구 대신 등록된 프로젝트 문항
 });
 
 test('나중에 작성하는 투표 피드백은 선택 시안 이미지와 사용자별 초안을 복원한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-  const auth = readFileSync(new URL('../src/auth.js', import.meta.url), 'utf8');
+  const html = readAppSource();
+  const auth = readFileSync(new URL('../src/features/auth/auth.js', import.meta.url), 'utf8');
   const submitFeedbackFlow = html.match(/async function submitFeedbackForm\(\)[\s\S]*?\n    \}/)?.[0] || '';
 
   // 초안은 다른 계정과 섞이지 않도록 사용자 ID와 프로젝트 ID를 모두 키에 포함한다.
@@ -394,8 +395,8 @@ test('5단계 마이그레이션은 직접 쓰기를 차단하고 원자적 함�
 });
 
 test('리뷰 작성 시 필수 검증 퀴즈를 입력하지 않거나 오답일 경우 제출 및 코인 지급이 차단된다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-  const service = readFileSync(new URL('../src/dataService.js', import.meta.url), 'utf8');
+  const html = readAppSource();
+  const service = readFileSync(new URL('../src/shared/data/dataService.js', import.meta.url), 'utf8');
   const serverValidation = readFileSync(
     new URL('../supabase/migrations/20260914090000_enforce_server_quiz_validation.sql', import.meta.url),
     'utf8'

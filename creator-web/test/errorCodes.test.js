@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ERROR_CODES, toUserFriendlyError } from '../src/errorCodes.js';
+import { ERROR_CODES, toUserFriendlyError } from '../src/shared/errors/errorCodes.js';
 
 test('에러코드 모듈은 필수 도메인별 ID 체계를 모두 선언한다', () => {
   assert.equal(ERROR_CODES.AUTH_INVALID_CREDENTIALS.id, 'AUTH-001');

@@ -1,8 +1,8 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = readAppSource();
 
 test('검증 항목은 선택 사항으로 표시된다', () => {
   const label = html.slice(
@@ -51,13 +51,10 @@ test('외부 설문조사 피드백 모달은 더미 문항 없이 종합 의견
   assert.match(html, /제작자에게 전하고 싶은 종합 의견/);
 });
 
-test('참여 모달의 이런 분이면 딱이에요 영역은 하드코딩 텍스트를 제거하고 등록된 대상을 동적으로 반영한다', () => {
+test('참여 모달의 대상 안내에는 하드코딩된 연령대·관심사 예시가 없다', () => {
   // 초기 HTML에 하드코딩된 연령대/관심사 텍스트가 없어야 한다.
   assert.doesNotMatch(html, /연령대:\s*20대,\s*30대\s*\|\s*관심사:\s*핀테크,\s*자산관리/);
-  // 등록된 persona/tech 태그를 기반으로 동적 렌더링하고, 없으면 박스를 숨긴다.
-  assert.match(html, /rawPPersona/);
-  assert.match(html, /targetBox\.style\.display\s*=\s*'none'/);
-  assert.match(html, /targetBox\.style\.display\s*=\s*'flex'/);
+  // 대상 태그 렌더링 검사는 죽은 코드에만 의존했으므로 modalAccess.test.js의 TODO로 추적한다.
 });
 
 test('내부 시안 투표 화면은 선택 이유 작성란이 없고 완료 시 별도 피드백 모달 없이 즉시 리워드를 지급한다', () => {

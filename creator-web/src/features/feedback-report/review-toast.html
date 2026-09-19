@@ -1,0 +1,33 @@
+  <aside id="review-toast"
+    class="fixed top-6 right-6 z-[99999] transform translate-x-32 opacity-0 pointer-events-none transition-all duration-300 max-w-[420px] w-[calc(100%-48px)]">
+    <div onclick="handleToastClick()"
+      class="bg-[#191A1C] text-white rounded-2xl p-4 shadow-toast border border-[#2F3136] flex items-start gap-3.5 cursor-pointer hover:scale-[1.02] active:scale-[0.99] transition-all duration-200 group relative"
+      title="클릭하여 결과 피드백 대시보드로 이동">
+      <div
+        class="relative shrink-0 w-11 h-11 rounded-xl bg-[#282A2E] border border-[#3A3D42] flex items-center justify-center p-2 group-hover:border-primary/60 transition-colors">
+        <span class="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-ping"></span>
+        <span class="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full border-2 border-[#191A1C]"></span>
+        <img src="/images/brand/logo-coin.png" alt="돼지코인" class="w-full h-full object-contain" />
+      </div>
+
+      <div class="flex-1 pr-6">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span
+            class="text-[10px] font-extrabold uppercase tracking-wider bg-primary/25 text-primary px-1.5 py-0.5 rounded">NEW</span>
+          <h4 class="text-sm font-bold text-white tracking-tight">새로운 테스터 리뷰 도착!</h4>
+        </div>
+        <p class="text-xs text-[#D1D5DB] leading-relaxed">
+          방금 테스터 1명이 정성스러운 리뷰를 남겼어요.<br>
+          <span class="text-primary font-semibold group-hover:underline inline-flex items-center gap-0.5 mt-0.5">
+            (지금 확인하기 →)
+          </span>
+        </p>
+      </div>
+
+      <button type="button" onclick="event.stopPropagation(); dismissReviewToast();"
+        class="absolute top-3.5 right-3.5 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white flex items-center justify-center text-xs transition-colors"
+        title="닫기">
+        ✕
+      </button>
+    </div>
+  </aside>

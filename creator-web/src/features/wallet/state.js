@@ -1,0 +1,1 @@
+    let userCoinBalance = 0;

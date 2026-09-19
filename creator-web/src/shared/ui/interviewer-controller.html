@@ -1,0 +1,86 @@
+  <!-- ========================================================
+       INTERVIEWER MINI CONTROLLER (FLOATING VIEW SWITCHER)
+  ======================================================== -->
+  <aside id="interviewer-controller" hidden class="fixed bottom-6 right-6 z-50 flex-col items-end">
+    <div id="switcher-panel"
+      class="bg-white/95 backdrop-blur-md rounded-soft-lg shadow-float border border-neutral-border p-3.5 mb-2.5 w-72 transition-all duration-200 origin-bottom-right">
+      <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-neutral-border/70">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+          <span class="text-xs font-bold text-neutral-dark tracking-wide uppercase">인터뷰 뷰 컨트롤러</span>
+        </div>
+        <span class="text-[10px] text-neutral-muted font-medium bg-neutral-100 px-1.5 py-0.5 rounded">단축키 1~7</span>
+      </div>
+
+      <div class="space-y-1 text-xs">
+        <button onclick="navigateTo('landing')" data-view-btn="landing"
+          class="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between hover:bg-neutral-100 transition-colors font-medium">
+          <span>1. 랜딩 페이지 (SCR-01)</span>
+          <kbd
+            class="text-[10px] text-neutral-muted bg-white border border-neutral-border px-1.5 py-0.5 rounded font-mono">1</kbd>
+        </button>
+        <button onclick="navigateTo('explore')" data-view-btn="explore"
+          class="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between hover:bg-neutral-100 transition-colors font-medium">
+          <span>2. 메인 피드/대시보드 (SCR-05)</span>
+          <kbd
+            class="text-[10px] text-neutral-muted bg-white border border-neutral-border px-1.5 py-0.5 rounded font-mono">2</kbd>
+        </button>
+        <button onclick="navigateTo('create')" data-view-btn="create"
+          class="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between hover:bg-neutral-100 transition-colors font-medium">
+          <span>3. 테스트 등록 폼 (SCR-15)</span>
+          <kbd
+            class="text-[10px] text-neutral-muted bg-white border border-neutral-border px-1.5 py-0.5 rounded font-mono">3</kbd>
+        </button>
+        <button onclick="navigateTo('post')" data-view-btn="post"
+          class="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between hover:bg-neutral-100 transition-colors font-medium">
+          <span>4. 테스트 상세 (제작자 뷰)</span>
+          <kbd
+            class="text-[10px] text-neutral-muted bg-white border border-neutral-border px-1.5 py-0.5 rounded font-mono">4</kbd>
+        </button>
+        <button onclick="navigateTo('feedback')" data-view-btn="feedback"
+          class="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between hover:bg-neutral-100 transition-colors font-medium">
+          <span>6. 피드백 결과 분석 (SCR-16/17)</span>
+          <kbd
+            class="text-[10px] text-neutral-muted bg-white border border-neutral-border px-1.5 py-0.5 rounded font-mono">6</kbd>
+        </button>
+        <button onclick="navigateTo('market')" data-view-btn="market"
+          class="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between hover:bg-neutral-100 transition-colors font-medium">
+          <span>7. 돼코상점</span>
+          <kbd
+            class="text-[10px] text-neutral-muted bg-white border border-neutral-border px-1.5 py-0.5 rounded font-mono">7</kbd>
+        </button>
+      </div>
+
+      <!-- Gating Bypass Toggle Switch inside Controller -->
+      <div class="mt-2 pt-2 border-t border-neutral-border/70 flex items-center justify-between">
+        <div class="flex flex-col">
+          <span class="text-[11px] font-bold text-neutral-dark flex items-center gap-1">
+            <span>🛡️</span> 3회 게이팅 충족
+          </span>
+          <span class="text-[9px] text-neutral-400">ON 시 테스트 등록 즉시 허용</span>
+        </div>
+        <button type="button" id="btn-toggle-gating-bypass" onclick="toggleGatingBypassMode()"
+          class="px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all bg-neutral-200 text-neutral-600 shadow-2xs border border-neutral-300 cursor-pointer">
+          OFF
+        </button>
+      </div>
+
+      <div
+        class="mt-2 pt-2 border-t border-neutral-border/70 text-[11px] text-neutral-muted flex items-center justify-between">
+        <span>현재 뷰:</span>
+        <span id="current-view-badge" class="font-semibold text-neutral-dark bg-primary-sub/70 px-2 py-0.5 rounded">랜딩
+          페이지</span>
+      </div>
+    </div>
+
+    <button id="toggle-switcher-btn" onclick="toggleSwitcherPanel()"
+      class="flex items-center gap-2 bg-neutral-dark text-white px-3.5 py-2.5 rounded-full shadow-card hover:bg-neutral-800 transition-all transform active:scale-95 focus:outline-none"
+      title="인터뷰 컨트롤러 열기/닫기">
+      <svg id="switcher-icon" class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      <span class="text-xs font-semibold">뷰 컨트롤러</span>
+    </button>
+  </aside>

@@ -1,16 +1,8 @@
+import { readAppSource, readRuntimeFunction } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-
-function extractFunction(name, nextMarker) {
-  const start = html.indexOf(`function ${name}(`);
-  const end = html.indexOf(nextMarker, start);
-  assert.notEqual(start, -1, `${name} 함수를 찾을 수 없습니다.`);
-  assert.notEqual(end, -1, `${name} 함수의 끝을 찾을 수 없습니다.`);
-  return html.slice(start, end);
-}
+const html = readAppSource();
 
 test('리워드 예산 카드는 모집인원 → 1인당 코인 → 총 코인 순서로 배치된다', () => {
   const start = html.indexOf('id="reward-budget-calculator"');
@@ -29,7 +21,7 @@ test('리워드 예산 카드는 모집인원 → 1인당 코인 → 총 코인 
 });
 
 test('모집인원이나 1인당 코인을 바꾸면 총 코인이 즉시 계산된다', () => {
-  const calculateTotalCost = extractFunction('calculateTotalCost', 'async function handleStep3PublishClick');
+  const calculateTotalCost = readRuntimeFunction('calculateTotalCost');
   const elements = new Map([
     ['input-target-count', { value: '3' }],
     ['input-reward-coin', { value: '70' }],

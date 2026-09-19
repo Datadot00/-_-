@@ -1,20 +1,21 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 import { installProfileModalDom } from './support/stubDom.js';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = readAppSource();
 const schema = readFileSync(new URL('../supabase_schema.sql', import.meta.url), 'utf8');
 const migration = readFileSync(
   new URL('../supabase/migrations/20260915200000_edit_new_profile_fields.sql', import.meta.url),
   'utf8'
 );
-const dataService = readFileSync(new URL('../src/dataService.js', import.meta.url), 'utf8');
+const dataService = readFileSync(new URL('../src/shared/data/dataService.js', import.meta.url), 'utf8');
 
 async function importProfileFields() {
   // 모듈이 바인딩 여부를 기억하므로 테스트마다 새 인스턴스를 받는다.
-  return import(`../src/profileFieldsUi.js?t=${Math.random()}`);
+  return import(`../src/features/profile/profileFieldsUi.js?t=${Math.random()}`);
 }
 
 // ── 마크업·계약 ────────────────────────────────────────────────────────────

@@ -1,0 +1,69 @@
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+          },
+          maxWidth: {
+            'desktop': '1440px',
+          },
+          colors: {
+            action: { DEFAULT: '#B4E380', hover: '#A3D96D', text: '#1E3E0B', border: '#96D15E' },
+            layout: { 'sidebar-border': '#E5EAD4', 'header-border': '#ECEFE2' },
+            canvas: {
+              white: '#FFFFFF',
+              cream: '#F8F6DF',
+              bg: '#FBFBF7',
+              sidebar: '#F2F5E8',
+            },
+            primary: {
+              DEFAULT: '#A9DD82',
+              sub: '#C4E9AB',
+              hover: '#95ce6c',
+              dark: '#2E5E14',
+            },
+            secondary: {
+              DEFAULT: '#FDA2BC',
+              sub: '#FFC4D4',
+              hover: '#f58ca8',
+              wine: '#8A2B43',
+            },
+            neutral: {
+              200: '#e5e5e5',
+              dark: '#191A1C',
+              muted: '#71717A',
+              border: '#E4E4E7',
+              lightborder: '#EFEFEF',
+            },
+          },
+          borderRadius: {
+            'soft': '14px',
+            'soft-lg': '20px',
+            'card': '24px',
+          },
+          boxShadow: {
+            'subtle': '0 2px 10px rgba(25, 26, 28, 0.03)',
+            'card': '0 8px 24px rgba(25, 26, 28, 0.05)',
+            'float': '0 16px 40px rgba(25, 26, 28, 0.16)',
+            'hero': '0 10px 30px rgba(0, 0, 0, 0.02)',
+            'toast': '0 20px 48px rgba(0, 0, 0, 0.28)',
+          }
+        }
+      }
+    };
+    // CSS components use the same palette as Tailwind utilities.
+    (() => {
+      const { colors, borderRadius, boxShadow } = tailwind.config.theme.extend;
+      for (const [family, values] of Object.entries(colors)) {
+        for (const [name, value] of Object.entries(values)) {
+          const token = `--color-${family}${name === 'DEFAULT' ? '' : '-' + name}`;
+          document.documentElement.style.setProperty(token, value);
+          const rgb = value.slice(1).match(/.{2}/g).map(channel => parseInt(channel, 16)).join(' ');
+          document.documentElement.style.setProperty(token + '-rgb', rgb);
+        }
+      }
+      for (const [name, value] of Object.entries(borderRadius)) document.documentElement.style.setProperty(`--radius-${name}`, value);
+      for (const [name, value] of Object.entries(boxShadow)) document.documentElement.style.setProperty(`--shadow-${name}`, value);
+    })();
+  </script>

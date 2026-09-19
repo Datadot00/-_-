@@ -6,7 +6,7 @@ import {
   isAccountStateMigrationMissing,
   normalizeAccountState,
   routeAuthenticatedAccount
-} from '../src/accountRouting.js';
+} from '../src/features/auth/accountRouting.js';
 
 function createRpcClient({ data = null, error = null } = {}) {
   const calls = [];

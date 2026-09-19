@@ -1,0 +1,1031 @@
+  <!-- ========================================================
+       VIEW 3: MULTI-STEP TEST CREATION FORM (SCR-15)
+  ======================================================== -->
+  <div id="view-create" class="view-container hidden w-full min-h-screen flex flex-col bg-white">
+    <header class="w-full border-b border-neutral-lightborder sticky top-0 z-30 bg-white/95 backdrop-blur-sm">
+      <div class="max-w-[1140px] mx-auto px-8 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('explore')">
+          <img src="/images/brand/logo-default.png" alt="돈 돼?" class="h-9 w-auto object-contain" />
+          <span class="text-xl font-extrabold text-[#2F6517] tracking-tight">돈 돼?</span>
+        </div>
+
+        <nav data-service-top-nav class="hidden md:flex items-center gap-7 text-sm" aria-label="주요 메뉴"></nav>
+      </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1140px] mx-auto px-8 py-10 flex flex-col gap-8">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-extrabold text-neutral-dark tracking-tight">
+          테스트 등록하기
+        </h1>
+        <button onclick="navigateTo('explore')"
+          class="text-sm font-medium text-neutral-muted hover:text-neutral-dark flex items-center gap-1">
+          ← 피드로 나가기
+        </button>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="w-full flex items-center justify-between py-3 relative">
+        <div class="absolute left-10 right-10 top-1/2 -translate-y-1.5 h-1 bg-[#E4E4E7] z-0"></div>
+        <div id="step-progress-line"
+          class="absolute left-10 top-1/2 -translate-y-1.5 h-1 bg-primary transition-all duration-300 z-0"
+          style="width: 20%;"></div>
+
+        <div class="flex flex-col items-center gap-2 z-10 bg-white px-2 cursor-pointer" onclick="goToStep(1)">
+          <div id="step-badge-1"
+            class="w-9 h-9 rounded-full bg-primary text-neutral-dark flex items-center justify-center font-bold text-sm shadow-xs border-2 border-primary">
+            1
+          </div>
+          <span id="step-label-1" class="text-xs font-semibold text-neutral-dark">1. 기본정보</span>
+        </div>
+
+        <div class="flex flex-col items-center gap-2 z-10 bg-white px-2 cursor-pointer" onclick="requestCreateStep(2)">
+          <div id="step-badge-2"
+            class="w-9 h-9 rounded-full bg-[#F4F4F5] text-neutral-muted flex items-center justify-center font-bold text-sm border-2 border-[#E4E4E7]">
+            2
+          </div>
+          <span id="step-label-2" class="text-xs font-medium text-neutral-muted">2. 테스트 과제 설정</span>
+        </div>
+
+        <div class="flex flex-col items-center gap-2 z-10 bg-white px-2 cursor-pointer" onclick="requestCreateStep(3)">
+          <div id="step-badge-3"
+            class="w-9 h-9 rounded-full bg-[#F4F4F5] text-neutral-muted flex items-center justify-center font-bold text-sm border-2 border-[#E4E4E7]">
+            3
+          </div>
+          <span id="step-label-3" class="text-xs font-medium text-neutral-muted">3. 타겟 및 리워드 설정</span>
+        </div>
+      </div>
+
+      <!-- Main Form White Card -->
+      <div class="w-full bg-white rounded-card border border-[#E5E7EB] p-8 lg:p-12 shadow-card flex flex-col gap-8">
+
+        <!-- STEP 1: 기본 정보 (공통, 모든 유형에서 동일) -->
+        <div id="form-section-1" style="display: flex;" class="flex flex-col gap-6">
+          <div class="border-b border-neutral-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-primary-dark uppercase tracking-wider">Step 01</span>
+              <h2 class="text-lg font-bold text-neutral-dark mt-0.5">기본 정보 입력</h2>
+            </div>
+            <span class="text-xs text-neutral-400 font-medium">1 / 3 단계</span>
+          </div>
+
+          <!-- 1. 썸네일 사진 (선택, 이미지 1장 업로드 제한) -->
+          <div>
+            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
+              썸네일 사진 <span class="text-xs font-normal text-neutral-400">(선택, 이미지 1장)</span>
+            </label>
+            <div class="flex items-center gap-4">
+              <div id="thumbnail-preview-box"
+                class="w-24 h-24 rounded-2xl border-2 border-dashed border-[#D1D5DB] bg-[#FAFAFA] flex flex-col items-center justify-center text-center text-neutral-400 hover:border-primary cursor-pointer transition-colors relative overflow-hidden"
+                onclick="document.getElementById('input-thumbnail-file').click()">
+                <span class="text-xl">📷</span>
+                <span class="text-[11px] font-medium mt-1">사진 추가</span>
+                <img id="thumbnail-img-preview" class="absolute inset-0 w-full h-full object-cover hidden"
+                  alt="썸네일 미리보기" />
+              </div>
+              <input id="input-thumbnail-file" type="file" accept="image/*" class="hidden"
+                onchange="handleThumbnailUpload(this)" />
+              <div class="flex flex-col gap-1 text-xs text-neutral-muted">
+                <p class="font-medium text-neutral-700">대표 썸네일 이미지를 등록해주세요.</p>
+                <p class="text-[11px] text-neutral-400">PNG, JPG, WEBP 지원 (1장으로 제한됨)</p>
+                <button type="button" id="btn-remove-thumbnail" onclick="removeThumbnailImage()"
+                  class="text-left text-[11px] text-red-500 font-semibold hover:underline hidden mt-1">
+                  ✕ 이미지 삭제
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. 제목 (텍스트, 필수, 최대 50자) -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-sm font-bold text-neutral-dark">
+                테스트 제목 <span class="text-red-500">*</span>
+              </label>
+              <span id="test-title-counter" class="text-xs text-neutral-400 font-mono">0 / 50자</span>
+            </div>
+            <input id="input-test-title" type="text" maxlength="50" value="" required
+              placeholder="예: AI 기반 하루 일기 웹앱 UX/UI 사용성 검증 (최대 50자)"
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium"
+              oninput="document.getElementById('test-title-counter').textContent = `${this.value.length} / 50자`" />
+          </div>
+
+          <!-- 3. 서비스명 (텍스트, 필수, 최대 20자) -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-sm font-bold text-neutral-dark">
+                서비스명 <span class="text-red-500">*</span>
+              </label>
+              <span id="service-name-counter" class="text-xs text-neutral-400 font-mono">0 / 20자</span>
+            </div>
+            <input id="input-service-name" type="text" maxlength="20" value="" required
+              placeholder="예: 돈돼 (최대 20자)"
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium"
+              oninput="document.getElementById('service-name-counter').textContent = `${this.value.length} / 20자`" />
+          </div>
+
+          <!-- 4. 서비스 소개 (텍스트, 필수, 200자 내외 권장) -->
+          <div>
+            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
+              서비스 소개 <span class="text-red-500">*</span> <span class="text-xs font-normal text-neutral-400">(200자
+                내외)</span>
+            </label>
+            <textarea id="input-service-desc" rows="3" required placeholder="서비스에 대한 소개를 자유롭게 작성해 주세요 (200자 내외 권장)"
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed"></textarea>
+          </div>
+
+          <!-- 5. 안내 내용 / 테스트 목적 (텍스트, 여러 줄, 글자수 제한 없음) -->
+          <div>
+            <label class="block text-sm font-bold text-neutral-dark mb-1.5">
+              안내 내용 / 테스트 목적 <span class="text-red-500">*</span>
+            </label>
+            <textarea id="input-test-notice" rows="3" required placeholder="테스터에게 전할 상세 안내 사항 및 테스트의 주요 목적을 자유롭게 작성해 주세요."
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed"></textarea>
+          </div>
+
+          <!-- Step 1 Navigation Buttons -->
+          <div class="pt-6 border-t border-neutral-100 flex items-center justify-between mt-2">
+            <button type="button" onclick="navigateTo('explore')"
+              class="px-6 py-3 rounded-full border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs">
+              <span>←</span> 피드로 나가기
+            </button>
+            <button type="button" onclick="requestCreateStep(2)"
+              class="px-8 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer">
+              <span>다음: 2. 테스트 유형 선택</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: 테스트 유형 및 세부 정보 선택 (동적 렌더링) -->
+        <div id="form-section-2" style="display: none;" class="flex flex-col gap-6">
+          <div class="border-b border-neutral-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-primary-dark uppercase tracking-wider">Step 02</span>
+              <h2 class="text-lg font-bold text-neutral-dark mt-0.5">테스트 유형 및 검증 방식 선택</h2>
+            </div>
+            <span class="text-xs text-neutral-400 font-medium">2 / 3 단계</span>
+          </div>
+
+          <!-- 1. 테스트 대분류 선택 -->
+          <div>
+            <h3 class="text-sm font-bold text-neutral-dark mb-1">1. 테스트 대분류 선택</h3>
+            <p class="text-xs text-neutral-muted mb-4">프로덕트, 프로토타입, 투표, 설문조사 중 검증할 대상 형태를 선택하세요.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <!-- 분류 1: 프로덕트 -->
+              <label id="card-main-product"
+                class="main-category-card cursor-pointer rounded-2xl border-2 border-primary bg-[#F4F9EE] p-5 flex flex-col items-center text-center gap-3 transition-all shadow-xs">
+                <input type="radio" name="mainCategory" value="product" class="hidden" checked
+                  onchange="handleMainCategoryChange('product')" />
+                <div
+                  class="w-12 h-12 rounded-full bg-primary/30 text-primary-dark flex items-center justify-center text-xl">
+                  💻
+                </div>
+                <div>
+                  <span class="text-base font-extrabold text-neutral-dark block">프로덕트</span>
+                  <span class="text-xs text-[#2F6517] font-semibold mt-0.5 block">상용 출시된 웹사이트 또는 모바일 앱</span>
+                </div>
+              </label>
+
+              <!-- 분류 2: 프로토타입 -->
+              <label id="card-main-prototype"
+                class="main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all relative overflow-hidden">
+                <input type="radio" name="mainCategory" value="prototype" class="hidden"
+                  onchange="handleMainCategoryChange('prototype')" />
+                <div
+                  class="w-12 h-12 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-xl">
+                  💻
+                </div>
+                <div>
+                  <div class="flex items-center justify-center gap-1.5">
+                    <span class="text-base font-extrabold text-neutral-dark block">프로토타입</span>
+                    <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">웹(Web) 전용</span>
+                  </div>
+                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">개발 중인 웹/피그마 시안 (앱 추후 지원 예정)</span>
+                </div>
+              </label>
+
+              <!-- 분류 3: 투표 -->
+              <label id="card-main-vote"
+                class="main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all">
+                <input type="radio" name="mainCategory" value="vote" class="hidden"
+                  onchange="handleMainCategoryChange('vote')" />
+                <div
+                  class="w-12 h-12 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-xl">
+                  📊
+                </div>
+                <div>
+                  <span class="text-base font-extrabold text-neutral-dark block">투표</span>
+                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">다중 이미지/URL 시안 비교 투표</span>
+                </div>
+              </label>
+
+              <!-- 분류 4: 설문조사 -->
+              <label id="card-main-survey"
+                class="main-category-card cursor-pointer rounded-2xl border-2 border-[#E5E7EB] hover:border-neutral-300 p-5 flex flex-col items-center text-center gap-3 transition-all">
+                <input type="radio" name="mainCategory" value="survey" class="hidden"
+                  onchange="handleMainCategoryChange('survey')" />
+                <div
+                  class="w-12 h-12 rounded-full bg-neutral-100 text-neutral-600 flex items-center justify-center text-xl">
+                  📋
+                </div>
+                <div>
+                  <span class="text-base font-extrabold text-neutral-dark block">설문조사</span>
+                  <span class="text-xs text-neutral-muted font-medium mt-0.5 block">직접 문항 또는 외부 설문 링크로 의견 수집</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 동적 서브 폼 컨테이너 -->
+          <div id="sub-category-form-container"
+            class="bg-[#FAFBF7] border border-[#E9EEDC] rounded-2xl p-6 flex flex-col gap-6 animate-in fade-in duration-200">
+
+            <!-- Sub Form 1: 프로덕트 / 프로토타입 서브 폼 -->
+            <div id="sub-form-product" class="flex flex-col gap-5">
+              <label class="block text-sm font-bold text-neutral-dark">
+                매체 및 접속 정보 설정 <span class="text-red-500">*</span>
+              </label>
+              <div class="flex items-center gap-4">
+                <label class="flex items-center gap-2 cursor-pointer text-sm font-bold text-neutral-800">
+                  <input type="radio" name="productSubPlatform" value="web" checked
+                    onchange="toggleProductPlatformFields('web')" class="accent-primary-dark w-4 h-4" />
+                  <span id="text-platform-web">🌐 웹사이트 (Web Site)</span>
+                </label>
+                <label id="label-platform-app" class="flex items-center gap-2 cursor-pointer text-sm font-bold text-neutral-800">
+                  <input type="radio" name="productSubPlatform" value="app"
+                    onchange="toggleProductPlatformFields('app')" class="accent-primary-dark w-4 h-4" />
+                  <span id="text-platform-app">📱 모바일 앱 (iOS / Android App)</span>
+                </label>
+              </div>
+              <div id="prototype-app-disabled-notice" class="hidden text-xs text-amber-700 bg-amber-50 border border-amber-200 p-2.5 rounded-xl font-medium">
+                ⚠️ 프로토타입 카테고리는 현재 웹(Web) 테스트만 지원합니다. 앱 프로토타입 기능은 추후 업데이트 예정입니다.
+              </div>
+
+              <!-- A/B 비교 토글 스위치 -->
+              <div class="p-4 rounded-xl bg-white border border-neutral-200 flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold text-neutral-dark block">A/B 비교 테스트 모드</span>
+                  <span class="text-[11px] text-neutral-400 font-medium">ON 설정 시 A안/B안 2개 시안 비교 필드가 추가됩니다.</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="toggle-product-ab" onchange="toggleProductAbMode(this.checked)"
+                    class="sr-only switch-toggle" />
+                  <div class="w-11 h-6 bg-neutral-200 rounded-full switch-bg transition-colors"></div>
+                  <div
+                    class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform switch-dot shadow-2xs">
+                  </div>
+                </label>
+              </div>
+
+              <!-- 웹 선택 시 필드 (단일 / AB) -->
+              <div id="product-web-fields" class="flex flex-col gap-3">
+                <label class="block text-xs font-bold text-neutral-dark">사이트 URL <span
+                    class="text-red-500">*</span></label>
+                <div class="flex items-center rounded-xl border border-[#E5E7EB] px-4 py-2.5 bg-white">
+                  <input id="input-product-web-url" type="url"
+                    placeholder="https://example.com" class="flex-1 text-sm font-medium focus:outline-none" />
+                </div>
+              </div>
+
+              <!-- 프로덕트(상용) 앱 선택 시 필드 -->
+              <div id="product-app-store-fields" class="flex flex-col gap-4 hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">구글 플레이스토어 URL</label>
+                    <input id="input-app-playstore-url" type="url"
+                      placeholder="https://play.google.com/store/apps/details?id=..."
+                      class="w-full p-3 text-xs bg-white ui-input" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">애플 앱스토어 URL</label>
+                    <input id="input-app-appstore-url" type="url" placeholder="https://apps.apple.com/app/id..."
+                      class="w-full p-3 text-xs bg-white ui-input" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 프로토타입(베타) 앱 선택 시 필드 -->
+              <div id="product-app-prototype-fields" class="flex flex-col gap-4 hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">패키지명 (Android Package Name)</label>
+                    <input id="input-app-package" type="text" placeholder="com.example.app"
+                      class="w-full p-3 text-xs bg-white font-mono ui-input" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">번들 ID (iOS Bundle ID)</label>
+                    <input id="input-app-bundle" type="text" placeholder="com.example.appname"
+                      class="w-full p-3 text-xs bg-white font-mono ui-input" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 트랙 구별</label>
+                  <select id="select-app-track"
+                    class="w-full p-3 text-xs bg-white font-semibold ui-input">
+                    <option value="internal">내부 테스트 (Internal Test)</option>
+                    <option value="closed" selected>비공개 테스트 (Closed Beta / TestFlight)</option>
+                    <option value="open">공개 테스트 (Open Beta)</option>
+                  </select>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스터 그룹 가입 링크</label>
+                    <input id="input-app-group-link" type="text" placeholder="https://groups.google.com/g/my-testers"
+                      class="w-full p-3 text-xs bg-white ui-input" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-neutral-dark mb-1">테스트 참여 링크 또는 스토어 링크</label>
+                    <input id="input-app-test-link" type="text"
+                      placeholder="https://play.google.com/apps/testing/com.example"
+                      class="w-full p-3 text-xs bg-white ui-input" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- A/B 모드 온 일 때 필드 -->
+              <div id="product-ab-fields" class="flex flex-col gap-4 hidden">
+                <div id="product-ab-web-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                    <span class="text-xs font-extrabold text-primary-dark">A안 사이트 URL</span>
+                    <input id="input-product-ab-web-a" type="url"
+                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none font-medium" />
+                  </div>
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-2">
+                    <span class="text-xs font-extrabold text-secondary-wine">B안 사이트 URL</span>
+                    <input id="input-product-ab-web-b" type="url"
+                      class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs focus:outline-none font-medium" />
+                  </div>
+                </div>
+                <div id="product-ab-app-fields" class="grid grid-cols-1 sm:grid-cols-2 gap-4 hidden">
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3">
+                    <span class="text-xs font-extrabold text-primary-dark">A안 앱 정보</span>
+                    <input id="input-product-ab-app-link-a" type="text" placeholder="A안 참여 링크 또는 스토어 링크"
+                      class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                  </div>
+                  <div class="p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3">
+                    <span class="text-xs font-extrabold text-secondary-wine">B안 앱 정보</span>
+                    <input id="input-product-ab-app-link-b" type="text" placeholder="B안 참여 링크 또는 스토어 링크"
+                      class="w-full p-2 rounded-lg border border-neutral-200 text-xs" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub Form 2: 투표 서브 폼 -->
+            <div id="sub-form-vote" class="flex flex-col gap-6 hidden">
+              <div class="flex flex-col gap-2 bg-white p-4 rounded-xl border border-neutral-200">
+                <label class="block text-xs font-bold text-neutral-dark">
+                  콘텐츠 입력 방식 선택 <span class="text-red-500">*</span>
+                </label>
+                <div class="grid grid-cols-2 gap-3 text-center text-xs">
+                  <button type="button" id="btn-vote-input-mode-image" onclick="setVoteInputMode('image')"
+                    class="py-2.5 px-4 rounded-xl border-2 border-primary bg-primary/10 text-primary-dark font-extrabold transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>🖼️</span> <span>이미지 직접 업로드 (A/B)</span>
+                  </button>
+                  <button type="button" id="btn-vote-input-mode-url" onclick="setVoteInputMode('url')"
+                    class="py-2.5 px-4 rounded-xl border border-neutral-200 bg-white text-neutral-600 font-bold hover:bg-neutral-50 transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                    <span>🔗</span> <span>시안·이미지 URL (A/B)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- A/B 콘텐츠 추가 UI -->
+              <div class="flex flex-col gap-3">
+                <div id="vote-image-input-container" class="flex flex-col gap-3">
+                  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div class="rounded-xl border border-neutral-200 bg-white p-4">
+                      <label for="input-vote-image-a" class="mb-2 block text-xs font-extrabold text-primary-dark">A안 이미지 <span class="text-red-500">*</span></label>
+                      <input id="input-vote-image-a" type="file" accept="image/png,image/jpeg,image/webp,image/gif"
+                        onchange="handleVoteImageSelected('A', this)"
+                        class="w-full rounded-lg border border-neutral-200 bg-[#FAFAFA] p-2.5 text-xs" />
+                      <div id="vote-image-preview-a" class="mt-3 hidden rounded-xl border border-[#DCE4B8] bg-[#F4F9EE] p-2">
+                        <img id="vote-image-preview-img-a" alt="A안 업로드 미리보기" class="h-40 w-full rounded-lg object-contain" />
+                        <p id="vote-image-preview-name-a" class="mt-2 truncate text-[10px] font-semibold text-neutral-500"></p>
+                      </div>
+                    </div>
+                    <div class="rounded-xl border border-neutral-200 bg-white p-4">
+                      <label for="input-vote-image-b" class="mb-2 block text-xs font-extrabold text-secondary-wine">B안 이미지 <span class="text-red-500">*</span></label>
+                      <input id="input-vote-image-b" type="file" accept="image/png,image/jpeg,image/webp,image/gif"
+                        onchange="handleVoteImageSelected('B', this)"
+                        class="w-full rounded-lg border border-neutral-200 bg-[#FAFAFA] p-2.5 text-xs" />
+                      <div id="vote-image-preview-b" class="mt-3 hidden rounded-xl border border-[#F2D4DD] bg-[#FFF7FA] p-2">
+                        <img id="vote-image-preview-img-b" alt="B안 업로드 미리보기" class="h-40 w-full rounded-lg object-contain" />
+                        <p id="vote-image-preview-name-b" class="mt-2 truncate text-[10px] font-semibold text-neutral-500"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="text-[11px] font-medium leading-5 text-neutral-500">
+                    PNG, JPG, WEBP, GIF · 파일당 최대 5MB. 게시 시 안전한 이미지 저장소에 업로드됩니다.
+                  </p>
+                </div>
+
+                <div id="vote-url-input-container" class="hidden flex-col gap-3">
+                  <div id="vote-url-list" class="space-y-2.5">
+                    <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
+                      <span class="text-xs font-bold text-neutral-500 shrink-0">항목 1</span>
+                      <input type="url"
+                        placeholder="https://a-version.example.com"
+                        class="flex-1 text-xs font-medium focus:outline-none" />
+                    </div>
+                    <div class="flex items-center gap-2 p-3 rounded-xl border border-neutral-200 bg-white">
+                      <span class="text-xs font-bold text-neutral-500 shrink-0">항목 2</span>
+                      <input type="url"
+                        placeholder="https://b-version.example.com"
+                        class="flex-1 text-xs font-medium focus:outline-none" />
+                    </div>
+                  </div>
+                  <p class="text-[11px] font-medium leading-5 text-neutral-500">
+                    직접 이미지 주소를 입력하면 투표 화면에서 바로 미리보기를 표시하고, 일반 웹·Figma 주소는 새 탭 확인 버튼으로 제공합니다.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 질문 입력 (최대 5개) -->
+              <div class="flex flex-col gap-3 border-t border-neutral-200/80 pt-4">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-bold text-neutral-dark">
+                    질문 입력 (최대 5개) <span class="text-red-500">*</span>
+                  </label>
+                </div>
+                <div id="vote-questions-list" class="space-y-3">
+                  <div class="flex items-center gap-3 p-3.5 rounded-xl border border-[#E5E7EB] bg-white">
+                    <span class="px-2 py-0.5 rounded bg-primary/20 text-primary-dark font-extrabold text-xs shrink-0">질문
+                      1</span>
+                    <input type="text"
+                      class="flex-1 text-xs font-medium focus:outline-none" />
+                    <button type="button" onclick="this.parentElement.remove()"
+                      class="text-neutral-400 hover:text-neutral-600 text-xs px-1">삭제</button>
+                  </div>
+                </div>
+                <button type="button" onclick="addVoteQuestionItem()"
+                  class="w-full py-3 rounded-xl border border-dashed border-neutral-300 text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
+                  <span>+ 질문 추가 (최대 5개)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 2. 로그인 필요 여부 및 개인정보 명시 (신규 요구사항 1-3) -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col gap-4 shadow-xs">
+            <div>
+              <label class="block text-sm font-bold text-neutral-dark">
+                2. 로그인 필요 여부 및 개인정보 명시 <span class="text-red-500">*</span>
+              </label>
+              <p class="text-xs text-neutral-muted mt-0.5">테스터가 서비스를 둘러볼 때 로그인이 필요한지 지정해주세요.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label id="card-login-req-no" class="flex items-center justify-between p-3.5 rounded-xl border-2 border-primary bg-[#F4F9EE] cursor-pointer transition-all">
+                <div class="flex items-center gap-2.5">
+                  <input type="radio" name="loginRequirementMode" value="none" checked onchange="handleLoginRequirementChange('none')" class="accent-primary-dark w-4 h-4" />
+                  <div>
+                    <span class="text-xs font-extrabold text-neutral-dark block">🔑 로그인 불필요 (자유 접근)</span>
+                    <span class="text-[11px] text-neutral-500 font-medium">로그인 없이 서비스 전체 또는 일부 둘러보기 가능</span>
+                  </div>
+                </div>
+              </label>
+              <label id="card-login-req-yes" class="flex items-center justify-between p-3.5 rounded-xl border-2 border-neutral-200 hover:border-neutral-300 cursor-pointer transition-all">
+                <div class="flex items-center gap-2.5">
+                  <input type="radio" name="loginRequirementMode" value="required" onchange="handleLoginRequirementChange('required')" class="accent-primary-dark w-4 h-4" />
+                  <div>
+                    <span class="text-xs font-extrabold text-neutral-dark block">🔒 로그인 필수</span>
+                    <span class="text-[11px] text-neutral-500 font-medium">테스트용 계정 제공 또는 회원가입 필요</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- 로그인 필수 선택 시 나타나는 추가 세부정보 필드 -->
+            <div id="login-detail-fields" class="flex flex-col gap-4 pt-2 border-t border-neutral-100 hidden">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#FAFAFA] p-4 rounded-xl border border-neutral-200">
+                <div>
+                  <label id="label-test-login-id" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 ID / 이메일 <span class="text-neutral-400 font-medium">(선택)</span></label>
+                  <input id="input-test-login-id" type="text" maxlength="200" autocomplete="off" placeholder="예: tester01@dondwae.io (체험 계정, 선택사항)"
+                    class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-white font-mono" />
+                </div>
+                <div>
+                  <label id="label-test-login-pw" class="block text-xs font-bold text-neutral-dark mb-1">테스트용 계정 비밀번호 <span class="text-neutral-400 font-medium">(선택)</span></label>
+                  <input id="input-test-login-pw" type="text" maxlength="200" autocomplete="new-password" placeholder="예: test1234! (선택사항)"
+                    class="w-full p-2.5 rounded-lg border border-neutral-200 text-xs bg-white font-mono" />
+                </div>
+                <p id="test-login-credentials-help" class="sm:col-span-2 text-[11px] text-neutral-500">
+                  테스트용 공용 계정이 있는 경우 입력해 주세요. (미입력 시 테스터 본인 계정 사용 또는 직접 가입)
+                </p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-neutral-dark mb-1">
+                  취급/수집되는 개인정보 항목 <span class="text-red-500">*</span>
+                </label>
+                <input id="input-privacy-items" type="text" maxlength="1000" placeholder="예: 이메일, 닉네임, 프로필 사진 (테스트 진행 시 필요한 정보 명시)"
+                  class="w-full p-3 text-xs bg-white font-medium ui-input" />
+                <p class="text-[11px] text-neutral-400 mt-1">테스트 과정에서 사용자 가입 또는 정보 입력으로 수집되는 항목을 명확히 알려 테스터 권리를 보호합니다.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 테스트 진행 방법 (가이드) -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col gap-3">
+            <label class="block text-sm font-bold text-neutral-dark">
+              3. 테스트 진행 방법 (가이드) <span class="text-red-500">*</span>
+            </label>
+            <textarea id="input-test-guide" rows="3" required placeholder="테스터가 진행할 가이드나 참여 순서를 입력해 주세요."
+              class="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] text-xs focus:outline-none focus:ring-2 focus:ring-primary/60 font-medium leading-relaxed">1. 접속 링크를 통해 서비스를 3분간 자유롭게 둘러봅니다.
+2. 테스트를 마친 뒤 별점과 자유 의견으로 솔직한 소감을 남겨 주세요.</textarea>
+          </div>
+
+          <!-- 4. 검증 항목 작성 (테스트 미션) - 개선된 UI (신규 요구사항 1-1) -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <label class="block text-sm font-bold text-neutral-dark">
+                  4. 검증 항목 작성 (테스트 미션) <span class="text-xs font-bold text-neutral-400">(선택)</span>
+                </label>
+                <p class="text-xs text-neutral-muted mt-0.5">서술형/객관식(단일, 복수선택) 질문을 구성하고 필수 여부를 설정하세요. 비워 두면 테스터는 별점과 자유 의견만 남깁니다.</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-neutral-800">
+                <input type="radio" name="missionFormatMode" value="direct" checked
+                  onchange="toggleMissionFormatMode('direct')" class="accent-primary-dark w-4 h-4" />
+                <span>✏️ 문항 직접 입력</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-neutral-800">
+                <input type="radio" name="missionFormatMode" value="link" onchange="toggleMissionFormatMode('link')"
+                  class="accent-primary-dark w-4 h-4" />
+                <span>🔗 외부 URL 링크형 (구글폼, 타입폼 등)</span>
+              </label>
+            </div>
+
+            <!-- (1) 문항 직접 입력 -->
+            <div id="mission-direct-container" class="flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-neutral-600">검증 문항 작성 (최대 10개까지 추가 가능)</span>
+              </div>
+              <div id="questions-list" class="space-y-4">
+                <!-- 동적 문항 아이템 1 -->
+                <div class="question-item p-5 rounded-2xl border border-[#E5E7EB] bg-white hover:border-primary/60 transition-all flex flex-col gap-3.5 shadow-2xs" data-question-type="single">
+                  <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-1 rounded-lg bg-[#EDF8E5] text-[#2F6517] font-bold text-xs shrink-0">검증 1</span>
+                    <input type="text" placeholder="질문 내용을 입력하세요..."
+                      class="question-title-input flex-1 text-xs font-semibold text-neutral-dark focus:outline-none border-b border-neutral-200 pb-1" />
+
+                    <!-- 유형 선택 드롭다운 -->
+                    <select class="question-type-select text-xs font-bold bg-[#F4F4F5] px-3 py-1.5 rounded-lg border border-neutral-200 focus:outline-none cursor-pointer" onchange="handleQuestionTypeChange(this)">
+                      <option value="essay">📝 서술형</option>
+                      <option value="single" selected>🔘 객관식 (단일선택)</option>
+                      <option value="multiple">☑️ 객관식 (복수선택)</option>
+                    </select>
+
+                    <!-- 필수/선택 토글 스위치 -->
+                    <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer shrink-0 bg-neutral-50 px-2.5 py-1.5 rounded-lg border border-neutral-200">
+                      <input type="checkbox" class="question-required-toggle accent-primary-dark w-3.5 h-3.5" checked />
+                      <span class="text-neutral-700">필수</span>
+                    </label>
+
+                    <button type="button" onclick="this.closest('.question-item').remove()"
+                      class="text-neutral-400 hover:text-red-500 text-xs px-1 font-bold">✕ 삭제</button>
+                  </div>
+
+                  <!-- 선택지 영역 (서술형 시 hidden) -->
+                  <div class="question-options-box pl-6 flex flex-col gap-2 border-t border-neutral-100 pt-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-[11px] font-bold text-neutral-500">선택지 (최대 5개)</span>
+                      <button type="button" onclick="addOptionToQuestion(this)" class="text-[11px] text-[#2F6517] font-extrabold hover:underline cursor-pointer">+ 선택지 추가</button>
+                    </div>
+                    <div class="options-container grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div class="option-item flex items-center gap-2 bg-[#FAFBF7] px-3 py-2 rounded-xl border border-neutral-200">
+                        <span class="text-xs text-neutral-400 font-mono option-num">1.</span>
+                        <input type="text" placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                        <button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>
+                      </div>
+                      <div class="option-item flex items-center gap-2 bg-[#FAFBF7] px-3 py-2 rounded-xl border border-neutral-200">
+                        <span class="text-xs text-neutral-400 font-mono option-num">2.</span>
+                        <input type="text" placeholder="선택지 내용을 입력하세요" class="option-title-input flex-1 text-xs font-medium bg-transparent focus:outline-none" />
+                        <button type="button" onclick="removeOptionFromQuestion(this)" class="text-neutral-400 hover:text-red-500 text-xs">✕</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" onclick="addQuestionItem()"
+                class="w-full py-3 rounded-xl border border-dashed border-[#D1D5DB] text-xs font-semibold text-neutral-muted hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 mt-1 cursor-pointer">
+                <span>+ 검증 문항 추가하기 (최대 10개)</span>
+              </button>
+            </div>
+
+            <!-- (2) 외부 URL 링크형 -->
+            <div id="mission-link-container" class="flex flex-col gap-3 hidden">
+              <label class="block text-xs font-bold text-neutral-dark">외부 설문 URL (구글폼, 타입폼 등)</label>
+              <input id="input-external-survey-url" type="url" placeholder="https://forms.google.com/..."
+                class="w-full p-3 bg-white text-xs ui-input" />
+            </div>
+          </div>
+
+          <!-- 5. 선택 검증 방식 (퀴즈 또는 스크린샷, 미선택 가능) -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col gap-4 shadow-xs">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <label class="block text-sm font-bold text-neutral-dark">
+                    5. 성실 참여 검증 방식 <span class="text-xs font-normal text-neutral-400">(선택)</span>
+                  </label>
+                  <span class="text-[10px] font-extrabold text-[#2F6517] bg-[#EDF8E5] px-2 py-0.5 rounded-full">어뷰징 방지</span>
+                </div>
+                <p class="text-xs text-neutral-muted mt-0.5">필요한 경우 한 가지를 선택하세요. 선택한 항목을 다시 누르면 해제할 수 있습니다.</p>
+              </div>
+            </div>
+
+            <!-- 검증 방식: 최대 1개 선택, 모두 미선택 가능 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="verification-method-picker">
+              <label data-verification-option="quiz"
+                class="verification-method-card cursor-pointer rounded-xl border-2 border-neutral-200 bg-white p-4 flex flex-col gap-1.5 transition-all">
+                <span class="flex items-center gap-2">
+                  <input type="checkbox" name="verificationMethod" value="quiz"
+                    onchange="setVerificationMethod(this.checked ? 'quiz' : 'none')" class="accent-[#2F6517] w-4 h-4" />
+                  <span class="text-xs font-extrabold text-neutral-dark">❓ 검증 퀴즈</span>
+                </span>
+                <span class="text-[11px] text-neutral-500 font-medium leading-relaxed pl-6">
+                  테스트를 해야만 알 수 있는 질문을 최대 3개 출제합니다.
+                </span>
+              </label>
+              <label data-verification-option="screenshot"
+                class="verification-method-card cursor-pointer rounded-xl border-2 border-neutral-200 bg-white p-4 flex flex-col gap-1.5 transition-all">
+                <span class="flex items-center gap-2">
+                  <input type="checkbox" name="verificationMethod" value="screenshot"
+                    onchange="setVerificationMethod(this.checked ? 'screenshot' : 'none')" class="accent-[#2F6517] w-4 h-4" />
+                  <span class="text-xs font-extrabold text-neutral-dark">📸 스크린샷 첨부</span>
+                </span>
+                <span class="text-[11px] text-neutral-500 font-medium leading-relaxed pl-6">
+                  테스터가 사용 화면을 캡처해 첨부하도록 요구합니다.
+                </span>
+              </label>
+            </div>
+
+            <!-- 스크린샷 방식 안내 (택1 시 노출) -->
+            <div id="verification-screenshot-note"
+              class="hidden bg-[#FAFBF7] border border-[#E9EEDC] rounded-xl p-3.5 text-xs text-neutral-600 flex items-start gap-2">
+              <span class="text-base shrink-0">📸</span>
+              <p class="leading-relaxed">
+                <strong class="font-bold text-neutral-800">스크린샷 방식:</strong> 테스터는 리뷰를 제출할 때 사용 화면 캡처를 반드시 첨부해야 합니다. 퀴즈는 출제하지 않습니다.
+              </p>
+            </div>
+
+            <!-- 퀴즈 방식 영역 -->
+            <div id="verification-quiz-section" class="hidden flex-col gap-4">
+            <div class="bg-[#FAFBF7] border border-[#E9EEDC] rounded-xl p-3.5 text-xs text-neutral-600 flex items-start gap-2">
+              <span class="text-base shrink-0">💡</span>
+              <p class="leading-relaxed">
+                <strong class="font-bold text-neutral-800">예시:</strong> "올리브영 SOL통장 만들면 올리브영 <span class="text-emerald-700 font-bold">OOO</span> 모바일 상품권을 받나요?" 처럼 실제 서비스를 이용해야 정답을 알 수 있는 퀴즈를 출제해주세요.
+              </p>
+            </div>
+
+            <!-- 퀴즈 리스트 컨테이너 (최대 3개) -->
+            <div id="quiz-questions-list" class="flex flex-col gap-3.5">
+              <div class="quiz-item p-4 rounded-xl border border-neutral-200 bg-white flex flex-col gap-3 shadow-2xs">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-neutral-dark flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-full bg-primary/30 text-primary-dark flex items-center justify-center text-[11px] font-bold">1</span>
+                    <span>퀴즈 질문 1</span>
+                  </span>
+                  <button type="button" onclick="this.closest('.quiz-item').remove()" class="text-neutral-400 hover:text-red-500 text-xs font-bold">✕ 삭제</button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div class="sm:col-span-2">
+                    <input type="text" placeholder="예: 메인 화면 하단 첫 번째 탭 메뉴의 이름은 무엇인가요?" class="quiz-question-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-medium focus:outline-none" />
+                  </div>
+                  <div>
+                    <input type="text" placeholder="정답 입력 (예: 5개)" class="quiz-answer-input w-full p-2.5 rounded-lg border border-neutral-200 text-xs font-bold bg-[#F9FAFB] focus:outline-none text-emerald-800" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" onclick="addQuizQuestionItem()"
+              class="w-full py-3 rounded-xl border border-dashed border-[#D1D5DB] text-xs font-bold text-neutral-600 hover:border-primary hover:text-primary-dark transition-all flex items-center justify-center gap-1 cursor-pointer">
+              <span>+ 퀴즈 항목 추가 (최대 3개)</span>
+            </button>
+            </div>
+          </div>
+
+          <!-- Step 2 Navigation Buttons -->
+          <div class="pt-6 border-t border-neutral-100 flex items-center justify-between mt-2">
+            <button type="button" onclick="goToStep(1)"
+              class="px-6 py-3 rounded-full border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs">
+              <span>←</span> 이전: 1. 기본 정보
+            </button>
+            <button type="button" onclick="requestCreateStep(3)"
+              class="px-8 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer">
+              <span>다음: 3. 테스트 세부 설정</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: 테스트 세부 설정 (검증항목 & 가이드 제거됨) -->
+        <div id="form-section-3" style="display: none;" class="flex flex-col gap-6">
+          <div class="border-b border-neutral-100 pb-3 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-primary-dark uppercase tracking-wider">Step 03</span>
+              <h2 class="text-lg font-bold text-neutral-dark mt-0.5">테스트 세부 설정</h2>
+            </div>
+            <span class="text-xs text-neutral-400 font-medium">3 / 3 단계</span>
+          </div>
+
+          <!-- 1. 모집기간 & 소요시간 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 시작일 <span
+                  class="text-red-500">*</span></label>
+              <input id="input-start-date" type="date" required onchange="applyProjectStartDateLimit()"
+                class="w-full p-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60 ui-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">모집 종료일 <span
+                  class="text-red-500">*</span></label>
+              <input id="input-end-date" type="date" required
+                class="w-full p-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/60 ui-input" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-neutral-dark mb-1">예상 소요 시간 <span
+                  class="text-red-500">*</span></label>
+              <select id="select-test-duration" required
+                class="w-full p-3 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-primary/60 cursor-pointer ui-input">
+                <option value="1분 내외">1분 내외 (매우 간단)</option>
+                <option value="3분 내외" selected>3분 내외 (기본)</option>
+                <option value="5분 내외">5분 내외</option>
+                <option value="10분 내외">10분 내외</option>
+                <option value="15분 이상">15분 이상 (심층 테스트)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 2. 서비스 카테고리 (다중선택 가능) -->
+          <div class="p-5 rounded-2xl border border-neutral-200 bg-[#FAFAFA] flex flex-col gap-3">
+            <div>
+              <h3 class="text-xs font-bold text-neutral-dark mb-0.5">서비스 카테고리 선택 <span
+                  class="text-neutral-400 font-normal">(다중 선택 가능)</span></h3>
+              <p class="text-[11px] text-neutral-400">서비스에 해당하는 카테고리를 선택해주세요.</p>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs font-semibold pt-1">
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="productivity" class="accent-[#2F6517]" />
+                생산성/업무도구
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="commerce" class="accent-[#2F6517]" />
+                커머스/쇼핑
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="fintech" class="accent-[#2F6517]" />
+                핀테크/금융
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="healthcare" class="accent-[#2F6517]" />
+                헬스케어/웰니스
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="education" class="accent-[#2F6517]" />
+                교육/학습
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="entertainment" class="accent-[#2F6517]" />
+                엔터테인먼트/콘텐츠
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="social" class="accent-[#2F6517]" />
+                소셜/커뮤니티
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="lifestyle" class="accent-[#2F6517]" />
+                라이프스타일
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="ai_dev" class="accent-[#2F6517]" />
+                AI/개발도구
+              </label>
+              <label
+                class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-neutral-200 hover:border-primary/60 cursor-pointer transition-colors shadow-2xs">
+                <input type="checkbox" name="targetInterest" value="etc" class="accent-[#2F6517]" />
+                기타
+              </label>
+            </div>
+          </div>
+
+          <!-- 3. 개발 도구 / 개발 환경 태그 -->
+          <div class="p-6 rounded-2xl border border-[#DDE8D2] bg-[#F8FBF5] flex flex-col gap-4">
+            <div>
+              <h3 class="text-sm font-extrabold text-neutral-dark flex items-center gap-2">
+                <span>🛠️</span> <span>개발 도구 / 개발 환경</span>
+                <span class="text-xs font-normal text-neutral-400">(선택)</span>
+              </h3>
+              <p class="text-xs text-neutral-500 mt-1">
+                서비스를 제작할 때 사용한 언어, 프레임워크, 개발 도구와 배포·데이터 환경을 태그로 입력해 주세요.
+              </p>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <input id="input-tech-tag" type="text" maxlength="40"
+                  placeholder="예: React, Next.js, Flutter, Supabase, Vercel, Cursor"
+                  class="flex-1 px-4 py-2.5 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 ui-input"
+                  onkeydown="if(event.key==='Enter'){ event.preventDefault(); addTechTag(); }" />
+                <button type="button" onclick="addTechTag()"
+                  class="px-4 py-2.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white font-extrabold text-xs shrink-0 cursor-pointer transition-all">
+                  + 태그 추가
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-1.5 mb-3" aria-label="개발 환경 추천 태그">
+                <button type="button" onclick="addTechTag('React')" class="px-2.5 py-1 rounded-lg border border-[#DDE8D2] bg-white text-[11px] font-semibold text-[#2F6517] hover:bg-[#EDF8E5] cursor-pointer">+ React</button>
+                <button type="button" onclick="addTechTag('Next.js')" class="px-2.5 py-1 rounded-lg border border-[#DDE8D2] bg-white text-[11px] font-semibold text-[#2F6517] hover:bg-[#EDF8E5] cursor-pointer">+ Next.js</button>
+                <button type="button" onclick="addTechTag('Flutter')" class="px-2.5 py-1 rounded-lg border border-[#DDE8D2] bg-white text-[11px] font-semibold text-[#2F6517] hover:bg-[#EDF8E5] cursor-pointer">+ Flutter</button>
+                <button type="button" onclick="addTechTag('Supabase')" class="px-2.5 py-1 rounded-lg border border-[#DDE8D2] bg-white text-[11px] font-semibold text-[#2F6517] hover:bg-[#EDF8E5] cursor-pointer">+ Supabase</button>
+                <button type="button" onclick="addTechTag('Vercel')" class="px-2.5 py-1 rounded-lg border border-[#DDE8D2] bg-white text-[11px] font-semibold text-[#2F6517] hover:bg-[#EDF8E5] cursor-pointer">+ Vercel</button>
+                <button type="button" onclick="addTechTag('Cursor')" class="px-2.5 py-1 rounded-lg border border-[#DDE8D2] bg-white text-[11px] font-semibold text-[#2F6517] hover:bg-[#EDF8E5] cursor-pointer">+ Cursor</button>
+              </div>
+              <div id="tech-tags-container" class="flex flex-wrap gap-2"></div>
+            </div>
+          </div>
+
+          <!-- 4. 권장 참여 대상 조건 (어떤 분이 봐주면 좋을까요?) -->
+          <div class="p-6 rounded-2xl border border-[#ECEFE2] bg-[#FAFBF7] flex flex-col gap-4">
+            <div>
+              <h3 class="text-sm font-extrabold text-neutral-dark flex items-center gap-2">
+                <span>🎯</span> <span>어떤 분이 봐주면 좋을까요?</span>
+              </h3>
+              <p class="text-xs text-neutral-500 mt-1">
+                우선 타겟이나 이런 분이 참여해 주시면 좋겠다 하는 대상 및 관심사를 자유롭게 적어주세요.
+              </p>
+            </div>
+
+            <!-- 권장 태그 입력 및 태그 박스 -->
+            <div>
+              <span class="text-xs font-bold text-neutral-700 block mb-2">어떤 분이 봐주면 좋을까요? (선택)</span>
+              <div class="flex items-center gap-2 mb-3">
+                <input id="input-target-persona-tag" type="text" placeholder="예: 🎂 20대·30대, 📊 가계부 관심자, 📱 앱 실사용자"
+                  class="flex-1 px-4 py-2.5 bg-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/60 ui-input"
+                  onkeydown="if(event.key==='Enter'){ event.preventDefault(); addPersonaTag(); }" />
+                <button type="button" onclick="addPersonaTag()"
+                  class="px-4 py-2.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white font-extrabold text-xs shrink-0 cursor-pointer transition-all">
+                  + 태그 추가
+                </button>
+              </div>
+
+              <!-- Persona Tags Container -->
+              <div id="persona-tags-container" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Soft guidance notice box -->
+            <div
+              class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] flex items-center gap-2 font-medium">
+              <span>💡</span>
+              <span>해당 조건에 100% 부합하지 않더라도 자유롭고 참신한 시각의 피드백은 언제나 환영합니다!</span>
+            </div>
+          </div>
+
+          <!-- 5. 피드백 공개 / 비공개 설정 -->
+          <div class="p-4 rounded-2xl border border-neutral-200 bg-white flex items-center justify-between shadow-2xs">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-xs font-bold text-neutral-dark flex items-center gap-1.5">
+                🔒 <span>피드백 공개 여부 설정</span>
+              </span>
+              <p class="text-[11px] text-neutral-400">
+                비공개 설정 시 제작자 본인만 참여자들의 피드백 및 리뷰 답변을 조회할 수 있습니다.
+              </p>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <span id="feedback-privacy-label" class="text-xs font-bold text-[#2F6517]">전체 공개</span>
+              <label class="relative inline-flex items-center cursor-pointer switch-toggle">
+                <input type="checkbox" id="toggle-feedback-privacy" class="sr-only peer" onchange="
+                  const lbl = document.getElementById('feedback-privacy-label');
+                  if(this.checked) {
+                    lbl.textContent = '제작자만 비공개';
+                    lbl.className = 'text-xs font-bold text-purple-700';
+                  } else {
+                    lbl.textContent = '전체 공개';
+                    lbl.className = 'text-xs font-bold text-[#2F6517]';
+                  }
+                ">
+                <div
+                  class="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2F6517] switch-bg">
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 6. 모집인원 × 1인당 보상 = 총 코인 -->
+          <div id="reward-budget-calculator" class="p-6 rounded-2xl border border-[#E1DBB0] bg-canvas-cream/50 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-sm font-bold text-neutral-dark">모집인원 및 리워드 예산</span>
+                <p class="mt-0.5 text-[11px] font-medium text-neutral-500">모집인원과 1인당 코인을 입력하면 총 코인이 자동 계산됩니다.</p>
+              </div>
+              <span class="text-xs text-[#736838] font-medium" id="step3-user-coin-balance">보유: — 돼지코인</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1.15fr)] items-stretch gap-3">
+              <div class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-2xs">
+                <div class="mb-3 flex items-center gap-2">
+                  <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-neutral-800 px-1.5 text-[10px] font-extrabold text-white">1</span>
+                  <label for="input-target-count" class="text-xs font-extrabold text-neutral-700">모집인원</label>
+                  <span class="text-red-500">*</span>
+                </div>
+                <div class="flex items-center gap-2 rounded-xl bg-neutral-50 px-3 py-2.5 ring-1 ring-inset ring-neutral-200 focus-within:ring-2 focus-within:ring-primary/60">
+                  <span class="text-base" aria-hidden="true">👥</span>
+                  <input id="input-target-count" type="number" value="0" min="1" step="1" required
+                    class="min-w-0 flex-1 bg-transparent text-lg font-black text-neutral-dark focus:outline-none"
+                    oninput="calculateTotalCost()" />
+                  <span class="text-xs font-bold text-neutral-500">명</span>
+                </div>
+              </div>
+
+              <div class="hidden items-center justify-center px-1 text-xl font-black text-neutral-300 lg:flex" aria-hidden="true">×</div>
+
+              <div class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-2xs">
+                <div class="mb-3 flex items-center gap-2">
+                  <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[#2F6517] px-1.5 text-[10px] font-extrabold text-white">2</span>
+                  <label for="input-reward-coin" class="text-xs font-extrabold text-neutral-700">1인당 코인</label>
+                  <span class="text-red-500">*</span>
+                </div>
+                <div class="flex items-center gap-2 rounded-xl bg-[#F4F9EE] px-3 py-2.5 ring-1 ring-inset ring-[#DCE4B8] focus-within:ring-2 focus-within:ring-primary/60">
+                  <img src="/images/brand/logo-coin.png" alt="" class="h-5 w-5 object-contain" />
+                  <input id="input-reward-coin" type="number" value="70" min="0" step="1" required
+                    class="min-w-0 flex-1 bg-transparent text-lg font-black text-neutral-dark focus:outline-none" oninput="calculateTotalCost()" />
+                  <span class="text-xs font-bold text-neutral-500">코인</span>
+                </div>
+              </div>
+
+              <div class="hidden items-center justify-center px-1 text-xl font-black text-neutral-300 lg:flex" aria-hidden="true">=</div>
+
+              <div class="rounded-2xl border-2 border-primary/60 bg-[#F4F9EE] p-4 shadow-2xs">
+                <div class="mb-3 flex items-center gap-2">
+                  <span class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-dark px-1.5 text-[10px] font-extrabold text-white">3</span>
+                  <span class="text-xs font-extrabold text-neutral-700">총 코인</span>
+                  <span class="ml-auto rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-primary-dark">자동 계산</span>
+                </div>
+                <div class="flex min-h-[46px] items-center gap-2 rounded-xl bg-white px-3 py-2.5 ring-1 ring-inset ring-primary/40" aria-live="polite">
+                  <img src="/images/brand/logo-coin.png" alt="" class="h-5 w-5 object-contain" />
+                  <strong id="total-cost-coin" class="min-w-0 flex-1 text-xl font-black text-primary-dark">0</strong>
+                  <span class="text-xs font-bold text-primary-dark">코인</span>
+                </div>
+              </div>
+            </div>
+
+            <p id="total-cost-summary" class="text-[11px] font-semibold text-neutral-500">
+              모집인원 × 1인당 코인으로 총 예산을 계산합니다.
+            </p>
+          </div>
+
+          <!-- 테스트 기간 예산 안내 배너 -->
+          <div id="step3-coin-status-banner" class="rounded-2xl transition-all duration-200"></div>
+
+          <!-- Step 3 Navigation Buttons -->
+          <div class="pt-6 border-t border-neutral-100 flex items-center justify-between mt-2">
+            <button type="button" onclick="goToStep(2)"
+              class="px-6 py-3 rounded-full border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs">
+              <span>←</span> 이전: 2. 테스트 유형 선택
+            </button>
+
+            <button type="button" id="btn-publish-test-step3" onclick="handleStep3PublishClick()"
+              class="px-8 py-3.5 rounded-full bg-primary hover:bg-primary-hover active:scale-95 text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center gap-2 border border-primary-dark/20 cursor-pointer">
+              <span id="btn-publish-step3-text">프로젝트 게시하기</span>
+              <span id="btn-publish-step3-icon">🚀</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+    </main>
+
+    <footer class="w-full border-t border-neutral-lightborder py-8 bg-white">
+      <div
+        class="max-w-[1140px] mx-auto px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B7280]">
+        <div class="flex items-center gap-2">
+          <img src="/images/brand/logo-default.png" alt="돈 돼?" class="h-5 w-auto object-contain" />
+          <span class="font-bold text-[#2F6517]">돈 돼?</span>
+          <span>© 2024 돈 돼?. All rights reserved. Playful Finance for Everyone.</span>
+        </div>
+        <div class="flex items-center gap-5">
+          <a href="#" class="hover:text-neutral-dark">Privacy Policy</a>
+          <a href="#" class="hover:text-neutral-dark">Terms of Service</a>
+          <a href="#" class="hover:text-neutral-dark">Contact Us</a>
+          <a href="#" class="hover:text-neutral-dark">패니 스토리(Mascot Story)</a>
+        </div>
+      </div>
+    </footer>
+  </div>

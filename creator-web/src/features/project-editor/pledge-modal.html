@@ -1,0 +1,107 @@
+  <!-- ========================================================
+       PRE-PLEDGE MODAL (테스트 등록 자격 확인 및 사전 서약 팝업)
+  ======================================================== -->
+  <div id="pledge-modal"
+    class="flex backdrop-blur-xs hidden transition-all duration-200 ui-modal">
+    <div
+      class="w-full max-w-[520px] mx-4 bg-canvas-cream rounded-[20px] border border-[#E9E3B8] shadow-float p-8 sm:p-10 text-center flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+
+      <!-- [상태 1] 테스트 참여 횟수 미충족 경고 뷰 -->
+      <div id="pledge-view-blocked" class="w-full flex flex-col items-center hidden">
+        <div class="relative mb-4 flex flex-col items-center">
+          <div
+            class="w-24 h-24 flex items-center justify-center bg-white/85 rounded-full border border-[#E4DEAC] p-3 shadow-xs mb-3">
+            <img src="/images/mascots/mascot-hungry.png" alt="배고픈 마스코트" class="w-full h-full object-contain" />
+          </div>
+          <span
+            class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-secondary text-[#7D1E36] text-xs font-bold shadow-2xs border border-[#F88EA8]">
+            ⚠️ 테스트 게시 자격 미충족
+          </span>
+        </div>
+
+        <h3 class="text-2xl font-extrabold text-neutral-dark mb-2 tracking-tight">
+          테스트 3회 이상 참여 필수
+        </h3>
+        <p class="text-xs text-[#6B6547] mb-5 leading-relaxed">
+          서로 돕는 상부상조 플랫폼 생태계를 위해,<br>
+          <strong class="text-neutral-dark">다른 사용자의 서비스를 3회 이상 테스트 완료</strong>해야 내 테스트를 등록할 수 있습니다.
+        </p>
+
+        <!-- 참여 현황 진행률 바 -->
+        <div class="w-full bg-white/90 border border-[#E4DEAC] rounded-2xl p-4 mb-6 text-left">
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-neutral-dark">현재 다른 서비스 테스트 완료 횟수</span>
+            <span id="pledge-test-count-badge"
+              class="font-extrabold text-[#8A2B43] bg-secondary/20 px-2 py-0.5 rounded">0 / 3 회</span>
+          </div>
+          <div class="w-full h-3 bg-[#F4F4F5] rounded-full overflow-hidden mb-3">
+            <div id="pledge-test-count-bar" class="h-full bg-secondary rounded-full transition-all duration-500"
+              style="width: 0%;"></div>
+          </div>
+          <p class="text-[11px] text-[#7B7656] leading-normal">
+            💡 탐색 탭에서 다른 창업자들의 웹/앱 테스트에 참여하고 리뷰를 남겨주세요. 3회 게이팅 완료 시 초반 가입 보너스로 +500 돼지코인이 지급됩니다!
+          </p>
+        </div>
+
+        <div class="w-full flex items-center gap-3">
+          <button type="button" onclick="closePledgeModal()"
+            class="flex-1 py-3.5 px-4 rounded-xl border border-[#DCD5A4] bg-white/80 text-sm font-semibold text-neutral-dark hover:bg-white transition-all">
+            닫기
+          </button>
+          <button type="button" onclick="closePledgeModal(); navigateTo('explore');"
+            class="flex-1 py-3.5 px-4 rounded-xl bg-primary text-neutral-dark text-sm font-extrabold shadow-sm hover:bg-primary-hover active:scale-98 transition-all border border-primary-dark/20 flex items-center justify-center gap-1.5">
+            <span>테스트 참여하러 가기</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- [상태 2] 자격 충족 시 테스트 등록 전 확인 서약 뷰 -->
+      <div id="pledge-view-allowed" class="w-full flex flex-col items-center">
+        <div class="relative mb-5 flex flex-col items-center">
+          <div
+            class="w-28 h-28 flex items-center justify-center bg-white/85 rounded-full border border-[#E4DEAC] p-3 shadow-xs mb-3">
+            <img src="/images/mascots/mascot-hungry.png" alt="주의 마스코트" class="w-full h-full object-contain" />
+          </div>
+          <span
+            class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-secondary text-[#7D1E36] text-xs font-bold shadow-2xs border border-[#F88EA8]">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            서비스 수정 금지 사전 서약
+          </span>
+        </div>
+
+        <h3 class="text-2xl font-extrabold text-neutral-dark mb-3 tracking-tight">
+          프로젝트 등록 전 확인 서약
+        </h3>
+        <div class="bg-white/80 border border-[#E4DEAC] rounded-xl p-4 mb-6 text-left">
+          <p class="text-[14px] text-[#4F4B30] leading-relaxed font-semibold text-center mb-1">
+            "공정한 테스트와 보상 지급을 위해,<br>
+            <span class="text-[#8D2B44] underline decoration-secondary decoration-2 underline-offset-2">모집 기간 중에는 서비스
+              URL의 핵심 로직 수정을 삼가주세요.</span>"
+          </p>
+          <p class="text-xs text-[#7B7656] text-center font-normal mt-2">
+            테스터들이 안정적인 환경에서 일관된 피드백을 제공할 수 있도록 협조해 주세요. (타 서비스 테스트 <span id="pledge-user-completed-count"
+              class="font-bold text-[#2E5E14]">0회</span> 완료 확인됨)
+          </p>
+        </div>
+
+        <div class="w-full flex items-center gap-3">
+          <button type="button" onclick="closePledgeModal()"
+            class="flex-1 py-3.5 px-4 rounded-xl border border-[#DCD5A4] bg-white/80 text-sm font-semibold text-neutral-dark hover:bg-white transition-all focus:outline-none">
+            취소
+          </button>
+          <button type="button" onclick="confirmPledgeAndProceed()"
+            class="flex-1 py-3.5 px-4 rounded-xl bg-primary text-neutral-dark text-sm font-extrabold shadow-sm hover:bg-primary-hover active:scale-98 transition-all focus:outline-none border border-primary-dark/20 flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>동의하고 프로젝트 등록하기</span>
+            <svg class="w-4 h-4 text-[#244C10]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>

@@ -1,10 +1,11 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const authSource = readFileSync(new URL('../src/auth.js', import.meta.url), 'utf8');
-const mainSource = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
+const html = readAppSource();
+const authSource = readFileSync(new URL('../src/features/auth/auth.js', import.meta.url), 'utf8');
+const mainSource = readFileSync(new URL('../src/app/main.js', import.meta.url), 'utf8');
 
 test('로그인 중 스피너와 접근성 상태를 표시한다', () => {
   assert.match(html, /id="btn-auth-submit"[\s\S]*?aria-busy="false"/);

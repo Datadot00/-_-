@@ -1,0 +1,229 @@
+  <!-- ==========================================================
+       VIEW 6: CREATOR FEEDBACK DASHBOARD (SCR-16 / SCR-17)
+  ========================================================== -->
+  <div id="view-feedback" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
+
+    <!-- Left Sidebar (Home standard layout) -->
+    <aside
+      class="overflow-y-auto ui-service-sidebar">
+      <div class="flex flex-col gap-8">
+        <!-- @include src/shared/navigation/sidebar-brand.html -->
+
+        <!-- @include src/shared/navigation/sidebar-menu.html -->
+      </div>
+
+      <!-- Bottom Start New Project Button -->
+      <!-- @include src/shared/navigation/create-project-direct-button.html -->
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Utility Header Bar -->
+      <header
+        class="bg-white/80 shrink-0 ui-service-header">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">ANALYTICS & FEEDBACK</p>
+          <h2 class="text-base font-extrabold text-neutral-dark">피드백 리포트</h2>
+        </div>
+
+        <div class="flex items-center gap-3.5">
+          <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 돼지코인</span>
+            <img src="/images/brand/logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain" />
+            <span data-sidebar-coin class="text-xs font-bold text-[#574B1A]">— C</span>
+          </div>
+
+          <div onclick="navigateToMypageSection('mypage-profile-section', 'profile')"
+            class="flex items-center gap-2 pl-2 cursor-pointer group">
+            <div
+              class="w-9 h-9 rounded-full border border-neutral-200 bg-[#FAFBF7] overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+              <span class="text-sm">👤</span>
+            </div>
+            <div class="hidden sm:flex flex-col text-left">
+              <span class="text-[10px] text-neutral-400">환영해요!</span>
+              <span data-auth-email
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인이 필요합니다</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Feedback Analytics Content Area -->
+      <main class="flex-1 p-8 lg:p-10 max-w-[1240px] w-full mx-auto flex flex-col gap-8">
+
+        <!-- Top Navigation Bar (Breadcrumbs) -->
+        <div class="flex items-center justify-start pb-2 border-b border-neutral-200/60">
+          <div class="flex items-center gap-2 text-xs text-neutral-400 font-medium">
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+            <span>&gt;</span>
+            <span class="cursor-pointer hover:underline"
+              onclick="navigateToMypageSection('mypage-projects-section', 'my-projects')">내 프로젝트</span>
+            <span>&gt;</span>
+            <span class="font-bold text-neutral-700">피드백 리포트</span>
+          </div>
+        </div>
+
+        <!-- Project Display Card (Fixed Title without Select Toggle) -->
+        <div
+          class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <!-- Icon -->
+            <div
+              class="w-10 h-10 rounded-xl bg-[#E8F5E9] border border-[#C8E6C9] flex items-center justify-center text-lg shrink-0">
+              📋
+            </div>
+
+            <!-- Project Title & Subtitle -->
+            <div class="flex flex-col gap-0.5 min-w-0">
+              <div class="flex items-center gap-2">
+                <h3 id="feedback-project-title" class="text-base font-extrabold text-neutral-dark tracking-tight">
+                  머니로그
+                </h3>
+                <span id="feedback-project-version" class="hidden px-2 py-0.5 rounded bg-neutral-100 text-neutral-500 text-[10px] font-bold"></span>
+              </div>
+              <p id="feedback-project-subtext" class="text-xs text-neutral-500 font-medium truncate">
+                AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
+              </p>
+            </div>
+          </div>
+
+          <!-- Tags & Detail Button -->
+          <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+            <span id="feedback-project-category-tag"
+              class="px-2.5 py-1 rounded-lg bg-neutral-100 text-neutral-600 text-xs font-bold">
+              프로덕트 테스트
+            </span>
+            <span id="feedback-project-status-tag"
+              class="px-2.5 py-1 rounded-lg bg-[#EBF7E2] text-[#25500F] text-xs font-extrabold border border-[#D0E8BD]">
+              모집 완료
+            </span>
+            <!-- 리뷰 공개/비공개 상태 뱃지 -->
+            <span id="feedback-review-visibility-badge"
+              class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-extrabold border border-emerald-200 flex items-center gap-1">
+              <span>🌐</span> 리뷰 공개
+            </span>
+            <span class="text-neutral-300">|</span>
+            <button onclick="navigateTo('post')"
+              class="text-xs font-bold text-neutral-700 hover:text-neutral-dark flex items-center gap-1 transition-colors">
+              <span>테스트 상세보기</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Top Title Area with Status Badge & Primary CTA Button -->
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200/70 pb-6">
+          <div>
+            <div class="flex items-center gap-3 mb-1.5">
+              <h1 class="text-3xl font-extrabold text-neutral-dark tracking-tight">
+                테스터 피드백 리포트
+              </h1>
+              <!-- Status Badge: Dynamic toggle between [모집 중] -> [테스트 종료] -->
+              <span id="test-status-badge"
+                class="px-3 py-1 rounded-full bg-primary/30 text-[#214c0c] text-xs font-extrabold border border-primary/60 transition-all">
+                [모집 중]
+              </span>
+            </div>
+            <p class="text-sm text-neutral-muted">
+              참여한 테스터들의 생생한 의견을 확인하고, 유저 피드백을 반영해 프로덕트를 고도화하세요.
+            </p>
+          </div>
+
+          <!-- Primary CTA: [🚀 유저 리뷰 기반 업데이트 완료 알림 테스터에게 보내기] -->
+          <button id="btn-notify-testers" onclick="openNotifyModal()"
+            class="px-5 py-3 rounded-xl bg-primary text-neutral-dark font-extrabold text-xs shadow-sm hover:bg-primary-hover active:scale-98 transition-all flex items-center justify-center gap-2 border border-primary-dark/20 shrink-0">
+            <span>🚀 유저 리뷰 기반 업데이트 완료 알림 테스터에게 보내기</span>
+          </button>
+        </div>
+
+        <!-- 3 Summary Metrics Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- 1. 모집 인원 현황 (초기 9/10명 90% -> 5초 뒤 10/10명 100%) -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2 text-xs font-semibold text-neutral-muted">
+                <span>👥</span>
+                <span>모집 현황</span>
+              </div>
+              <span id="feedback-time-left"
+                class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">
+                마감 임박
+              </span>
+            </div>
+            <div>
+              <div class="flex items-baseline gap-2 mb-3">
+                <span id="feedback-recruits-num" class="text-4xl font-extrabold text-neutral-dark">9</span>
+                <span id="feedback-target-count-text" class="text-sm font-semibold text-neutral-muted">/ 30명</span>
+              </div>
+              <div class="w-full h-2.5 bg-[#F4F4F5] rounded-full overflow-hidden mb-2">
+                <div id="feedback-progress-bar" class="h-full bg-primary rounded-full" style="width: 90%;"></div>
+              </div>
+              <div class="flex items-center justify-between text-xs font-bold">
+                <span class="text-neutral-muted font-normal text-[11px]">선착순 마감</span>
+                <span id="feedback-recruits-rate" class="text-primary-dark font-extrabold">90% 달성</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. 평균 평점 (평균 만족도 별점) -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col justify-between">
+            <div class="flex items-center gap-2 text-xs font-semibold text-neutral-muted mb-4">
+              <span>⭐</span>
+              <span>평균 만족도 평점</span>
+            </div>
+            <div>
+              <div class="flex items-baseline gap-2 mb-3">
+                <span id="feedback-average-rating" class="text-4xl font-extrabold text-neutral-dark">-</span>
+                <span class="text-sm font-semibold text-neutral-muted">/ 5.0</span>
+              </div>
+              <div id="feedback-average-stars" class="flex items-center gap-1 text-[#8D2B44] text-lg">☆☆☆☆☆</div>
+            </div>
+          </div>
+
+          <!-- 3. 지급된 돼지코인 총액 -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-7 shadow-subtle flex flex-col justify-between">
+            <div class="flex items-center gap-2 text-xs font-semibold text-neutral-muted mb-4">
+              <span>💲</span>
+              <span>지급된 리워드 총액</span>
+            </div>
+            <div>
+              <div class="flex items-baseline gap-1.5 mb-3">
+                <span id="feedback-total-reward-num" class="text-4xl font-extrabold text-neutral-dark">1,500</span>
+                <span class="text-base font-bold text-[#574B1A]">돼지코인</span>
+              </div>
+              <div class="text-xs text-[#2F6517] font-semibold flex items-center gap-1">
+                <span>📈</span> <span id="feedback-per-person-reward-text">1인당 50 돼지코인 정상 지급 완료</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Feedback Filter Controls -->
+        <div class="flex items-center gap-3">
+          <button id="btn-sort-rating" onclick="sortFeedback('rating')"
+            class="px-4 py-2 rounded-full border border-neutral-border bg-white text-xs font-semibold text-neutral-dark hover:bg-neutral-50 flex items-center gap-1 transition-all">
+            <span>별점 높은순</span>
+            <span class="text-[10px]">⌄</span>
+          </button>
+          <button id="btn-sort-latest" onclick="sortFeedback('latest')"
+            class="px-4 py-2 rounded-full border border-neutral-border bg-white text-xs font-semibold text-neutral-dark hover:bg-neutral-50 transition-all">
+            최신순
+          </button>
+          <button id="btn-filter-unreplied" type="button" onclick="toggleUnrepliedFeedbackFilter()"
+            class="px-4 py-2 rounded-full bg-[#EBF7E2] text-xs font-bold text-[#2A5E12] border-2 border-primary flex items-center gap-1.5 transition-all shadow-xs cursor-pointer">
+            <span id="unreplied-filter-check">✓</span>
+            <span id="unreplied-filter-text">답글 미작성건만 보기</span>
+            <span id="unreplied-count-badge"
+              class="ml-0.5 px-2 py-0.2 rounded-full bg-[#2F6517] text-white text-[10px] font-extrabold">2건</span>
+          </button>
+        </div>
+
+        <!-- Feedback Cards List (SCR-16 / SCR-17) -->
+        <section id="feedback-cards-container" class="space-y-6">
+          <!-- Dynamically populated via openFeedbackReport(projectId) -->
+        </section>
+
+      </main>
+    </div>
+  </div>

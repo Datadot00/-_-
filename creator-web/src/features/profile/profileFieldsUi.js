@@ -6,7 +6,7 @@ import {
   validateGender,
   validateJobGroup,
   validateToolTags
-} from './onboardingService.js';
+} from '../auth/onboardingService.js';
 
 /**
  * 내 정보 수정 모달에서 온보딩 때 받은 항목(직업군·성별·연령대·기기·툴 태그)을

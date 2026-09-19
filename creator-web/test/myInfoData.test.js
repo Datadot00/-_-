@@ -1,3 +1,4 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -10,7 +11,7 @@ import {
   SUPPORT_TICKET_COLUMNS,
   prepareProfileLinks,
   prepareSupportTicketPayload
-} from '../src/dataService.js';
+} from '../src/shared/data/dataService.js';
 
 test('프로필 링크를 HTTPS URL로 정규화하고 중복을 제거한다', () => {
   assert.deepEqual(
@@ -56,7 +57,7 @@ test('내 정보 조회 목록은 필요한 컬럼만 명시한다', () => {
 });
 
 test('마이페이지 UI는 실제 DB 연결 지점과 고객센터 화면을 포함한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   assert.equal(html.includes('fetchMyPrivateProfile()'), true);
   assert.equal(html.includes('updateMyPrivateProfile({'), true);
   assert.equal(html.includes('fetchUserExchanges(userId)'), true);
@@ -75,7 +76,7 @@ test('스키마는 고객센터 RLS와 private profile RPC 권한을 선언한�
 });
 
 test('인라인 브라우저 스크립트에 문법 오류가 없다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const inlineScripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.ok(inlineScripts.length > 0);
   inlineScripts.forEach((match, index) => {

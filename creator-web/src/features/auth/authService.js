@@ -1,4 +1,4 @@
-import { toUserFriendlyError } from './errorCodes.js';
+import { toUserFriendlyError } from '../../shared/errors/errorCodes.js';
 
 function requireAuthClient(client) {
   if (!client?.auth) {

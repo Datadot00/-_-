@@ -1,4 +1,4 @@
-import { supabase } from './dataService.js';
+import { supabase } from '../../shared/data/dataService.js';
 import {
   clearExistingLocalSession,
   getActiveSessionUser,

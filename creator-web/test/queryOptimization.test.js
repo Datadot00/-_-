@@ -1,3 +1,4 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -10,15 +11,15 @@ import {
   PROJECT_PUBLIC_LEGACY_COLUMNS,
   PROJECT_PUBLIC_COLUMNS,
   sanitizeProjectSearchQuery
-} from '../src/dataService.js';
+} from '../src/shared/data/dataService.js';
 
-const service = readFileSync(new URL('../src/dataService.js', import.meta.url), 'utf8');
+const service = readFileSync(new URL('../src/shared/data/dataService.js', import.meta.url), 'utf8');
 const migration = readFileSync(
   new URL('../supabase/migrations/20260910130451_stage_7_query_and_index_optimization.sql', import.meta.url),
   'utf8'
 );
 const schema = readFileSync(new URL('../supabase_schema.sql', import.meta.url), 'utf8');
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = readAppSource();
 
 test('프로젝트 검색어는 와일드카드를 제거하고 길이를 제한한다', () => {
   assert.equal(sanitizeProjectSearchQuery('  머니%__  로그  '), '머니 로그');

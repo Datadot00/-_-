@@ -1,0 +1,351 @@
+  <!-- ========================================================
+       ONBOARDING WIZARD MODAL (가입 직후 4단계 온보딩)
+  ======================================================== -->
+  <div id="onboarding-wizard-modal"
+    class="hidden fixed inset-0 z-[10000] items-center justify-center bg-neutral-950/55 p-4 backdrop-blur-[2px]"
+    role="dialog" aria-modal="true" aria-labelledby="wizard-step-title">
+    <div class="flex max-h-[92vh] w-full max-w-[560px] flex-col overflow-hidden rounded-[24px] border border-white/70 bg-[#FBFBF7] shadow-2xl">
+
+      <!-- Stepper Header -->
+      <div class="border-b border-neutral-200 bg-white px-6 py-5 sm:px-7">
+        <ol id="wizard-stepper" class="mb-4 flex items-center gap-1.5" aria-label="가입 진행 단계">
+          <li class="flex flex-1 items-center gap-1.5" data-wizard-step-indicator="1">
+            <span
+              class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black transition-colors"
+              data-wizard-step-badge>1</span>
+            <span class="h-[3px] flex-1 rounded-full bg-neutral-200 transition-colors" data-wizard-step-bar></span>
+          </li>
+          <li class="flex flex-1 items-center gap-1.5" data-wizard-step-indicator="2">
+            <span
+              class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black transition-colors"
+              data-wizard-step-badge>2</span>
+            <span class="h-[3px] flex-1 rounded-full bg-neutral-200 transition-colors" data-wizard-step-bar></span>
+          </li>
+          <li class="flex flex-1 items-center gap-1.5" data-wizard-step-indicator="3">
+            <span
+              class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black transition-colors"
+              data-wizard-step-badge>3</span>
+            <span class="h-[3px] flex-1 rounded-full bg-neutral-200 transition-colors" data-wizard-step-bar></span>
+          </li>
+          <li class="flex flex-1 items-center gap-1.5" data-wizard-step-indicator="4">
+            <span
+              class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black transition-colors"
+              data-wizard-step-badge>4</span>
+            <span class="h-[3px] flex-1 rounded-full bg-neutral-200 transition-colors" data-wizard-step-bar></span>
+          </li>
+          <li class="flex shrink-0 items-center" data-wizard-step-indicator="5">
+            <span
+              class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black transition-colors"
+              data-wizard-step-badge>5</span>
+          </li>
+        </ol>
+        <p id="wizard-step-counter" class="text-[11px] font-extrabold tracking-wide text-[#568A32]">STEP 1 / 4</p>
+        <h2 id="wizard-step-title" class="mt-1 text-xl font-extrabold tracking-tight text-neutral-dark">
+          서비스 이용을 위해 약관을 확인해 주세요
+        </h2>
+        <p id="wizard-step-subtitle" class="mt-1.5 text-xs font-medium leading-5 text-neutral-500">
+          필수 약관에 동의해야 서비스를 계속 이용할 수 있어요. 선택 동의는 언제든 변경할 수 있습니다.
+        </p>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-6 py-5 sm:px-7">
+
+        <!-- STEP 1 : 약관 동의 -->
+        <section id="wizard-step-1" data-wizard-step-panel="1">
+          <label id="wizard-terms-all-wrapper"
+            class="mb-3 flex cursor-pointer items-center gap-3 rounded-xl border border-[#CFE5A8] bg-[#F5FBEA] px-4 py-3.5">
+            <input id="wizard-terms-all" type="checkbox"
+              class="h-4 w-4 shrink-0 cursor-pointer accent-[#2F6517]" />
+            <span>
+              <span class="block text-sm font-extrabold text-neutral-800">전체 동의</span>
+              <span class="mt-0.5 block text-[11px] font-medium text-neutral-500">필수 및 선택 약관을 모두 선택합니다.</span>
+            </span>
+          </label>
+
+          <div id="wizard-terms-document-list" class="space-y-2"></div>
+
+          <p id="wizard-terms-loading" class="py-6 text-center text-xs font-bold text-neutral-400">
+            약관 정보를 불러오는 중...
+          </p>
+
+          <div id="wizard-terms-detail" class="hidden mt-4 rounded-2xl border border-neutral-200 bg-white p-4">
+            <div class="mb-3 flex items-center justify-between gap-3">
+              <h3 id="wizard-terms-detail-title" class="text-sm font-extrabold text-neutral-800"></h3>
+              <button id="btn-wizard-terms-detail-close" type="button"
+                class="shrink-0 rounded-lg px-2 py-1 text-[11px] font-bold text-neutral-500 hover:bg-neutral-100">
+                닫기
+              </button>
+            </div>
+            <pre id="wizard-terms-detail-content"
+              class="max-h-64 overflow-y-auto whitespace-pre-wrap break-words font-sans text-[11px] leading-5 text-neutral-600"></pre>
+          </div>
+
+          <button id="btn-wizard-terms-retry" type="button"
+            class="hidden mt-3 w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-xs font-extrabold text-neutral-700 hover:bg-neutral-50">
+            약관 다시 불러오기
+          </button>
+        </section>
+
+        <!-- STEP 2 : 닉네임 · 한줄소개 -->
+        <section id="wizard-step-2" data-wizard-step-panel="2" class="hidden flex-col gap-5 text-left text-xs">
+          <div class="flex items-center gap-4 rounded-2xl border border-[#E4EED7] bg-[#FAFDF6] p-4">
+            <img src="/images/mascots/mascot-full.png" alt="" aria-hidden="true"
+              class="h-14 w-14 shrink-0 rounded-full border border-[#E9DCA6] bg-[#FAF5E6] object-contain p-1" />
+            <p class="text-xs font-medium leading-relaxed text-neutral-600">
+              <strong class="font-extrabold text-neutral-800">다른 사용자에게 보여질 이름이에요.</strong><br />
+              피드백과 테스트 참여 기록에 이 닉네임이 표시됩니다.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <label for="wizard-nickname" class="font-bold text-neutral-800">닉네임 <span class="text-red-500">*</span></label>
+              <span class="text-[10px] text-neutral-400" id="wizard-nickname-count">0/20자</span>
+            </div>
+            <input type="text" id="wizard-nickname" placeholder="닉네임을 입력하세요" maxlength="20"
+              class="w-full rounded-xl border border-neutral-300 p-3.5 font-semibold text-neutral-dark outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary">
+            <span class="text-[10px] text-neutral-400">한글, 영문, 숫자 조합으로 최대 20자까지 입력 가능합니다.</span>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="wizard-job-group" class="font-bold text-neutral-800">
+              현재 직업군 <span class="text-[10px] font-medium text-neutral-400">(선택)</span>
+            </label>
+            <select id="wizard-job-group"
+              class="w-full appearance-none rounded-xl border border-neutral-300 bg-white bg-[length:18px] bg-[right_0.9rem_center] bg-no-repeat p-3.5 pr-10 font-semibold text-neutral-dark outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"
+              style="background-image:url(&quot;data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'&gt;&lt;path d='M5 8l5 5 5-5'/&gt;&lt;/svg&gt;&quot;)">
+              <option value="">선택 안 함</option>
+              <option value="개발자">개발자</option>
+              <option value="디자이너">디자이너</option>
+              <option value="기획/PM">기획/PM</option>
+              <option value="마케팅/그로스">마케팅/그로스</option>
+              <option value="창업가/1인 사업">창업가/1인 사업</option>
+              <option value="프리랜서">프리랜서</option>
+              <option value="학생">학생</option>
+              <option value="기타">기타</option>
+            </select>
+            <span class="text-[10px] text-neutral-400">비슷한 직업군의 테스터를 찾는 제작자에게 추천될 때 쓰여요.</span>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <label for="wizard-bio" class="font-bold text-neutral-800">
+                한줄소개 <span class="text-[10px] font-medium text-neutral-400">(선택)</span>
+              </label>
+              <span class="text-[10px] text-neutral-400" id="wizard-bio-count">0/50자</span>
+            </div>
+            <textarea id="wizard-bio" rows="2" maxlength="50" placeholder="나를 한 줄로 소개해 주세요 (선택)"
+              class="w-full resize-none rounded-xl border border-neutral-300 p-3.5 font-semibold text-neutral-dark outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary"></textarea>
+            <span class="text-[10px] text-neutral-400">비워 두고 나중에 내 정보에서 입력해도 괜찮아요.</span>
+          </div>
+        </section>
+
+        <!-- STEP 3 : 성별 · 연령대 · 주 사용기기 -->
+        <section id="wizard-step-3" data-wizard-step-panel="3" class="hidden flex-col gap-5 text-left text-xs">
+          <p class="rounded-2xl border border-[#E4EED7] bg-[#FAFDF6] px-4 py-3 text-[11px] font-medium leading-relaxed text-neutral-600">
+            <strong class="font-extrabold text-neutral-800">테스터 모집 조건을 맞추는 데만 쓰여요.</strong><br />
+            다른 사용자에게는 공개되지 않고, 제작자에게는 통계로만 보입니다.
+          </p>
+
+          <div class="flex flex-col gap-2">
+            <label class="font-bold text-neutral-800">성별 <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-2 gap-2" id="wizard-gender-box" role="radiogroup" aria-label="성별">
+              <button type="button" data-wizard-gender="male" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">남성</button>
+              <button type="button" data-wizard-gender="female" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">여성</button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="font-bold text-neutral-800">연령대 <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-3 gap-2" id="wizard-age-range-box" role="radiogroup" aria-label="연령대">
+              <button type="button" data-wizard-age-range="10s" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">10대</button>
+              <button type="button" data-wizard-age-range="20s" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">20대</button>
+              <button type="button" data-wizard-age-range="30s" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">30대</button>
+              <button type="button" data-wizard-age-range="40s" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">40대</button>
+              <button type="button" data-wizard-age-range="50s" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">50대</button>
+              <button type="button" data-wizard-age-range="60s_plus" role="radio" aria-checked="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">60대 이상</button>
+            </div>
+            <span class="text-[10px] text-neutral-400">만 14세 미만은 서비스에 가입할 수 없습니다.</span>
+          </div>
+
+          <div class="flex flex-col gap-2 border-t border-neutral-100 pt-4">
+            <div class="flex items-center justify-between">
+              <label class="font-bold text-neutral-800">
+                주 사용기기 <span class="text-[10px] font-medium text-neutral-400">(선택)</span>
+              </label>
+              <span class="text-[10px] font-bold text-neutral-400" id="wizard-device-count">0개 선택</span>
+            </div>
+            <span class="mb-1 text-[10px] text-neutral-400">여러 개 고를 수 있어요. 기기 조건이 있는 테스트를 추천할 때 쓰여요.</span>
+
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4" id="wizard-device-box">
+              <button type="button" data-wizard-device="ios" aria-pressed="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">iOS</button>
+              <button type="button" data-wizard-device="android" aria-pressed="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">Android</button>
+              <button type="button" data-wizard-device="mac" aria-pressed="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">Mac</button>
+              <button type="button" data-wizard-device="windows" aria-pressed="false"
+                class="rounded-xl border border-neutral-300 bg-white px-3 py-3 text-xs font-bold text-neutral-700 transition-all hover:bg-neutral-50">Windows</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 4 : 관심분야 · SNS -->
+        <section id="wizard-step-4" data-wizard-step-panel="4" class="hidden flex-col gap-5 text-left text-xs">
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <label class="font-bold text-neutral-800">관심분야 <span class="text-red-500">*</span></label>
+              <span class="text-[10px] font-bold text-neutral-400" id="wizard-interest-count">0/5개 선택</span>
+            </div>
+            <span class="mb-1 text-[10px] text-neutral-400">관심 있는 분야를 1~5개 선택해 주세요. 선택한 분야의 테스트를 먼저 추천해 드려요.</span>
+
+            <div class="flex flex-wrap gap-2" id="wizard-interest-chips-box">
+              <button type="button" data-wizard-interest="생산성/업무도구" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">생산성/업무도구</button>
+              <button type="button" data-wizard-interest="커머스/쇼핑" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">커머스/쇼핑</button>
+              <button type="button" data-wizard-interest="핀테크/금융" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">핀테크/금융</button>
+              <button type="button" data-wizard-interest="헬스케어/웰니스" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">헬스케어/웰니스</button>
+              <button type="button" data-wizard-interest="교육/학습" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">교육/학습</button>
+              <button type="button" data-wizard-interest="엔터테인먼트/콘텐츠" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">엔터테인먼트/콘텐츠</button>
+              <button type="button" data-wizard-interest="소셜/커뮤니티" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">소셜/커뮤니티</button>
+              <button type="button" data-wizard-interest="라이프스타일" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">라이프스타일</button>
+              <button type="button" data-wizard-interest="AI/개발도구" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">AI/개발도구</button>
+              <button type="button" data-wizard-interest="기타" aria-pressed="false"
+                class="rounded-full border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 transition-all hover:bg-neutral-50">기타</button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 border-t border-neutral-100 pt-4">
+            <div class="flex items-center justify-between">
+              <label for="wizard-tool-tag-input" class="font-bold text-neutral-800">
+                다뤄본 툴 / 관심 기술 <span class="text-[10px] font-medium text-neutral-400">(선택)</span>
+              </label>
+              <span class="text-[10px] font-bold text-neutral-400" id="wizard-tool-tag-count">0/10개</span>
+            </div>
+            <span class="mb-1 text-[10px] text-neutral-400">써 본 툴이나 배우고 싶은 기술을 적어주세요. 이 툴로 만든 서비스의 테스트를 먼저 추천해 드려요.</span>
+
+            <div class="flex items-center gap-2">
+              <input type="text" id="wizard-tool-tag-input" maxlength="40"
+                placeholder="예: Cursor, Figma, Next.js"
+                class="w-full rounded-xl border border-neutral-300 p-3 font-semibold text-neutral-dark outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary">
+              <button type="button" id="btn-wizard-add-tool-tag"
+                class="shrink-0 rounded-xl border border-neutral-300 bg-white px-4 py-3 text-xs font-bold text-neutral-700 shadow-2xs transition-colors hover:bg-neutral-50">
+                추가
+              </button>
+            </div>
+            <span class="text-[10px] text-neutral-400">쉼표로 구분하거나 Enter 로 여러 개를 한 번에 추가할 수 있어요.</span>
+
+            <div class="mt-1 flex flex-wrap gap-2" id="wizard-tool-tags-container"></div>
+
+            <div class="mt-1 flex flex-wrap items-center gap-1.5">
+              <span class="text-[10px] font-bold text-neutral-400">자주 쓰는 툴</span>
+              <div class="flex flex-wrap gap-1.5" id="wizard-tool-tag-suggestions">
+                <button type="button" data-wizard-tool-suggestion="Cursor"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ Cursor</button>
+                <button type="button" data-wizard-tool-suggestion="v0"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ v0</button>
+                <button type="button" data-wizard-tool-suggestion="Figma"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ Figma</button>
+                <button type="button" data-wizard-tool-suggestion="Notion"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ Notion</button>
+                <button type="button" data-wizard-tool-suggestion="ChatGPT"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ ChatGPT</button>
+                <button type="button" data-wizard-tool-suggestion="Claude"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ Claude</button>
+                <button type="button" data-wizard-tool-suggestion="Next.js"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ Next.js</button>
+                <button type="button" data-wizard-tool-suggestion="Supabase"
+                  class="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-600 transition-colors hover:bg-neutral-50">+ Supabase</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 border-t border-neutral-100 pt-4">
+            <label class="font-bold text-neutral-800">SNS / 링크 <span class="text-[10px] font-medium text-neutral-400">(선택)</span></label>
+            <span class="mb-1 text-[10px] text-neutral-400">프로필에 노출할 포트폴리오, 소셜 채널 링크를 등록하세요.</span>
+
+            <div class="flex flex-col gap-2.5" id="wizard-sns-links-container"></div>
+
+            <button type="button" id="btn-wizard-add-sns-link"
+              class="mt-1 flex items-center gap-1 self-start rounded-xl border border-neutral-300 bg-white px-3.5 py-2 text-xs font-bold text-neutral-700 shadow-2xs transition-colors hover:bg-neutral-50">
+              <span>+</span> 링크 추가
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 5 : 가입 완료 -->
+        <section id="wizard-step-5" data-wizard-step-panel="5" class="hidden flex-col items-center gap-5 py-2 text-center">
+          <img src="/images/mascots/mascot-full.png" alt="돈돼 마스코트"
+            class="h-28 w-28 rounded-full border border-[#E9DCA6] bg-[#FAF5E6] object-contain p-2" />
+          <div>
+            <p class="text-lg font-black tracking-tight text-neutral-dark">
+              <span id="wizard-complete-nickname">돈돼</span>님, 가입이 완료됐어요! 🎉
+            </p>
+            <p class="mt-1.5 text-xs font-medium leading-5 text-neutral-500">
+              이제 테스트에 참여하고 피드백을 남겨 코인을 모을 수 있어요.
+            </p>
+          </div>
+
+          <div class="w-full rounded-2xl border border-[#E4EED7] bg-[#FAFDF6] p-4 text-left">
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-neutral-600 ring-1 ring-neutral-200">Lv.1</span>
+              <h4 class="text-sm font-black text-neutral-dark">아기돼지로 시작합니다</h4>
+            </div>
+            <p class="mt-1.5 text-xs font-medium leading-relaxed text-neutral-600">
+              캐릭터는 피드백과 테스트 활동으로
+              <strong class="font-extrabold text-emerald-700">레벨업하면 자동으로 성장</strong>해요.
+            </p>
+          </div>
+
+          <ul class="w-full space-y-2 text-left">
+            <li class="flex items-start gap-2.5 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+              <span class="text-base leading-none" aria-hidden="true">🔍</span>
+              <span class="text-xs font-medium leading-5 text-neutral-600">
+                <strong class="font-extrabold text-neutral-800">관심분야 테스트 찾기</strong><br />
+                선택한 분야의 모집글을 먼저 보여드려요.
+              </span>
+            </li>
+            <li class="flex items-start gap-2.5 rounded-xl border border-neutral-200 bg-white px-4 py-3">
+              <span class="text-base leading-none" aria-hidden="true">✏️</span>
+              <span class="text-xs font-medium leading-5 text-neutral-600">
+                <strong class="font-extrabold text-neutral-800">프로필은 언제든 수정 가능</strong><br />
+                내 정보에서 닉네임·관심분야를 다시 바꿀 수 있어요.
+              </span>
+            </li>
+          </ul>
+        </section>
+
+        <p id="wizard-error" role="alert" aria-live="assertive"
+          class="hidden mt-4 rounded-xl bg-red-50 px-4 py-3 text-xs font-bold text-red-600"></p>
+      </div>
+
+      <!-- Footer -->
+      <div class="grid grid-cols-1 gap-2 border-t border-neutral-200 bg-white px-6 py-4 sm:grid-cols-[1fr_2fr] sm:px-7">
+        <button id="btn-wizard-back" type="button"
+          class="rounded-xl border border-neutral-300 bg-white px-4 py-3 text-xs font-bold text-neutral-500 transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40">
+          이전
+        </button>
+        <button id="btn-wizard-next" type="button"
+          class="rounded-xl border border-[#2F6517]/20 bg-primary px-4 py-3 text-sm font-extrabold text-neutral-dark shadow-sm transition-all hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40">
+          다음
+        </button>
+      </div>
+
+    </div>
+  </div>

@@ -1,3 +1,4 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -5,12 +6,12 @@ import { readFileSync } from 'node:fs';
 import {
   ONBOARDING_LIMITS,
   prepareOnboardingPayload
-} from '../src/onboardingService.js';
+} from '../src/features/auth/onboardingService.js';
 import { installWizardDom } from './support/stubDom.js';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const wizardSource = readFileSync(new URL('../src/onboardingWizard.js', import.meta.url), 'utf8');
-const authSource = readFileSync(new URL('../src/auth.js', import.meta.url), 'utf8');
+const html = readAppSource();
+const wizardSource = readFileSync(new URL('../src/features/auth/onboardingWizard.js', import.meta.url), 'utf8');
+const authSource = readFileSync(new URL('../src/features/auth/auth.js', import.meta.url), 'utf8');
 
 // 닉네임 외 필수 항목을 매번 적지 않도록 모아 둔다. 개별 규칙은 아래 전용 테스트에서 본다.
 const REQUIRED = Object.freeze({
@@ -313,7 +314,7 @@ const pendingAccountState = {
 
 async function importWizard() {
   // 모듈 상태(현재 단계 등)를 테스트마다 초기화하려고 새 인스턴스를 받는다.
-  return import(`../src/onboardingWizard.js?t=${Math.random()}`);
+  return import(`../src/features/auth/onboardingWizard.js?t=${Math.random()}`);
 }
 
 test('약관이 남은 계정은 1단계부터 시작하고 필수 동의 전에는 진행할 수 없다', async () => {

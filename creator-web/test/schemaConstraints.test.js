@@ -1,3 +1,4 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -11,7 +12,7 @@ const backup = readFileSync(
   'utf8'
 );
 const schema = readFileSync(new URL('../supabase_schema.sql', import.meta.url), 'utf8');
-const page = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const page = readAppSource();
 
 test('6단계는 등록 자격 정규화 전에 복구 지점을 만든다', () => {
   assert.match(backup, /private\.schema_constraints_users_backup_20260910/i);

@@ -1,0 +1,102 @@
+  <!-- ========================================================
+       UNIFIED TEST PARTICIPATION MODAL (통합 테스트 참여 신청 & 안내 모달)
+  ======================================================== -->
+  <div id="test-participate-modal"
+    class="flex backdrop-blur-xs hidden transition-all duration-200 ui-modal">
+    <div
+      class="w-full max-w-[560px] mx-4 p-6 sm:p-8 flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200 relative max-h-[90vh] overflow-y-auto ui-dialog">
+
+      <!-- Close (X) Button -->
+      <button type="button" onclick="closeTestParticipateModal()"
+        class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-colors text-sm cursor-pointer"
+        title="닫기">
+        ✕
+      </button>
+
+      <!-- [VIEW A: 참여 신청 확인 및 안내 뷰] -->
+      <div id="participate-view-initial" class="flex flex-col gap-5">
+        <!-- 1. 모달 상단 요약 (작은 썸네일 + 서비스명 + 한줄소개) -->
+        <div class="flex items-center gap-4 border-b border-neutral-100 pb-4">
+          <div id="part-modal-thumb-box"
+            class="w-14 h-14 rounded-2xl bg-[#F4F9EE] border border-primary/40 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+            📱
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 mb-1">
+              <span id="part-modal-badge"
+                class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-primary/30 text-primary-dark">[프로덕트 테스트]</span>
+              <span id="part-modal-reward"
+                class="text-[11px] font-extrabold text-[#7E22CE] bg-purple-50 px-2 py-0.5 rounded">🪙 600 돼지코인 수령</span>
+            </div>
+            <h3 id="part-modal-title" class="text-base font-extrabold text-neutral-dark truncate">가계부 앱 베타테스트</h3>
+            <p id="part-modal-desc" class="text-xs text-neutral-500 truncate mt-0.5">영수증 사진 한 장으로 지출을 자동 분류하는 스마트 가계부
+            </p>
+          </div>
+        </div>
+
+        <!-- 2. 검증 항목 체크리스트 (안내 목적) -->
+        <div class="flex flex-col gap-2.5">
+          <label class="block text-xs font-bold text-neutral-dark flex items-center gap-1.5">
+            <span>📋</span> <span>테스트 검증 안내 항목</span>
+          </label>
+          <div id="part-modal-checklist" class="space-y-2 bg-[#FAFBF7] p-4 rounded-xl border border-[#E9EEDC] text-xs">
+            <!-- Dynamic checklist items -->
+          </div>
+        </div>
+
+        <!-- 3. 대상 조건 확인용 추가 질문 (있을 시 노출) -->
+        <div id="part-modal-target-box"
+          class="hidden p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 flex flex-col gap-1.5">
+          <span class="font-bold flex items-center gap-1">🎯 이런 분이면 딱이에요!</span>
+          <div id="part-modal-target-text" class="flex flex-wrap gap-1.5 text-[11px] text-amber-800 leading-relaxed font-medium"></div>
+        </div>
+
+        <!-- 4. 모달 하단 버튼 -->
+        <div class="pt-2 flex items-center gap-3">
+          <button type="button" onclick="closeTestParticipateModal()"
+            class="w-1/3 py-3.5 px-4 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">
+            취소
+          </button>
+          <button type="button" id="btn-confirm-participation" onclick="confirmParticipationAndProceed()"
+            class="w-2/3 py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span>확인했어요, 시작하기</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- [VIEW B: 외부형 완료 안내 뷰 (웹/앱/설문URL)] -->
+      <div id="participate-view-external-done" class="flex flex-col gap-5 text-center hidden py-4">
+        <div
+          class="mx-auto w-16 h-16 rounded-full bg-[#EBF7E2] text-primary-dark flex items-center justify-center text-3xl mb-1 shadow-xs">
+          🚀
+        </div>
+        <div>
+          <h3 class="text-xl font-extrabold text-neutral-dark mb-1">외부 테스트 링크로 이동했습니다</h3>
+          <p class="text-xs text-neutral-500 leading-relaxed mt-1">
+            새 탭에서 테스트 접속이 진행 중입니다.<br />
+            테스트를 마치신 후 돌아오셔서 리뷰를 작성해 주세요!
+          </p>
+        </div>
+
+        <div
+          class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 text-xs text-[#2A5E12] font-semibold leading-relaxed">
+          💡 지금 작성하지 않아도 <strong class="underline decoration-2">내 프로젝트 &gt; 참여 프로젝트 관리</strong>에서<br />
+          <strong>리뷰 작성하러 가기</strong>로 이어서 마무리하면 <strong id="part-external-reward-text" class="text-[#7E22CE]">돼지코인</strong>이 최종 지급됩니다.
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="deferParticipationReview()"
+            class="w-1/3 py-3.5 px-4 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">
+            나중에 작성하기
+          </button>
+          <button type="button" onclick="openFeedbackWriteModal()"
+            class="w-2/3 py-3.5 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span>✍️ 리뷰 작성하러 가기</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>

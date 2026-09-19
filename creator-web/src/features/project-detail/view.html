@@ -1,0 +1,563 @@
+  <!-- ========================================================
+       VIEW 4: TEST DETAILS - CREATOR VIEW (가계부 앱 베타테스터 모집)
+       Reference: desktop-creator-porduct-betatester-test.png 1:1 매칭
+  ======================================================== -->
+  <div id="view-post" class="view-container hidden w-full min-h-screen flex flex-col bg-[#FBFBF7]">
+    <!-- Top Global Header -->
+    <header
+      class="bg-white/80 ui-service-header">
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('explore')">
+          <img src="/images/brand/logo-default.png" alt="돈 돼?" class="h-8 w-auto object-contain" />
+          <span class="text-xl font-extrabold text-[#2F6517]">돈 돼?</span>
+        </div>
+
+        <nav data-service-top-nav class="hidden md:flex items-center gap-7 text-sm" aria-label="주요 메뉴"></nav>
+      </div>
+
+      <div class="flex items-center gap-3.5">
+        <div onclick="navigateTo('market')"
+          class="flex items-center gap-1.5 bg-canvas-cream border border-[#E9E4C2] px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-[#F2EECA] transition-colors"
+          title="내 보유 돼지코인">
+          <span class="text-xs text-neutral-muted font-medium mr-1">내 보유 돼지코인</span>
+          <img src="/images/brand/logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain" />
+          <span class="text-xs font-bold text-[#574B1A]" id="post-user-coin-badge">— C</span>
+        </div>
+
+        <div onclick="navigateTo('mypage')" class="flex items-center gap-2 pl-2 cursor-pointer group">
+          <div
+            class="w-9 h-9 rounded-full border border-neutral-border bg-canvas-cream overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+            <span class="text-sm">👤</span>
+          </div>
+          <div class="hidden sm:flex flex-col text-left">
+            <span class="text-[10px] text-neutral-muted">환영해요!</span>
+            <span class="text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors"
+              id="header-user-nickname">로그인 사용자 ▾</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 border-l border-neutral-200 pl-3" id="header-auth-buttons-container">
+          <!-- Rendered dynamically by updateHeaderAuthUI() -->
+          <button type="button" onclick="navigateTo('login')" id="btn-header-login"
+            class="px-3 py-1.5 rounded-xl bg-[#2F6517] hover:bg-[#25500F] text-white text-xs font-bold transition-all cursor-pointer shadow-2xs">
+            로그인
+          </button>
+          <button type="button" onclick="handleUserLogout()" id="btn-header-logout"
+            class="hidden px-3 py-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-100 transition-all cursor-pointer">
+            로그아웃
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main 2-Column Content Layout -->
+    <main class="max-w-[1240px] mx-auto px-6 py-8 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-7">
+
+        <!-- Left Column: Detailed Service & Mission (2/3) -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Card 1: Top Mockup Banner & Title + Tech Tags -->
+          <div class="bg-white rounded-[24px] border border-[#E5E7EB] p-6 sm:p-7 shadow-subtle flex flex-col gap-5">
+            <!-- Preview Mockup Banner Image Container -->
+            <div id="post-mockup-container"
+              class="w-full rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3 overflow-hidden shadow-2xs">
+              <div class="rounded-xl border border-neutral-200 bg-white overflow-hidden shadow-xs">
+                <!-- Mockup Browser Header -->
+                <div
+                  class="bg-[#F1F5F9] px-4 py-2 border-b border-neutral-200 flex items-center justify-between text-[11px] text-neutral-500">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
+                    <span id="post-mockup-url"
+                      class="ml-2 font-mono text-[10px] text-neutral-400">moneylog-preview.io</span>
+                  </div>
+                  <span id="post-mockup-author" class="font-semibold text-neutral-600">핀테크러버 ▾</span>
+                </div>
+                <!-- Mockup Content Body -->
+                <div id="post-mockup-body" class="p-6 bg-gradient-to-b from-white to-[#F9FAFB] flex flex-col gap-4">
+                  <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+                    <div class="flex items-center gap-2">
+                      <span class="text-lg">🐷</span>
+                      <span class="font-extrabold text-sm text-neutral-800">종목 알림 봇 대시보드 & 머니로그 AI</span>
+                    </div>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">실시간
+                      가동중</span>
+                  </div>
+                  <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                      <span class="text-[10px] text-neutral-400 block mb-1">오늘 인식 영수증</span>
+                      <span class="text-lg font-extrabold text-neutral-800">5 건</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                      <span class="text-[10px] text-neutral-400 block mb-1">카테고리 분류 정확도</span>
+                      <span class="text-lg font-extrabold text-primary-dark">98.4%</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-neutral-200 shadow-2xs">
+                      <span class="text-[10px] text-neutral-400 block mb-1">이번 달 예산 절감</span>
+                      <span class="text-lg font-extrabold text-[#BE185D]">185,000원</span>
+                    </div>
+                  </div>
+                  <div
+                    class="w-full h-28 bg-[#EFF6FF] rounded-xl border border-blue-100 p-4 flex items-center justify-center text-center">
+                    <div>
+                      <span class="text-xs font-bold text-blue-900 block mb-1">머니로그 AI 가계부 앱 UI 프리뷰</span>
+                      <span class="text-[11px] text-blue-600">지출 분석 차트, 예산 알림, 영수증 OCR 인식 모듈 탑재</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tech / Keyword Tags -->
+            <div id="post-tech-tags-list" class="flex flex-wrap gap-2 pt-1">
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크/금융</span>
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성/업무도구</span>
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI영수증</span>
+              <span
+                class="px-2.5 py-1 rounded-lg bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#OCR</span>
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <h1 id="post-main-title"
+                class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight leading-tight flex-1">
+                AI 영수증 인식 스마트 가계부 '머니로그' 베타테스터 모집
+              </h1>
+              <button type="button" id="post-title-bookmark-btn" onclick="toggleCurrentDetailBookmark(event)"
+                class="bookmark-flag-btn w-11 h-11 rounded-full border border-neutral-200 bg-white hover:bg-neutral-50 flex items-center justify-center text-neutral-400 hover:text-neutral-700 transition-all shadow-xs shrink-0 cursor-pointer mt-1"
+                title="스크랩 저장">
+                <svg class="w-5 h-5 pointer-events-none transition-transform duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: 3-Tabs Navigation Bar (개요 / 테스트 미션 / 리뷰) -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-2 shadow-xs flex items-center gap-2">
+            <button type="button" id="tab-btn-overview" onclick="switchPostDetailTab('overview')"
+              class="flex-1 py-3 px-4 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 bg-[#FAFBF5] text-[#2F6517] border border-[#E2E8D3] shadow-2xs">
+              <span>📜 개요</span>
+            </button>
+            <button type="button" id="tab-btn-mission" onclick="switchPostDetailTab('mission')"
+              class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50">
+              <span>🎯 테스트 미션</span>
+              <span id="tab-count-mission"
+                class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-neutral-200 text-neutral-700">3</span>
+            </button>
+            <button type="button" id="tab-btn-reviews" onclick="switchPostDetailTab('reviews')"
+              class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50">
+              <span>⭐ 리뷰</span>
+              <span id="tab-count-reviews"
+                class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">14</span>
+            </button>
+          </div>
+
+          <!-- TAB 1 CONTENT: 개요 (Overview) -->
+          <div id="tab-content-overview" class="space-y-6">
+            <!-- 1. 서비스 정보 (서비스명 + 한 줄 소개) -->
+            <div class="bg-[#FAFBF5] border border-[#E3EBD3] rounded-[22px] p-5 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-md bg-[#2F6517] text-white text-[11px] font-extrabold">서비스 정보</span>
+                <h3 class="text-sm font-extrabold text-neutral-dark" id="post-service-name-text">서비스명: 머니로그 (MoneyLog)
+                </h3>
+              </div>
+              <p class="text-xs text-neutral-700 font-semibold bg-white p-3.5 rounded-xl border border-[#E4EBD5]"
+                id="post-service-short-intro">
+                <strong class="text-neutral-800">한 줄 소개:</strong> 영수증 사진 한 장으로 끝내는 AI 자동 지출 분류 및 예산 관리 비서
+              </p>
+            </div>
+
+            <!-- 2. 서비스 소개 (상세) -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <h2
+                class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+                <span>📖 서비스 소개</span>
+              </h2>
+              <p id="post-service-desc-text" class="text-xs sm:text-sm text-neutral-700 leading-relaxed font-normal">
+                안녕하세요! 영수증 사진 한 장만 찍으면 AI가 자동으로 지출 품목과 카테고리를 분류해 주는 스마트 가계부 '머니로그'를 만들었습니다. 기존 뱅킹앱이나 복잡한 가계부의 번거로움을 줄이고,
+                이번 달 예산 초과 알림과 지출 패턴 분석 기능을 중점적으로 검증하고자 합니다.
+              </p>
+              <p id="post-service-extra-text"
+                class="p-3.5 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-xs text-[#6B5A14] font-medium leading-relaxed">
+                💡 카메라 영수증 OCR 인식과 대시보드 지출 분석 플로우가 실제 사용 환경에서 얼마나 직관적이고 편리한지 솔직한 피드백을 부탁드립니다.
+              </p>
+            </div>
+
+            <!-- 3. 안내 내용 / 테스트 목적 및 이런 분들의 참여를 원해요 -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-5">
+              <h2
+                class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+                <span>🎯 테스트 목적 및 참여 대상</span>
+              </h2>
+
+              <!-- 테스트 목적 -->
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-neutral-800">테스트 목적:</span>
+                <p id="post-notice-text"
+                  class="text-xs text-neutral-600 leading-relaxed font-medium bg-[#FAFAFA] p-3.5 rounded-xl border border-neutral-200">
+                  실제 다양한 영수증 OCR 인식을 검증 및 지출 분석 대시보드 사용성 검증
+                </p>
+              </div>
+
+              <!-- 이런 분이면 딱이에요! -->
+              <div class="p-5 rounded-2xl border border-[#ECEFE2] bg-[#FAFBF7] flex flex-col gap-3">
+                <div>
+                  <h4 class="text-xs font-extrabold text-neutral-dark flex items-center gap-1.5">
+                    <span>🎯</span> <span>이런 분이면 딱이에요!</span>
+                  </h4>
+                  <p class="text-[11px] text-neutral-500 mt-0.5">
+                    아래의 성향이나 환경에 부합하시는 분들의 목소리가 제품 발전에 특히 큰 도움이 됩니다.
+                  </p>
+                </div>
+                <!-- Persona Tags List -->
+                <div id="post-persona-tags-list" class="flex flex-wrap gap-2 pt-1">
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🎂
+                    연령대: 20대·30대</span>
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📊
+                    가계부/자산관리 관심자</span>
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">🧾
+                    영수증 모으기 습관 보유자</span>
+                  <span
+                    class="px-3 py-1.5 rounded-xl bg-white border border-neutral-200 text-xs font-semibold text-neutral-700 shadow-2xs">📱
+                    모바일 웹/앱 실사용자</span>
+                </div>
+                <div
+                  class="p-3 rounded-xl bg-[#FFFDF0] border border-[#F5EDBA] text-[11px] text-[#6B5A14] font-medium flex items-center gap-1.5 mt-1">
+                  <span>💡</span>
+                  <span>해당 조건에 100% 부합하지 않더라도 자유롭고 참신한 시각의 피드백은 언제나 환영합니다!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2 CONTENT: 테스트 미션 (Test Mission) -->
+          <div id="tab-content-mission" class="space-y-6 hidden">
+            <!-- 1. 테스트 진행 방식 카드 (외부 접속 vs 내부 검증 테스트하기) -->
+            <div id="post-mission-card-box"
+              class="bg-[#F4F9EE] border-2 border-primary/40 rounded-[24px] p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-subtle">
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center gap-2">
+                  <span id="post-mission-card-label"
+                    class="px-2.5 py-0.5 rounded-md bg-[#2F6517] text-white text-[11px] font-extrabold">서비스 미리보기</span>
+                  <span id="post-mission-type-badge" class="text-xs font-bold text-[#2F6517]">서비스 구경용 · 참여 등록 안 됨</span>
+                </div>
+                <div id="post-mission-service-row" class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-neutral-500">서비스명:</span>
+                  <span id="post-mission-service-name" class="text-sm font-extrabold text-[#2F6517]">머니로그</span>
+                </div>
+                <p id="post-mission-card-subtext" class="text-[11px] text-neutral-500 font-medium">
+                  * 우측 버튼을 누르면 새 탭에서 서비스를 둘러볼 수 있습니다. 미션 참여와 리워드 지급은 참여하기 버튼에서 시작해 주세요.
+                </p>
+              </div>
+              <button type="button" id="post-mission-card-btn" onclick="openPublicServiceUrl()"
+                class="px-6 py-3.5 rounded-xl bg-white border-2 border-[#2F6517] text-[#2F6517] hover:bg-[#F4F9EE] active:scale-95 text-xs font-extrabold shadow-sm shrink-0 transition-all cursor-pointer flex items-center gap-2">
+                <span id="post-mission-card-btn-text">↗ 서비스 구경하기</span>
+                <span>→</span>
+              </button>
+            </div>
+
+            <!-- 2. 로그인 필요 여부 및 테스트 계정 정보 카드 -->
+            <div id="post-login-info-box" class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+                <h2 class="text-base font-extrabold text-neutral-dark flex items-center gap-2">
+                  <span>🔐 로그인 필요 여부 & 계정 정보</span>
+                </h2>
+                <span id="post-login-status-badge" class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-primary/20 text-[#2F6517] border border-primary/30">
+                  로그인 불필요 (자유 접근)
+                </span>
+              </div>
+
+              <!-- 로그인 불필요 안내 -->
+              <div id="post-login-none-desc" class="p-4 rounded-xl bg-[#FAFBF7] border border-[#EAEFE0] flex items-center gap-3">
+                <span class="text-xl">🔓</span>
+                <div>
+                  <span class="text-xs font-bold text-neutral-800 block">로그인 없이 자유롭게 둘러보실 수 있습니다.</span>
+                  <span class="text-[11px] text-neutral-500 font-medium">별도의 회원가입이나 계정 로그인 절차 없이 서비스 접속 링크로 바로 테스트를 진행해 주세요.</span>
+                </div>
+              </div>
+
+              <!-- 로그인 필수 시 영역 -->
+              <div id="post-login-required-container" class="flex flex-col gap-3.5 hidden">
+                <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center gap-2.5">
+                  <span class="text-base">🔒</span>
+                  <span class="text-xs text-amber-900 font-bold">이 테스트는 서비스 구경 및 검증을 위해 로그인이 필요합니다.</span>
+                </div>
+
+                <!-- 테스트용 계정 ID / PW 표시 영역 (입력된 경우) -->
+                <div id="post-test-account-row" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden">
+                  <div class="p-4 rounded-xl bg-[#FAFBF7] border border-neutral-200 flex flex-col gap-1.5">
+                    <span class="text-[11px] font-bold text-neutral-400">테스트용 계정 ID / 이메일</span>
+                    <div class="flex items-center justify-between gap-2">
+                      <span id="post-test-account-id-text" class="text-xs font-extrabold text-neutral-800 font-mono select-all truncate">-</span>
+                      <button type="button" onclick="copyTextToClipboard(document.getElementById('post-test-account-id-text').textContent, '계정 ID가 복사되었습니다.')" class="px-2.5 py-1 rounded-lg bg-white border border-neutral-200 text-[10px] font-bold text-neutral-700 hover:bg-neutral-50 cursor-pointer shrink-0 shadow-2xs">복사</button>
+                    </div>
+                  </div>
+                  <div class="p-4 rounded-xl bg-[#FAFBF7] border border-neutral-200 flex flex-col gap-1.5">
+                    <span class="text-[11px] font-bold text-neutral-400">테스트용 계정 비밀번호</span>
+                    <div class="flex items-center justify-between gap-2">
+                      <span id="post-test-account-pw-text" class="text-xs font-extrabold text-neutral-800 font-mono select-all truncate">-</span>
+                      <button type="button" onclick="copyTextToClipboard(document.getElementById('post-test-account-pw-text').textContent, '비밀번호가 복사되었습니다.')" class="px-2.5 py-1 rounded-lg bg-white border border-neutral-200 text-[10px] font-bold text-neutral-700 hover:bg-neutral-50 cursor-pointer shrink-0 shadow-2xs">복사</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 테스트 계정이 미제공(공백)인 경우 -->
+                <div id="post-test-account-none-row" class="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 text-xs text-neutral-600 font-medium hidden">
+                  💡 별도의 테스트 계정이 제공되지 않습니다. 서비스 화면에서 직접 간편 가입하시거나 안내에 따라 진행해 주세요.
+                </div>
+
+                <!-- 수집 개인정보 항목 -->
+                <div id="post-privacy-items-box" class="p-4 rounded-xl bg-[#FAFBF7] border border-neutral-200 flex flex-col gap-1 hidden">
+                  <span class="text-[11px] font-bold text-neutral-400">취급 / 수집되는 개인정보 항목</span>
+                  <span id="post-privacy-items-text" class="text-xs font-bold text-neutral-700">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. 테스트 진행 방법 (가이드) -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <h2
+                class="text-base font-extrabold text-neutral-dark border-b border-neutral-100 pb-3 flex items-center gap-2">
+                <span>💡 테스트 진행 방법 (가이드)</span>
+              </h2>
+              <div id="post-test-guide-box"
+                class="p-4.5 rounded-2xl bg-[#FAFBF7] border border-[#EAEFE0] text-xs text-neutral-700 font-medium leading-relaxed whitespace-pre-line">
+                1. [서비스 구경하기] 버튼으로 서비스에 접속하여 이메일 간편 가입을 진행합니다.
+                2. 메인 지출 입력 화면에서 영수증 카메라 촬영 버튼을 클릭해 샘플 영수증 사진을 업로드합니다.
+                3. 자동 분류된 지출 내역 및 이번 달 예산 알림 차트를 확인해 주세요.
+              </div>
+            </div>
+
+            <!-- 3. 검증 항목 체크리스트 -->
+            <div class="bg-white rounded-[22px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-4">
+              <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+                <h2 class="text-base font-extrabold text-neutral-dark flex items-center gap-2">
+                  <span>📋 제작자가 요청한 검증 항목 체크리스트</span>
+                </h2>
+                <span class="text-xs text-neutral-400 font-medium">총 3개 필수 항목</span>
+              </div>
+
+              <div id="post-missions-container" class="space-y-3">
+                <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                  <span
+                    class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">1</span>
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-bold text-neutral-800">회원가입 및 영수증 자동 인식 테스트</span>
+                    <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                      이메일 간편가입 후 카메라로 영수증 사진 1장을 직접 업로드해보거나 간편 지출 입력을 진행해 주세요.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                  <span
+                    class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-bold text-neutral-800">지출 분석 리포트 & 예산 알림 시각화 확인</span>
+                    <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                      '이번 달 지출 리포트' 탭에서 카테고리별 분할 차트와 예산 초과 시 노출되는 알림 UI를 확인해 주세요.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 bg-[#FAFBF8] border border-[#EAEFE0] p-4.5 rounded-2xl">
+                  <span
+                    class="w-7 h-7 rounded-xl bg-[#2F6517] text-white font-extrabold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+                  <div class="flex flex-col gap-1">
+                    <span class="text-xs font-bold text-neutral-800">인식 속도 및 화면 가독성 피드백</span>
+                    <p class="text-xs text-neutral-600 leading-relaxed font-medium">
+                      영수증 OCR 인식 처리 속도와 지출 차트의 가독성에 대한 솔직하고 직관적인 소감을 피드백으로 작성해 주세요.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3 CONTENT: 리뷰 (Reviews) -->
+          <div id="tab-content-reviews" class="space-y-6 hidden">
+            <!-- Review Summary Header Card -->
+            <div
+              class="bg-white rounded-[24px] border border-[#E5E7EB] p-6 shadow-subtle flex flex-col sm:flex-row items-center justify-between gap-5">
+              <div class="flex items-center gap-5 w-full sm:w-auto">
+                <div
+                  class="w-16 h-16 rounded-2xl bg-[#FAFBF5] border border-[#E2E8D3] flex flex-col items-center justify-center text-[#2F6517] shrink-0 shadow-2xs">
+                  <span class="text-[10px] font-bold text-neutral-400">평점</span>
+                  <span id="detail-reviews-avg-score" class="text-xl font-extrabold">4.8</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <h3 class="text-sm font-extrabold text-neutral-dark flex items-center gap-2">
+                    <span>테스터 만족도 및 리뷰 요약</span>
+                    <span id="detail-reviews-stars-display" class="text-amber-500 text-xs">⭐⭐⭐⭐⭐</span>
+                  </h3>
+                  <p class="text-xs text-neutral-500">
+                    참여 완료한 테스터 <strong id="detail-reviews-count-num" class="text-[#2F6517] font-bold">14명</strong>이 작성한 소중한 검증 피드백입니다.
+                  </p>
+                </div>
+              </div>
+              <span
+                class="text-xs font-bold text-[#2F6517] bg-[#EBF7E2] px-3.5 py-1.5 rounded-full border border-primary/30 shrink-0">
+                🔒 피드백 공개됨
+              </span>
+            </div>
+
+            <!-- Review Items List -->
+            <div id="detail-reviews-container" class="space-y-4">
+              <!-- Dynamically populated via fetchProjectReviews(projectId) -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Sidebar (1/3): 참고 이미지 1:1 2열 메타 카드 구조 적용 + 스크롤 따라오는 sticky 패널 -->
+        <div id="post-sidebar-panel"
+          class="space-y-5 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+
+          <!-- Main Sidebar Card: 2열 메타 라벨 배치 + 참여하기 버튼 + 제작자 프로필 + 태그 -->
+          <div class="bg-white border border-[#E5E7EB] rounded-[24px] p-6 shadow-subtle flex flex-col gap-5">
+
+            <!-- 1행: 모집구분 & 진행방식 -->
+            <div class="grid grid-cols-2 gap-4 border-b border-neutral-100 pb-4">
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">모집 구분</span>
+                <span id="post-side-type" class="text-sm font-extrabold text-neutral-dark">프로덕트 테스트</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">진행 방식</span>
+                <span id="post-side-how"
+                  class="inline-block text-xs font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">외부형</span>
+              </div>
+            </div>
+
+            <!-- 2행: 모집인원 & 마감일 -->
+            <div class="grid grid-cols-2 gap-4 border-b border-neutral-100 pb-4">
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">모집 인원</span>
+                <span id="post-recruits-text" class="text-sm font-extrabold text-[#2F6517]">28 / 50명</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">마감일</span>
+                <span id="post-meta-enddate" class="text-sm font-extrabold text-neutral-dark">2026.09.19</span>
+              </div>
+            </div>
+
+            <!-- 3행: 소요시간 & 보상 -->
+            <div class="grid grid-cols-2 gap-4 border-b border-neutral-100 pb-4">
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">소요 시간</span>
+                <span id="post-side-duration" class="text-sm font-extrabold text-neutral-dark">약 5분</span>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-neutral-400 block mb-0.5">보상</span>
+                <span id="post-meta-reward" class="text-sm font-extrabold text-[#7E22CE] flex items-center gap-1">
+                  🪙 <span id="post-reward-coin-num">600 C</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- 4행: 이런 분이면 딱이에요 (전체 폭) -->
+            <div id="post-side-tools-row" class="border-b border-neutral-100 pb-4">
+              <span class="text-[11px] font-semibold text-neutral-400 block mb-2">이런 분이면 딱이에요</span>
+              <div id="post-tools-icons" class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                <span
+                  class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                  <span>🖤</span> Cursor
+                </span>
+                <span
+                  class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                  <span>▲</span> Next.js
+                </span>
+                <span
+                  class="inline-flex items-center gap-1 bg-[#F4F4F5] px-2.5 py-1 rounded-full text-neutral-700 text-[11px] font-bold">
+                  <span>⚡</span> v0
+                </span>
+              </div>
+            </div>
+
+            <!-- User Test Participation CTA Button & Bookmark Button -->
+            <div class="flex items-center gap-2.5">
+              <button type="button" id="btn-participate-test" onclick="startMissionParticipation()"
+                class="flex-1 py-4 px-4 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-[0.98] text-white font-extrabold text-sm shadow-card transition-all flex items-center justify-center gap-2 cursor-pointer">
+                <span id="btn-participate-test-icon">🚀</span>
+                <span id="btn-participate-test-text">미션 참여하기</span>
+              </button>
+              <button type="button" id="post-detail-bookmark-btn" onclick="toggleCurrentDetailBookmark(event)"
+                class="bookmark-flag-btn h-[54px] px-3.5 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 flex flex-col items-center justify-center gap-0.5 text-neutral-400 hover:text-neutral-700 transition-all shadow-xs shrink-0 cursor-pointer"
+                title="스크랩 저장">
+                <svg class="w-5 h-5 pointer-events-none transition-transform duration-150 active:scale-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                </svg>
+                <span class="text-[9px] font-extrabold" id="post-detail-bookmark-label">저장</span>
+              </button>
+            </div>
+
+            <!-- Creator view alternative actions (hidden for other's post) -->
+            <div id="creator-only-actions" class="hidden flex-col gap-2">
+              <button onclick="openFeedbackReport(currentPostId)"
+                class="w-full py-3.5 px-4 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white font-extrabold text-sm shadow-card active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                <span>참여 현황 & 테스터 리뷰 보기</span>
+                <span>→</span>
+              </button>
+              <button onclick="openEditPostModal(currentPostId)"
+                class="w-full py-2.5 px-4 rounded-xl bg-[#EFECCB]/80 hover:bg-[#E6E2B9] text-neutral-800 font-bold text-xs border border-[#DDD6A7] transition-all cursor-pointer">
+                ✏️ 게시글 수정
+              </button>
+            </div>
+
+            <hr class="border-neutral-100 my-1" />
+
+            <!-- 제작자 미니 카드 -->
+            <div class="flex items-center gap-3.5 bg-[#FAFBF7] border border-[#E9EEDC] p-3.5 rounded-xl">
+              <div
+                class="w-10 h-10 rounded-full bg-white border border-[#DDD8A8] p-0.5 shadow-2xs shrink-0 flex items-center justify-center">
+                <img src="/images/mascots/mascot-hungry.png" alt="제작자 프로필" class="w-8 h-8 object-contain" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span id="post-creator-name-sidebar" class="font-extrabold text-xs text-neutral-dark">프로필 로딩 중...</span>
+                  <span id="post-creator-badge-sidebar" class="px-1.5 py-0.5 rounded bg-[#FDA2BC]/30 text-[#8A2B43] text-[9px] font-extrabold">✓ 마스터 크리에이터</span>
+                </div>
+                <span id="post-creator-bio-sidebar" class="text-[10px] text-neutral-400 block mt-0.5">돈돼 멤버입니다.</span>
+              </div>
+            </div>
+
+            <!-- 관심분야 태그 (알약 형태) -->
+            <div>
+              <span class="text-[11px] font-semibold text-neutral-400 block mb-2">관심분야</span>
+              <div id="post-creator-tags-sidebar" class="flex flex-wrap gap-1.5 text-xs font-semibold">
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#핀테크</span>
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#생산성</span>
+                <span class="px-2.5 py-1 rounded-full bg-[#FAFBF5] border border-[#E2E8D3] text-[#2F6517] text-[11px] font-bold">#AI가계부</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Back button: 직전 화면으로 (피드 외 경로로 들어와도 홈으로 튕기지 않게) -->
+          <button onclick="navigateBack('explore')"
+            class="w-full py-3 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+            ← 이전으로
+          </button>
+
+          <!-- Encouraging Banner -->
+          <div
+            class="bg-[#FFFDF0] border border-[#F5EDBA] rounded-2xl p-4 text-xs text-[#6B5A14] flex items-center gap-3">
+            <span class="text-xl">🐷</span>
+            <p class="leading-relaxed font-medium text-[11px]">
+              <strong>돈 돼? 검증 팁:</strong> 테스트 후 솔직하고 구체적인 피드백을 작성해주실수록 제작자에게 더 큰 힘이 됩니다!
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>

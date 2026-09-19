@@ -10,7 +10,7 @@ import {
   resumeEmailConfirmation,
   signInWithEmail,
   signUpWithEmail
-} from '../src/authService.js';
+} from '../src/features/auth/authService.js';
 
 test('returns the signed-in user from the active browser session', async () => {
   const user = { id: 'active-user', email: 'active@example.com' };

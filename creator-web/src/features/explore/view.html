@@ -1,0 +1,289 @@
+  <!-- ========================================================
+       VIEW 2: MAIN FEED / DASHBOARD (SCR-05)
+  ======================================================== -->
+  <div id="view-explore" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
+    <aside
+      class="ui-service-sidebar">
+      <div class="flex flex-col gap-8">
+        <!-- @include src/shared/navigation/sidebar-brand.html -->
+
+        <!-- @include src/shared/navigation/sidebar-menu.html -->
+      </div>
+
+      <!-- @include src/shared/navigation/create-project-button.html -->
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <header
+        class="bg-white/70 ui-service-header">
+        <div class="relative w-full max-w-xl">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg class="w-4 h-4 text-neutral-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input type="text" id="header-search-input" oninput="searchFeed(this.value)" placeholder="검색어를 입력하세요..."
+            class="w-full pl-11 pr-10 py-2.5 bg-[#F4F4F5]/70 border border-neutral-border rounded-full text-sm placeholder-neutral-muted text-neutral-dark focus:outline-none focus:ring-2 focus:ring-primary/50 focus:bg-white transition-all" />
+          <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+            <svg class="w-4 h-4 text-neutral-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3.5 pl-6">
+          <div
+            class="flex items-center gap-1.5 bg-canvas-cream border border-[#E9E4C2] px-3.5 py-1.5 rounded-full cursor-pointer hover:bg-[#F2EECA] transition-colors"
+            title="보유 돼지코인">
+            <img src="/images/brand/logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain" />
+            <span class="text-xs font-bold text-[#574B1A]" id="user-coin-badge">—</span>
+          </div>
+
+          <div class="hidden xl:flex items-center gap-2 border-l border-neutral-200 pl-3">
+            <span data-auth-email class="max-w-40 truncate text-[11px] font-semibold text-neutral-500"></span>
+            <button type="button" onclick="navigateTo('login')" id="btn-explore-login"
+              class="px-3.5 py-1.5 rounded-full bg-[#2F6517] hover:bg-[#25500F] text-white text-[11px] font-bold transition-all cursor-pointer shadow-2xs">
+              로그인
+            </button>
+            <button type="button" data-auth-signout onclick="handleUserLogout()" id="btn-explore-logout"
+              class="px-3 py-1.5 rounded-full border border-neutral-200 bg-white text-[11px] font-bold text-neutral-600 hover:bg-neutral-50 transition-colors hidden">
+              로그아웃
+            </button>
+          </div>
+
+          <div onclick="navigateTo('mypage')" title="마이페이지로 이동"
+            class="w-10 h-10 rounded-full border border-neutral-border bg-canvas-cream overflow-hidden flex items-center justify-center shadow-xs cursor-pointer hover:ring-2 ring-primary">
+            <img src="/images/mascots/mascot-hungry.png" alt="프로필" class="w-8 h-8 object-contain" />
+          </div>
+        </div>
+      </header>
+
+      <main class="p-8 max-w-[1280px] w-full mx-auto flex flex-col gap-8">
+
+        <!-- Top Hero Section: Greeting Banner (Left 70%) & Real-time Popular Users (Right 30%) -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+          <!-- Left Banner (안녕하세요, OOO님! 👋) -->
+          <div
+            class="lg:col-span-8 bg-white border border-[#E5E7EB] rounded-[28px] p-8 relative overflow-hidden shadow-subtle flex flex-col justify-between min-h-[220px]">
+            <div class="max-w-[420px] z-10 flex flex-col justify-center h-full">
+              <h2 class="text-2xl sm:text-3xl font-black text-neutral-dark mb-3 flex items-center gap-2 tracking-tight"
+                id="home-greeting-title">
+                안녕하세요, 바이브코더123님! 👋
+              </h2>
+              <p class="text-xs sm:text-sm text-neutral-500 font-medium leading-relaxed mb-6">
+                오늘도 새로운 프로덕트를 발견하고 생생한 피드백을 남겨 돼지 코인을 차곡차곡 적립해보세요!<br>
+                티끌모아 내 집 마련!! 가즈아..!!
+              </p>
+
+              <div class="flex items-center gap-3">
+                <button type="button" onclick="navigateTo('market')"
+                  class="px-5 py-3 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-extrabold text-xs shadow-sm transition-all flex items-center gap-2">
+                  <span>돼코상점 둘러보기</span>
+                  <span class="text-sm">🪙</span>
+                </button>
+                <button type="button" onclick="alert('피드백 작성 가이드 문서를 확인합니다.')"
+                  class="px-4 py-3 text-neutral-600 hover:text-neutral-900 font-bold text-xs transition-colors flex items-center gap-1">
+                  <span>피드백 작성 가이드</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mascot Illustration on Right side of Banner -->
+            <div
+              class="absolute right-6 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center w-48 h-48 pointer-events-none">
+              <img src="/images/mascots/mascot-hungry.png" alt="열정 돼지 마스코트"
+                class="w-40 h-40 object-contain hover:scale-105 transition-transform duration-300" />
+            </div>
+          </div>
+
+          <!-- Right Sidebar: 실시간 인기 유저 (Real-time Popular Users Widget) -->
+          <div
+            class="lg:col-span-4 bg-white border border-[#E5E7EB] rounded-[28px] p-6 shadow-subtle flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-base">🔥</span>
+                  <h3 class="text-sm font-black text-neutral-dark tracking-tight">실시간 인기 유저</h3>
+                </div>
+                <span class="text-[10px] text-neutral-400 font-semibold">이번 주 누적</span>
+              </div>
+
+              <!-- Popular Users Ranking List -->
+              <div class="flex flex-col gap-3">
+
+                <!-- Rank 1 -->
+                <div
+                  class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors"
+                  onclick="openUserProfileModal('민트코기', '다이아', '14,200 C', '민', '#E5D7B7', '#5C4A21', 'UX/UI 피드백 전문 크리에이터', '142건', '4.95점')">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-extrabold text-amber-500 w-3 text-center text-xs">1</span>
+                    <div
+                      class="w-6 h-6 rounded-full bg-[#E5D7B7] text-[#5C4A21] font-bold text-[10px] flex items-center justify-center">
+                      민</div>
+                    <span class="font-bold text-neutral-dark">민트코기</span>
+                    <span class="px-1.5 py-0.2 rounded bg-amber-100 text-[#785412] text-[9px] font-bold">다이아</span>
+                  </div>
+                  <span class="font-extrabold text-[#2F6517] text-xs">14,200 C</span>
+                </div>
+
+                <!-- Rank 2 -->
+                <div
+                  class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors"
+                  onclick="openUserProfileModal('진심피드백러', '플래티넘', '11,500 C', '진', '#D1D9E0', '#334155', '디테일한 사용성 분석 전문가', '98건', '4.90점')">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">2</span>
+                    <div
+                      class="w-6 h-6 rounded-full bg-[#D1D9E0] text-[#334155] font-bold text-[10px] flex items-center justify-center">
+                      진</div>
+                    <span class="font-semibold text-neutral-800">진심피드백러</span>
+                    <span class="px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 text-[9px] font-bold">플래티넘</span>
+                  </div>
+                  <span class="font-extrabold text-[#2F6517] text-xs">11,500 C</span>
+                </div>
+
+                <!-- Rank 3 -->
+                <div
+                  class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors"
+                  onclick="openUserProfileModal('도토리탐험가', '골드', '8,900 C', '도', '#E8CDB5', '#633A18', '다양한 신규 서비스 얼리어답터', '76건', '4.85점')">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">3</span>
+                    <div
+                      class="w-6 h-6 rounded-full bg-[#E8CDB5] text-[#633A18] font-bold text-[10px] flex items-center justify-center">
+                      도</div>
+                    <span class="font-semibold text-neutral-800">도토리탐험가</span>
+                    <span class="px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 text-[9px] font-bold">골드</span>
+                  </div>
+                  <span class="font-extrabold text-[#2F6517] text-xs">8,900 C</span>
+                </div>
+
+                <!-- Rank 4 -->
+                <div
+                  class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors"
+                  onclick="openUserProfileModal('준비된기획자', '골드', '6,400 C', '준', '#D4E2C7', '#2C4F16', '서비스 기획 및 로직 검증 전문', '52건', '4.80점')">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">4</span>
+                    <div
+                      class="w-6 h-6 rounded-full bg-[#D4E2C7] text-[#2C4F16] font-bold text-[10px] flex items-center justify-center">
+                      준</div>
+                    <span class="font-medium text-neutral-700">준비된기획자</span>
+                  </div>
+                  <span class="font-bold text-neutral-600 text-xs">6,400 C</span>
+                </div>
+
+                <!-- Rank 5 -->
+                <div
+                  class="flex items-center justify-between text-xs py-1 cursor-pointer hover:bg-neutral-50 p-1.5 rounded-xl transition-colors"
+                  onclick="openUserProfileModal('헤이프로덕트', '실버', '5,850 C', '헤', '#E2E8F0', '#475569', '프로덕트 경험 개선 열정 테스터', '45건', '4.78점')">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-neutral-400 w-3 text-center text-xs">5</span>
+                    <div
+                      class="w-6 h-6 rounded-full bg-[#E2E8F0] text-[#475569] font-bold text-[10px] flex items-center justify-center">
+                      헤</div>
+                    <span class="font-medium text-neutral-700">헤이프로덕트</span>
+                  </div>
+                  <span class="font-bold text-neutral-600 text-xs">5,850 C</span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Section Title: ⚡ 마감 임박! 지금 5분 만에 돼지코인 벌기 -->
+        <div class="flex items-center justify-between pt-2">
+          <div class="flex items-center gap-2">
+            <span class="text-base">⚡</span>
+            <h3 class="text-base sm:text-lg font-black text-neutral-dark tracking-tight">마감 임박! 지금 5분 만에 돼지코인 벌기</h3>
+            <span class="text-xs text-neutral-400 font-medium ml-1">참여 즉시 지갑으로 코인 지급</span>
+          </div>
+        </div>
+
+        <!-- Filter Category Tabs & Sort Filter Bar -->
+        <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1"
+          id="feed-filter-container">
+          <!-- Category Chips -->
+          <div class="flex items-center gap-2 overflow-x-auto text-[13px] font-semibold py-1" id="feed-filter-bar">
+            <button onclick="filterFeed('all', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-[#18181B] text-white shadow-2xs shrink-0 transition-all font-bold text-xs flex items-center gap-1.5">
+              전체 큐레이션
+            </button>
+            <button onclick="filterFeed('product', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>📱</span> 프로덕트
+            </button>
+            <button onclick="filterFeed('prototype', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>🎨</span> 프로토타입
+            </button>
+            <button onclick="filterFeed('vote', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>🗳️</span> 투표
+            </button>
+            <button onclick="filterFeed('survey', this)"
+              class="feed-filter-btn px-4 py-2 rounded-full bg-white border border-[#E5E7EB] text-[#52525B] hover:bg-neutral-50 hover:text-neutral-dark transition-all shrink-0 flex items-center gap-1.5 font-semibold text-xs">
+              <span>📝</span> 설문조사
+            </button>
+          </div>
+
+          <!-- Sort Filter Select Dropdown -->
+          <div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+            <span class="text-xs text-neutral-400 font-medium">정렬:</span>
+            <select id="feed-sort-select" onchange="sortFeed(this.value)"
+              class="px-3 py-1.5 rounded-xl bg-white border border-[#E5E7EB] text-neutral-700 text-xs font-bold shadow-2xs focus:outline-none focus:border-neutral-400 transition-all cursor-pointer">
+              <option value="recommended">👍 추천순 (맞춤)</option>
+              <option value="reward">💰 높은 보상순</option>
+              <option value="time">⏱ 소요시간 적은 순</option>
+              <option value="latest">🆕 등록순</option>
+              <option value="deadline">🔥 마감순</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Live project card grid. Legacy markup stays hidden until it is replaced. -->
+        <section id="dashboard-cards-grid" data-feed-status="loading" aria-busy="true"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Live cards and empty/error states are rendered by explore/render.js. -->
+        </section>
+
+        <!-- Bottom Banner Section: 내가 만든 프로젝트도 피드백을 받고 싶다면? -->
+        <section
+          class="bg-[#F8FCEF] border border-[#E2EED3] rounded-[24px] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-subtle mt-4">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-12 h-12 rounded-full bg-white border border-[#D5E6BF] flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+              🐷
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <h4 class="text-base sm:text-lg font-black text-neutral-dark tracking-tight">내가 만든 프로젝트도 피드백을 받고 싶다면?
+                </h4>
+                <span class="px-2 py-0.5 rounded-full bg-[#B4E380] text-[#1E3E0B] text-[10px] font-extrabold">첫 등록 50%
+                  할인</span>
+              </div>
+              <p class="text-xs text-neutral-500 font-medium">
+                링크 하나만 넣으면 3분 만에 피드백 모집 퀘스트가 생성됩니다. 지금 바로 내가 원하는 타겟의 검증을 받아보세요.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <button type="button" onclick="alert('가이드 문서를 연결합니다.')"
+              class="px-4 py-3 rounded-full bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs shadow-2xs transition-colors">
+              가이드 읽어보기
+            </button>
+            <button type="button" onclick="openPledgeModal()"
+              class="px-5 py-3 rounded-full bg-[#18181B] hover:bg-[#27272A] text-white font-extrabold text-xs shadow-xs transition-all flex items-center gap-1.5">
+              <span>새 프로젝트 등록하기</span>
+              <span class="text-sm">⊕</span>
+            </button>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>

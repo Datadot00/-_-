@@ -6,7 +6,7 @@ import {
   REVIEW_VISIBLE_COLUMNS,
   USER_PUBLIC_COLUMNS,
   sanitizeUserProfileUpdates
-} from '../src/dataService.js';
+} from '../src/shared/data/dataService.js';
 
 test('공개 사용자 조회 컬럼에서 개인정보를 제외한다', () => {
   const columns = new Set(USER_PUBLIC_COLUMNS.split(','));

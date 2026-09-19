@@ -1,9 +1,10 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const authSource = readFileSync(new URL('../src/auth.js', import.meta.url), 'utf8');
+const html = readAppSource();
+const authSource = readFileSync(new URL('../src/features/auth/auth.js', import.meta.url), 'utf8');
 const emailTemplate = readFileSync(
   new URL('../supabase/email-templates/confirmation.html', import.meta.url),
   'utf8'

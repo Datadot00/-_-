@@ -1,38 +1,31 @@
-# 돈돼 실제 웹 서비스
+﻿# 돈돼 실제 웹 서비스
 
-이 폴더는 돈돼 데스크톱 웹 MVP의 **실제 서비스 루트**입니다.
+돈돼 데스크톱 웹 MVP의 개발·배포 루트입니다. 제작자와 테스터가 같은 웹을 사용하며, `tester-mobile/`과 루트 `index(mode).html`은 참고용입니다.
 
-## 기준
+```bash
+npm install
+npm run dev
+npm test
+npm run build
+```
 
-- 진입 파일: `index.html`
-- Vercel Root Directory: `creator-web`
-- 서비스 형태: 데스크톱 웹 단일 서비스
-- 사용자 역할: 제작자와 테스터가 같은 웹에서 기능을 사용
-- 모바일 앱 및 별도 모바일 페이지: MVP 배포 범위에서 제외
-- 백엔드: Supabase Auth 클라이언트 연결 완료, 운영 데이터 연동 예정
-- 분석: GTM + GA4 웹 스트림 연동 예정
-- 코인·결제: 실제 금전 거래가 없는 MVP 가상 기능
+개발 주소는 `http://localhost:3000`, 빌드 결과는 `dist/`입니다. Vercel Root Directory는 `creator-web`입니다.
 
-## 현재 상태
+## 수정 위치
 
-현재 `index.html`은 인터랙티브 프론트엔드 프로토타입입니다.
+- `index.html`: 화면과 공통 설정을 불러오는 목차
+- `src/features/`: 기능별 화면·동작·상태·전용 팝업 — [기능 파일 안내](src/features/README.md)
+- `src/shared/`: 공통 디자인·메뉴·카드·데이터 접근 — [디자인 및 팀 작업 범위](src/shared/README.md)
+- `src/app/`: 시작 순서·초기 조회·일반 JS 조립 목록 — [실행 구조](src/app/README.md)
+- `public/images/`: 브랜드 이미지와 마스코트 원본
 
-- Vite 실행·빌드 환경 구성이 완료되었습니다.
-- Vercel 프로젝트 `don-dwae-web`과 GitHub 자동 배포 연결이 완료되었습니다.
-- Vercel은 저장소의 `creator-web`을 Root Directory로 사용합니다.
+HTML 조각은 빌드 전에 합치고, 기능별 일반 JS는 기존 버튼 연결을 유지하도록 한 실행 파일로 조립합니다. 생성된 `dist/`를 직접 수정하지 않습니다.
 
-- Supabase 이메일·비밀번호 회원가입, 로그인, 세션 유지, 로그아웃이 연결되었습니다.
-- 이메일 회원가입은 Supabase 확인 메일 링크 인증 후 가입하던 탭의 `인증 완료했어요` 버튼을 누르면 4단계 온보딩 위저드(약관 동의 → 닉네임·한줄소개 → 관심분야·SNS → 가입 완료)로 이어집니다. 확인 링크로 열린 탭에서도 예외적으로 계속할 수 있습니다.
-- 이미 약관에 동의한 계정은 위저드 1단계를 건너뛰고, 온보딩을 마친 기존 회원의 약관 개정 재동의는 단독 약관 모달로 처리합니다.
-- Google 로그인 버튼은 비활성 상태이며 아직 실제 OAuth가 아닙니다.
-- 테스트, 참여, 피드백, 코인은 브라우저 메모리 상태입니다.
-- 이미지 업로드와 URL 검증은 화면 시뮬레이션입니다.
+## 데이터 연결
 
-외부 사용자에게 공개하기 전에 Supabase Redirect URL, 운영 환경변수와 핵심 데이터 저장을 연결해야 합니다.
+인증·프로젝트·참여·후기·코인·교환은 Supabase 데이터 서비스와 연결돼 있습니다. 서버 설정·마이그레이션은 [Supabase 안내](supabase/README.md)를 확인합니다. 코인은 MVP의 가상 기능입니다.
 
-## Supabase 로컬 환경변수
-
-`.env.example`을 참고해 Git에서 제외되는 `.env.local`에 다음 값을 설정합니다.
+`.env.example`을 참고해 Git에서 제외되는 `.env.local`을 설정합니다.
 
 ```env
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
@@ -40,17 +33,4 @@ VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 VITE_USE_MOCK_DATA=false
 ```
 
-Supabase secret 또는 service role 키는 브라우저 환경변수에 넣지 않습니다.
-
-## 다음 작업
-
-1. 이미지 경로를 `public/assets` 기준으로 정리
-2. Supabase 대시보드의 Site URL·Redirect URL 구성
-3. 테스트 등록·참여·피드백 데이터 저장
-4. 가상 코인 내역 저장
-5. Vercel 운영 환경변수와 첫 배포 검증
-6. GTM·GA4 핵심 이벤트 연결
-
-## 협업
-
-현재 `index.html`은 단일 대형 파일입니다. 수정하기 전에 반드시 최신 `main`을 Pull하고, 팀 채팅에 작업 시작을 알린 뒤 한 사람만 이 파일을 수정합니다.
+secret/service role 키는 브라우저 환경변수에 넣지 않습니다. 같은 파일을 동시에 수정하지 않으며, 공통 파일은 영향받는 기능의 담당자와 작업 범위를 맞춥니다.

@@ -1,0 +1,129 @@
+  <!-- ========================================================
+       VIEW 9: NOTIFICATIONS PAGE (알림 화면)
+  ======================================================== -->
+  <div id="view-notifications" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
+    <!-- Left Sidebar LNB (Home standard layout) -->
+    <aside
+      class="overflow-y-auto ui-service-sidebar">
+      <div class="flex flex-col gap-6">
+        <!-- Logo -->
+        <!-- @include src/shared/navigation/sidebar-brand.html -->
+
+        <!-- Navigation Menu -->
+        <!-- @include src/shared/navigation/sidebar-menu.html -->
+      </div>
+
+      <!-- Bottom Start New Project Button -->
+      <!-- @include src/shared/navigation/create-project-direct-button.html -->
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Utility Header Bar -->
+      <header
+        class="bg-white/80 shrink-0 ui-service-header">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">REALTIME ACTIVITY</p>
+          <h2 class="text-base font-extrabold text-neutral-dark">알림</h2>
+        </div>
+
+        <div class="flex items-center gap-3.5">
+          <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 돼지코인</span>
+            <img src="/images/brand/logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain" />
+            <span data-sidebar-coin class="text-xs font-bold text-[#574B1A]">— C</span>
+          </div>
+
+          <div onclick="navigateToMypageSection('mypage-profile-section', 'profile')"
+            class="flex items-center gap-2 pl-2 cursor-pointer group">
+            <div
+              class="w-9 h-9 rounded-full border border-neutral-200 bg-[#FAFBF7] overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+              <span class="text-sm">👤</span>
+            </div>
+            <div class="hidden sm:flex flex-col text-left">
+              <span class="text-[10px] text-neutral-400">환영해요!</span>
+              <span data-auth-email
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인이 필요합니다</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 p-8 lg:p-10 max-w-[1040px] w-full mx-auto flex flex-col gap-6">
+
+        <!-- Top Breadcrumb & Live Sync Badge -->
+        <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
+          <div class="flex items-center gap-2 font-medium">
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+            <span>&gt;</span>
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('mypage')">MY</span>
+            <span>&gt;</span>
+            <span class="font-bold text-neutral-700">알림 목록</span>
+          </div>
+
+          <div id="notification-live-sync-badge"
+            class="flex items-center gap-1.5 text-xs text-[#2F6517] font-semibold bg-[#F0F7E8] px-3 py-1 rounded-full border border-[#D8E6C8]">
+            <span class="w-2 h-2 rounded-full bg-[#2F6517] animate-pulse"></span>
+            실시간 수신 활성
+          </div>
+        </div>
+
+        <!-- Header Card -->
+        <section
+          class="bg-white rounded-[24px] border border-neutral-200 p-6 shadow-subtle flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-12 h-12 rounded-full bg-[#EDF7E5] border border-[#D5E8C4] flex items-center justify-center text-primary-dark text-xl shrink-0">
+              🔔
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-2xl font-extrabold text-neutral-dark tracking-tight">알림</h2>
+                <span id="unread-count-badge"
+                  class="px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-xs font-extrabold">0</span>
+              </div>
+              <p class="text-xs text-neutral-500 mt-1 font-medium">
+                내 서비스 반응과 관심 테스트 소식을 실시간으로 확인하세요.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 self-end md:self-auto">
+            <!-- 알림 수신 설정 ON/OFF 토글 -->
+            <div class="flex items-center gap-2.5 bg-[#FAFBF5] px-3.5 py-1.5 rounded-xl border border-[#E2E8D3]">
+              <span class="text-xs font-bold text-neutral-700">알림 수신</span>
+              <button type="button" id="btn-notification-toggle" onclick="toggleNotificationSetting()"
+                role="switch" aria-checked="true"
+                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-[#2F6517] transition-colors duration-200 ease-in-out focus:outline-none">
+                <span id="notification-toggle-thumb" aria-hidden="true"
+                  class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+              </button>
+              <span id="notification-toggle-status-text" class="text-xs font-extrabold text-[#2F6517] w-7 text-center">ON</span>
+            </div>
+
+            <!-- 모두 읽음으로 표시 버튼 -->
+            <button type="button" onclick="markAllNotificationsAsRead()"
+              class="text-xs font-bold text-neutral-500 hover:text-[#2F6517] transition-colors flex items-center gap-1 cursor-pointer px-2 py-1.5">
+              <span>✓</span> 모두 읽음으로 표시
+            </button>
+          </div>
+        </section>
+
+        <!-- Notifications Dynamic List Container -->
+        <section id="notifications-list-container" class="flex flex-col gap-6">
+          <!-- Rendered via JavaScript renderNotificationsUI() -->
+        </section>
+
+        <!-- Bottom Notice -->
+        <section
+          class="flex items-center justify-between gap-3 pt-4 border-t border-neutral-200/80 text-xs text-neutral-400">
+          <div class="flex items-center gap-1.5 font-medium">
+            <span>⏱️</span>
+            <span>최근 30일간의 알림만 보관되며 이후 자동 정리됩니다.</span>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>

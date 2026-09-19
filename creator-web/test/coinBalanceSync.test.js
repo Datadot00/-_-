@@ -1,8 +1,8 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = readAppSource();
 
 test('프로토타입 잔액 1,250이 화면에 남아 있지 않다', () => {
   // 지갑 기본값에서 흘러나온 숫자를 마크업에 다시 적어두면

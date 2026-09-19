@@ -1,0 +1,762 @@
+  <!-- ========================================================
+       VIEW 8: MY PAGE (desktop-mypage.png 1:1)
+       - 기본 선택: LNB 가장 상단의 [내 정보]
+       - 3/3회 완료 원형 스트로크(100% 도넛 링)
+       - 상위 몇 프로인지에 따른 배지: 🏆 상위 3% 슈퍼 테스터
+       - 스크랩 수치 / 최근 본 수치 노출
+       - 스크롤 시 하단 돼코상점 섹션 자동 노출
+  ======================================================== -->
+  <div id="view-mypage" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
+
+    <!-- Left Sidebar LNB (Home standard layout) -->
+    <aside
+      class="overflow-y-auto ui-service-sidebar">
+      <div class="flex flex-col gap-6">
+
+        <!-- Logo -->
+        <!-- @include src/shared/navigation/sidebar-brand.html -->
+
+        <!-- Navigation Menu -->
+        <!-- @include src/shared/navigation/sidebar-menu.html -->
+      </div>
+
+      <!-- Bottom Start New Project Button -->
+      <!-- @include src/shared/navigation/create-project-direct-button.html -->
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto" id="mypage-main-scroll">
+      <!-- Utility Header Bar -->
+      <header
+        class="bg-white/80 shrink-0 ui-service-header">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">MY ACCOUNT & PROFILE</p>
+          <h2 class="text-base font-extrabold text-neutral-dark">내 정보</h2>
+        </div>
+
+        <div class="flex items-center gap-3.5">
+          <div class="flex items-center gap-1.5 bg-[#FFFDF0] border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-600 font-medium mr-1">내 보유 돼지코인</span>
+            <img src="/images/brand/logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain" />
+            <span data-sidebar-coin class="text-xs font-bold text-[#574B1A]">— C</span>
+          </div>
+
+          <div onclick="navigateToMypageSection('mypage-profile-section', 'profile')"
+            class="flex items-center gap-2 pl-2 cursor-pointer group">
+            <div
+              class="w-9 h-9 rounded-full border border-neutral-200 bg-[#FAFBF7] overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+              <span class="text-sm">👤</span>
+            </div>
+            <div class="hidden sm:flex flex-col text-left">
+              <span class="text-[10px] text-neutral-400">환영해요!</span>
+              <span data-auth-email
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인이 필요합니다</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 p-8 lg:p-10 max-w-[1180px] w-full mx-auto flex flex-col gap-7">
+
+        <!-- Top Breadcrumb & Live Sync -->
+        <div class="flex items-center justify-between text-xs text-neutral-400 pb-2 border-b border-neutral-200/60">
+          <div class="flex items-center gap-2 font-medium">
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('explore')">홈</span>
+            <span>&gt;</span>
+            <span class="cursor-pointer hover:underline" onclick="navigateTo('mypage')">마이페이지</span>
+            <span>&gt;</span>
+            <span class="font-bold text-neutral-700" id="mypage-breadcrumb-current">프로필</span>
+          </div>
+
+          <div
+            class="flex items-center gap-1.5 text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            실시간 활동 동기화 중
+          </div>
+        </div>
+
+        <!-- User Profile Header Card (With Circular 100% Progress Ring) -->
+        <section id="mypage-profile-section"
+          class="bg-white rounded-[24px] border border-[#E5E7EB] p-7 shadow-subtle flex flex-col gap-6 scroll-mt-6">
+
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div class="flex items-start gap-5">
+
+              <!-- Circular Progress Ring (3/3 Completed = 100% Stroke) -->
+              <div class="relative w-20 h-20 shrink-0">
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
+                  <!-- Background track -->
+                  <circle cx="40" cy="40" r="34" stroke="#F1F5E8" stroke-width="6" fill="none" />
+                  <!-- Filled animated stroke (100% = 2 * PI * 34 ≈ 213.6) -->
+                  <circle cx="40" cy="40" r="34" stroke="#2F6517" stroke-width="6" stroke-dasharray="213.6"
+                    stroke-dashoffset="0" stroke-linecap="round" fill="none"
+                    class="transition-all duration-1000 ease-out" />
+                </svg>
+                <!-- Avatar inside circle -->
+                <div
+                  class="absolute inset-1.5 rounded-full overflow-hidden flex items-center justify-center bg-[#FAFBF7]">
+                  <span class="text-2xl">🐶</span>
+                </div>
+                <!-- 100% Badge -->
+                <span
+                  class="absolute -bottom-1 -right-1 bg-[#2F6517] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-2xs border-2 border-white">
+                  100%
+                </span>
+              </div>
+
+              <!-- Profile Info Details -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h2 class="text-xl font-extrabold text-neutral-dark" id="mypage-user-nickname">로그인 사용자</h2>
+                  <span
+                    class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-extrabold border border-amber-200 flex items-center gap-1">
+                    🏆 상위 3% 슈퍼 테스터
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full bg-[#FAF0D7] text-[#7A5812] text-[11px] font-bold">
+                    🐷 골드 패니
+                  </span>
+                </div>
+                <p class="text-xs text-neutral-500 font-medium" id="mypage-user-bio">
+                  로그인 후 프로필을 확인할 수 있습니다.
+                </p>
+
+                <!-- Celebration Tag -->
+                <div
+                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F2F7EC] border border-[#DCE8CE] text-[#25500F] text-xs font-bold mt-1">
+                  <span>🎉</span> 피드백 3/3회 작성 완료! 내 바이브코딩 서비스 무료 등록 자격을 획득하셨습니다.
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Edit Profile & Scraps Meta -->
+            <div class="flex flex-col items-end gap-2 text-right">
+              <button onclick="openEditProfileModal()"
+                class="px-3.5 py-1.5 rounded-xl border border-neutral-300 hover:bg-neutral-50 text-xs font-bold text-neutral-700 shadow-2xs transition-all flex items-center gap-1.5">
+                <span>✏️</span> 프로필 수정
+              </button>
+              <span class="text-[10px] text-neutral-400">최근 정보 갱신: 2시간 전</span>
+              <div class="flex items-center gap-2 text-xs font-semibold text-neutral-600">
+                <span>스크랩 <strong class="text-neutral-dark font-extrabold" id="mypage-scrap-count">0</strong>개</span>
+                <span class="text-neutral-300">|</span>
+                <span>최근 본 <strong class="text-neutral-dark font-extrabold">12</strong>개</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 3-Segment Metric Box -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-neutral-100">
+            <div
+              class="bg-[#FAFBF7] rounded-xl border border-[#E9EFE0] p-4 flex flex-col gap-1 cursor-pointer hover:bg-[#F2F7EB] transition-colors"
+              onclick="scrollToMypageMarket()">
+              <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">🪙 보유 돼지코인 ›</span>
+              <div class="text-2xl font-extrabold text-neutral-dark flex items-baseline gap-1">
+                <span id="mypage-metric-coin">0</span>
+                <span class="text-sm text-primary-dark font-bold">C</span>
+              </div>
+              <span class="text-[10px] text-neutral-400">적립/교환 가능</span>
+            </div>
+
+            <div class="bg-[#FAFBF7] rounded-xl border border-[#E9EFE0] p-4 flex flex-col gap-1">
+              <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">참여한 테스트</span>
+              <div class="text-2xl font-extrabold text-neutral-dark">
+                <span id="mypage-overview-part-count">0</span><span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
+              </div>
+              <span class="text-[10px] text-primary-dark font-bold">상위 3% 활약</span>
+            </div>
+
+            <div
+              class="bg-[#FAFBF7] rounded-xl border border-[#E9EFE0] p-4 flex flex-col gap-1 cursor-pointer hover:bg-[#F2F7EB] transition-colors"
+              onclick="navigateTo('mypage')">
+              <span class="text-xs text-neutral-500 font-medium flex items-center gap-1">내 프로젝트 ›</span>
+              <div class="text-2xl font-extrabold text-neutral-dark">
+                <span id="mypage-overview-reg-count">0</span><span class="text-sm font-semibold text-neutral-500 ml-0.5">개</span>
+              </div>
+              <span id="mypage-overview-active-sub" class="text-[10px] text-emerald-700 font-bold">모집 진행중 6건</span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Special Reward Banner (다른 바이브코딩 프로젝트 피드백 3회 완료로 티켓 획득) -->
+        <section id="mypage-profile-banner"
+          class="bg-[#F8F9F0] border border-[#E4EACF] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span
+              class="w-10 h-10 rounded-xl bg-white border border-[#DDD6A7] flex items-center justify-center text-xl shadow-2xs">
+              🎟️
+            </span>
+            <div>
+              <span class="text-[10px] font-extrabold uppercase text-[#25500F] bg-primary/30 px-1.5 py-0.5 rounded">메이커
+                특별
+                혜택 완료</span>
+              <p class="text-xs font-bold text-neutral-dark mt-0.5">
+                다른 바이브코딩 프로젝트 피드백 3회 완료로 내 서비스 무료 등록 티켓 획득 완료!
+              </p>
+            </div>
+          </div>
+
+          <button onclick="navigateTo('create')"
+            class="px-4 py-2 bg-[#191A1C] hover:bg-neutral-800 text-white rounded-xl text-xs font-bold shadow-xs whitespace-nowrap">
+            새 서비스 등록하기
+          </button>
+        </section>
+
+        <!-- 2-Column Recommended Cards -->
+        <section id="mypage-profile-cards" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- Card 1: 참여 대기 중인 맞춤 테스트 -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-3">
+                <span class="font-extrabold text-neutral-dark flex items-center gap-1.5">
+                  <span>📱</span> 참여 대기 중인 맞춤 테스트
+                </span>
+                <span class="text-[10px] bg-neutral-100 text-neutral-600 px-2 py-0.5 rounded-full font-bold">내 관심사:
+                  SaaS</span>
+              </div>
+              <div class="bg-[#FAFBF8] rounded-xl border border-neutral-100 p-3 mb-3">
+                <div class="flex items-center justify-between mb-1">
+                  <h4 class="text-xs font-bold text-neutral-dark">노션 연동 자동 인보이스 발행 SaaS</h4>
+                  <span class="text-xs font-extrabold text-primary-dark">+300 C</span>
+                </div>
+                <p class="text-[11px] text-neutral-500">간단한 온보딩 플로우 UX 피드백 (약 5분 소요)</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 text-xs">
+              <span class="text-neutral-400 text-[11px]">마감 2일 전</span>
+              <button onclick="navigateTo('explore')" class="text-xs font-bold text-[#2F6517] hover:underline">
+                테스트 참여하기 ›
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: 내 돼지코인으로 바로 교환 가능! -->
+          <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-3">
+                <span class="font-extrabold text-neutral-dark flex items-center gap-1.5">
+                  <span>🎁</span> 내 돼지코인으로 바로 교환 가능!
+                </span>
+                <span class="text-[10px] text-primary-dark font-extrabold">현재 <span data-wallet-balance>0 C</span> 보유</span>
+              </div>
+              <div class="bg-[#FAFBF8] rounded-xl border border-neutral-100 p-3 mb-3 flex items-center justify-between">
+                <div>
+                  <h4 class="text-xs font-bold text-neutral-dark">B2B SaaS 피치덱 & 노션 템플릿</h4>
+                  <p class="text-[11px] text-neutral-500">실제 5천만 원 유치 검증 템플릿 즉시 다운로드</p>
+                </div>
+                <span class="text-xs font-extrabold text-[#2F6517] ml-2">1,200 C</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-neutral-100 text-xs">
+              <span class="text-neutral-400 text-[11px]">100 C 잔여 예정</span>
+              <button onclick="navigateTo('market')" class="text-xs font-bold text-[#BE185D] hover:underline">
+                즉시 교환하기 ›
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Section: 내 프로젝트 (User Reference Design 1:1) -->
+        <section id="mypage-projects-section" class="flex flex-col gap-5 scroll-mt-6">
+
+          <!-- Top Header -->
+          <div class="flex items-center gap-3">
+            <h2 class="text-2xl font-black text-neutral-dark tracking-tight">내 프로젝트</h2>
+            <span id="myproj-total-count" class="px-2.5 py-0.5 rounded-full bg-neutral-200 text-neutral-600 text-xs font-bold">총 0개</span>
+          </div>
+
+          <p class="text-xs text-neutral-500 font-medium -mt-2">
+            내가 등록한 피드백 모집 프로젝트와 테스터 현황을 한눈에 관리하세요.
+          </p>
+
+          <!-- Main Nav Tabs (등록 프로젝트 관리 / 참여 프로젝트 관리 / 돼지코인 내역 & 적립 + 프로젝트 등록 버튼) -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2">
+            <div class="inline-flex items-center bg-[#EDEDED] p-1 rounded-2xl gap-1 max-w-full overflow-x-auto">
+              <button type="button" onclick="switchMyProjectTab('registered')" id="myproj-tab-registered"
+                class="px-4 py-2 rounded-xl text-xs font-extrabold bg-[#191A1C] text-white shadow-xs flex items-center gap-2 transition-all">
+                <span>📂 등록 프로젝트 관리</span>
+                <span id="myproj-registered-count-badge"
+                  class="w-4 h-4 rounded-full bg-neutral-700 text-white text-[10px] flex items-center justify-center font-bold">0</span>
+              </button>
+              <button type="button" onclick="switchMyProjectTab('participated')" id="myproj-tab-participated"
+                class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
+                <span>📝 참여 프로젝트 관리</span>
+                <span id="myproj-part-count-badge" class="px-2 py-0.5 rounded-full bg-[#FCE7F3] text-[#BE185D] text-[10px] font-extrabold">리뷰 대기 0</span>
+              </button>
+              <button type="button" onclick="switchMyProjectTab('scraped')" id="myproj-tab-scraped"
+                class="px-4 py-2 rounded-xl text-xs font-bold text-neutral-600 hover:text-neutral-900 flex items-center gap-2 transition-all">
+                <span>🔖 스크랩한 프로젝트</span>
+                <span
+                  class="w-4 h-4 rounded-full bg-neutral-200 text-neutral-700 text-[10px] flex items-center justify-center font-bold"
+                  id="myproj-scraped-count">2</span>
+              </button>
+            </div>
+
+            <button onclick="navigateTo('create')"
+              class="px-5 py-2.5 rounded-2xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-xs transition-all shadow-xs flex items-center justify-center gap-1.5 shrink-0">
+              <span class="text-sm font-bold">+</span> 프로젝트 등록
+            </button>
+          </div>
+
+          <!-- Participated Project Review Status Sub-Tabs -->
+          <div id="myproj-participated-review-tabs"
+            class="hidden items-center justify-between pt-2 border-t border-neutral-200/50">
+            <div class="inline-flex items-center gap-1 rounded-2xl bg-[#F1F1F1] p-1">
+              <button type="button" id="myproj-review-tab-pending"
+                onclick="switchParticipatedReviewTab('pending')"
+                class="px-4 py-2 rounded-xl bg-white text-[#7A4B00] shadow-xs text-xs font-extrabold transition-all flex items-center gap-2">
+                <span>✍️ 리뷰 작성 대기</span>
+                <span id="myproj-review-pending-count"
+                  class="min-w-5 h-5 px-1.5 rounded-full bg-[#FFF1B8] text-[#7A4B00] text-[10px] flex items-center justify-center font-black">0</span>
+              </button>
+              <button type="button" id="myproj-review-tab-completed"
+                onclick="switchParticipatedReviewTab('completed')"
+                class="px-4 py-2 rounded-xl text-neutral-500 hover:text-neutral-800 text-xs font-bold transition-all flex items-center gap-2">
+                <span>✅ 완료 프로젝트</span>
+                <span id="myproj-review-completed-count"
+                  class="min-w-5 h-5 px-1.5 rounded-full bg-neutral-200 text-neutral-600 text-[10px] flex items-center justify-center font-black">0</span>
+              </button>
+            </div>
+            <span class="text-[11px] font-semibold text-neutral-400">최근 참여순</span>
+          </div>
+
+          <!-- Filter Sub-Tabs & Sorting -->
+          <div id="myproj-filter-bar" class="flex items-center justify-between pt-2 border-t border-neutral-200/50">
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="filterMyProjects('all')" id="myproj-filter-all"
+                class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-[#B4E380] text-[#1E3E0B] transition-all">
+                전체 (<span id="myproj-filter-all-count">0</span>)
+              </button>
+              <button type="button" onclick="filterMyProjects('active')" id="myproj-filter-active"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
+                진행중인 프로젝트 (<span id="myproj-filter-active-count">0</span>)
+              </button>
+              <button type="button" onclick="filterMyProjects('completed')" id="myproj-filter-completed"
+                class="px-3 py-1.5 rounded-xl text-xs font-bold text-neutral-600 bg-white border border-neutral-200 hover:bg-neutral-50 transition-all">
+                진행완료 프로젝트 (<span id="myproj-filter-completed-count">0</span>)
+              </button>
+            </div>
+
+            <button type="button"
+              class="text-xs font-semibold text-neutral-500 hover:text-neutral-800 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M6 12h12M9 20h6" />
+              </svg>
+              최신 등록순
+            </button>
+          </div>
+
+          <!-- Project Cards Container -->
+          <div class="flex flex-col gap-4" id="myproj-cards-list">
+            <!-- Dynamically populated via fetchMyProjects(userId) -->
+
+            <!-- My Projects Empty State -->
+            <div id="myproj-empty-state"
+              class="hidden py-14 flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
+              <div
+                class="w-14 h-14 rounded-full bg-[#FAFBF7] border border-[#E9EEDC] flex items-center justify-center text-2xl mb-3">
+                📂
+              </div>
+              <h4 class="text-sm font-extrabold text-neutral-dark mb-1">등록된 프로젝트가 없습니다</h4>
+              <p class="text-xs text-neutral-400 font-medium max-w-xs mb-4">
+                새로운 피드백 모집 프로젝트를 등록하고 사용자의 목소리를 들어보세요!
+              </p>
+              <button onclick="navigateTo('create')"
+                class="px-4 py-2 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-xs transition-all shadow-xs">
+                + 첫 프로젝트 등록하기
+              </button>
+            </div>
+
+            <!-- Scraped Projects List Container (Hidden by default) -->
+            <div class="hidden flex-col gap-4" id="myproj-scraped-cards-list">
+
+              <!-- Scraped Card 1 -->
+              <div
+                class="scrapedproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-[#EFF6FF] border border-[#BFDBFE] flex flex-col items-center justify-center relative p-1 shrink-0">
+                      <div
+                        class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">
+                        ⚖️</div>
+                      <span class="text-[9px] font-black text-white bg-blue-600 px-1 rounded mt-1">A/B</span>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                      <div class="flex items-center gap-2 flex-wrap text-xs">
+                        <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold text-[11px]">
+                          ● A/B테스트
+                        </span>
+                        <span class="text-[11px] text-neutral-400 font-medium">
+                          ⏱ 30초 소요
+                        </span>
+                      </div>
+
+                      <h3
+                        class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors"
+                        onclick="openPostDetail('diary')">
+                        AI 기반 하루 일기 웹앱 써보시고 UX 피드백 남겨주세요
+                      </h3>
+
+                      <div class="flex items-center gap-3 text-xs text-neutral-500 pt-1">
+                        <span class="font-black text-[#D97706]">🪙 +5 C</span>
+                        <span class="text-neutral-300">|</span>
+                        <span>모집: <strong>18/30명</strong></span>
+                        <span class="text-neutral-300">|</span>
+                        <span class="text-red-500 font-bold">3일 남음</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="deleteScrapedItem(this)"
+                    class="p-2 hover:bg-neutral-100 rounded-xl text-neutral-400 hover:text-neutral-700 transition-colors"
+                    title="스크랩 삭제">
+                    🗑️
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+                  <button onclick="openPostDetail('diary')"
+                    class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5">
+                    <span>참여하러 가기</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Scraped Card 2 -->
+              <div
+                class="scrapedproj-card bg-white rounded-2xl border border-neutral-200 p-5 shadow-xs flex flex-col gap-4 transition-all hover:shadow-subtle">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex items-start gap-4">
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] flex flex-col items-center justify-center relative p-1 shrink-0">
+                      <div
+                        class="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-xs">
+                        📄</div>
+                      <span class="text-[9px] font-black text-white bg-amber-500 px-1 rounded mt-1">투표</span>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                      <div class="flex items-center gap-2 flex-wrap text-xs">
+                        <span class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold text-[11px]">
+                          ● 투표
+                        </span>
+                        <span class="text-[11px] text-neutral-400 font-medium">
+                          ⏱ 1분 소요
+                        </span>
+                      </div>
+
+                      <h3
+                        class="text-base font-extrabold text-neutral-dark hover:text-primary-dark cursor-pointer transition-colors"
+                        onclick="openPostDetail('saas')">
+                        SaaS 서비스 랜딩페이지 카피라이팅 선호도 투표
+                      </h3>
+
+                      <div class="flex items-center gap-3 text-xs text-neutral-500 pt-1">
+                        <span class="font-black text-[#D97706]">🪙 +15 C</span>
+                        <span class="text-neutral-300">|</span>
+                        <span>모집: <strong>5/100명</strong></span>
+                        <span class="text-neutral-300">|</span>
+                        <span>7일 남음</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="button" onclick="deleteScrapedItem(this)"
+                    class="p-2 hover:bg-neutral-100 rounded-xl text-neutral-400 hover:text-neutral-700 transition-colors"
+                    title="스크랩 삭제">
+                    🗑️
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-100">
+                  <button onclick="openPostDetail('saas')"
+                    class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5">
+                    <span>참여하러 가기</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Scraped Empty State (Hidden when scraped cards exist) -->
+              <div id="scraped-empty-state"
+                class="hidden py-14 flex-col items-center justify-center text-center bg-white rounded-2xl border border-dashed border-neutral-300 p-6 shadow-xs">
+                <div
+                  class="w-14 h-14 rounded-full bg-[#FFFBEB] border border-[#FDE68A] flex items-center justify-center text-2xl mb-3">
+                  🔖
+                </div>
+                <h4 class="text-sm font-extrabold text-neutral-dark mb-1">스크랩한 프로젝트가 없습니다</h4>
+                <p class="text-xs text-neutral-400 font-medium max-w-xs mb-4">
+                  관심 있는 큐레이션 프로젝트에서 스크랩(🔖) 버튼을 눌러 모아보세요!
+                </p>
+                <button onclick="navigateTo('explore')"
+                  class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white font-bold text-xs transition-all shadow-xs">
+                  프로젝트 탐색하러 가기 →
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Bottom Promo Banner (User Screenshot 1:1) -->
+          <div
+            class="bg-[#FFFDF0] border border-[#F5E8B8] rounded-2xl p-5 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-4 mt-2">
+            <div class="flex items-center gap-4">
+              <div
+                class="w-12 h-12 rounded-2xl bg-[#FFF3C4] border border-[#F3E297] flex items-center justify-center text-2xl shrink-0">
+                🐷
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="text-sm font-extrabold text-neutral-dark">
+                    테스트를 제공하고 모은 돼지코인, 지금 바로 바꿔보세요!
+                  </h4>
+                  <span
+                    class="px-2 py-0.5 rounded-full bg-white border border-[#E9D68A] text-[#8C6D1F] text-[10px] font-black">
+                    즉시 수령
+                  </span>
+                </div>
+                <p class="text-xs text-neutral-600 font-medium mt-1 flex items-center gap-2 flex-wrap">
+                  <span class="text-emerald-700 font-bold">📈 최근 적립: +600 C (어제 완료 건)</span>
+                  <span class="text-neutral-300">·</span>
+                  <span>교환 가능한 기프티콘 14개 대기 중</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="navigateToMypageSection('mypage-market-section', 'coins')"
+                class="px-4 py-2.5 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-800 text-xs font-bold transition-all shadow-2xs">
+                📋 돼지코인 내역 상세
+              </button>
+              <button onclick="navigateTo('market')"
+                class="px-4 py-2.5 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1">
+                <span>돼코상점 전체 보기</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================================
+           SCROLL TARGET: 돼지코인 관리 & 돼코상점
+           프로필 하단 스크롤 시 나타나는 섹션 (desktop-mypage.png 1:1)
+      ======================================================== -->
+        <section id="mypage-market-section" class="flex flex-col gap-5 pt-4 scroll-mt-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🪙</span>
+              <div>
+                <h3 class="text-base font-extrabold text-neutral-dark">돼지코인 관리 & 돼코상점</h3>
+                <p class="text-xs text-neutral-400 font-normal">피드백으로 모은 돼지코인 내역을 확인하고 원하는 기프티콘과 자료로 교환하세요.</p>
+              </div>
+            </div>
+            <button onclick="navigateTo('market')"
+              class="px-4 py-2 rounded-xl bg-[#191A1C] hover:bg-neutral-800 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5">
+              <span>돼코상점 전체보기</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          <!-- 3 Column Metric Bar -->
+          <div
+            class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle">
+            <div class="border-r border-neutral-100 pr-4">
+              <span class="text-xs text-neutral-400 font-medium">현재 보유 돼지코인</span>
+              <div class="text-xl font-extrabold text-neutral-dark mt-1 flex items-baseline gap-1">
+                <span id="mypage-section-coin">0</span>
+                <span class="text-xs font-bold text-primary-dark">C</span>
+              </div>
+              <span class="text-[10px] text-neutral-400">즉시 교환 가능</span>
+            </div>
+
+            <div class="border-r border-neutral-100 pr-4">
+              <span class="text-xs text-neutral-400 font-medium">이번 달 누적 획득 돼지코인</span>
+              <div class="text-xl font-extrabold text-[#2F6517] mt-1 flex items-baseline gap-1">
+                <span id="mypage-monthly-earned">+0</span> <span class="text-xs font-bold">C</span>
+              </div>
+              <span id="mypage-monthly-earned-caption" class="text-[10px] text-neutral-400">이번 달 적립 내역 없음</span>
+            </div>
+
+            <div>
+              <span class="text-xs text-neutral-400 font-medium">교환 완료 내역</span>
+              <div class="text-xl font-extrabold text-neutral-dark mt-1">
+                <span id="mypage-exchange-count">0</span><span class="text-xs font-semibold text-neutral-500 ml-0.5">건</span>
+              </div>
+              <span id="mypage-exchange-caption" class="text-[10px] text-neutral-400">교환 내역 없음</span>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h4 class="text-sm font-extrabold text-neutral-dark">최근 돼지코인 내역</h4>
+                <p class="text-[11px] text-neutral-400 mt-0.5">실제 적립·사용 기록을 최신순으로 보여줍니다.</p>
+              </div>
+            </div>
+            <div id="mypage-coin-transactions-list" class="flex flex-col divide-y divide-neutral-100">
+              <p class="py-8 text-center text-xs text-neutral-400">돼지코인 내역을 불러오는 중입니다.</p>
+            </div>
+          </div>
+
+          <!-- Products 4 Grid + Mascot Piggy Widget -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+            <!-- Product Mini Cards (2 of 3 columns) -->
+            <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <div
+                class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-xl">⚡</span>
+                    <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">인기</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-neutral-dark line-clamp-1">AI 프롬프트 템플릿 패키지</h4>
+                  <p class="text-[10px] text-neutral-400">v0·Cursor 에러해결 20선</p>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-neutral-100 mt-3">
+                  <span class="text-xs font-extrabold text-neutral-dark">1,500 C</span>
+                  <button onclick="navigateTo('market')"
+                    class="px-3 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-bold">교환</button>
+                </div>
+              </div>
+
+              <div
+                class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-xl">📑</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">즉시 다운</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-neutral-dark line-clamp-1">1인 창업 프로젝트 관리 노션</h4>
+                  <p class="text-[10px] text-neutral-400">PRD & 검증 템플릿</p>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-neutral-100 mt-3">
+                  <span class="text-xs font-extrabold text-[#2F6517]">1,200 C</span>
+                  <button onclick="navigateTo('market')"
+                    class="px-3 py-1 rounded-lg bg-primary hover:bg-primary-hover text-neutral-dark text-xs font-bold">즉시교환</button>
+                </div>
+              </div>
+
+              <div
+                class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-xl">🛠️</span>
+                    <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-bold">가이드북</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-neutral-dark line-clamp-1">초보자 툴 비교 & 세팅 가이드</h4>
+                  <p class="text-[10px] text-neutral-400">Cursor·v0 환경설정</p>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-neutral-100 mt-3">
+                  <span class="text-xs font-extrabold text-neutral-dark">1,800 C</span>
+                  <button onclick="navigateTo('market')"
+                    class="px-3 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-bold">교환</button>
+                </div>
+              </div>
+
+              <div
+                class="bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-xl">📈</span>
+                    <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold">리서치</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-neutral-dark line-clamp-1">부업 리서치 자료집</h4>
+                  <p class="text-[10px] text-neutral-400">이모티콘·펀딩·외주</p>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-neutral-100 mt-3">
+                  <span class="text-xs font-extrabold text-neutral-dark">2,000 C</span>
+                  <button onclick="navigateTo('market')"
+                    class="px-3 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-bold">교환</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Mascot Piggy Savings Card (1 of 3 columns) -->
+            <div
+              class="bg-[#FFFCEB] rounded-2xl border border-[#EFE8BE] p-5 shadow-subtle flex flex-col items-center justify-between text-center">
+              <div class="w-24 h-24 my-2 flex items-center justify-center">
+                <img src="/images/mascots/mascot-hungry.png" alt="마스코트 패니 저금통" class="w-full h-full object-contain drop-shadow-sm" />
+              </div>
+
+              <div class="mb-4">
+                <h4 class="text-xs font-bold text-neutral-dark mb-1">오늘도 알뜰하게 패니 저금통에 돼지코인 저축 중!</h4>
+                <p class="text-[10px] text-neutral-500 leading-relaxed">피드백 1회 작성 시 100~500 C 즉시 지급</p>
+              </div>
+
+              <div class="w-full bg-white rounded-xl border border-[#E5DFB0] p-2.5 shadow-2xs">
+                <span class="text-[10px] text-neutral-400 block mb-0.5">내 교환 가능 잔액</span>
+                <span class="text-sm font-extrabold text-primary-dark" id="mypage-widget-coin">0 C</span>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section id="mypage-support-section" class="hidden flex-col gap-5 pt-4 scroll-mt-6">
+          <div>
+            <h2 class="text-2xl font-black text-neutral-dark tracking-tight">고객센터</h2>
+            <p class="text-xs text-neutral-500 mt-1">문의 등록부터 답변 상태까지 내 계정에서 안전하게 확인할 수 있습니다.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            <form id="support-ticket-form" onsubmit="submitSupportTicket(event)"
+              class="lg:col-span-2 bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle flex flex-col gap-4">
+              <h3 class="text-sm font-extrabold text-neutral-dark">새 문의 등록</h3>
+              <label class="flex flex-col gap-1.5 text-xs font-bold text-neutral-700">
+                문의 유형
+                <select id="support-ticket-category" required
+                  class="w-full p-3 rounded-xl border border-neutral-300 bg-white outline-none focus:border-primary font-semibold">
+                  <option value="account">계정/로그인</option>
+                  <option value="project">프로젝트</option>
+                  <option value="coin">돼지코인/교환</option>
+                  <option value="bug">오류 신고</option>
+                  <option value="other">기타</option>
+                </select>
+              </label>
+              <label class="flex flex-col gap-1.5 text-xs font-bold text-neutral-700">
+                제목
+                <input id="support-ticket-subject" type="text" maxlength="100" required placeholder="문의 제목을 입력해 주세요"
+                  class="w-full p-3 rounded-xl border border-neutral-300 outline-none focus:border-primary font-semibold">
+              </label>
+              <label class="flex flex-col gap-1.5 text-xs font-bold text-neutral-700">
+                문의 내용
+                <textarea id="support-ticket-message" rows="6" maxlength="2000" required placeholder="확인이 필요한 내용을 자세히 적어 주세요"
+                  class="w-full p-3 rounded-xl border border-neutral-300 outline-none focus:border-primary font-semibold resize-y"></textarea>
+              </label>
+              <button id="support-ticket-submit" type="submit"
+                class="w-full py-3 rounded-xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] text-xs font-black transition-colors">
+                문의 등록하기
+              </button>
+            </form>
+
+            <div class="lg:col-span-3 bg-white rounded-2xl border border-neutral-200 p-5 shadow-subtle">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="text-sm font-extrabold text-neutral-dark">내 문의 내역</h3>
+                  <p class="text-[11px] text-neutral-400 mt-0.5">내가 등록한 문의만 표시됩니다.</p>
+                </div>
+                <button type="button" onclick="loadSupportTickets()" class="text-xs font-bold text-[#2F6517] hover:underline">새로고침</button>
+              </div>
+              <div id="support-ticket-list" class="flex flex-col gap-3">
+                <p class="py-10 text-center text-xs text-neutral-400">문의 내역을 불러오는 중입니다.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>

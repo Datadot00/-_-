@@ -1,0 +1,62 @@
+  <!-- ========================================================
+       USER PROFILE VIEW MODAL (인기 유저 프로필 조회 모달)
+  ======================================================== -->
+  <div id="view-user-profile-modal"
+    class="flex backdrop-blur-xs hidden transition-all duration-200 ui-modal">
+    <div
+      class="w-full max-w-[440px] mx-4 bg-white rounded-[28px] border border-[#E9EEDC] shadow-2xl p-6 sm:p-7 relative animate-in fade-in zoom-in-95 duration-200">
+      <!-- Modal Close Button -->
+      <button type="button" onclick="closeUserProfileModal()"
+        class="absolute top-5 right-5 text-neutral-400 hover:text-neutral-700 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center transition-colors">
+        ✕
+      </button>
+
+      <!-- Profile Header -->
+      <div class="flex flex-col items-center text-center mt-2">
+        <div id="view-user-avatar"
+          class="w-16 h-16 rounded-full font-bold text-xl flex items-center justify-center shadow-inner mb-3">
+          민
+        </div>
+        <div class="flex items-center gap-2 mb-1">
+          <h3 id="view-user-name" class="text-lg font-black text-neutral-dark">민트코기</h3>
+          <span id="view-user-badge"
+            class="px-2 py-0.5 rounded bg-amber-100 text-[#785412] text-[10px] font-bold">다이아</span>
+        </div>
+        <p id="view-user-bio" class="text-xs text-neutral-500 font-medium px-4 leading-relaxed">UX/UI 피드백 전문 크리에이터</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-3 gap-3 my-6 bg-[#FAFBF7] p-3.5 rounded-2xl border border-[#E9EEDC] text-center">
+        <div>
+          <div class="text-[10px] text-neutral-400 font-bold mb-0.5">누적 획득 코인</div>
+          <div id="view-user-coins" class="text-sm font-black text-[#2F6517]">14,200 C</div>
+        </div>
+        <div class="border-x border-[#E9EEDC]">
+          <div class="text-[10px] text-neutral-400 font-bold mb-0.5">피드백 제출</div>
+          <div id="view-user-count" class="text-sm font-black text-neutral-800">142건</div>
+        </div>
+        <div>
+          <div class="text-[10px] text-neutral-400 font-bold mb-0.5">평균 평점</div>
+          <div id="view-user-rating" class="text-sm font-black text-amber-600">⭐ 4.95</div>
+        </div>
+      </div>
+
+      <!-- User Badges / Activities -->
+      <div class="space-y-2 mb-6">
+        <div class="text-xs font-extrabold text-neutral-dark flex items-center gap-1.5">
+          <span>🏆</span> 주 활동 분야 및 배지
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-[11px] font-bold">🎯 꼼꼼한 분석가</span>
+          <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-[11px] font-bold">⚡ 빠른 피드백</span>
+          <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-[11px] font-bold">💡 아이디어 왕</span>
+        </div>
+      </div>
+
+      <!-- Close Action -->
+      <button type="button" onclick="closeUserProfileModal()"
+        class="w-full py-3.5 rounded-2xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-sm transition-all shadow-xs">
+        확인
+      </button>
+    </div>
+  </div>

@@ -5,10 +5,10 @@ import {
   clearLocalSession,
   signInWithEmail,
   signUpWithEmail
-} from '../src/authService.js';
-import { routeAuthenticatedAccount } from '../src/accountRouting.js';
-import { completeMyOnboarding } from '../src/onboardingService.js';
-import { recordMyCurrentTermConsents } from '../src/termsService.js';
+} from '../src/features/auth/authService.js';
+import { routeAuthenticatedAccount } from '../src/features/auth/accountRouting.js';
+import { completeMyOnboarding } from '../src/features/auth/onboardingService.js';
+import { recordMyCurrentTermConsents } from '../src/features/auth/termsService.js';
 
 function createFullFlowClient() {
   const account = {

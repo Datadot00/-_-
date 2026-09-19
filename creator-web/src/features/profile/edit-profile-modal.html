@@ -1,0 +1,266 @@
+  <!-- ========================================================
+       PROFILE EDIT MODAL (프로필 정보 수정 모달 1:1 레퍼런스)
+  ======================================================== -->
+  <div id="edit-profile-modal"
+    class="flex backdrop-blur-xs hidden transition-all duration-200 ui-modal">
+    <div
+      class="w-full max-w-[620px] max-h-[90vh] mx-4 bg-white rounded-[24px] border border-neutral-200 shadow-float p-6 sm:p-8 flex flex-col gap-6 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+
+      <!-- Header -->
+      <div class="flex items-start justify-between border-b border-neutral-100 pb-4">
+        <div>
+          <h2 id="profile-modal-title" class="text-xl font-black text-neutral-dark tracking-tight">프로필 정보 수정</h2>
+          <p id="profile-modal-subtitle" class="text-xs text-neutral-400 mt-1 font-medium">테스트 및 피드백 참여 시 다른 사용자에게 표시되는 정보를 설정합니다.</p>
+        </div>
+        <button type="button" id="btn-profile-modal-dismiss" onclick="closeEditProfileModal()"
+          class="px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 text-xs font-bold transition-colors">
+          계정 설정
+        </button>
+      </div>
+
+      <!-- Character Banner Card -->
+      <div class="bg-[#FAFDF6] border border-[#E4EED7] rounded-2xl p-4 flex items-center gap-4">
+        <div
+          class="relative w-16 h-16 rounded-full bg-[#FAF5E6] border border-[#E9DCA6] flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+          <span>🐷</span>
+          <span
+            class="absolute -bottom-1 -right-1 bg-white text-neutral-600 text-[9px] font-black px-1.5 py-0.5 rounded-full border border-neutral-200">Lv.3</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h4 class="text-sm font-black text-neutral-dark">현재 캐릭터: 초가집 짓는 돼지</h4>
+            <span class="px-2 py-0.5 rounded bg-neutral-200 text-neutral-600 text-[10px] font-bold">자동 변경</span>
+          </div>
+          <p class="text-xs text-neutral-600 font-medium mt-1">
+            캐릭터 아바타는 피드백 및 테스트 활동을 통해 <strong class="text-emerald-700 font-extrabold">레벨업하면 자동으로 바뀌어요!</strong>
+          </p>
+          <span class="text-[10px] text-neutral-400 block mt-0.5">* 임의로 이미지를 변경할 수 없는 성장형 캐릭터입니다. (다음 레벨: Lv.4
+            나무집)</span>
+        </div>
+      </div>
+
+      <!-- Inputs Form -->
+      <div class="flex flex-col gap-5 text-left text-xs">
+
+        <!-- Nickname -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-neutral-800">닉네임 <span class="text-red-500">*</span></label>
+            <span class="text-[10px] text-neutral-400" id="profile-nick-count">9/20자</span>
+          </div>
+          <input type="text" id="profile-edit-nickname" value="" placeholder="닉네임을 입력하세요" maxlength="20" oninput="updateProfileInputCounts()"
+            class="w-full p-3.5 rounded-xl border border-neutral-300 font-semibold text-neutral-dark outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+          <span class="text-[10px] text-neutral-400">한글, 영문, 숫자 조합으로 최대 20자까지 입력 가능합니다.</span>
+        </div>
+
+        <!-- Bio -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-neutral-800">한줄소개 <span class="text-red-500">*</span></label>
+            <span class="text-[10px] text-neutral-400" id="profile-bio-count">24/50자</span>
+          </div>
+          <textarea id="profile-edit-bio" rows="2" maxlength="50" oninput="updateProfileInputCounts()"
+            class="w-full p-3.5 rounded-xl border border-neutral-300 font-semibold text-neutral-dark outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none">풀스택 바이브코더 · Cursor & v0 메이커</textarea>
+          <span class="text-[10px] text-neutral-400">테스터 및 프로덕트 등록 시 프로필에 노출됩니다.</span>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="flex flex-col gap-1.5">
+          <label class="font-bold text-neutral-800">휴대폰 번호</label>
+          <div class="flex items-center gap-2">
+            <input type="text" id="profile-edit-phone" value="" placeholder="등록된 번호 없음" readonly
+              class="flex-1 p-3.5 bg-white font-semibold text-neutral-700 outline-none ui-input">
+            <button type="button" disabled
+              class="px-4 py-3.5 rounded-xl bg-neutral-100 text-neutral-400 font-extrabold text-xs shrink-0 cursor-not-allowed">
+              준비 중
+            </button>
+          </div>
+          <span class="text-[10px] text-neutral-400">기프티콘 및 중요 알림 수신용으로 사용됩니다.</span>
+        </div>
+
+        <!-- Email (Disabled) -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center justify-between text-neutral-400 text-[11px]">
+            <label class="font-bold text-neutral-800">이메일 계정</label>
+            <span class="flex items-center gap-1">🔒 수정 불가 (연동 계정)</span>
+          </div>
+          <div
+            class="flex items-center justify-between p-3.5 rounded-xl border border-neutral-200 bg-neutral-50 text-neutral-500 font-semibold">
+            <span id="profile-edit-email">로그인 정보 확인 중...</span>
+            <span id="profile-edit-provider"
+              class="px-2.5 py-1 rounded-full bg-white border border-neutral-200 text-neutral-600 text-[10px] font-bold flex items-center gap-1">
+              이메일 계정
+            </span>
+          </div>
+          <span class="text-[10px] text-neutral-400">로그인 계정 이메일은 이 화면에서 변경할 수 없습니다.</span>
+        </div>
+
+        <!-- Birthdate (Disabled) -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center justify-between text-neutral-400 text-[11px]">
+            <label class="font-bold text-neutral-800">생년월일</label>
+            <span class="flex items-center gap-1">추후 본인인증 연결 예정</span>
+          </div>
+          <input type="text" value="등록된 정보 없음" disabled
+            class="w-full p-3.5 bg-neutral-50 text-neutral-500 font-semibold cursor-not-allowed ui-input">
+          <span class="text-[10px] text-neutral-400">실명 인증 및 리워드 지급 시 성인 검증 용도로 등록된 정보로 직접 변경이 불가능합니다.</span>
+        </div>
+
+        <!-- Interested Fields (Multi Select Chips) -->
+        <div class="flex flex-col gap-2 pt-2 border-t border-neutral-100">
+          <label class="font-bold text-neutral-800">관심분야</label>
+          <span class="text-[10px] text-neutral-400 mb-1">관심 있는 분야를 선택해주세요 (다중 선택 가능)</span>
+
+          <div class="flex flex-wrap gap-2" id="interest-chips-box">
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="생산성/업무도구" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">생산성/업무도구</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="커머스/쇼핑" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">커머스/쇼핑</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="핀테크/금융" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">핀테크/금융</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="헬스케어/웰니스" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">헬스케어/웰니스</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="교육/학습" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">교육/학습</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="엔터테인먼트/콘텐츠" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">엔터테인먼트/콘텐츠</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="소셜/커뮤니티" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">소셜/커뮤니티</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="라이프스타일" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">라이프스타일</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="AI/개발도구" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">AI/개발도구</button>
+            <button type="button" onclick="toggleInterestChip(this)" data-interest="기타" aria-pressed="false"
+              class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 transition-all">기타</button>
+          </div>
+        </div>
+
+        <!-- Job Group -->
+        <div class="flex flex-col gap-1.5 pt-2 border-t border-neutral-100">
+          <label for="profile-job-group" class="font-bold text-neutral-800">
+            현재 직업군 <span class="text-[10px] font-medium text-neutral-400">(선택)</span>
+          </label>
+          <select id="profile-job-group"
+            class="w-full p-3.5 rounded-xl border border-neutral-300 font-semibold text-neutral-dark outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+            <option value="">선택 안 함</option>
+            <option value="개발자">개발자</option>
+            <option value="디자이너">디자이너</option>
+            <option value="기획/PM">기획/PM</option>
+            <option value="마케팅/그로스">마케팅/그로스</option>
+            <option value="창업가/1인 사업">창업가/1인 사업</option>
+            <option value="프리랜서">프리랜서</option>
+            <option value="학생">학생</option>
+            <option value="기타">기타</option>
+          </select>
+          <span class="text-[10px] text-neutral-400">비슷한 직업군의 테스터를 찾는 제작자에게 추천될 때 쓰입니다.</span>
+        </div>
+
+        <!-- Gender -->
+        <div class="flex flex-col gap-2">
+          <label class="font-bold text-neutral-800">
+            성별 <span class="text-[10px] font-medium text-neutral-400">(테스터 모집 조건용, 비공개)</span>
+          </label>
+          <div class="grid grid-cols-2 gap-2" id="profile-gender-box" role="radiogroup" aria-label="성별">
+            <button type="button" data-profile-gender="male" role="radio" aria-checked="false"
+              class="px-4 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">남성</button>
+            <button type="button" data-profile-gender="female" role="radio" aria-checked="false"
+              class="px-4 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">여성</button>
+          </div>
+          <span class="text-[10px] text-neutral-400" id="profile-gender-hint">한 번 저장하면 변경할 수 없으니 신중히 선택해 주세요.</span>
+        </div>
+
+        <!-- Age Range -->
+        <div class="flex flex-col gap-2">
+          <label class="font-bold text-neutral-800">
+            연령대 <span class="text-[10px] font-medium text-neutral-400">(테스터 모집 조건용, 비공개)</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2" id="profile-age-range-box" role="radiogroup" aria-label="연령대">
+            <button type="button" data-profile-age-range="10s" role="radio" aria-checked="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">10대</button>
+            <button type="button" data-profile-age-range="20s" role="radio" aria-checked="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">20대</button>
+            <button type="button" data-profile-age-range="30s" role="radio" aria-checked="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">30대</button>
+            <button type="button" data-profile-age-range="40s" role="radio" aria-checked="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">40대</button>
+            <button type="button" data-profile-age-range="50s" role="radio" aria-checked="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">50대</button>
+            <button type="button" data-profile-age-range="60s_plus" role="radio" aria-checked="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">60대 이상</button>
+          </div>
+          <span class="text-[10px] text-neutral-400" id="profile-age-range-hint">한 번 저장하면 변경할 수 없으니 신중히 선택해 주세요.</span>
+        </div>
+
+        <!-- Devices -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-neutral-800">
+              주 사용기기 <span class="text-[10px] font-medium text-neutral-400">(선택)</span>
+            </label>
+            <span class="text-[10px] font-bold text-neutral-400" id="profile-device-count">0개 선택</span>
+          </div>
+          <span class="text-[10px] text-neutral-400 mb-1">여러 개 고를 수 있어요. 기기 조건이 있는 테스트를 추천할 때 쓰입니다.</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="profile-device-box">
+            <button type="button" data-profile-device="ios" aria-pressed="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">iOS</button>
+            <button type="button" data-profile-device="android" aria-pressed="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">Android</button>
+            <button type="button" data-profile-device="mac" aria-pressed="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">Mac</button>
+            <button type="button" data-profile-device="windows" aria-pressed="false"
+              class="px-3 py-3 rounded-xl border border-neutral-300 bg-white text-xs font-bold text-neutral-700 hover:bg-neutral-50 transition-all">Windows</button>
+          </div>
+        </div>
+
+        <!-- Tool / Tech Tags -->
+        <div class="flex flex-col gap-2 pt-2 border-t border-neutral-100">
+          <div class="flex items-center justify-between">
+            <label for="profile-tool-tag-input" class="font-bold text-neutral-800">
+              다뤄본 툴 / 관심 기술 <span class="text-[10px] font-medium text-neutral-400">(선택)</span>
+            </label>
+            <span class="text-[10px] font-bold text-neutral-400" id="profile-tool-tag-count">0/10개</span>
+          </div>
+          <span class="text-[10px] text-neutral-400 mb-1">써 본 툴이나 배우고 싶은 기술을 적어주세요. 이 툴로 만든 서비스의 테스트를 먼저 추천해 드려요.</span>
+
+          <div class="flex items-center gap-2">
+            <input type="text" id="profile-tool-tag-input" maxlength="40" placeholder="예: Cursor, Figma, Next.js"
+              class="w-full p-3 rounded-xl border border-neutral-300 font-semibold text-neutral-dark outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+            <button type="button" id="btn-profile-add-tool-tag"
+              class="shrink-0 px-4 py-3 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs shadow-2xs transition-colors">
+              추가
+            </button>
+          </div>
+          <span class="text-[10px] text-neutral-400">쉼표로 구분하거나 Enter 로 여러 개를 한 번에 추가할 수 있어요.</span>
+
+          <div class="flex flex-wrap gap-2 mt-1" id="profile-tool-tags-container"></div>
+        </div>
+
+        <!-- SNS / Links -->
+        <div class="flex flex-col gap-2 pt-2 border-t border-neutral-100">
+          <label class="font-bold text-neutral-800">SNS / 링크</label>
+          <span class="text-[10px] text-neutral-400 mb-1">프로필에 노출할 포트폴리오, 소셜 채널 링크를 등록하세요.</span>
+
+          <div class="flex flex-col gap-2.5" id="sns-links-container"></div>
+
+          <button type="button" onclick="addSnsLinkInput()"
+            class="self-start mt-1 px-3.5 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-bold text-xs shadow-2xs transition-colors flex items-center gap-1">
+            <span>+</span> 링크 추가
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Footer Action Buttons -->
+      <div class="flex flex-col items-center gap-3 pt-4 border-t border-neutral-100">
+        <button type="button" id="btn-save-profile" onclick="saveProfileChanges()"
+          class="w-full py-3.5 rounded-2xl bg-[#B4E380] hover:bg-[#A3D96D] text-[#1E3E0B] font-black text-sm transition-all shadow-xs">
+          저장하기
+        </button>
+        <button type="button" id="btn-profile-modal-cancel" onclick="closeEditProfileModal()"
+          class="text-xs font-semibold text-neutral-500 hover:text-neutral-800 transition-colors">
+          취소
+        </button>
+      </div>
+
+    </div>
+  </div>

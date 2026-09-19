@@ -1,0 +1,83 @@
+body {
+  font-family: 'Pretendard', sans-serif;
+  color: var(--color-neutral-dark);
+  background-color: #FAFAFA;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Screen Transitions */
+.view-container {
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-container.view-enter {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.view-container.view-exit {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+/* Toast Slide Animation */
+#review-toast,
+#update-toast {
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Progress bar smooth fill */
+#feedback-progress-bar {
+  transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Toggle Switch */
+.switch-toggle:checked~.switch-dot {
+  transform: translateX(100%);
+  background-color: #2F6517;
+}
+
+.switch-toggle:checked~.switch-bg {
+  background-color: #A9DD82;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4D4D8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A1A1AA;
+}
+
+/* Never expose the old hard-coded prototype cards while live data loads. */
+#dashboard-cards-grid[data-feed-status="loading"]>* {
+  display: none !important;
+}
+
+#dashboard-cards-grid[data-feed-status="loading"]::before {
+  content: '실제 프로젝트를 불러오는 중입니다...';
+  grid-column: 1 / -1;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #D4D4D8;
+  border-radius: 24px;
+  background: #FFFFFF;
+  color: #71717A;
+  font-size: 13px;
+  font-weight: 700;
+}

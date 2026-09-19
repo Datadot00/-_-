@@ -1,0 +1,46 @@
+  <!-- ========================================================
+       STEP 5: GOAL ACHIEVED CELEBRATION MODAL (목표 달성 알림)
+  ======================================================== -->
+  <div id="goal-achieved-modal"
+    class="flex backdrop-blur-xs hidden transition-all duration-300 ui-modal">
+    <div
+      class="w-full max-w-[500px] mx-4 bg-canvas-cream rounded-[24px] border-2 border-[#D9D3A0] shadow-float p-8 sm:p-10 text-center flex flex-col items-center animate-in fade-in zoom-in-95 duration-250 relative overflow-hidden">
+
+      <!-- Top Decorative Ribbon -->
+      <div class="absolute -top-10 -right-10 w-28 h-28 bg-primary/30 rounded-full blur-xl pointer-events-none"></div>
+      <div class="absolute -bottom-10 -left-10 w-28 h-28 bg-secondary/30 rounded-full blur-xl pointer-events-none">
+      </div>
+
+      <!-- Mascot: Full Piggy (배부른 꿀꿀이) -->
+      <div class="relative mb-4 flex flex-col items-center">
+        <div
+          class="w-28 h-28 flex items-center justify-center bg-white/90 rounded-full border border-[#E4DEAC] p-3 shadow-card mb-2">
+          <img src="/images/mascots/mascot-full.png" alt="배부른 마스코트"
+            class="w-full h-full object-contain filter drop-shadow-sm animate-bounce" style="animation-duration: 2s;" />
+        </div>
+        <span
+          class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary text-[#1F450B] text-xs font-extrabold shadow-xs">
+          <span>🏆</span> 목표 인원 100% 달성 완료!
+        </span>
+      </div>
+
+      <!-- Title & Text -->
+      <h3 class="text-2xl font-extrabold text-neutral-dark mb-2 tracking-tight">
+        테스트가 성공적으로 종료되었습니다!
+      </h3>
+      <p class="text-sm text-[#5B5532] leading-relaxed mb-6 font-medium">
+        목표 인원 <strong id="modal-target-recruits-1" class="text-neutral-dark font-extrabold">30명</strong>이 모두 참여하여 테스트가
+        마감되었습니다.<br>
+        참여 테스터들이 남겨준 생생한 리뷰를 검토해 보세요.
+      </p>
+
+      <!-- Action Button -->
+      <button type="button" onclick="closeGoalAchievedModal()"
+        class="w-full py-3.5 px-6 rounded-xl bg-primary text-neutral-dark font-extrabold text-sm shadow-sm hover:bg-primary-hover active:scale-98 transition-all flex items-center justify-center gap-2 border border-primary-dark/20">
+        <span>모인 리뷰 확인하기</span>
+        <svg class="w-4 h-4 text-[#244C10]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
+    </div>
+  </div>

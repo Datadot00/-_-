@@ -1,10 +1,11 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-const authSource = readFileSync(new URL('../src/auth.js', import.meta.url), 'utf8');
-const gateSource = readFileSync(new URL('../src/termsGate.js', import.meta.url), 'utf8');
+const html = readAppSource();
+const authSource = readFileSync(new URL('../src/features/auth/auth.js', import.meta.url), 'utf8');
+const gateSource = readFileSync(new URL('../src/features/auth/termsGate.js', import.meta.url), 'utf8');
 const schema = readFileSync(new URL('../supabase_schema.sql', import.meta.url), 'utf8');
 const migration = readFileSync(
   new URL('../supabase/migrations/20260914200000_prepare_terms_gate.sql', import.meta.url),

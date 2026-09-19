@@ -1,0 +1,1 @@
+    let userScrapCount = 0;

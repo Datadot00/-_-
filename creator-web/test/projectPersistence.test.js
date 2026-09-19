@@ -1,3 +1,4 @@
+import { readAppSource, readRuntimeFunction } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -14,7 +15,7 @@ import {
   validateVoteImageFileContent,
   VOTE_IMAGE_BUCKET,
   VOTE_IMAGE_MAX_BYTES
-} from '../src/dataService.js';
+} from '../src/shared/data/dataService.js';
 
 test('normalizes a schemeless service URL to HTTPS', () => {
   assert.equal(normalizeHttpUrl('  example.com/path  '), 'https://example.com/path');
@@ -177,7 +178,7 @@ test('개발 환경 태그와 권장 참여 대상 태그는 정리되어 별도
 });
 
 test('모집인원과 보상 하한을 낮추고 서비스 카테고리는 직접 선택하게 한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const schema = readFileSync(new URL('../supabase_schema.sql', import.meta.url), 'utf8');
 
   // 신규 등록은 모집 1명, 무보상 프로젝트까지 허용한다.
@@ -207,7 +208,7 @@ test('모집인원과 보상 하한을 낮추고 서비스 카테고리는 직�
 });
 
 test('모집 시작일은 오늘 이전 날짜를 고를 수 없다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   // 하한은 렌더 시점에 계산해 input.min 으로 건다.
   assert.match(html, /function getTodayDateValue\(\)/);
@@ -228,13 +229,13 @@ test('모집 시작일은 오늘 이전 날짜를 고를 수 없다', () => {
 });
 
 test('does not restore an unscoped project cache across login accounts', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   assert.equal(html.includes("localStorage.getItem('don_dwae_my_created_test')"), false);
   assert.equal(html.includes("localStorage.setItem('don_dwae_my_created_test'"), false);
 });
 
 test('프로젝트 수정 ID를 세션에 유지하고 ID 기준으로 update 경로를 선택한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   assert.match(html, /PROJECT_EDIT_SESSION_KEY = 'dondwae_editing_project_id'/);
   assert.match(html, /const editingProjectId = getActiveProjectEditId\(\)/);
@@ -244,15 +245,12 @@ test('프로젝트 수정 ID를 세션에 유지하고 ID 기준으로 update �
 });
 
 test('신규 프로젝트 등록은 이전 작성값과 수정 대상을 모두 초기화한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-  const resetStart = html.indexOf('function resetCreateProjectForm()');
-  const resetEnd = html.indexOf('function navigateTo(', resetStart);
-  const resetSource = html.slice(resetStart, resetEnd);
+  const html = readAppSource();
+  const resetSource = readRuntimeFunction('resetCreateProjectForm');
   const createViewStart = html.indexOf('id="view-create"');
   const createViewEnd = html.indexOf('id="view-post"', createViewStart);
   const createView = html.slice(createViewStart, createViewEnd);
 
-  assert.ok(resetStart >= 0 && resetEnd > resetStart);
   assert.match(resetSource, /clearProjectEditContext\(\)/);
   assert.match(resetSource, /querySelectorAll\('input, textarea, select'\)/);
   assert.match(resetSource, /questionsList\.innerHTML = ''[\s\S]*addQuestionItem\(\)/);
@@ -267,7 +265,7 @@ test('신규 프로젝트 등록은 이전 작성값과 수정 대상을 모두 
 });
 
 test('단순 설문은 생략 예외가 아닌 설문조사 대분류로 저장한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const createViewStart = html.indexOf('id="view-create"');
   const createViewEnd = html.indexOf('id="view-post"', createViewStart);
   const createView = html.slice(createViewStart, createViewEnd);
@@ -284,14 +282,14 @@ test('단순 설문은 생략 예외가 아닌 설문조사 대분류로 저장�
 });
 
 test('프로덕트와 프로토타입의 웹 접속 안내 문구를 구분한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   assert.match(html, /id="text-platform-web">🌐 웹사이트 \(Web Site\)</);
   assert.match(html, /cat === 'prototype'[\s\S]{0,80}\? '🌐 웹 \/ Figma Link'[\s\S]{0,80}: '🌐 웹사이트 \(Web Site\)'/);
 });
 
 test('프로젝트 등록은 단계별 필수 입력을 완료해야 다음 단계와 게시로 이동한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   assert.match(html, /function validateCreateStep\(stepNum\)/);
   assert.match(html, /function requestCreateStep\(stepNum\)/);
@@ -309,7 +307,7 @@ test('프로젝트 등록은 단계별 필수 입력을 완료해야 다음 단�
 });
 
 test('검증 퀴즈와 스크린샷은 배타적인 선택사항이며 기본값은 미선택이다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const createViewStart = html.indexOf('id="view-create"');
   const createViewEnd = html.indexOf('id="view-post"', createViewStart);
   const createView = html.slice(createViewStart, createViewEnd);
@@ -327,7 +325,7 @@ test('검증 퀴즈와 스크린샷은 배타적인 선택사항이며 기본값
 });
 
 test('테스트 세부 설정에서 개발 도구와 개발 환경 태그를 별도로 입력한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const stepThree = html.slice(html.indexOf('id="form-section-3"'), html.indexOf('id="view-post"'));
 
   assert.match(stepThree, /개발 도구 \/ 개발 환경/);
@@ -341,7 +339,7 @@ test('테스트 세부 설정에서 개발 도구와 개발 환경 태그를 별
 });
 
 test('does not persist the current page URL when no thumbnail was selected', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   assert.equal(html.includes("thumbImg.src = '';"), false);
   assert.equal(html.includes("previewImg.src = '';"), false);
   assert.match(html, /thumbnailPreview\.getAttribute\('src'\)/);
@@ -349,7 +347,7 @@ test('does not persist the current page URL when no thumbnail was selected', () 
 });
 
 test('투표 프로젝트는 A/B 이미지 직접 업로드와 URL 입력을 모두 영속화한다', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
 
   assert.doesNotMatch(html, /currentVoteSubOption/);
   assert.match(html, /id="btn-vote-input-mode-image" onclick="setVoteInputMode\('image'\)"/);
@@ -413,7 +411,7 @@ test('투표 이미지 Storage는 공개 읽기와 제작자별 쓰기·삭제 �
 });
 
 test('creator report opens with the current project instead of the static feedback sample', () => {
-  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const html = readAppSource();
   const creatorActions = html.match(/<div id="creator-only-actions"[\s\S]*?<\/div>\s*<hr/)?.[0] || '';
 
   assert.match(creatorActions, /onclick="openFeedbackReport\(currentPostId\)"/);

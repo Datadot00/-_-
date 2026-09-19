@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { routeAuthenticatedAccount } from '../src/accountRouting.js';
-import { completeMyOnboarding } from '../src/onboardingService.js';
+import { routeAuthenticatedAccount } from '../src/features/auth/accountRouting.js';
+import { completeMyOnboarding } from '../src/features/auth/onboardingService.js';
 import { installWizardDom } from './support/stubDom.js';
 
 // ── 가짜 Supabase 클라이언트 ────────────────────────────────────────────────
@@ -260,7 +260,7 @@ const TERMS_SETTLED = {
 
 async function importWizard() {
   // 모듈 상태(현재 단계 등)를 테스트마다 초기화하려고 새 인스턴스를 받는다.
-  return import(`../src/onboardingWizard.js?t=${Math.random()}`);
+  return import(`../src/features/auth/onboardingWizard.js?t=${Math.random()}`);
 }
 
 test('온보딩이 필요한 계정에서는 전용 위저드가 열린다', async () => {

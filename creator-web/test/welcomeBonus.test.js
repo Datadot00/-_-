@@ -1,3 +1,4 @@
+import { readAppSource } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -6,7 +7,7 @@ const migration = readFileSync(
   new URL('../supabase/migrations/20260916140000_welcome_bonus_on_gating_pass.sql', import.meta.url),
   'utf8'
 );
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = readAppSource();
 
 test('환영 보너스는 원장에 별도 타입으로 남는다', () => {
   // 리뷰 리워드와 같은 타입으로 묶으면 리뷰 보상 합계가 부풀어 보인다.

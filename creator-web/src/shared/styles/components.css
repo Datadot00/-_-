@@ -1,0 +1,74 @@
+/* Shared surfaces. Keep hidden/flex, widths and per-screen spacing in the view.
+   State utilities (selected, disabled, error) remain controlled by feature JS. */
+.ui-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(var(--color-neutral-dark-rgb) / 0.6);
+}
+.ui-dialog {
+  background-color: var(--color-canvas-white);
+  border: 1px solid var(--color-neutral-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-float);
+}
+.ui-input {
+  border-radius: 0.75rem;
+  border-width: 1px;
+  border-color: var(--color-neutral-200);
+}
+.ui-button-primary {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-primary);
+  color: var(--color-neutral-dark);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  border: 1px solid rgb(var(--color-primary-dark-rgb) / 0.2);
+}
+.ui-button-primary:hover { background-color: var(--color-primary-hover); }
+.ui-button-create {
+  width: 100%;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-radius: 1rem;
+  background-color: var(--color-action);
+  color: var(--color-action-text);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 900;
+  border: 1px solid var(--color-action-border);
+}
+.ui-button-create:hover { background-color: var(--color-action-hover); }
+.ui-service-sidebar {
+  width: 16rem;
+  background-color: var(--color-canvas-sidebar);
+  border-right: 1px solid var(--color-layout-sidebar-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.ui-service-header {
+  height: 5rem;
+  border-bottom: 1px solid var(--color-layout-header-border);
+  --tw-backdrop-blur: blur(4px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  padding-left: 2rem;
+  padding-right: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}

@@ -1,0 +1,26 @@
+  <!-- ========================================================
+       STEP 5: UPDATE SENT SUCCESS TOAST (최종 클로징 피드백 토스트)
+  ======================================================== -->
+  <aside id="update-toast"
+    class="fixed top-6 right-6 z-[99999] transform translate-x-32 opacity-0 pointer-events-none transition-all duration-300 max-w-[460px] w-[calc(100%-48px)]">
+    <div
+      class="bg-[#191A1C] text-white rounded-2xl p-4 shadow-toast border border-[#2F3136] flex items-start gap-3.5 relative">
+      <div
+        class="w-11 h-11 rounded-xl bg-[#282A2E] border border-primary/40 flex items-center justify-center p-1.5 shrink-0">
+        <img src="/images/mascots/mascot-full.png" alt="배부른 돈돼" class="w-full h-full object-contain" />
+      </div>
+      <div class="flex-1 pr-4">
+        <div class="flex items-center gap-1.5 mb-0.5">
+          <span class="text-[10px] font-extrabold bg-primary text-neutral-dark px-1.5 py-0.2 rounded">전송 완료</span>
+          <h4 class="text-xs font-bold text-white">버전 업데이트 알림 발송 성공!</h4>
+        </div>
+        <p class="text-xs text-[#E4E4E7] leading-relaxed font-normal">
+          참여한 테스터 <span id="toast-target-recruits">30</span>명에게 버전 업데이트 알림이 성공적으로 전송되었습니다!<br>
+          <span class="text-primary font-bold">마스코트가 보람차게 배불러졌어요 🐷</span>
+        </p>
+      </div>
+      <button type="button" onclick="dismissUpdateToast()" class="text-neutral-400 hover:text-white text-xs p-1">
+        ✕
+      </button>
+    </div>
+  </aside>

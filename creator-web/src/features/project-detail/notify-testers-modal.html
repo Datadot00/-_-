@@ -1,0 +1,30 @@
+  <!-- ========================================================
+       STEP 5: NOTIFY TESTERS CONFIRM MODAL
+  ======================================================== -->
+  <div id="notify-testers-modal"
+    class="flex backdrop-blur-xs hidden transition-all duration-200 ui-modal">
+    <div
+      class="w-full max-w-[460px] mx-4 bg-white rounded-[22px] border border-neutral-border shadow-float p-7 text-center flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+      <div
+        class="w-14 h-14 rounded-2xl bg-primary/20 text-primary-dark flex items-center justify-center text-2xl mb-3 shadow-xs">
+        🚀
+      </div>
+      <h3 class="text-xl font-extrabold text-neutral-dark mb-1.5">
+        테스터에게 업데이트 알림 전송
+      </h3>
+      <p class="text-xs text-neutral-muted leading-relaxed mb-6">
+        피드백을 남겨준 <strong>참여 테스터 <span id="modal-target-recruits-2">30</span>명</strong>에게<br>
+        "의견이 반영된 새로운 버전이 배포되었습니다" 푸시 알림을 발송합니다.
+      </p>
+      <div class="w-full flex items-center gap-3">
+        <button type="button" onclick="closeNotifyModal()"
+          class="flex-1 py-3 px-4 rounded-xl border border-neutral-border text-sm font-semibold text-neutral-dark hover:bg-neutral-50">
+          취소
+        </button>
+        <button type="button" onclick="sendUpdateNotification()"
+          class="flex-1 py-3 px-4 rounded-xl bg-primary text-neutral-dark text-sm font-extrabold shadow-xs hover:bg-primary-hover active:scale-98">
+          전송하기
+        </button>
+      </div>
+    </div>
+  </div>

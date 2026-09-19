@@ -5,7 +5,7 @@ import {
   isTermsGateMigrationMissing,
   normalizeTermsRequirement,
   recordMyCurrentTermConsents
-} from '../src/termsService.js';
+} from '../src/features/auth/termsService.js';
 
 test('normalizes the current terms requirement returned by the server', () => {
   assert.deepEqual(normalizeTermsRequirement({

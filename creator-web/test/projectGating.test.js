@@ -1,8 +1,8 @@
+import { readAppSource, readRuntimeFunction } from './support/readAppHtml.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = readAppSource();
 
 test('등록 화면 진입은 navigateTo 한 곳에서 게이팅을 검사한다', () => {
   // 관문이 navigateTo 안에 있어야 새 진입점이 생겨도 자동으로 막힌다.
@@ -15,10 +15,7 @@ test('등록 화면 진입은 navigateTo 한 곳에서 게이팅을 검사한다
 });
 
 test('게이팅 검사는 캐시된 값이 아니라 서버 프로필로 확인한다', () => {
-  const fn = html.slice(
-    html.indexOf('async function ensureProjectGatingPassed()'),
-    html.indexOf('function navigateTo(viewKey')
-  );
+  const fn = readRuntimeFunction('ensureProjectGatingPassed');
   assert.match(fn, /ds\.fetchUserProfile\(session\.user\.id\)/);
   assert.match(fn, /window\.userHasPassedGating = !!profile\?\.has_passed_gating/);
 });

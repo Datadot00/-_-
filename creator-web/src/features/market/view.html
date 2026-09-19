@@ -1,0 +1,357 @@
+  <!-- ========================================================
+       VIEW 7: COIN SHOP / 돼코상점 (desktop-creator-coinmarket-and-exchange.png 1:1)
+  ======================================================== -->
+  <div id="view-market" class="view-container hidden w-full min-h-screen flex bg-[#FBFBF7]">
+    <aside
+      class="ui-service-sidebar">
+      <div class="flex flex-col gap-8">
+        <!-- @include src/shared/navigation/sidebar-brand.html -->
+
+        <!-- @include src/shared/navigation/sidebar-menu.html -->
+      </div>
+
+      <!-- @include src/shared/navigation/create-project-button.html -->
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Market Header -->
+      <header
+        class="bg-white/80 shrink-0 ui-service-header">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7A8A62]">Reward &amp; Exchange</p>
+          <h2 class="text-base font-extrabold text-neutral-dark">돼코상점</h2>
+        </div>
+
+        <div class="flex items-center gap-3.5">
+          <div class="flex items-center gap-1.5 bg-canvas-cream border border-[#E9E4C2] px-3.5 py-1.5 rounded-full"
+            title="내 보유 돼지코인">
+            <span class="text-xs text-neutral-muted font-medium mr-1">내 보유 돼지코인</span>
+            <img src="/images/brand/logo-coin.png" alt="돼지코인" class="w-4 h-4 object-contain" />
+            <span class="text-xs font-bold text-[#574B1A]" id="market-header-coin">— C</span>
+          </div>
+
+          <div onclick="navigateToMypageSection('mypage-profile-section', 'profile')"
+            class="flex items-center gap-2 pl-2 cursor-pointer group">
+            <div
+              class="w-9 h-9 rounded-full border border-neutral-border bg-canvas-cream overflow-hidden flex items-center justify-center shadow-2xs group-hover:ring-2 ring-primary transition-all">
+              <span class="text-sm">👤</span>
+            </div>
+            <div class="hidden sm:flex flex-col text-left">
+              <span class="text-[10px] text-neutral-muted">환영해요!</span>
+              <span data-auth-email
+                class="max-w-40 truncate text-xs font-bold text-neutral-dark group-hover:text-primary-dark transition-colors">로그인
+                사용자</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-[1240px] mx-auto px-6 py-8 w-full flex flex-col gap-8">
+
+        <!-- Top Hero Banner Card -->
+        <section
+          class="w-full bg-gradient-to-r from-[#FFFCEE] via-[#FDF9EA] to-[#FDF4F6] border border-[#EBE6C0] rounded-[24px] p-8 shadow-subtle flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          <div class="max-w-xl z-10">
+            <div
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/30 border border-primary/50 text-[#25500F] text-xs font-bold mb-3">
+              <span>🎁</span> Reward & Exchange Center
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-neutral-dark tracking-tight mb-2">
+              돼코상점<span class="text-lg font-bold text-[#64748B] ml-1.5 font-normal">(Coin Market)</span>
+            </h1>
+            <p class="text-sm text-[#52525B] leading-relaxed mb-6 font-normal">
+              열심히 모은 돼지코인으로 바이브코더 초보자를 위한 프롬프트, 노션 템플릿, 툴 세팅 가이드, 부업 리서치 자료를 교환해보세요!<br>
+              교환 즉시 마이페이지로 안전하게 지급됩니다.
+            </p>
+
+            <div class="flex items-center gap-3">
+              <button onclick="navigateTo('mypage')"
+                class="px-4 py-2 rounded-xl bg-white border border-[#DDD6A7] hover:bg-neutral-50 text-xs font-bold text-neutral-800 shadow-2xs transition-all flex items-center gap-1.5">
+                <span>📋</span> 교환 내역 확인
+              </button>
+              <button onclick="alert('테스트에 정성껏 참여하시면 건당 100~600 돼지코인이 즉시 지급됩니다!');"
+                class="px-4 py-2 rounded-xl bg-[#FDA2BC]/20 hover:bg-[#FDA2BC]/30 text-xs font-bold text-[#8A2B43] border border-[#FDA2BC]/40 transition-all flex items-center gap-1.5">
+                <span>❓</span> 돼지코인 적립 가이드
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Mascot & Coin Summary Card -->
+          <div class="flex items-center gap-4 z-10">
+            <div class="w-24 h-24 flex items-center justify-center shrink-0">
+              <img src="/images/mascots/mascot-hungry.png" alt="코인 가득 든 돼지" class="w-full h-full object-contain drop-shadow-md" />
+            </div>
+
+            <div
+              class="bg-white rounded-2xl border border-[#E9E5BC] p-5 shadow-card min-w-[210px] flex flex-col gap-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-neutral-muted font-medium">누적 돼지코인</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-2xl font-extrabold text-neutral-dark tracking-tight flex items-baseline gap-1">
+                <span id="market-user-coin-display">—</span>
+                <span class="text-sm font-bold text-primary-dark">C</span>
+              </div>
+              <div class="w-full h-2 bg-[#F4F4F5] rounded-full overflow-hidden mt-1">
+                <div class="h-full bg-primary rounded-full" style="width: 82%;"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-neutral-400 font-medium">
+                <span>다음 등급까지</span>
+                <span class="font-bold text-neutral-600">550 C 남음</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Category Filter Tabs & Sort Dropdown -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-semibold">
+            <button onclick="filterMarketCategory('all', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-primary font-bold text-neutral-dark shadow-2xs">
+              전체
+            </button>
+            <button onclick="filterMarketCategory('prompt', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              ⚡ 프롬프트 템플릿
+            </button>
+            <button onclick="filterMarketCategory('notion', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              📑 노션 템플릿
+            </button>
+            <button onclick="filterMarketCategory('guide', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              🛠️ 툴 비교/세팅 가이드
+            </button>
+            <button onclick="filterMarketCategory('research', this)"
+              class="market-filter-btn px-4 py-2 rounded-full bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-colors">
+              📈 부업 리서치 자료
+            </button>
+          </div>
+
+          <select
+            class="px-3 py-2 bg-white text-xs font-semibold text-neutral-700 shadow-2xs focus:outline-none ui-input">
+            <option>인기순</option>
+            <option>낮은 돼지코인순</option>
+            <option>높은 돼지코인순</option>
+          </select>
+        </div>
+
+        <!-- Main Marketplace Grid (Left Products + Right Exchange Box) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-7 items-start">
+
+          <!-- Left: Product Cards (2 Columns on large, spans 2 of 3) -->
+          <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5" id="market-product-grid">
+
+            <!-- Product 1 (Active/Selected initially) -->
+            <div data-market-item="p1" data-market-category="prompt"
+              onclick="selectMarketProduct('p1', '바이브코더 입문용 AI 프롬프트 템플릿 패키지', 1500, '프롬프트 템플릿', '⚡')"
+              class="market-item-card ring-2 ring-[#2F6517] bg-white rounded-2xl border border-primary p-4 shadow-card transition-all cursor-pointer flex flex-col justify-between group relative">
+              <span data-selected-market-badge
+                class="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded-full bg-[#2F6517] text-white text-[10px] font-extrabold shadow-xs flex items-center gap-1">
+                ✓ 현재 선택됨
+              </span>
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#FFF7ED] border border-orange-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">🔥 BEST</span>
+                  <span class="text-4xl">⚡</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">프롬프트 템플릿</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-2 leading-relaxed">
+                  바이브코더 입문용 AI 프롬프트 템플릿 패키지
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">1,500 C</span>
+                <span class="text-[11px] font-bold text-[#2F6517] bg-primary/20 px-2 py-0.5 rounded">교환 가능</span>
+              </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div data-market-item="p2" data-market-category="notion"
+              onclick="selectMarketProduct('p2', '1인 창업 & MVP 프로젝트 관리 노션 템플릿', 1200, '노션 템플릿', '📑')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#EFF6FF] border border-blue-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-bold">노션 템플릿</span>
+                  <span class="text-4xl">📑</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">노션 템플릿</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-2 leading-relaxed">
+                  1인 창업 & MVP 프로젝트 관리 노션 템플릿
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">1,200 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div data-market-item="p3" data-market-category="guide"
+              onclick="selectMarketProduct('p3', 'v0 vs Cursor vs Windsurf 완벽 비교 & 초보자 세팅 가이드', 1800, '툴 비교/세팅 가이드', '🛠️')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#F0FDF4] border border-emerald-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">가이드북</span>
+                  <span class="text-4xl">🛠️</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">툴 비교/세팅 가이드</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-2 leading-relaxed">
+                  v0 vs Cursor vs Windsurf 완벽 비교 & 초보자 세팅 가이드
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">1,800 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div data-market-item="p4" data-market-category="research"
+              onclick="selectMarketProduct('p4', '바이브코더 부업 리서치 자료집 (이모티콘·펀딩·프리랜서)', 2000, '부업 리서치 자료', '📈')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#FAF5FF] border border-purple-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold">리서치</span>
+                  <span class="text-4xl">📈</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">부업 리서치 자료</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-2 leading-relaxed">
+                  바이브코더 부업 리서치 자료집 (이모티콘·펀딩·프리랜서)
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">2,000 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div data-market-item="p5" data-market-category="prompt"
+              onclick="selectMarketProduct('p5', 'UI/UX 기획서 및 PRD 자동완성 프롬프트', 1600, '프롬프트 템플릿', '⚡')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#FFF7ED] border border-orange-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">실전 프롬프트</span>
+                  <span class="text-4xl">⚡</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">프롬프트 템플릿</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-2 leading-relaxed">
+                  UI/UX 기획서 및 PRD 자동완성 프롬프트
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">1,600 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div data-market-item="p6" data-market-category="notion"
+              onclick="selectMarketProduct('p6', '초기 서비스 검증 & 유저 인터뷰 노션 템플릿', 1400, '노션 템플릿', '📑')"
+              class="market-item-card bg-white rounded-2xl border border-neutral-200 p-4 shadow-subtle hover:shadow-card hover:-translate-y-1 transition-all cursor-pointer flex flex-col justify-between group">
+              <div>
+                <div
+                  class="relative w-full h-32 rounded-xl bg-[#EFF6FF] border border-blue-100 flex items-center justify-center mb-3">
+                  <span
+                    class="absolute top-2 left-2 px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-bold">인터뷰 팩</span>
+                  <span class="text-4xl">📑</span>
+                </div>
+                <span class="text-[11px] text-neutral-400 font-medium">노션 템플릿</span>
+                <h3
+                  class="text-xs font-bold text-neutral-dark mb-2 group-hover:text-primary-dark transition-colors line-clamp-2 leading-relaxed">
+                  초기 서비스 검증 & 유저 인터뷰 노션 템플릿
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 mt-2">
+                <span class="text-sm font-extrabold text-neutral-dark">1,400 C</span>
+                <span class="text-[11px] font-bold text-neutral-500 group-hover:text-primary-dark">선택하기 &gt;</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Side: Exchange Panel (desktop-creator-coinmarket-and-exchange.png 1:1) -->
+          <div
+            class="lg:col-span-1 bg-white rounded-[24px] border-2 border-[#DCE4CF] p-6 shadow-card sticky top-28 flex flex-col gap-6">
+            <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span
+                  class="w-6 h-6 rounded-lg bg-[#EBF4E5] flex items-center justify-center text-primary-dark text-xs font-bold">⇄</span>
+                <h3 class="text-base font-extrabold text-neutral-dark">
+                  교환하기 <span class="text-xs font-medium text-neutral-400">(Exchange)</span>
+                </h3>
+              </div>
+              <button class="text-neutral-400 hover:text-neutral-600 text-sm">✕</button>
+            </div>
+
+            <!-- Selected Item Info Box -->
+            <div class="bg-[#F8FAF5] rounded-xl border border-[#E3EBD3] p-4 flex items-center gap-3">
+              <div
+                class="w-12 h-12 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-2xl shrink-0"
+                id="selected-product-icon">
+                ⚡
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="px-2 py-0.5 rounded bg-primary/20 text-[#25500F] text-[10px] font-extrabold">선택 상품</span>
+                <h4 class="text-xs font-bold text-neutral-dark truncate mt-0.5" id="selected-product-name">
+                  바이브코더 입문용 AI 프롬프트 템플릿 패키지
+                </h4>
+                <span class="text-xs font-extrabold text-primary-dark" id="selected-product-cost">
+                  1,500 C
+                </span>
+              </div>
+            </div>
+
+            <!-- Calculation Sheet -->
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between text-neutral-600">
+                <span>보유 돼지코인</span>
+                <span class="font-bold text-neutral-dark" id="exchange-user-coin">— C</span>
+              </div>
+              <div class="flex items-center justify-between text-[#DC2626]">
+                <span>차감 돼지코인</span>
+                <span class="font-extrabold" id="exchange-deduct-coin">- 1,500 C</span>
+              </div>
+              <div class="h-px bg-neutral-200 my-1"></div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-bold text-neutral-800">교환 후 잔여</span>
+                <span class="text-lg font-extrabold text-[#2F6517]" id="exchange-remain-coin">0 C</span>
+              </div>
+            </div>
+
+            <!-- Exchange Action Button -->
+            <button type="button" onclick="executeExchange()" id="btn-exchange-action"
+              class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover active:scale-[0.98] text-neutral-dark font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 border border-primary-dark/20">
+              <span>✓</span> 교환 완료하기
+            </button>
+
+            <!-- Safe Delivery Notice -->
+            <div
+              class="bg-[#F8FAFC] rounded-xl border border-neutral-200 p-3 text-[11px] text-neutral-500 leading-relaxed flex items-start gap-2">
+              <span class="text-neutral-400 mt-0.5">ℹ️</span>
+              <p>교환 즉시 마이페이지 쿠폰함 및 등록된 이메일로 발급 정보가 안전하게 전송됩니다.</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>

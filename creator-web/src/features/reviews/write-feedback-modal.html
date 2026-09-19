@@ -1,0 +1,49 @@
+  <!-- ========================================================
+       DYNAMIC FEEDBACK SUBMISSION MODAL (테스트 유형별 피드백 작성 모달)
+  ======================================================== -->
+  <div id="write-feedback-modal"
+    class="flex backdrop-blur-xs hidden transition-all duration-200 ui-modal">
+    <div
+      class="w-full max-w-[620px] mx-4 p-6 sm:p-8 flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200 relative max-h-[90vh] overflow-y-auto ui-dialog">
+
+      <!-- Close (X) Button -->
+      <button type="button" onclick="deferFeedbackReview()"
+        class="absolute top-5 right-5 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-colors text-sm cursor-pointer"
+        title="닫기">
+        ✕
+      </button>
+
+      <!-- Header -->
+      <div class="border-b border-neutral-100 pb-4">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span id="fb-modal-badge"
+            class="text-xs font-bold text-primary-dark bg-[#EBF7E2] px-2.5 py-0.5 rounded-full border border-[#D5EA9F]">
+            📱 프로덕트 테스트 피드백
+          </span>
+          <span id="fb-modal-reward" class="text-xs font-bold text-[#7E22CE] bg-purple-50 px-2.5 py-0.5 rounded-full">
+            🪙 +600 돼지코인 지급
+          </span>
+        </div>
+        <h3 id="fb-modal-title" class="text-xl font-extrabold text-neutral-dark">가계부 앱 베타테스트 피드백 작성</h3>
+        <p class="text-xs text-neutral-500 mt-1">테스트 경험을 솔직하게 남겨주시면 제작자에게 큰 도움이 됩니다.</p>
+      </div>
+
+      <!-- Dynamic Body Form Container -->
+      <div id="fb-modal-dynamic-body" class="flex flex-col gap-5">
+        <!-- Rendered via JS according to test type -->
+      </div>
+
+      <!-- Footer Action -->
+      <div class="pt-2 border-t border-neutral-100 flex items-center justify-end gap-3">
+        <button type="button" onclick="deferFeedbackReview()"
+          class="px-5 py-3 rounded-xl border border-neutral-300 text-xs font-bold text-neutral-600 hover:bg-neutral-50 transition-all cursor-pointer">
+          나중에 작성하기
+        </button>
+        <button type="button" id="btn-submit-feedback" onclick="submitFeedbackForm()"
+          class="px-6 py-3 rounded-xl bg-[#2F6517] hover:bg-[#25500F] active:scale-98 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span>✓ 피드백 제출하고 리워드 받기</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
