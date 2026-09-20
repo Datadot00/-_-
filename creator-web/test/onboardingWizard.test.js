@@ -215,21 +215,25 @@ test('SNS 링크는 HTTP(S) 주소만 최대 5개까지 허용한다', () => {
 });
 
 // ── 마크업 계약 ────────────────────────────────────────────────────────────
-test('온보딩은 프로필 수정 모달과 분리된 5단계 전용 모달을 쓴다', () => {
+test('온보딩은 프로필 수정 모달과 분리된 2단계 전용 모달을 쓴다', () => {
   assert.match(html, /id="onboarding-wizard-modal"/);
   ['wizard-step-counter', 'wizard-step-title', 'wizard-step-subtitle',
     'wizard-terms-document-list', 'wizard-nickname', 'wizard-interest-chips-box',
     'wizard-job-group', 'wizard-tool-tag-input', 'wizard-tool-tags-container',
     'wizard-sns-links-container', 'wizard-error',
-    'btn-wizard-back', 'btn-wizard-next'].forEach(elementId => {
+    'wizard-optional-fields', 'wizard-scroll-body', 'btn-wizard-next'].forEach(elementId => {
     assert.match(html, new RegExp(`id="${elementId}"`), `${elementId} 누락`);
   });
 
-  // 4개 단계 패널과 진행 표시가 모두 있어야 한다.
-  for (let step = 1; step <= 5; step += 1) {
+  // 2개 단계 패널과 진행 표시가 모두 있어야 한다.
+  for (let step = 1; step <= 2; step += 1) {
     assert.match(html, new RegExp(`data-wizard-step-panel="${step}"`), `step ${step} 패널 누락`);
     assert.match(html, new RegExp(`data-wizard-step-indicator="${step}"`), `step ${step} 표시 누락`);
   }
+
+  assert.doesNotMatch(html, /data-wizard-step-panel="[345]"/);
+  assert.match(html, /<details id="wizard-optional-fields"[^>]*>/);
+  assert.doesNotMatch(html, /<details id="wizard-optional-fields"[^>]*\bopen\b/);
 
   // 프로필 수정 모달에서는 온보딩 전용 요소를 걷어냈다.
   assert.doesNotMatch(html, /id="onboarding-notice"/);
@@ -249,7 +253,7 @@ test('가입 직후 계정은 약관까지 위저드 한 곳에서 처리한다'
   assert.match(authSource, /state\.onboarding\.required\s*\n?\s*\? openOnboardingWizardFlow/);
   assert.match(authSource, /onboarding: \(state\) => openOnboardingWizardFlow\(state, onReady\)/);
   // 완료되면 갱신된 계정 상태로 다음 단계를 다시 태운다.
-  assert.match(authSource, /onCompleted: \(\) => routeAfterAuthentication\(onReady\)/);
+  assert.match(authSource, /onCompleted: \(\) => routeAfterAuthentication\(async \(completedState\) => \{[\s\S]*?navigateTo\('explore'\)/);
   // 로그아웃과 이메일 재인증 시 위저드를 닫는다.
   assert.match(authSource, /closeTermsConsentGate\(\);\s*\n\s*closeOnboardingWizard\(\);/);
 });
@@ -328,13 +332,13 @@ test('약관이 남은 계정은 1단계부터 시작하고 필수 동의 전에
 
   assert.equal(opened, true);
   assert.equal(dom.el('onboarding-wizard-modal').hidden, false);
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 1 / 5');
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 1 / 2');
   assert.equal(dom.el('wizard-step-1').hidden, false);
   assert.equal(dom.el('wizard-step-2').hidden, true);
   // 필수 약관이 체크되기 전에는 다음으로 넘어갈 수 없다.
   assert.equal(dom.el('btn-wizard-next').disabled, true);
   // 1단계에서는 되돌아갈 곳이 없다.
-  assert.equal(dom.el('btn-wizard-back').disabled, true);
+  assert.equal(dom.el('btn-wizard-back'), null);
 });
 
 test('필수 약관에 동의하면 동의를 기록하고 2단계로 넘어간다', async () => {
@@ -363,7 +367,7 @@ test('필수 약관에 동의하면 동의를 기록하고 2단계로 넘어간�
   const consentCall = client.calls.find(call => call.name === 'record_my_current_term_consents');
   assert.ok(consentCall, '약관 동의가 기록되어야 한다');
   assert.deepEqual(consentCall.params.p_accepted_document_ids, ['doc-tos']);
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 5');
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
   assert.equal(dom.el('wizard-step-2').hidden, false);
 });
 
@@ -376,10 +380,10 @@ test('이미 약관에 동의한 계정은 1단계를 건너뛰고 2단계에서
 
   await showOnboardingWizard(client, pendingAccountState, {});
 
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 5');
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
   assert.equal(dom.el('wizard-step-1').hidden, true);
   // 되돌아갈 약관 단계가 없으므로 이전 버튼은 막아 둔다.
-  assert.equal(dom.el('btn-wizard-back').disabled, true);
+  assert.equal(dom.el('btn-wizard-back'), null);
   assert.equal(
     client.calls.some(call => call.name === 'record_my_current_term_consents'),
     false,
@@ -387,7 +391,7 @@ test('이미 약관에 동의한 계정은 1단계를 건너뛰고 2단계에서
   );
 });
 
-test('닉네임이 비어 있으면 2단계에서 막히고, 입력하면 3단계로 넘어간다', async () => {
+test('닉네임 오류는 해당 입력에 표시하고 입력 후 다음 필수 항목을 검증한다', async () => {
   const dom = installWizardDom();
   const client = createFakeClient({
     get_my_terms_requirement_status: { data: termsStatus({ requiresConsent: false }), error: null }
@@ -396,19 +400,20 @@ test('닉네임이 비어 있으면 2단계에서 막히고, 입력하면 3단�
   await showOnboardingWizard(client, pendingAccountState, {});
 
   dom.el('btn-wizard-next').click();
-  assert.equal(dom.el('wizard-error').hidden, false);
-  assert.match(dom.el('wizard-error').textContent, /닉네임은 1자 이상/);
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 5');
+  assert.match(dom.el('wizard-field-error').textContent, /닉네임은 1자 이상/);
+  assert.equal(document.activeElement, dom.el('wizard-nickname'));
+  assert.equal(dom.el('wizard-nickname').scrolledIntoView, true);
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
 
   dom.el('wizard-nickname').value = '돈돼테스터';
   dom.el('btn-wizard-next').click();
 
   assert.equal(dom.el('wizard-error').hidden, true);
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 3 / 5');
-  assert.equal(dom.el('wizard-step-3').hidden, false);
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
+  assert.match(dom.el('wizard-field-error').textContent, /성별을 선택해 주세요/);
 });
 
-test('성별과 연령대를 고르지 않으면 3단계에서 막힌다', async () => {
+test('한 화면에서 성별·연령대·관심분야 누락을 순서대로 안내한다', async () => {
   const dom = installWizardDom();
   const client = createFakeClient({
     get_my_terms_requirement_status: { data: termsStatus({ requiresConsent: false }), error: null }
@@ -418,11 +423,11 @@ test('성별과 연령대를 고르지 않으면 3단계에서 막힌다', async
 
   dom.el('wizard-nickname').value = '돈돼테스터';
   dom.el('btn-wizard-next').click();
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 3 / 5');
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
 
   dom.el('btn-wizard-next').click();
-  assert.match(dom.el('wizard-error').textContent, /성별을 선택해 주세요/);
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 3 / 5');
+  assert.match(dom.el('wizard-field-error').textContent, /성별을 선택해 주세요/);
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
 
   const genderBox = dom.el('wizard-gender-box');
   const male = genderBox.querySelectorAll('[data-wizard-gender]')[0];
@@ -431,8 +436,8 @@ test('성별과 연령대를 고르지 않으면 3단계에서 막힌다', async
 
   // 성별만 고르고 넘어가려 하면 이번엔 연령대에서 막힌다.
   dom.el('btn-wizard-next').click();
-  assert.match(dom.el('wizard-error').textContent, /연령대를 선택해 주세요/);
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 3 / 5');
+  assert.match(dom.el('wizard-field-error').textContent, /연령대를 선택해 주세요/);
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
 
   const ageBox = dom.el('wizard-age-range-box');
   const twenties = ageBox.querySelectorAll('[data-wizard-age-range]')[1];
@@ -441,7 +446,7 @@ test('성별과 연령대를 고르지 않으면 3단계에서 막힌다', async
   // 주 사용기기는 선택 항목이라 비워 둔 채로도 넘어갈 수 있어야 한다.
   dom.el('btn-wizard-next').click();
   assert.equal(dom.el('wizard-error').hidden, true);
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 4 / 5');
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 2 / 2');
 });
 
 test('성별과 연령대는 하나만 선택되고, 기기는 여러 개 고를 수 있다', async () => {
@@ -476,7 +481,7 @@ test('성별과 연령대는 하나만 선택되고, 기기는 여러 개 고를
   assert.equal(dom.el('wizard-device-count').textContent, '1개 선택');
 });
 
-test('관심분야를 고르지 않으면 4단계에서 막히고, 고르면 저장 후 완료 화면으로 간다', async () => {
+test('필수 정보와 선택 정보를 한 번에 저장하고 추가 클릭 없이 완료 콜백을 실행한다', async () => {
   const dom = installWizardDom();
   const client = createFakeClient({
     get_my_terms_requirement_status: { data: termsStatus({ requiresConsent: false }), error: null },
@@ -508,7 +513,7 @@ test('관심분야를 고르지 않으면 4단계에서 막히고, 고르면 저
   dom.el('btn-wizard-next').click();
 
   dom.el('btn-wizard-next').click();
-  assert.match(dom.el('wizard-error').textContent, /관심분야는 1개 이상/);
+  assert.match(dom.el('wizard-field-error').textContent, /관심분야는 1개 이상/);
   assert.equal(
     client.calls.some(call => call.name === 'complete_my_onboarding'),
     false,
@@ -536,16 +541,7 @@ test('관심분야를 고르지 않으면 4단계에서 막히고, 고르면 저
   assert.deepEqual(completeCall.params.p_tool_tags, ['Cursor']);
   assert.deepEqual(completeCall.params.p_interests, [chip.dataset.wizardInterest]);
 
-  // 저장이 끝나야 축하 화면이 뜨고, 그 전에는 흐름을 이어가지 않는다.
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 5 / 5');
-  assert.equal(dom.el('wizard-step-5').hidden, false);
-  assert.equal(dom.el('wizard-complete-nickname').textContent, '돈돼테스터');
-  assert.equal(continuedWith, 'not-called');
-
-  // 마지막 버튼을 눌러야 모달이 닫히고 다음 단계로 이어진다.
-  dom.el('btn-wizard-next').click();
-  await new Promise(resolve => setImmediate(resolve));
-
+  // 저장 성공 즉시 모달을 닫고 탐색 화면으로 이어지는 콜백을 실행한다.
   assert.notEqual(continuedWith, 'not-called');
   assert.equal(continuedWith.nextStep, 'ready');
   assert.equal(dom.el('onboarding-wizard-modal').hidden, true);
@@ -631,6 +627,69 @@ test('약관 저장이 실패하면 단계를 넘기지 않고 오류를 보여�
   dom.el('btn-wizard-next').click();
   await new Promise(resolve => setImmediate(resolve));
 
-  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 1 / 5');
+  assert.equal(dom.el('wizard-step-counter').textContent, 'STEP 1 / 2');
   assert.match(dom.el('wizard-error').textContent, /약관 동의를 저장하지 못했습니다/);
+});
+
+
+test('접힌 선택 정보에 잘못된 링크가 있으면 펼치고 해당 입력으로 이동한다', async () => {
+  const dom = installWizardDom();
+  const client = createFakeClient({
+    get_my_terms_requirement_status: { data: termsStatus({ requiresConsent: false }), error: null }
+  });
+  const { showOnboardingWizard } = await importWizard();
+  await showOnboardingWizard(client, {
+    profile: { nickname: '돈돼테스터', ...REQUIRED }
+  });
+  assert.equal(dom.el('wizard-optional-fields').open, false);
+  dom.el('btn-wizard-add-sns-link').click();
+  const input = dom.el('wizard-sns-links-container').querySelector('input');
+  input.value = 'not-a-url';
+  dom.el('btn-wizard-next').click();
+
+  assert.equal(dom.el('wizard-optional-fields').open, true);
+  assert.equal(document.activeElement, input);
+  assert.match(dom.el('wizard-field-error').textContent, /http/);
+  assert.equal(client.calls.some(call => call.name === 'complete_my_onboarding'), false);
+});
+
+test('선택 항목 없이 저장할 수 있고 실패 시 입력을 유지하며 중복 제출을 막는다', async () => {
+  const dom = installWizardDom();
+  let finishSave;
+  const client = createFakeClient({
+    get_my_terms_requirement_status: { data: termsStatus({ requiresConsent: false }), error: null },
+    complete_my_onboarding: () => new Promise(resolve => { finishSave = resolve; })
+  });
+  const { showOnboardingWizard } = await importWizard();
+  let completed = 0;
+  await showOnboardingWizard(client, {
+    profile: { nickname: '돈돼테스터', ...REQUIRED }
+  }, { onCompleted: () => { completed += 1; } });
+
+  dom.el('btn-wizard-next').click();
+  dom.el('btn-wizard-next').click();
+  assert.equal(client.calls.filter(call => call.name === 'complete_my_onboarding').length, 1);
+  assert.equal(dom.el('btn-wizard-next').disabled, true);
+  finishSave({ data: null, error: { message: 'network down' } });
+  await new Promise(resolve => setImmediate(resolve));
+
+  assert.equal(completed, 0);
+  assert.equal(dom.el('onboarding-wizard-modal').hidden, false);
+  assert.equal(dom.el('wizard-nickname').value, '돈돼테스터');
+  assert.equal(dom.el('wizard-optional-fields').open, false);
+  assert.equal(dom.el('btn-wizard-next').disabled, false);
+  assert.match(dom.el('wizard-error').textContent, /저장하지 못했습니다/);
+
+  dom.el('btn-wizard-next').click();
+  finishSave({ data: completedAccountState(), error: null });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(completed, 1);
+  assert.equal(dom.el('onboarding-wizard-modal').hidden, true);
+  const saves = client.calls.filter(call => call.name === 'complete_my_onboarding');
+  assert.deepEqual(saves[0].params, saves[1].params);
+  assert.equal(saves[1].params.p_bio, '');
+  assert.equal(saves[1].params.p_job_group, '');
+  assert.deepEqual(saves[1].params.p_devices, []);
+  assert.deepEqual(saves[1].params.p_tool_tags, []);
+  assert.deepEqual(saves[1].params.p_sns_links, []);
 });

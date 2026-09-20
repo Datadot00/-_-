@@ -50,6 +50,30 @@ test('실제 앱의 11개 라우팅 화면과 모달·스크립트 배치가 유
   assert.ok(html.indexOf('id="terms-consent-modal"') < html.indexOf('src="/src/features/auth/auth.js"'));
 });
 
+test('라우팅 화면과 인증 모달은 다른 화면의 숨김 영역 안에 중첩되지 않는다', () => {
+  // 조립 후의 div/main 경계를 검사한다. 스크립트·주석·속성 안의 HTML 문자열은 제외한다.
+  const html = readAppHtml()
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<(script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
+  const stack = [];
+  let checked = 0;
+  for (const [tag] of html.matchAll(/<\/?(?:div|main)\b(?:"[^"]*"|'[^']*'|[^'">])*>/gi)) {
+    if (tag.startsWith('</')) {
+      stack.pop();
+      continue;
+    }
+    const id = /\bid="([^"]+)"/.exec(tag)?.[1] || '';
+    const classes = /\bclass="([^"]*)"/.exec(tag)?.[1].split(/\s+/) || [];
+    const isView = classes.includes('view-container');
+    if (isView || ['onboarding-wizard-modal', 'terms-consent-modal'].includes(id)) {
+      assert.equal(stack.some(parent => parent.isView), false, `${id}가 다른 라우팅 화면에 갇힘`);
+      checked += 1;
+    }
+    stack.push({ id, isView });
+  }
+  assert.equal(checked, 13, '라우팅 화면 11개와 인증 모달 2개를 확인해야 한다');
+});
+
 test('Vite 개발·빌드 모두 조립하며 partial 수정은 열린 페이지를 새로고침한다', { timeout: 20000 }, async t => {
   const { root, write } = fixture(t);
   write('index.html', '<!doctype html><html><head></head><body>\n<!-- @include src/view.html -->\n</body></html>');

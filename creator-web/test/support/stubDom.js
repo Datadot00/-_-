@@ -65,12 +65,17 @@ class StubElement {
     if (name.startsWith('data-')) this.dataset[datasetKeyOf(name)] = String(value);
   }
 
+  removeAttribute(name) {
+    delete this.attributes[name];
+  }
+
   getAttribute(name) {
     return this.attributes[name] ?? null;
   }
 
   append(...nodes) {
     nodes.forEach(node => {
+      node.remove();
       node.parentNode = this;
       this.children.push(node);
     });
@@ -137,7 +142,11 @@ class StubElement {
     this.dispatch('click');
   }
 
-  focus() {}
+  focus() { global.document.activeElement = this; }
+
+  scrollIntoView() { this.scrolledIntoView = true; }
+
+  scrollTo() {}
 }
 
 /**
@@ -171,7 +180,7 @@ export function installWizardDom({ interests = ['핀테크/금융', 'AI/개발�
     'wizard-device-count', 'wizard-interest-count',
     'wizard-tool-tag-input', 'wizard-tool-tag-count', 'btn-wizard-add-tool-tag',
     'btn-wizard-add-sns-link',
-    'wizard-complete-nickname', 'wizard-error', 'btn-wizard-back', 'btn-wizard-next'
+    'wizard-scroll-body', 'wizard-error', 'btn-wizard-next'
   ].forEach(id => modal.append(create('div', id)));
 
   const termsAll = create('input', 'wizard-terms-all');
@@ -220,7 +229,7 @@ export function installWizardDom({ interests = ['핀테크/금융', 'AI/개발�
   );
   addChoices(deviceBox, 'wizardDevice', ['ios', 'android', 'mac', 'windows'], 'aria-pressed');
 
-  for (let step = 1; step <= 5; step += 1) {
+  for (let step = 1; step <= 2; step += 1) {
     const panel = create('section', `wizard-step-${step}`, step === 1 ? '' : 'hidden');
     panel.dataset.wizardStepPanel = String(step);
     modal.append(panel);
@@ -230,7 +239,7 @@ export function installWizardDom({ interests = ['핀테크/금융', 'AI/개발�
     const badge = create('span');
     badge.dataset.wizardStepBadge = '';
     indicator.append(badge);
-    if (step < 5) {
+    if (step < 2) {
       const bar = create('span');
       bar.dataset.wizardStepBar = '';
       indicator.append(bar);
@@ -238,8 +247,14 @@ export function installWizardDom({ interests = ['핀테크/금융', 'AI/개발�
     modal.append(indicator);
   }
 
+  const optionalFields = create('details', 'wizard-optional-fields');
+  optionalFields.open = false;
+  modal.append(optionalFields);
+  ['wizard-job-group', 'wizard-bio', 'wizard-device-box', 'wizard-tool-tag-input',
+    'wizard-sns-links-container'].forEach(id => optionalFields.append(byId[id]));
+
   global.document = {
-    getElementById: id => byId[id] || null,
+    getElementById: id => byId[id] || root.querySelector(`#${id}`) || null,
     createElement: tagName => new StubElement(tagName),
     querySelectorAll: selector => root.querySelectorAll(selector),
     querySelector: selector => root.querySelector(selector),
@@ -247,7 +262,7 @@ export function installWizardDom({ interests = ['핀테크/금융', 'AI/개발�
   };
   global.window = { setTimeout: fn => fn() };
 
-  return { byId, root, el: id => byId[id] };
+  return { byId, root, el: id => global.document.getElementById(id) };
 }
 
 /**
@@ -297,7 +312,7 @@ export function installProfileModalDom() {
   addChoices(deviceBox, 'profileDevice', ['ios', 'android', 'mac', 'windows'], 'aria-pressed');
 
   global.document = {
-    getElementById: id => byId[id] || null,
+    getElementById: id => byId[id] || root.querySelector(`#${id}`) || null,
     createElement: tagName => new StubElement(tagName),
     querySelectorAll: selector => root.querySelectorAll(selector),
     querySelector: selector => root.querySelector(selector),
@@ -305,7 +320,7 @@ export function installProfileModalDom() {
   };
   global.window = { setTimeout: fn => fn() };
 
-  return { byId, root, el: id => byId[id] };
+  return { byId, root, el: id => global.document.getElementById(id) };
 }
 
 export { StubElement };

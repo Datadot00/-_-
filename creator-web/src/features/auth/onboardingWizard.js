@@ -1,16 +1,8 @@
 import {
   completeMyOnboarding,
   ONBOARDING_LIMITS,
-  validateAgeRange,
-  validateBio,
-  validateDevices,
-  validateGender,
-  validateJobGroup,
-  validateInterests,
-  validateNickname,
-  normalizeToolTag,
-  validateToolTags,
-  validateSnsLinks
+  prepareOnboardingPayload,
+  normalizeToolTag
 } from './onboardingService.js';
 import {
   fetchMyTermsRequirement,
@@ -23,7 +15,7 @@ const DOCUMENT_TYPE_LABELS = {
   marketing_consent: '마케팅 정보 수신 동의'
 };
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 2;
 
 const STEP_TEXT = Object.freeze({
   1: {
@@ -32,24 +24,9 @@ const STEP_TEXT = Object.freeze({
     next: '동의하고 계속하기'
   },
   2: {
-    title: '어떤 이름으로 활동하시겠어요?',
-    subtitle: `닉네임은 최대 ${ONBOARDING_LIMITS.nicknameMax}자까지 쓸 수 있고, 나중에 내 정보에서 바꿀 수 있어요.`,
-    next: '다음'
-  },
-  3: {
-    title: '어떤 테스터인지 알려 주세요',
-    subtitle: '테스터 모집 조건을 맞추는 데만 쓰이고, 다른 사용자에게는 공개되지 않아요.',
-    next: '다음'
-  },
-  4: {
-    title: '어떤 테스트를 보여 드릴까요?',
-    subtitle: `관심분야는 1개 이상 ${ONBOARDING_LIMITS.interestsMax}개 이하로 고르고, 툴·기술과 링크는 선택 사항이에요.`,
-    next: '프로필 저장하고 완료'
-  },
-  5: {
-    title: '돈돼 가입을 환영합니다!',
-    subtitle: '프로필 설정이 끝났어요. 이제 바로 테스트에 참여할 수 있습니다.',
-    next: '돈돼 시작하기'
+    title: '프로필을 설정해 주세요',
+    subtitle: '필수 정보만 입력하면 바로 시작할 수 있어요. 선택 정보는 나중에 추가해도 괜찮아요.',
+    next: '저장하고 시작하기'
   }
 });
 
@@ -58,7 +35,8 @@ const CHIP_IDLE_CLASSES = ['bg-white', 'border-neutral-300', 'text-neutral-700']
 
 let activeClient = null;
 let pendingContinuation = null;
-let pendingCompletedState = null;
+let invalidField = null;
+let fieldError = null;
 let currentStep = 1;
 let termsDocuments = [];
 let termsAlreadyAccepted = false;
@@ -72,7 +50,8 @@ function getElements() {
     title: document.getElementById('wizard-step-title'),
     subtitle: document.getElementById('wizard-step-subtitle'),
     error: document.getElementById('wizard-error'),
-    back: document.getElementById('btn-wizard-back'),
+    scrollBody: document.getElementById('wizard-scroll-body'),
+    optionalFields: document.getElementById('wizard-optional-fields'),
     next: document.getElementById('btn-wizard-next'),
     termsAll: document.getElementById('wizard-terms-all'),
     termsAllWrapper: document.getElementById('wizard-terms-all-wrapper'),
@@ -100,16 +79,58 @@ function getElements() {
     toolTagSuggestions: document.getElementById('wizard-tool-tag-suggestions'),
     addToolTag: document.getElementById('btn-wizard-add-tool-tag'),
     snsContainer: document.getElementById('wizard-sns-links-container'),
-    addSnsLink: document.getElementById('btn-wizard-add-sns-link'),
-    completeNickname: document.getElementById('wizard-complete-nickname')
+    addSnsLink: document.getElementById('btn-wizard-add-sns-link')
   };
 }
 
 function setError(message = '') {
+  invalidField?.removeAttribute('aria-invalid');
+  invalidField?.removeAttribute('aria-describedby');
+  invalidField = null;
+  fieldError?.remove();
+  fieldError = null;
   const { error } = getElements();
   if (!error) return;
   error.textContent = message;
   error.classList.toggle('hidden', !message);
+  if (message) error.scrollIntoView?.({ block: 'nearest' });
+}
+
+function showProfileError(error) {
+  const fieldIds = {
+    onboarding_nickname_invalid: 'wizard-nickname',
+    onboarding_gender_invalid: 'wizard-gender-box',
+    onboarding_age_range_invalid: 'wizard-age-range-box',
+    onboarding_interests_invalid: 'wizard-interest-chips-box',
+    onboarding_job_group_invalid: 'wizard-job-group',
+    onboarding_bio_invalid: 'wizard-bio',
+    onboarding_devices_invalid: 'wizard-device-box',
+    onboarding_tool_tags_invalid: 'wizard-tool-tag-input',
+    onboarding_sns_links_invalid: 'wizard-sns-links-container'
+  };
+  const field = document.getElementById(fieldIds[error.code]);
+  setError('');
+  if (!field) {
+    setError(error.message);
+    return;
+  }
+  const details = field.closest('details');
+  if (details) details.open = true;
+  fieldError = document.createElement('p');
+  fieldError.id = 'wizard-field-error';
+  fieldError.className = 'mt-1 text-xs font-bold text-red-600';
+  fieldError.setAttribute('role', 'alert');
+  fieldError.textContent = error.message;
+  field.parentNode.append(fieldError);
+  invalidField = field;
+  field.setAttribute('aria-invalid', 'true');
+  field.setAttribute('aria-describedby', fieldError.id);
+  if (!['INPUT', 'SELECT', 'TEXTAREA'].includes(field.tagName.toUpperCase())) {
+    field.setAttribute('tabindex', '-1');
+  }
+  const focusTarget = field.querySelector('input') || field.querySelector('button') || field;
+  focusTarget.focus({ preventScroll: true });
+  field.scrollIntoView?.({ block: 'center' });
 }
 
 /* ------------------------------------------------------------------ *
@@ -281,7 +302,7 @@ async function submitTermsStep() {
 }
 
 /* ------------------------------------------------------------------ *
- * Step 2 : 닉네임 · 한줄소개
+ * 프로필 : 닉네임 · 한줄소개
  * ------------------------------------------------------------------ */
 
 function updateInputCounts() {
@@ -298,7 +319,7 @@ function updateInputCounts() {
 }
 
 /* ------------------------------------------------------------------ *
- * Step 3 : 성별 · 연령대 · 주 사용기기
+ * 프로필 : 성별 · 연령대 · 주 사용기기
  * ------------------------------------------------------------------ */
 
 /** 성별·연령대는 하나만 고르는 버튼 묶음이라 aria-checked 로 상태를 표시한다. */
@@ -351,7 +372,7 @@ function updateDeviceCount() {
 }
 
 /* ------------------------------------------------------------------ *
- * Step 4 : 관심분야 · SNS
+ * 프로필 : 관심분야 · SNS
  * ------------------------------------------------------------------ */
 
 function getInterestButtons() {
@@ -498,26 +519,30 @@ function updateAddSnsLinkAvailability() {
   addSnsLink.classList.toggle('cursor-not-allowed', addSnsLink.disabled);
 }
 
-async function submitProfileStep() {
+function collectProfileInput() {
+  return {
+    nickname: getElements().nickname?.value || '',
+    bio: getElements().bio?.value || '',
+    jobGroup: getElements().jobGroup?.value || '',
+    gender: getSingleChoiceValue('gender'),
+    ageRange: getSingleChoiceValue('age-range'),
+    devices: getSelectedDevices(),
+    toolTags: getToolTagValues(),
+    interests: getSelectedInterests(),
+    snsLinks: getSnsLinkValues()
+  };
+}
+
+async function submitProfileStep(input) {
   try {
-    const state = await completeMyOnboarding(activeClient, {
-      nickname: getElements().nickname?.value || '',
-      bio: getElements().bio?.value || '',
-      jobGroup: getElements().jobGroup?.value || '',
-      gender: getSingleChoiceValue('gender'),
-      ageRange: getSingleChoiceValue('age-range'),
-      devices: getSelectedDevices(),
-      toolTags: getToolTagValues(),
-      interests: getSelectedInterests(),
-      snsLinks: getSnsLinkValues()
-    });
+    const state = await completeMyOnboarding(activeClient, input);
     return state;
   } catch (error) {
     // 클라이언트 검증 오류는 사용자가 고칠 수 있는 문구를 그대로 보여준다.
     // 입력 실수까지 콘솔에 쌓지 않고, 서버·네트워크 실패만 기록한다.
     const isValidationError = String(error?.code || '').startsWith('onboarding_');
     if (isValidationError) {
-      setError(error.message);
+      showProfileError(error);
     } else {
       console.warn('[Onboarding] Could not complete onboarding:', error);
       setError('프로필 설정을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.');
@@ -556,15 +581,9 @@ function updateStepper() {
 }
 
 function updateFooter() {
-  const { back, next } = getElements();
+  const { next } = getElements();
   const text = STEP_TEXT[currentStep];
 
-  if (back) {
-    // 약관을 이미 통과한 계정은 1단계로 되돌아갈 이유가 없다.
-    const minimumStep = termsAlreadyAccepted ? 2 : 1;
-    back.disabled = isSubmitting || currentStep <= minimumStep;
-    back.classList.toggle('invisible', currentStep === TOTAL_STEPS);
-  }
   if (next) {
     next.textContent = isSubmitting ? '저장 중...' : text.next;
     next.disabled = isSubmitting
@@ -596,7 +615,8 @@ function showStep(step) {
   updateStepper();
   updateFooter();
 
-  if (step === 2) window.setTimeout(() => nickname?.focus(), 0);
+  getElements().scrollBody?.scrollTo?.({ top: 0 });
+  if (step === 2) window.setTimeout(() => nickname?.focus({ preventScroll: true }), 0);
 }
 
 function setSubmitting(submitting) {
@@ -616,69 +636,22 @@ async function handleNext() {
     return;
   }
 
-  if (currentStep === 2) {
-    try {
-      validateNickname(getElements().nickname?.value || '');
-      validateBio(getElements().bio?.value || '');
-      validateJobGroup(getElements().jobGroup?.value || '');
-    } catch (error) {
-      setError(error.message);
-      return;
-    }
-    showStep(3);
+  const input = collectProfileInput();
+  try {
+    prepareOnboardingPayload(input);
+  } catch (error) {
+    showProfileError(error);
     return;
   }
 
-  if (currentStep === 3) {
-    try {
-      validateGender(getSingleChoiceValue('gender'));
-      validateAgeRange(getSingleChoiceValue('age-range'));
-      validateDevices(getSelectedDevices());
-    } catch (error) {
-      setError(error.message);
-      return;
-    }
-    showStep(4);
-    return;
-  }
-
-  if (currentStep === 4) {
-    try {
-      validateInterests(getSelectedInterests());
-      validateToolTags(getToolTagValues());
-      validateSnsLinks(getSnsLinkValues());
-    } catch (error) {
-      setError(error.message);
-      return;
-    }
-
-    setSubmitting(true);
-    const state = await submitProfileStep();
-    setSubmitting(false);
-    if (!state) return;
-
-    const { completeNickname } = getElements();
-    if (completeNickname) {
-      completeNickname.textContent = state.profile?.nickname
-        || getElements().nickname?.value
-        || '돈돼';
-    }
-    pendingCompletedState = state;
-    showStep(5);
-    return;
-  }
+  setSubmitting(true);
+  const state = await submitProfileStep(input);
+  setSubmitting(false);
+  if (!state) return;
 
   const continuation = pendingContinuation;
-  const completedState = pendingCompletedState;
   closeOnboardingWizard();
-  await continuation?.(completedState);
-}
-
-function handleBack() {
-  if (isSubmitting || currentStep <= 1) return;
-  const minimumStep = termsAlreadyAccepted ? 2 : 1;
-  if (currentStep <= minimumStep) return;
-  showStep(currentStep - 1);
+  await continuation?.(state);
 }
 
 /* ------------------------------------------------------------------ *
@@ -736,7 +709,6 @@ export function closeOnboardingWizard() {
 
   activeClient = null;
   pendingContinuation = null;
-  pendingCompletedState = null;
   termsDocuments = [];
   termsAlreadyAccepted = false;
   isSubmitting = false;
@@ -749,13 +721,12 @@ function bindEvents() {
   eventsBound = true;
 
   const {
-    back, next, termsAll, termsList, termsDetailClose, termsRetry,
+    next, termsAll, termsList, termsDetailClose, termsRetry,
     nickname, bio, jobGroup, genderBox, ageRangeBox, deviceBox,
     interestsBox, toolTagInput, toolTagsContainer, toolTagSuggestions, addToolTag,
     snsContainer, addSnsLink
   } = getElements();
 
-  back?.addEventListener('click', handleBack);
   next?.addEventListener('click', handleNext);
 
   termsAll?.addEventListener('change', () => {
@@ -883,7 +854,7 @@ function bindEvents() {
 }
 
 /**
- * 가입 직후 4단계 온보딩 위저드를 연다.
+ * 가입 직후 2단계 온보딩 위저드를 연다.
  * 약관에 이미 동의한 계정이면 1단계를 완료 처리하고 2단계부터 시작한다.
  */
 export async function showOnboardingWizard(client, state, { onCompleted } = {}) {
@@ -893,9 +864,9 @@ export async function showOnboardingWizard(client, state, { onCompleted } = {}) 
   bindEvents();
   activeClient = client;
   pendingContinuation = typeof onCompleted === 'function' ? onCompleted : null;
-  pendingCompletedState = null;
   isSubmitting = false;
 
+  if (getElements().optionalFields) getElements().optionalFields.open = false;
   prefillFromAccountState(state);
   showStep(1);
   openModal();

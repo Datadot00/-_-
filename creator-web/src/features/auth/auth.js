@@ -541,7 +541,10 @@ async function openOnboardingWizardFlow(state, onReady) {
   }));
 
   const opened = await showOnboardingWizard(supabase, state, {
-    onCompleted: () => routeAfterAuthentication(onReady)
+    onCompleted: () => routeAfterAuthentication(async (completedState) => {
+      await onReady?.(completedState);
+      navigateTo('explore');
+    })
   });
   if (opened) return;
 
@@ -752,7 +755,7 @@ async function handleEmailConfirmationComplete() {
       : '';
     const { user } = await resumeEmailConfirmation(supabase, email, pendingPassword);
 
-    await continueConfirmedSignup(user, '이메일 인증을 확인했습니다.');
+    await continueConfirmedSignup(user, '로그인이 완료되었습니다!');
   } catch (error) {
     if (error?.code === 'email_not_confirmed') {
       showAuthMessage('error', '아직 이메일 인증이 완료되지 않았습니다. 메일의 확인 링크를 먼저 눌러 주세요.');
