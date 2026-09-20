@@ -127,7 +127,7 @@
           if (!isValidCreateStepUrl(surveyUrlInput?.value)) {
             return showCreateStepValidationError(1, surveyUrlInput, '외부 설문 URL을 올바르게 입력해 주세요.');
           }
-        } else {
+        } else if (currentMainCategory !== 'vote') {
           // 검증 항목은 선택 사항이다. 아무것도 추가하지 않으면 그대로 통과한다.
           // 다만 쓰다 만 문항은 그대로 저장되면 테스터에게 빈 질문으로 보이므로 막는다.
           const questionItems = Array.from(document.querySelectorAll('#questions-list .question-item'))
@@ -172,11 +172,22 @@
       }
 
       if (stepNum === 2) {
+        const isVote = currentMainCategory === 'vote';
+        const isSurvey = currentMainCategory === 'survey';
+        const titleMessage = isVote
+          ? '투표 제목을 입력해 주세요.'
+          : (isSurvey ? '설문 제목을 입력해 주세요.' : '테스트 제목을 입력해 주세요.');
+        const noticeMessage = isVote
+          ? '안내 내용과 투표 목적을 입력해 주세요.'
+          : (isSurvey ? '안내 내용과 설문 목적을 입력해 주세요.' : '안내 내용과 테스트 목적을 입력해 주세요.');
+
         const requiredFields = [
-          ['input-test-title', '테스트 제목을 입력해 주세요.'],
-          ['input-service-name', '서비스명을 입력해 주세요.'],
-          ['input-service-desc', '서비스 소개를 입력해 주세요.'],
-          ['input-test-notice', '안내 내용과 테스트 목적을 입력해 주세요.']
+          ['input-test-title', titleMessage],
+          ...((isVote || isSurvey) ? [] : [
+            ['input-service-name', '서비스명을 입력해 주세요.'],
+            ['input-service-desc', '서비스 소개를 입력해 주세요.']
+          ]),
+          ['input-test-notice', noticeMessage]
         ];
         for (const [fieldId, message] of requiredFields) {
           const field = document.getElementById(fieldId);

@@ -34,20 +34,30 @@
       let voteImageUrlsCommitted = false;
 
       try {
-      // 1. STEP 1 수집 (공통)
+      // 1. STEP 2 기본 정보 수집
       const tTitle = (document.getElementById('input-test-title')?.value || '').trim();
-      const sName = (document.getElementById('input-service-name')?.value || '').trim();
-      const sDesc = (document.getElementById('input-service-desc')?.value || '').trim();
+      let sName = (document.getElementById('input-service-name')?.value || '').trim();
+      let sDesc = (document.getElementById('input-service-desc')?.value || '').trim();
+      const sNoticeVal = (document.getElementById('input-test-notice')?.value || '').trim();
       const thumbnailPreview = document.getElementById('thumbnail-img-preview');
       const thumbImgSrc = thumbnailPreview && !thumbnailPreview.classList.contains('hidden')
         ? (thumbnailPreview.getAttribute('src') || '')
         : '';
 
       if (!tTitle) {
-        throw new Error('테스트 제목을 입력해 주세요.');
+        throw new Error(
+          currentMainCategory === 'vote' ? '투표 제목을 입력해 주세요.' :
+          (currentMainCategory === 'survey' ? '설문 제목을 입력해 주세요.' : '테스트 제목을 입력해 주세요.')
+        );
       }
-      if (!sName) {
-        throw new Error('서비스명을 입력해 주세요.');
+      if (currentMainCategory === 'product' || currentMainCategory === 'prototype') {
+        if (!sName) {
+          throw new Error('서비스명을 입력해 주세요.');
+        }
+      } else {
+        // 투표, 설문조사 시 서비스명/소개가 비노출되므로 DB NOT NULL 제약조건 호환을 위해 자동 보정
+        if (!sName) sName = tTitle;
+        if (!sDesc) sDesc = sNoticeVal || tTitle;
       }
 
       // 2. STEP 2 동적 데이터 수집 (유형별)

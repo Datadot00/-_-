@@ -296,7 +296,7 @@ test('프로젝트 등록은 단계별 필수 입력을 완료해야 다음 단�
   assert.match(html, /onclick="requestCreateStep\(2\)"/);
   assert.match(html, /onclick="requestCreateStep\(3\)"/);
   assert.match(html, /if \(!validateCreateStep\(step\)\) return false/);
-  assert.match(html, /'input-test-title', '테스트 제목을 입력해 주세요\.'/);
+  assert.match(html, /'input-test-title', (?:titleMessage|'테스트 제목을 입력해 주세요\.')/);
   assert.match(html, /'input-service-desc', '서비스 소개를 입력해 주세요\.'/);
   assert.match(html, /isValidCreateStepUrl\(serviceUrlInput\?\.value\)/);
   assert.match(html, /취급·수집되는 개인정보 항목을 입력해 주세요/);
@@ -312,7 +312,7 @@ test('검증 퀴즈와 스크린샷은 배타적인 선택사항이며 기본값
   const createViewEnd = html.indexOf('id="view-post"', createViewStart);
   const createView = html.slice(createViewStart, createViewEnd);
 
-  assert.match(createView, /5\. 성실 참여 검증 방식[\s\S]{0,120}\(선택\)/);
+  assert.match(createView, /3\. 성실 참여 검증 방식[\s\S]{0,120}\(선택\)/);
   assert.match(createView, /type="checkbox" name="verificationMethod" value="quiz"/);
   assert.match(createView, /this\.checked \? 'quiz' : 'none'/);
   assert.match(createView, /type="checkbox" name="verificationMethod" value="screenshot"/);

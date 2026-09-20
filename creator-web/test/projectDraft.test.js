@@ -54,3 +54,46 @@ test('dataService에 프로젝트 임시저장 관련 함수가 정의되어 있
 test('게시 완료 시 임시저장 데이터가 자동 정리된다', () => {
   assert.match(html, /clearProjectCreationDraft/);
 });
+
+test('STEP 01 내부 섹션 순서가 1.대분류 → 2.검증항목 → 3.성실참여 → 4.로그인 → 5.가이드 순서로 배치된다', () => {
+  const s1Idx = html.indexOf('id="form-section-1"');
+  const s2Idx = html.indexOf('id="form-section-2"');
+  const s1Html = html.slice(s1Idx, s2Idx);
+
+  const idxCategory = s1Html.indexOf('1. 테스트 대분류 선택');
+  const idxQuestions = s1Html.indexOf('2. 검증항목 작성');
+  const idxHonesty = s1Html.indexOf('3. 성실 참여 검증 방식');
+  const idxLogin = s1Html.indexOf('4. 로그인 필요 여부 및 개인정보 명시');
+  const idxGuide = s1Html.indexOf('5. 테스트 진행 방법(가이드) 필수');
+
+  assert.ok(idxCategory > 0, '1. 대분류 선택 섹션 존재');
+  assert.ok(idxQuestions > idxCategory, '2. 검증항목 작성이 대분류 뒤에 위치');
+  assert.ok(idxHonesty > idxQuestions, '3. 성실 참여 검증 방식이 검증항목 뒤에 위치');
+  assert.ok(idxLogin > idxHonesty, '4. 로그인 필요 여부가 성실참여 검증 뒤에 위치');
+  assert.ok(idxGuide > idxLogin, '5. 테스트 진행 방법(가이드)이 로그인 뒤에 위치');
+
+  // 검증항목 섹션 wrapper ID 확인
+  assert.match(s1Html, /id="section-questions-container"/);
+});
+
+test('STEP 02에 동적 제어용 요소 ID가 선언되어 있다', () => {
+  const s2Idx = html.indexOf('id="form-section-2"');
+  const s3Idx = html.indexOf('id="form-section-3"');
+  const s2Html = html.slice(s2Idx, s3Idx);
+
+  assert.match(s2Html, /id="label-test-title"/);
+  assert.match(s2Html, /id="field-service-name-box"/);
+  assert.match(s2Html, /id="field-service-desc-box"/);
+  assert.match(s2Html, /id="label-test-notice"/);
+});
+
+test('유형에 따라 검증항목 및 STEP 02 서비스명/소개 필드가 동적으로 제어된다', () => {
+  // actions.js 내 handleMainCategoryChange 로직 검증
+  assert.match(html, /questionsSection\.style\.display = \(cat === 'vote'\) \? 'none' : 'flex'/);
+  assert.match(html, /fieldServiceNameBox\.style\.display = 'none'/);
+  assert.match(html, /fieldServiceDescBox\.style\.display = 'none'/);
+  assert.match(html, /labelTestTitle\.innerHTML = '투표 제목/);
+  assert.match(html, /labelTestTitle\.innerHTML = '설문 제목/);
+  assert.match(html, /labelTestTitle\.innerHTML = '테스트 제목/);
+});
+

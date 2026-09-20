@@ -506,6 +506,43 @@
         if (subVote) subVote.style.display = cat === 'vote' ? 'flex' : 'none';
         toggleProductPlatformFields(document.querySelector('input[name="productSubPlatform"]:checked')?.value || 'web');
       }
+
+      // STEP 01: 검증 항목 작성 섹션 제어 (투표 시 숨김, 프로덕트/프로토타입/설문조사는 노출)
+      const questionsSection = document.getElementById('section-questions-container');
+      if (questionsSection) {
+        questionsSection.style.display = (cat === 'vote') ? 'none' : 'flex';
+      }
+
+      // STEP 02: 서비스명/서비스 소개 필드 및 제목/안내 라벨 동적 제어
+      const fieldServiceNameBox = document.getElementById('field-service-name-box');
+      const fieldServiceDescBox = document.getElementById('field-service-desc-box');
+      const labelTestTitle = document.getElementById('label-test-title');
+      const inputTestTitle = document.getElementById('input-test-title');
+      const labelTestNotice = document.getElementById('label-test-notice');
+      const inputTestNotice = document.getElementById('input-test-notice');
+
+      if (cat === 'vote') {
+        if (fieldServiceNameBox) fieldServiceNameBox.style.display = 'none';
+        if (fieldServiceDescBox) fieldServiceDescBox.style.display = 'none';
+        if (labelTestTitle) labelTestTitle.innerHTML = '투표 제목 <span class="text-secondary">*</span>';
+        if (inputTestTitle) inputTestTitle.placeholder = '예: 브랜드 로고 A안 vs B안 선호도 조사 (최대 50자)';
+        if (labelTestNotice) labelTestNotice.innerHTML = '안내 내용 / 투표 목적 <span class="text-secondary">*</span>';
+        if (inputTestNotice) inputTestNotice.placeholder = '참여자에게 투표의 취지나 배경을 안내해주세요.';
+      } else if (cat === 'survey') {
+        if (fieldServiceNameBox) fieldServiceNameBox.style.display = 'none';
+        if (fieldServiceDescBox) fieldServiceDescBox.style.display = 'none';
+        if (labelTestTitle) labelTestTitle.innerHTML = '설문 제목 <span class="text-secondary">*</span>';
+        if (inputTestTitle) inputTestTitle.placeholder = '예: 2030 가계부 앱 사용 패턴 설문 (최대 50자)';
+        if (labelTestNotice) labelTestNotice.innerHTML = '안내 내용 / 설문 목적 <span class="text-secondary">*</span>';
+        if (inputTestNotice) inputTestNotice.placeholder = '참여자에게 설문조사의 목적과 배경을 안내해주세요.';
+      } else {
+        if (fieldServiceNameBox) fieldServiceNameBox.style.display = 'block';
+        if (fieldServiceDescBox) fieldServiceDescBox.style.display = 'block';
+        if (labelTestTitle) labelTestTitle.innerHTML = '테스트 제목 <span class="text-secondary">*</span>';
+        if (inputTestTitle) inputTestTitle.placeholder = '예: 직관적인 가계부 앱 온보딩 및 첫 거래 기록 사용성 테스트 (최대 50자)';
+        if (labelTestNotice) labelTestNotice.innerHTML = '안내 내용 / 테스트 목적 <span class="text-secondary">*</span>';
+        if (inputTestNotice) inputTestNotice.placeholder = '테스터에게 전달할 배경이나 특히 주의 깊게 봐주었으면 하는 부분을 적어주세요.';
+      }
     }
 
     function toggleProductPlatformFields(platform) {
