@@ -108,11 +108,13 @@ function getProjectColumns(excludedColumns = new Set(), baseColumns = PROJECT_PU
     .join(',');
 }
 
+const globalExcludedProjectColumns = new Set();
+
 async function runProjectQueryWithColumnFallback(
   queryFactory,
   { baseColumns = PROJECT_PUBLIC_COLUMNS } = {}
 ) {
-  const excludedColumns = new Set();
+  const excludedColumns = new Set(globalExcludedProjectColumns);
   let result = { data: null, error: null };
   for (let attempt = 0; attempt <= PROJECT_INCREMENTAL_COLUMNS.length; attempt += 1) {
     result = await queryFactory(
@@ -122,6 +124,7 @@ async function runProjectQueryWithColumnFallback(
     const missingColumn = getMissingIncrementalProjectColumn(result.error);
     if (!missingColumn || excludedColumns.has(missingColumn)) return result;
     excludedColumns.add(missingColumn);
+    globalExcludedProjectColumns.add(missingColumn);
   }
   return result;
 }
@@ -785,15 +788,28 @@ export async function fetchProjectById(projectId) {
   }
 }
 
-export async function fetchProjectQuizzes(projectId) {
-  if (!supabase || !projectId) return [];
+let isProjectQuizzesRpcAvailable = true;
 
-  const { data, error } = await supabase.rpc('get_project_quizzes', {
-    p_project_id: projectId
-  });
-  if (!error) return Array.isArray(data) ? data : [];
-  console.warn('[dataService] fetchProjectQuizzes failed:', error.message);
-  return [];
+export async function fetchProjectQuizzes(projectId) {
+  if (!supabase || !projectId || !isProjectQuizzesRpcAvailable) return [];
+
+  try {
+    const { data, error } = await supabase.rpc('get_project_quizzes', {
+      p_project_id: projectId
+    });
+    if (!error) return Array.isArray(data) ? data : [];
+
+    const msg = String(error?.message || '');
+    if (error?.code === 'PGRST202' || error?.code === '42883' || /could not find the function/i.test(msg) || /schema cache/i.test(msg)) {
+      isProjectQuizzesRpcAvailable = false;
+      return [];
+    }
+    console.warn('[dataService] fetchProjectQuizzes failed:', error.message);
+    return [];
+  } catch (err) {
+    isProjectQuizzesRpcAvailable = false;
+    return [];
+  }
 }
 
 /**

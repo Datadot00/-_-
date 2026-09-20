@@ -5,9 +5,10 @@ import assert from 'node:assert/strict';
 const html = readAppSource();
 
 test('검증 항목은 선택 사항으로 표시된다', () => {
+  const labelStart = html.indexOf('2. 검증항목 작성 (테스트 미션) <span class="text-xs font-bold text-neutral-400">(선택)</span>');
   const label = html.slice(
-    html.indexOf('4. 검증 항목 작성 (테스트 미션)'),
-    html.indexOf('4. 검증 항목 작성 (테스트 미션)') + 400
+    labelStart,
+    labelStart + 300
   );
   assert.doesNotMatch(label, /text-red-500">\*/);
   assert.match(label, /\(선택\)/);
