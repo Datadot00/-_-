@@ -4,6 +4,7 @@
 // ========================================================
 
 import { createClient } from '@supabase/supabase-js';
+import { invokeModeratedReview } from './reviewModeration.js';
 
 const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL || 'https://mikswhcchbatrlpetngb.supabase.co';
 const supabaseKey = import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY || '';
@@ -108,7 +109,7 @@ function getProjectColumns(excludedColumns = new Set(), baseColumns = PROJECT_PU
     .join(',');
 }
 
-const globalExcludedProjectColumns = new Set(PROJECT_INCREMENTAL_COLUMNS);
+const globalExcludedProjectColumns = new Set();
 
 async function runProjectQueryWithColumnFallback(
   queryFactory,
@@ -1024,9 +1025,7 @@ export async function applyParticipation(projectId) {
 export async function submitProjectReview(reviewPayload) {
   if (!supabase) throw new Error('Supabase 연결이 설정되지 않았습니다.');
   const rpcPayload = prepareReviewRpcPayload(reviewPayload);
-  const { data, error } = await supabase.rpc('submit_project_review', rpcPayload);
-  if (error) throw error;
-  return data;
+  return invokeModeratedReview(supabase, rpcPayload);
 }
 
 /**

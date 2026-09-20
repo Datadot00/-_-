@@ -268,6 +268,9 @@
     }
 
     async function completeInternalTestFlow() {
+      if (document.getElementById('btn-complete-internal-test')?.disabled) return;
+      const moderationNotice = document.getElementById('vote-moderation-result');
+      if (moderationNotice) { moderationNotice.textContent = ''; moderationNotice.classList.add('hidden'); }
       const pId = currentParticipatingPostId || currentPostId || 'prototype';
       const dynamicContent = document.getElementById('part-internal-dynamic-content');
 
@@ -500,10 +503,14 @@
 
         navigateTo('explore');
       } catch (err) {
-        console.error('[Don Dwae DB] Vote submission failed:', err);
         const friendly = resolveFriendlyError(err, 'PART_SUBMISSION_FAILED');
-        const detail = err?.message && !friendly.message.includes(err.message) ? ` (${err.message})` : '';
-        showGenericToast(`${friendly.formatted}${detail}`, '⚠️');
+        const message = err?.isReviewModerationError ? err.message : friendly.formatted;
+        if (moderationNotice) {
+          moderationNotice.textContent = message + (err?.requestId ? ` 문의 시 검수번호: ${err.requestId}` : '');
+          moderationNotice.classList.remove('hidden');
+          moderationNotice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        showGenericToast(message, '⚠️');
       } finally {
         if (completeBtn) {
           completeBtn.disabled = false;

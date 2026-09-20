@@ -1,6 +1,9 @@
     async function submitFeedbackForm() {
       const projectId = currentParticipatingPostId || currentPostId || '';
       const submitButton = document.getElementById('btn-submit-feedback');
+      if (submitButton?.disabled) return;
+      const moderationNotice = document.getElementById('fb-moderation-result');
+      if (moderationNotice) { moderationNotice.textContent = ''; moderationNotice.classList.add('hidden'); }
       if (!isDatabaseProjectId(projectId)) {
         showGenericToast('실제 DB 프로젝트에서 참여한 뒤 피드백을 제출해 주세요.', '⚠️');
         return;
@@ -93,7 +96,7 @@
 
       if (submitButton) {
         submitButton.disabled = true;
-        submitButton.textContent = '피드백 저장 및 리워드 지급 중...';
+        submitButton.textContent = '리뷰 검수 및 제출 중...';
       }
 
       const submittedAnswers = {
@@ -209,8 +212,13 @@
           navigateTo('explore');
         }
       } catch (err) {
-        console.error('[Don Dwae DB] Transactional review failed:', err);
-        showGenericToast(resolveFriendlyError(err, 'PART_SUBMISSION_FAILED').formatted, '⚠️');
+        const message = err?.isReviewModerationError ? err.message : resolveFriendlyError(err, 'PART_SUBMISSION_FAILED').formatted;
+        if (moderationNotice) {
+          moderationNotice.textContent = message + (err?.requestId ? ` 문의 시 검수번호: ${err.requestId}` : '');
+          moderationNotice.classList.remove('hidden');
+          moderationNotice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        showGenericToast(message, '⚠️');
       } finally {
         if (submitButton) {
           submitButton.disabled = false;

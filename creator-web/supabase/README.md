@@ -14,3 +14,5 @@ The SQL filenames in `migrations/` match the versions already recorded by the sh
 `20260909171123_seed_home_projects_for_existing_user.sql` is a no-op history marker because that seed was applied before local migration files were adopted. `supabase_schema.sql` is the current schema snapshot, but it also contains project-specific seed data and must be reviewed before provisioning a different Supabase project.
 
 Database migrations must not be executed automatically from a public browser build or from Vercel. Production migration authority remains with the database owner.
+
+Review moderation uses the `moderate-review` Edge Function and a server-issued approval bound to the submitted content. See [implementation and rollout checklist](../../docs/AI_REVIEW_MODERATION.md) for the four migrations from `20260920190000` through `20260920220000`. Production had unrecorded historical changes and missing verification prerequisites, so this release uses an explicitly selected atomic SQL bundle with migration history recording. Do not replay historical SQL with `db push --include-all`. Deploy the function, apply the rehearsed bundle, and release the frontend together.

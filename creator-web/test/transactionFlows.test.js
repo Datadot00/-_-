@@ -84,7 +84,8 @@ test('코인 원장은 원인 참조를 포함하고 상점 컬럼은 서버 가
 test('데이터 서비스 쓰기는 트랜잭션 RPC만 호출한다', () => {
   const source = readFileSync(new URL('../src/shared/data/dataService.js', import.meta.url), 'utf8');
   assert.match(source, /rpc\('apply_to_project'/);
-  assert.match(source, /rpc\('submit_project_review'/);
+  assert.match(source, /invokeModeratedReview\(supabase, rpcPayload\)/);
+  assert.doesNotMatch(source, /rpc\('submit_project_review'/);
   assert.match(source, /rpc\('exchange_marketplace_item'/);
   assert.doesNotMatch(source, /from\('coin_transactions'\)\s*\.insert/);
   assert.doesNotMatch(source, /from\('marketplace_exchanges'\)\s*\.insert/);

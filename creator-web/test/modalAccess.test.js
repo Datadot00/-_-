@@ -126,9 +126,7 @@ test('참여: 프로젝트 정보를 표시하고 다시 열면 초기 단계로
   assert.equal(app.hidden('participate-view-external-done'), true);
 });
 
-test('참여: 등록된 대상 태그를 모달에 표시한다', {
-  todo: '중복 제거 전부터 유효한 함수에 대상 태그 렌더링이 없었음. 기능 수정 단계에서 복구할 것.'
-}, async () => {
+test('참여: 등록된 대상 태그를 모달에 표시한다', async () => {
   const app = setup({ signedIn: true });
   app.context.donDwaeDataService.fetchProjectById = async () => ({
     service_name: '대상 태그 테스트', target_persona_tags: ['1인 창업자'], tech_tags: ['웹']

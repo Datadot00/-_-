@@ -240,6 +240,8 @@
     }
 
     async function openFeedbackWriteModal(postId) {
+      const moderationNotice = document.getElementById('fb-moderation-result');
+      if (moderationNotice) { moderationNotice.textContent = ''; moderationNotice.classList.add('hidden'); }
       closeTestParticipateModal();
       currentFeedbackVerificationMethod = 'none';
       feedbackScreenshotDataUrl = null;

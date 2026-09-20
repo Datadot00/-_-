@@ -61,6 +61,8 @@
     }
 
     function renderInternalMissionFlow(project, rewardCoin = 0) {
+      const moderationNotice = document.getElementById('vote-moderation-result');
+      if (moderationNotice) { moderationNotice.textContent = ''; moderationNotice.classList.add('hidden'); }
       const projectId = String(project?.id || currentParticipatingPostId || currentPostId || '');
       const inMemoryDraft = internalMissionAnswers?.projectId === projectId
         ? normalizeInternalMissionDraftData(internalMissionAnswers.data)
@@ -211,6 +213,17 @@
       viewInitial.classList.remove('hidden');
       viewExternal.classList.add('hidden');
 
+      const targetBox = document.getElementById('part-modal-target-box');
+      const targetText = document.getElementById('part-modal-target-text');
+      const targetTags = Array.isArray(project?.target_persona_tags)
+        ? project.target_persona_tags.filter(tag => typeof tag === 'string' && tag.trim())
+        : [];
+      if (targetText) targetText.innerHTML = targetTags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('');
+      if (targetBox) {
+        if (targetTags.length) targetBox.classList.remove('hidden');
+        else targetBox.classList.add('hidden');
+      }
+
       if (project) {
         const thumbBox = document.getElementById('part-modal-thumb-box');
         const badge = document.getElementById('part-modal-badge');
@@ -279,7 +292,7 @@
     }
 
     function getVoteSubmitMarkupPending() {
-      return '<span>투표 제출 및 리워드 지급 중...</span>';
+      return '<span>답변 검수 및 투표 제출 중...</span>';
     }
 
     function getVoteSubmitMarkupReady() {

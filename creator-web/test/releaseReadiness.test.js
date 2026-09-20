@@ -42,10 +42,13 @@ const expectedMigrations = [
   '20260916120000_drop_prototype_wallet_default.sql',
   '20260916140000_welcome_bonus_on_gating_pass.sql',
   '20260916160000_update_marketplace_items_for_vibecoders.sql',
-  '20260920190000_add_project_drafts.sql'
+  '20260920190000_add_project_drafts.sql',
+  '20260920200000_reconcile_review_verification.sql',
+  '20260920210000_require_review_moderation.sql',
+  '20260920220000_fix_review_screenshot_evidence.sql'
 ];
 
-test('로컬 마이그레이션 파일명은 운영 DB 버전 순서와 일치한다', () => {
+test('기존 이력과 신규 마이그레이션 파일의 버전 순서를 유지한다', () => {
   const files = readdirSync(new URL('../supabase/migrations/', import.meta.url))
     .filter(file => file.endsWith('.sql'))
     .sort();

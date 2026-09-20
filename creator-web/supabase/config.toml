@@ -1,0 +1,6 @@
+project_id = "don-dwae-web"
+
+[functions.moderate-review]
+# The handler validates the user JWT with Supabase Auth before any work.
+# Explicit verification also supports projects using asymmetric signing keys.
+verify_jwt = false

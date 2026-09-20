@@ -19,3 +19,6 @@ npm-debug.log*
 # OS / 에디터
 .DS_Store
 Thumbs.db
+
+# 개인용 Claude 권한/환경 설정
+.claude/settings.local.json
