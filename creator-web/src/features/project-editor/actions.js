@@ -130,6 +130,10 @@
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (typeof saveProjectCreationDraft === 'function' && !isProjectEditMode) {
+        saveProjectCreationDraft({ showToast: false, silent: true });
+      }
     }
 
     function requestCreateStep(stepNum) {

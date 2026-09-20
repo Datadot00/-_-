@@ -389,6 +389,13 @@
       userCoinBalance = Math.max(0, userCoinBalance - totalCost);
       updateAllCoinDisplays();
       clearProjectEditContext();
+      if (typeof clearProjectCreationDraft === 'function') {
+        try {
+          await clearProjectCreationDraft();
+        } catch (draftErr) {
+          console.warn('[Draft cleanup notice]:', draftErr);
+        }
+      }
 
       // 3. Create or update top card in Dashboard Feed
       renderPublishedProjectCard(createdId, sName, sDesc, sUrl, rCoin, tCount, techTags);

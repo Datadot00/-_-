@@ -57,6 +57,7 @@ export const runtimeFiles = [
   "src/features/project-editor/validation.js",
   "src/features/project-editor/publish.js",
   "src/features/project-editor/edit.js",
+  "src/features/project-editor/drafts.js",
   "src/features/participation/drafts.js",
   "src/features/reviews/submit.js",
   "src/app/bootstrap.js"

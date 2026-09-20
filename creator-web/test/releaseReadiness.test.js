@@ -41,7 +41,8 @@ const expectedMigrations = [
   '20260915221000_add_vote_image_storage.sql',
   '20260916120000_drop_prototype_wallet_default.sql',
   '20260916140000_welcome_bonus_on_gating_pass.sql',
-  '20260916160000_update_marketplace_items_for_vibecoders.sql'
+  '20260916160000_update_marketplace_items_for_vibecoders.sql',
+  '20260920190000_add_project_drafts.sql'
 ];
 
 test('로컬 마이그레이션 파일명은 운영 DB 버전 순서와 일치한다', () => {

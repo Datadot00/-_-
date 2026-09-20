@@ -1316,4 +1316,81 @@ export async function deleteNotification(notificationId) {
   }
 }
 
+/**
+ * Fetch saved project creation draft for active user
+ */
+export async function fetchProjectDraft() {
+  if (!supabase) return null;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user?.id) return null;
+
+    const { data, error } = await supabase
+      .from('project_drafts')
+      .select('id, user_id, current_step, draft_data, updated_at')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.warn('[dataService] fetchProjectDraft error:', error.message);
+      return null;
+    }
+    return data;
+  } catch (err) {
+    console.warn('[dataService] fetchProjectDraft exception:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Save or update project creation draft for active user
+ */
+export async function saveProjectDraft(draftData = {}, currentStep = 1) {
+  if (!supabase) throw new Error('Supabase 연결이 설정되지 않았습니다.');
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user?.id) throw new Error('로그인이 필요합니다.');
+
+  const userId = session.user.id;
+  const payload = {
+    user_id: userId,
+    current_step: Math.min(Math.max(1, parseInt(currentStep, 10) || 1), 3),
+    draft_data: draftData,
+    updated_at: new Date().toISOString()
+  };
+
+  const { data, error } = await supabase
+    .from('project_drafts')
+    .upsert(payload, { onConflict: 'user_id' })
+    .select('id, user_id, current_step, draft_data, updated_at')
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Delete project creation draft for active user
+ */
+export async function deleteProjectDraft() {
+  if (!supabase) return false;
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user?.id) return false;
+
+    const { error } = await supabase
+      .from('project_drafts')
+      .delete()
+      .eq('user_id', session.user.id);
+
+    if (error) {
+      console.warn('[dataService] deleteProjectDraft error:', error.message);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.warn('[dataService] deleteProjectDraft exception:', err.message);
+    return false;
+  }
+}
+
 

@@ -150,6 +150,9 @@
           resetCreateProjectForm();
         }
         goToStep(1);
+        if (!isProjectEditMode && typeof checkAndPromptProjectCreationDraft === 'function') {
+          checkAndPromptProjectCreationDraft();
+        }
       } else if (isProjectEditMode) {
         clearProjectEditContext();
       }
