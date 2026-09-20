@@ -506,7 +506,7 @@
         const friendly = resolveFriendlyError(err, 'PART_SUBMISSION_FAILED');
         const message = err?.isReviewModerationError ? err.message : friendly.formatted;
         if (moderationNotice) {
-          moderationNotice.textContent = message + (err?.requestId ? ` 문의 시 검수번호: ${err.requestId}` : '');
+          moderationNotice.textContent = message;
           moderationNotice.classList.remove('hidden');
           moderationNotice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }

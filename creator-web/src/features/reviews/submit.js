@@ -214,7 +214,7 @@
       } catch (err) {
         const message = err?.isReviewModerationError ? err.message : resolveFriendlyError(err, 'PART_SUBMISSION_FAILED').formatted;
         if (moderationNotice) {
-          moderationNotice.textContent = message + (err?.requestId ? ` 문의 시 검수번호: ${err.requestId}` : '');
+          moderationNotice.textContent = message;
           moderationNotice.classList.remove('hidden');
           moderationNotice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
