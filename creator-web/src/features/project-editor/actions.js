@@ -513,6 +513,21 @@
         questionsSection.style.display = (cat === 'vote') ? 'none' : 'flex';
       }
 
+      // STEP 01: 섹션 번호 동적 제어 (투표 시 검증 항목이 숨겨지므로 2, 3, 4로 번호 재지정)
+      const labelVerification = document.getElementById('label-section-verification');
+      const labelLogin = document.getElementById('label-section-login');
+      const labelGuide = document.getElementById('label-section-guide');
+
+      if (cat === 'vote') {
+        if (labelVerification) labelVerification.innerHTML = '2. 성실 참여 검증 방식 <span class="text-xs font-normal text-neutral-400">(선택)</span>';
+        if (labelLogin) labelLogin.innerHTML = '3. 로그인 필요 여부 및 개인정보 명시 <span class="text-red-500">*</span>';
+        if (labelGuide) labelGuide.innerHTML = '4. 테스트 진행 방법 (가이드) <span class="text-red-500">*</span>';
+      } else {
+        if (labelVerification) labelVerification.innerHTML = '3. 성실 참여 검증 방식 <span class="text-xs font-normal text-neutral-400">(선택)</span>';
+        if (labelLogin) labelLogin.innerHTML = '4. 로그인 필요 여부 및 개인정보 명시 <span class="text-red-500">*</span>';
+        if (labelGuide) labelGuide.innerHTML = '5. 테스트 진행 방법 (가이드) <span class="text-red-500">*</span>';
+      }
+
       // STEP 02: 서비스명/서비스 소개 필드 및 제목/안내 라벨 동적 제어
       const fieldServiceNameBox = document.getElementById('field-service-name-box');
       const fieldServiceDescBox = document.getElementById('field-service-desc-box');

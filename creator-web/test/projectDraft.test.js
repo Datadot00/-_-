@@ -96,4 +96,29 @@ test('유형에 따라 검증항목 및 STEP 02 서비스명/소개 필드가 �
   assert.match(html, /labelTestTitle\.innerHTML = '설문 제목/);
   assert.match(html, /labelTestTitle\.innerHTML = '테스트 제목/);
 });
+test('투표 서브폼에서 질문 입력 칸이 이미지 등록 칸보다 위에 배치된다', () => {
+  const voteSubIdx = html.indexOf('id="sub-form-vote"');
+  assert.ok(voteSubIdx > 0, 'sub-form-vote가 존재해야 함');
 
+  const voteHtml = html.slice(voteSubIdx, html.indexOf('id="section-questions-container"'));
+  const qIdx = voteHtml.indexOf('id="vote-questions-list"');
+  const imgIdx = voteHtml.indexOf('id="vote-image-input-container"');
+
+  assert.ok(qIdx > 0, '질문 리스트가 존재해야 함');
+  assert.ok(imgIdx > 0, '이미지 등록 컨테이너가 존재해야 함');
+  assert.ok(qIdx < imgIdx, '질문 입력 칸이 이미지 등록 칸보다 위에 위치해야 함');
+});
+
+test('투표 선택 시 검증항목이 숨겨지며 섹션 번호가 2.성실참여, 3.로그인, 4.가이드로 동적 변경된다', () => {
+  assert.match(html, /id="label-section-verification"/);
+  assert.match(html, /id="label-section-login"/);
+  assert.match(html, /id="label-section-guide"/);
+
+  // actions.js 내 동적 변경 로직 검증
+  assert.match(html, /labelVerification\.innerHTML = '2\. 성실 참여 검증 방식/);
+  assert.match(html, /labelLogin\.innerHTML = '3\. 로그인 필요 여부 및 개인정보 명시/);
+  assert.match(html, /labelGuide\.innerHTML = '4\. 테스트 진행 방법 \(가이드\)/);
+  assert.match(html, /labelVerification\.innerHTML = '3\. 성실 참여 검증 방식/);
+  assert.match(html, /labelLogin\.innerHTML = '4\. 로그인 필요 여부 및 개인정보 명시/);
+  assert.match(html, /labelGuide\.innerHTML = '5\. 테스트 진행 방법 \(가이드\)/);
+});
