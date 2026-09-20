@@ -108,7 +108,7 @@ function getProjectColumns(excludedColumns = new Set(), baseColumns = PROJECT_PU
     .join(',');
 }
 
-const globalExcludedProjectColumns = new Set();
+const globalExcludedProjectColumns = new Set(PROJECT_INCREMENTAL_COLUMNS);
 
 async function runProjectQueryWithColumnFallback(
   queryFactory,
